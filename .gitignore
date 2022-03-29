@@ -1,3 +1,7 @@
+docs/node_modules
+docs/.yarn/*
+!docs/.yarn/releases
+docs/.pnp.*
 vue/node_modules
 vue/dist
 release/

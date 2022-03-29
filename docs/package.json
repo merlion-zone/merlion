@@ -1,0 +1,29 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "Merlion Documentation",
+  "scripts": {
+    "serve": "vuepress dev",
+    "build": "vuepress build"
+  },
+  "keywords": [
+    "merlion",
+    "ethereum",
+    "cosmos",
+    "blockchain",
+    "cryptocurrency",
+    "evm"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "yarn@3.2.0",
+  "devDependencies": {
+    "vuepress": "^1.9.7",
+    "vuepress-plugin-element-tabs": "^0.2.8"
+  },
+  "dependencies": {
+    "markdown-it": "^12.3.2",
+    "markdown-it-katex": "^2.0.3",
+    "vuepress-theme-cosmos": "^1.0.183"
+  }
+}
