@@ -12,8 +12,6 @@ require (
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0 // indirect
-	github.com/regen-network/cosmos-proto v0.3.1 // indirect
 	github.com/spf13/cast v1.4.1
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.7.1
@@ -22,6 +20,7 @@ require (
 	github.com/tendermint/tm-db v0.6.7
 	github.com/tharsis/ethermint v0.12.0
 	github.com/tharsis/evmos/v3 v3.0.0-beta
+	go.opencensus.io v0.23.0
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	google.golang.org/genproto v0.0.0-20220322021311-435b647f9ef2
 	google.golang.org/grpc v1.45.0
