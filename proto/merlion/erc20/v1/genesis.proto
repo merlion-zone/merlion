@@ -1,0 +1,20 @@
+syntax = "proto3";
+package merlion.erc20.v1;
+
+import "gogoproto/gogo.proto";
+import "merlion/erc20/v1/erc20.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/erc20/types";
+
+// GenesisState defines the module's genesis state.
+message GenesisState {
+  // module parameters
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  // registered token pairs
+  repeated TokenPair token_pairs = 2 [ (gogoproto.nullable) = false ];
+}
+
+// Params defines the erc20 module params
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+}

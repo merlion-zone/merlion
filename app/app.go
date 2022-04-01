@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"os"
@@ -80,17 +81,29 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/v2/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
+	custombankkeeper "github.com/merlion-zone/merlion/x/bank/keeper"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
+	srvflags "github.com/tharsis/ethermint/server/flags"
+	ethermint "github.com/tharsis/ethermint/types"
+	"github.com/tharsis/ethermint/x/evm"
+	evmkeeper "github.com/tharsis/ethermint/x/evm/keeper"
+	evmtypes "github.com/tharsis/ethermint/x/evm/types"
+	"github.com/tharsis/ethermint/x/feemarket"
+	feemarketkeeper "github.com/tharsis/ethermint/x/feemarket/keeper"
+	feemarkettypes "github.com/tharsis/ethermint/x/feemarket/types"
 
 	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
 	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 
 	"github.com/merlion-zone/merlion/docs"
+	"github.com/merlion-zone/merlion/x/erc20"
+	erc20keeper "github.com/merlion-zone/merlion/x/erc20/keeper"
+	erc20types "github.com/merlion-zone/merlion/x/erc20/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
@@ -143,6 +156,8 @@ var (
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		evm.AppModuleBasic{},
+		erc20.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -155,6 +170,8 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		evmtypes.ModuleName:            {authtypes.Minter, authtypes.Burner}, // used for secure addition and subtraction of balance using module account
+		erc20types.ModuleName:          {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -172,6 +189,9 @@ func init() {
 	}
 
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+
+	// manually update the power reduction by replacing micro (u) -> fur
+	sdk.DefaultPowerReduction = ethermint.PowerReduction
 }
 
 // App extends an ABCI application, but with most of its parameters exported.
@@ -212,6 +232,11 @@ type App struct {
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
+	// Ethermint keepers
+	EvmKeeper       *evmkeeper.Keeper
+	FeeMarketKeeper feemarketkeeper.Keeper
+
+	Erc20Keeper erc20keeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -219,6 +244,8 @@ type App struct {
 
 	// sm is the simulation manager
 	sm *module.SimulationManager
+
+	tpsCounter *tpsCounter
 }
 
 // New returns a reference to an initialized blockchain app
@@ -248,9 +275,11 @@ func New(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
+		evmtypes.StoreKey, feemarkettypes.StoreKey,
+		erc20types.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
-	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
+	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey, evmtypes.TransientKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
 
 	app := &App{
@@ -277,11 +306,13 @@ func New(
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/scopedKeeper
 
+	app.CapabilityKeeper.Seal()
+
 	// add keepers
 	app.AccountKeeper = authkeeper.NewAccountKeeper(
 		appCodec, keys[authtypes.StoreKey], app.GetSubspace(authtypes.ModuleName), authtypes.ProtoBaseAccount, maccPerms,
 	)
-	app.BankKeeper = bankkeeper.NewBaseKeeper(
+	app.BankKeeper = custombankkeeper.NewKeeper(
 		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.GetSubspace(banktypes.ModuleName), app.ModuleAccountAddrs(),
 	)
 	stakingKeeper := stakingkeeper.NewKeeper(
@@ -346,6 +377,29 @@ func New(
 		&stakingKeeper, govRouter,
 	)
 
+	// Create ethermint keepers
+	tracer := cast.ToString(appOpts.Get(srvflags.EVMTracer))
+	app.FeeMarketKeeper = feemarketkeeper.NewKeeper(
+		appCodec, keys[feemarkettypes.StoreKey], app.GetSubspace(feemarkettypes.ModuleName),
+	)
+	app.EvmKeeper = evmkeeper.NewKeeper(
+		appCodec, keys[evmtypes.StoreKey], tkeys[evmtypes.TransientKey], app.GetSubspace(evmtypes.ModuleName),
+		app.AccountKeeper, app.BankKeeper, &stakingKeeper, app.FeeMarketKeeper,
+		tracer,
+	)
+
+	app.Erc20Keeper = *erc20keeper.NewKeeper(
+		appCodec,
+		keys[erc20types.StoreKey],
+		app.GetSubspace(erc20types.ModuleName),
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.EvmKeeper,
+	)
+	erc20Module := erc20.NewAppModule(appCodec, app.Erc20Keeper, app.AccountKeeper, app.BankKeeper)
+
+	app.BankKeeper.(custombankkeeper.Keeper).SetErc20Keeper(app.Erc20Keeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -384,6 +438,9 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
+		evm.NewAppModule(app.EvmKeeper, app.AccountKeeper),
+		feemarket.NewAppModule(app.FeeMarketKeeper),
+		erc20Module,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -392,12 +449,28 @@ func New(
 	// CanWithdrawInvariant invariant.
 	// NOTE: staking module is required if HistoricalEntries param > 0
 	app.mm.SetOrderBeginBlockers(
-		upgradetypes.ModuleName, capabilitytypes.ModuleName, minttypes.ModuleName, distrtypes.ModuleName, slashingtypes.ModuleName,
-		evidencetypes.ModuleName, stakingtypes.ModuleName, ibchost.ModuleName,
+		upgradetypes.ModuleName,
+		capabilitytypes.ModuleName,
+		feemarkettypes.ModuleName,
+		evmtypes.ModuleName,
+		minttypes.ModuleName,
+		distrtypes.ModuleName,
+		slashingtypes.ModuleName,
+		evidencetypes.ModuleName,
+		stakingtypes.ModuleName,
+		ibchost.ModuleName,
 		feegrant.ModuleName,
+		erc20types.ModuleName,
 	)
 
-	app.mm.SetOrderEndBlockers(crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName)
+	app.mm.SetOrderEndBlockers(
+		crisistypes.ModuleName,
+		govtypes.ModuleName,
+		stakingtypes.ModuleName,
+		evmtypes.ModuleName,
+		feemarkettypes.ModuleName,
+		erc20types.ModuleName,
+	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
 	// properly initialized with tokens from genesis accounts.
@@ -418,6 +491,9 @@ func New(
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		evmtypes.ModuleName,
+		feemarkettypes.ModuleName,
+		erc20types.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -440,6 +516,9 @@ func New(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
+		evm.NewAppModule(app.EvmKeeper, app.AccountKeeper),
+		feemarket.NewAppModule(app.FeeMarketKeeper),
+		erc20Module,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -479,6 +558,13 @@ func New(
 	app.ScopedTransferKeeper = scopedTransferKeeper
 	// this line is used by starport scaffolding # stargate/app/beforeInitReturn
 
+	app.tpsCounter = newTPSCounter(logger)
+	go func() {
+		// Unfortunately golangci-lint is so pedantic,
+		// so we have to ignore this error explicitly.
+		_ = app.tpsCounter.start(context.Background())
+	}()
+
 	return app
 }
 
@@ -496,6 +582,20 @@ func (app *App) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.R
 // EndBlocker application updates every end block
 func (app *App) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
+}
+
+func (app *App) DeliverTx(req abci.RequestDeliverTx) (res abci.ResponseDeliverTx) {
+	defer func() {
+		// TODO: Record the count along with the code and or reason so as to display
+		// in the transactions per second live dashboards.
+		if res.IsErr() {
+			app.tpsCounter.incrementFailure()
+		} else {
+			app.tpsCounter.incrementSuccess()
+		}
+	}()
+
+	return app.BaseApp.DeliverTx(req)
 }
 
 // InitChainer application update at chain initialization
@@ -627,6 +727,9 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
+	paramsKeeper.Subspace(evmtypes.ModuleName)
+	paramsKeeper.Subspace(feemarkettypes.ModuleName)
+	paramsKeeper.Subspace(erc20types.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
