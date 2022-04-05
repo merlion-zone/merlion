@@ -14,10 +14,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/merlion-zone/merlion/app"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtypes "github.com/tendermint/tendermint/types"
+	"github.com/tharsis/ethermint/encoding"
 )
 
 func init() {
@@ -25,7 +25,7 @@ func init() {
 }
 
 type SimApp interface {
-	cosmoscmd.App
+	app.App
 	GetBaseApp() *baseapp.BaseApp
 	AppCodec() codec.Codec
 	SimulationManager() *module.SimulationManager
@@ -72,7 +72,7 @@ func BenchmarkSimulation(b *testing.B) {
 		require.NoError(b, err)
 	})
 
-	encoding := cosmoscmd.MakeEncodingConfig(app.ModuleBasics)
+	encoding := encoding.MakeConfig(app.ModuleBasics)
 
 	app := app.New(
 		logger,
