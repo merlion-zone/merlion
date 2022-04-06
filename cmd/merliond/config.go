@@ -2,11 +2,12 @@ package main
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/merlion-zone/merlion/app"
 	ethermint "github.com/tharsis/ethermint/types"
 )
 
 const (
+	AccountAddressPrefix = "mer"
+
 	// DisplayDenom defines the denomination displayed to users in client applications.
 	DisplayDenom = "lion"
 	// BaseDenom defines to the default denomination used in Merlion (staking, EVM, governance, etc.)
@@ -47,7 +48,7 @@ func RegisterDenoms() {
 
 func SetupConfig() {
 	config := sdk.GetConfig()
-	SetBech32Prefixes(config, app.AccountAddressPrefix)
+	SetBech32Prefixes(config, AccountAddressPrefix)
 	SetBip44CoinType(config)
 	RegisterDenoms()
 	config.Seal()

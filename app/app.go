@@ -123,8 +123,7 @@ type ExportableApp interface {
 }
 
 const (
-	AccountAddressPrefix = "mer"
-	Name                 = "merlion"
+	Name = "merlion"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -205,7 +204,7 @@ func init() {
 
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
 
-	// manually update the power reduction by replacing micro (u) -> fur
+	// Manually update the power reduction by replacing micro (u) -> fur
 	sdk.DefaultPowerReduction = ethermint.PowerReduction
 }
 

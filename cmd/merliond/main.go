@@ -10,7 +10,6 @@ import (
 func main() {
 	rootCmd, _ := NewRootCmd(
 		app.Name,
-		app.AccountAddressPrefix,
 		app.DefaultNodeHome,
 		app.Name,
 		app.ModuleBasics,
