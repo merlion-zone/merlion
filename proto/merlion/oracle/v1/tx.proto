@@ -1,0 +1,61 @@
+syntax = "proto3";
+package merlion.oracle.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/oracle/types";
+
+// Msg defines the Msg service.
+service Msg {
+  // AggregateExchangeRatePrevote submits aggregate exchange rate prevote.
+  rpc AggregateExchangeRatePrevote(MsgAggregateExchangeRatePrevote) returns (MsgAggregateExchangeRatePrevoteResponse);
+
+  // AggregateExchangeRateVote submits aggregate exchange rate vote.
+  rpc AggregateExchangeRateVote(MsgAggregateExchangeRateVote) returns (MsgAggregateExchangeRateVoteResponse);
+
+  // DelegateFeedConsent sets the feeder delegation.
+  rpc DelegateFeedConsent(MsgDelegateFeedConsent) returns (MsgDelegateFeedConsentResponse);
+}
+
+// MsgAggregateExchangeRatePrevote defines a message to submit
+// aggregate exchange rate prevote.
+message MsgAggregateExchangeRatePrevote {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string hash = 1;
+  string feeder = 2;
+  string validator = 3;
+}
+
+// MsgAggregateExchangeRatePrevoteResponse defines the MsgAggregateExchangeRatePrevote response type.
+message MsgAggregateExchangeRatePrevoteResponse {
+}
+
+// MsgAggregateExchangeRateVote defines a message to submit
+// aggregate exchange rate vote.
+message MsgAggregateExchangeRateVote {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string salt = 1;
+  string exchange_rates = 2;
+  string feeder = 3;
+  string validator = 4;
+}
+
+// MsgAggregateExchangeRateVoteResponse defines the MsgAggregateExchangeRateVote response type.
+message MsgAggregateExchangeRateVoteResponse {}
+
+// MsgDelegateFeedConsent defines a message to
+// delegate oracle voting rights to another address.
+message MsgDelegateFeedConsent {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string operator = 1;
+  string delegate = 2;
+}
+
+// MsgDelegateFeedConsentResponse defines the MsgDelegateFeedConsent response type.
+message MsgDelegateFeedConsentResponse {}
