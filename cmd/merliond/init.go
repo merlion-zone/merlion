@@ -80,7 +80,7 @@ func InitCmd(mbm module.BasicManager, defaultNodeHome string) *cobra.Command {
 
 			chainID, _ := cmd.Flags().GetString(flags.FlagChainID)
 			if chainID == "" {
-				chainID = fmt.Sprintf("merlion-5000-%v", tmrand.Str(6))
+				chainID = fmt.Sprintf("merlion_5000-%v", tmrand.Str(6))
 			}
 
 			// Get bip39 mnemonic

@@ -11,7 +11,6 @@ func main() {
 	rootCmd, _ := NewRootCmd(
 		app.Name,
 		app.DefaultNodeHome,
-		app.Name,
 		app.ModuleBasics,
 		app.New,
 		// this line is used by starport scaffolding # root/arguments

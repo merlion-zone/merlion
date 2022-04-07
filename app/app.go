@@ -104,6 +104,9 @@ import (
 	"github.com/merlion-zone/merlion/x/erc20"
 	erc20keeper "github.com/merlion-zone/merlion/x/erc20/keeper"
 	erc20types "github.com/merlion-zone/merlion/x/erc20/types"
+	makermodule "github.com/merlion-zone/merlion/x/maker"
+	makermodulekeeper "github.com/merlion-zone/merlion/x/maker/keeper"
+	makermoduletypes "github.com/merlion-zone/merlion/x/maker/types"
 	"github.com/merlion-zone/merlion/x/oracle"
 	oraclekeeper "github.com/merlion-zone/merlion/x/oracle/keeper"
 	oracletypes "github.com/merlion-zone/merlion/x/oracle/types"
@@ -176,6 +179,7 @@ var (
 		evm.AppModuleBasic{},
 		erc20.AppModuleBasic{},
 		oracle.AppModuleBasic{},
+		makermodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -191,6 +195,7 @@ var (
 		evmtypes.ModuleName:            {authtypes.Minter, authtypes.Burner}, // used for secure addition and subtraction of balance using module account
 		erc20types.ModuleName:          {authtypes.Minter, authtypes.Burner},
 		oracletypes.ModuleName:         nil,
+		makermoduletypes.ModuleName:    {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
@@ -262,6 +267,8 @@ type MerlionApp struct {
 
 	Erc20Keeper  erc20keeper.Keeper
 	OracleKeeper oraclekeeper.Keeper
+
+	MakerKeeper makermodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -303,6 +310,7 @@ func New(
 		evmtypes.StoreKey, feemarkettypes.StoreKey,
 		erc20types.StoreKey,
 		oracletypes.StoreKey,
+		makermoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey, evmtypes.TransientKey)
@@ -439,6 +447,18 @@ func New(
 	)
 	oracleModule := oracle.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.MakerKeeper = *makermodulekeeper.NewKeeper(
+		appCodec,
+		keys[makermoduletypes.StoreKey],
+		keys[makermoduletypes.MemStoreKey],
+		app.GetSubspace(makermoduletypes.ModuleName),
+
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.OracleKeeper,
+	)
+	makerModule := makermodule.NewAppModule(appCodec, app.MakerKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -481,6 +501,7 @@ func New(
 		feemarket.NewAppModule(app.FeeMarketKeeper),
 		erc20Module,
 		oracleModule,
+		makerModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -536,6 +557,7 @@ func New(
 		evmtypes.ModuleName,
 		feemarkettypes.ModuleName,
 		erc20types.ModuleName,
+		makermoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -562,6 +584,7 @@ func New(
 		feemarket.NewAppModule(app.FeeMarketKeeper),
 		erc20Module,
 		oracleModule,
+		makerModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -785,6 +808,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(feemarkettypes.ModuleName)
 	paramsKeeper.Subspace(erc20types.ModuleName)
 	paramsKeeper.Subspace(oracletypes.ModuleName)
+	paramsKeeper.Subspace(makermoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

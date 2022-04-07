@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -105,8 +106,7 @@ func WithEnvPrefix(envPrefix string) Option {
 // NewRootCmd creates a new root command for a Cosmos SDK application
 func NewRootCmd(
 	appName,
-	defaultNodeHome,
-	defaultChainID string,
+	defaultNodeHome string,
 	moduleBasics module.BasicManager,
 	buildApp AppBuilder,
 	options ...Option,
@@ -170,7 +170,7 @@ func NewRootCmd(
 		rootOptions,
 	)
 	overwriteFlagDefaults(rootCmd, map[string]string{
-		flags.FlagChainID:        defaultChainID,
+		flags.FlagChainID:        fmt.Sprintf("%s_5000-101", appName),
 		flags.FlagKeyringBackend: "test",
 	})
 

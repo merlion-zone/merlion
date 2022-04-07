@@ -31526,6 +31526,42 @@ paths:
           type: string
       tags:
         - Query
+  /merlion/maker/v1/params:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: MerlionMakerV1Params
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
   /merlion/oracle/v1/denoms/actives:
     get:
       summary: Actives returns all active denoms.
@@ -52550,6 +52586,16 @@ definitions:
     description: |-
       TokenPair defines an instance that records pairing consisting of a Cosmos
       native Coin and an ERC20 token address.
+  merlion.maker.v1.Params:
+    type: object
+    description: Params defines the parameters for the module.
+  merlion.maker.v1.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+    description: QueryParamsResponse is response type for the Query/Params RPC method.
   merlion.oracle.v1.AggregateExchangeRatePrevote:
     type: object
     properties:
