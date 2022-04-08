@@ -433,7 +433,9 @@ func New(
 	)
 	erc20Module := erc20.NewAppModule(appCodec, app.Erc20Keeper, app.AccountKeeper, app.BankKeeper)
 
-	app.BankKeeper.(custombankkeeper.Keeper).SetErc20Keeper(app.Erc20Keeper)
+	bankKeeper := app.BankKeeper.(custombankkeeper.Keeper)
+	bankKeeper.SetErc20Keeper(app.Erc20Keeper)
+	app.BankKeeper = bankKeeper
 
 	app.OracleKeeper = *oraclekeeper.NewKeeper(
 		appCodec,

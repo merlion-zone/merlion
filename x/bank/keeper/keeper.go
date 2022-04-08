@@ -32,7 +32,7 @@ func NewKeeper(cdc codec.BinaryCodec,
 	}
 }
 
-func (k Keeper) SetErc20Keeper(erc20Keeper types.Erc20Keeper) {
+func (k *Keeper) SetErc20Keeper(erc20Keeper types.Erc20Keeper) {
 	k.erc20Keeper = erc20Keeper
 }
 

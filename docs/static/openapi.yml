@@ -31562,6 +31562,652 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
+  /merlion/maker/v1/tx/burn_by_collateral:
+    get:
+      summary: >-
+        BurnByCollateral burns Mer stablecoins by unlocking collateral assets
+        and earning Lion coins.
+      operationId: MerlionMakerV1BurnByCollateral
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              burn_fee:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+              lion_out:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+            description: >-
+              MsgBurnByCollateralResponse defines the Msg/BurnByCollateral
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: burn_in.denom
+          in: query
+          required: false
+          type: string
+        - name: burn_in.amount
+          in: query
+          required: false
+          type: string
+        - name: lion_out_min.denom
+          in: query
+          required: false
+          type: string
+        - name: lion_out_min.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
+  /merlion/maker/v1/tx/burn_by_swap:
+    get:
+      summary: >-
+        BurnBySwap burns Mer stablecoins by swapping out strong-backing assets
+        and Lion coins.
+      operationId: MerlionMakerV1BurnBySwap
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              burn_fee:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+              backing_out:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+              lion_out:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+            description: MsgBurnBySwapResponse defines the Msg/BurnBySwap response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: burn_in.denom
+          in: query
+          required: false
+          type: string
+        - name: burn_in.amount
+          in: query
+          required: false
+          type: string
+        - name: backing_out_min.denom
+          in: query
+          required: false
+          type: string
+        - name: backing_out_min.amount
+          in: query
+          required: false
+          type: string
+        - name: lion_out_min.denom
+          in: query
+          required: false
+          type: string
+        - name: lion_out_min.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
+  /merlion/maker/v1/tx/buyback:
+    get:
+      summary: BuyBack buybacks strong-backing assets by spending Lion coins.
+      operationId: MerlionMakerV1BuyBack
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              backing_out:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+            description: MsgBuyBackResponse defines the Msg/BuyBack response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: lion_in.denom
+          in: query
+          required: false
+          type: string
+        - name: lion_in.amount
+          in: query
+          required: false
+          type: string
+        - name: backing_out_min.denom
+          in: query
+          required: false
+          type: string
+        - name: backing_out_min.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
+  /merlion/maker/v1/tx/deposit_collateral:
+    get:
+      summary: DepositCollateral deposits collateral assets.
+      operationId: MerlionMakerV1DepositCollateral
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            description: >-
+              MsgDepositCollateralResponse defines the Msg/DepositCollateral
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: collateral.denom
+          in: query
+          required: false
+          type: string
+        - name: collateral.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
+  /merlion/maker/v1/tx/mint_by_collateral:
+    get:
+      summary: >-
+        MintByCollateral mints Mer stablecoins by locking collateral assets and
+        spending Lion coins.
+      operationId: MerlionMakerV1MintByCollateral
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              mint_fee:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+              lion_in:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+            description: >-
+              MsgMintByCollateralResponse defines the Msg/MintByCollateral
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: mint_out.denom
+          in: query
+          required: false
+          type: string
+        - name: mint_out.amount
+          in: query
+          required: false
+          type: string
+        - name: lion_in_max.denom
+          in: query
+          required: false
+          type: string
+        - name: lion_in_max.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
+  /merlion/maker/v1/tx/mint_by_swap:
+    get:
+      summary: >-
+        MintBySwap mints Mer stablecoins by swapping in strong-backing assets
+        and Lion coins.
+      operationId: MerlionMakerV1MintBySwap
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              mint_fee:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+              backing_in:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+              lion_in:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+            description: MsgMintBySwapResponse defines the Msg/MintBySwap response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: mint_out.denom
+          in: query
+          required: false
+          type: string
+        - name: mint_out.amount
+          in: query
+          required: false
+          type: string
+        - name: backing_in_max.denom
+          in: query
+          required: false
+          type: string
+        - name: backing_in_max.amount
+          in: query
+          required: false
+          type: string
+        - name: lion_in_max.denom
+          in: query
+          required: false
+          type: string
+        - name: lion_in_max.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
+  /merlion/maker/v1/tx/recollateralize:
+    get:
+      summary: >-
+        ReCollateralize re-collateralizes strong-backing assets by earning Lion
+        coins.
+      operationId: MerlionMakerV1ReCollateralize
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              lion_out:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+            description: >-
+              MsgReCollateralizeResponse defines the Msg/ReCollateralize
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: backing_in.denom
+          in: query
+          required: false
+          type: string
+        - name: backing_in.amount
+          in: query
+          required: false
+          type: string
+        - name: lion_out_min.denom
+          in: query
+          required: false
+          type: string
+        - name: lion_out_min.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
+  /merlion/maker/v1/tx/redeem_collateral:
+    get:
+      summary: RedeemCollateral redeems collateral assets.
+      operationId: MerlionMakerV1RedeemCollateral
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            description: >-
+              MsgRedeemCollateralResponse defines the Msg/RedeemCollateral
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: collateral.denom
+          in: query
+          required: false
+          type: string
+        - name: collateral.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
   /merlion/oracle/v1/denoms/actives:
     get:
       summary: Actives returns all active denoms.
@@ -52586,6 +53232,188 @@ definitions:
     description: |-
       TokenPair defines an instance that records pairing consisting of a Cosmos
       native Coin and an ERC20 token address.
+  merlion.maker.v1.MsgBurnByCollateralResponse:
+    type: object
+    properties:
+      burn_fee:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      lion_out:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+    description: >-
+      MsgBurnByCollateralResponse defines the Msg/BurnByCollateral response
+      type.
+  merlion.maker.v1.MsgBurnBySwapResponse:
+    type: object
+    properties:
+      burn_fee:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      backing_out:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      lion_out:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+    description: MsgBurnBySwapResponse defines the Msg/BurnBySwap response type.
+  merlion.maker.v1.MsgBuyBackResponse:
+    type: object
+    properties:
+      backing_out:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+    description: MsgBuyBackResponse defines the Msg/BuyBack response type.
+  merlion.maker.v1.MsgDepositCollateralResponse:
+    type: object
+    description: >-
+      MsgDepositCollateralResponse defines the Msg/DepositCollateral response
+      type.
+  merlion.maker.v1.MsgMintByCollateralResponse:
+    type: object
+    properties:
+      mint_fee:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      lion_in:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+    description: >-
+      MsgMintByCollateralResponse defines the Msg/MintByCollateral response
+      type.
+  merlion.maker.v1.MsgMintBySwapResponse:
+    type: object
+    properties:
+      mint_fee:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      backing_in:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      lion_in:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+    description: MsgMintBySwapResponse defines the Msg/MintBySwap response type.
+  merlion.maker.v1.MsgReCollateralizeResponse:
+    type: object
+    properties:
+      lion_out:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+    description: MsgReCollateralizeResponse defines the Msg/ReCollateralize response type.
+  merlion.maker.v1.MsgRedeemCollateralResponse:
+    type: object
+    description: >-
+      MsgRedeemCollateralResponse defines the Msg/RedeemCollateral response
+      type.
   merlion.maker.v1.Params:
     type: object
     description: Params defines the parameters for the module.
