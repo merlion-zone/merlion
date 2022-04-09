@@ -20,5 +20,11 @@ message Params {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
-  uint64 collateral_ration_cooldown_period = 3 [(gogoproto.moretags) = "yaml:\"collateral_ration_cooldown_period\""];
+  uint64 collateral_ratio_cooldown_period = 3
+      [ (gogoproto.moretags) = "yaml:\"collateral_ration_cooldown_period\"" ];
+  string liquidation_commission_fee = 4 [
+    (gogoproto.moretags) = "yaml:\"liquidation_commission_fee\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
 }

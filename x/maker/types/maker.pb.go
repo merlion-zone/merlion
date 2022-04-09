@@ -107,13 +107,17 @@ type CollateralRiskParams struct {
 	MaxMerMint *github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,4,opt,name=max_mer_mint,json=maxMerMint,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"max_mer_mint,omitempty"`
 	// ratio at which a position is defined as undercollateralized
 	LiquidationThreshold *github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,5,opt,name=liquidation_threshold,json=liquidationThreshold,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"liquidation_threshold,omitempty"`
-	// maximum ratio of maximum amount of currency that can be borrowed with a specific collateral
+	// maximum ratio of maximum amount of currency that can be borrowed with a
+	// specific collateral
 	LoanToValue *github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,6,opt,name=loan_to_value,json=loanToValue,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"loan_to_value,omitempty"`
-	// basic ratio of maximum amount of currency that can be borrowed with a specific collateral
+	// basic ratio of maximum amount of currency that can be borrowed with a
+	// specific collateral
 	BasicLoanToValue *github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,7,opt,name=basic_loan_to_value,json=basicLoanToValue,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"basic_loan_to_value,omitempty"`
-	// catalytic ratio of burned Lion to minted stablecoins, to maximize the LTV in [basic-LTV, LTV]
+	// catalytic ratio of burned Lion to minted stablecoins, to maximize the LTV
+	// in [basic-LTV, LTV]
 	CatalyticLionRatio *github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,8,opt,name=catalytic_lion_ratio,json=catalyticLionRatio,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"catalytic_lion_ratio,omitempty"`
-	// liquidation fee rate, i.e., the discount a liquidator gets when buying collateral flagged for a liquidation
+	// liquidation fee rate, i.e., the discount a liquidator gets when buying
+	// collateral flagged for a liquidation
 	LiquidationFee *github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,9,opt,name=liquidation_fee,json=liquidationFee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"liquidation_fee,omitempty"`
 	// mint fee rate, i.e., extra fee debt
 	MintFee *github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,10,opt,name=mint_fee,json=mintFee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"mint_fee,omitempty"`
@@ -168,7 +172,8 @@ func (m *CollateralRiskParams) GetEnabled() bool {
 	return false
 }
 
-// RegisterBacking is a gov Content type to register eligible strong-backing asset with backing risk parameters.
+// RegisterBackingProposal is a gov Content type to register eligible
+// strong-backing asset with backing risk parameters.
 type RegisterBackingProposal struct {
 	// title of the proposal
 	Title string `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
@@ -232,7 +237,8 @@ func (m *RegisterBackingProposal) GetRiskParams() *BackingRiskParams {
 	return nil
 }
 
-// RegisterCollateral is a gov Content type to register eligible collateral with collateral risk parameters.
+// RegisterCollateralProposal is a gov Content type to register eligible
+// collateral with collateral risk parameters.
 type RegisterCollateralProposal struct {
 	// title of the proposal
 	Title string `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
@@ -296,8 +302,9 @@ func (m *RegisterCollateralProposal) GetRiskParams() *CollateralRiskParams {
 	return nil
 }
 
-// SetBackingRiskParams is a gov Content type to set backing coin risk parameters.
-type SetBackingRiskParams struct {
+// SetBackingRiskParamsProposal is a gov Content type to set backing coin risk
+// parameters.
+type SetBackingRiskParamsProposal struct {
 	// title of the proposal
 	Title string `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	// proposal description
@@ -306,18 +313,18 @@ type SetBackingRiskParams struct {
 	RiskParams *BackingRiskParams `protobuf:"bytes,3,opt,name=risk_params,json=riskParams,proto3" json:"risk_params,omitempty"`
 }
 
-func (m *SetBackingRiskParams) Reset()         { *m = SetBackingRiskParams{} }
-func (m *SetBackingRiskParams) String() string { return proto.CompactTextString(m) }
-func (*SetBackingRiskParams) ProtoMessage()    {}
-func (*SetBackingRiskParams) Descriptor() ([]byte, []int) {
+func (m *SetBackingRiskParamsProposal) Reset()         { *m = SetBackingRiskParamsProposal{} }
+func (m *SetBackingRiskParamsProposal) String() string { return proto.CompactTextString(m) }
+func (*SetBackingRiskParamsProposal) ProtoMessage()    {}
+func (*SetBackingRiskParamsProposal) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ee82e911d469b50f, []int{4}
 }
-func (m *SetBackingRiskParams) XXX_Unmarshal(b []byte) error {
+func (m *SetBackingRiskParamsProposal) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *SetBackingRiskParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *SetBackingRiskParamsProposal) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_SetBackingRiskParams.Marshal(b, m, deterministic)
+		return xxx_messageInfo_SetBackingRiskParamsProposal.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -327,41 +334,42 @@ func (m *SetBackingRiskParams) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *SetBackingRiskParams) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SetBackingRiskParams.Merge(m, src)
+func (m *SetBackingRiskParamsProposal) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetBackingRiskParamsProposal.Merge(m, src)
 }
-func (m *SetBackingRiskParams) XXX_Size() int {
+func (m *SetBackingRiskParamsProposal) XXX_Size() int {
 	return m.Size()
 }
-func (m *SetBackingRiskParams) XXX_DiscardUnknown() {
-	xxx_messageInfo_SetBackingRiskParams.DiscardUnknown(m)
+func (m *SetBackingRiskParamsProposal) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetBackingRiskParamsProposal.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_SetBackingRiskParams proto.InternalMessageInfo
+var xxx_messageInfo_SetBackingRiskParamsProposal proto.InternalMessageInfo
 
-func (m *SetBackingRiskParams) GetTitle() string {
+func (m *SetBackingRiskParamsProposal) GetTitle() string {
 	if m != nil {
 		return m.Title
 	}
 	return ""
 }
 
-func (m *SetBackingRiskParams) GetDescription() string {
+func (m *SetBackingRiskParamsProposal) GetDescription() string {
 	if m != nil {
 		return m.Description
 	}
 	return ""
 }
 
-func (m *SetBackingRiskParams) GetRiskParams() *BackingRiskParams {
+func (m *SetBackingRiskParamsProposal) GetRiskParams() *BackingRiskParams {
 	if m != nil {
 		return m.RiskParams
 	}
 	return nil
 }
 
-// SetCollateralRiskParams is a gov Content type to set collateral risk parameters.
-type SetCollateralRiskParams struct {
+// SetCollateralRiskParamsProposal is a gov Content type to set collateral risk
+// parameters.
+type SetCollateralRiskParamsProposal struct {
 	// title of the proposal
 	Title string `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	// proposal description
@@ -370,18 +378,18 @@ type SetCollateralRiskParams struct {
 	RiskParams *CollateralRiskParams `protobuf:"bytes,3,opt,name=risk_params,json=riskParams,proto3" json:"risk_params,omitempty"`
 }
 
-func (m *SetCollateralRiskParams) Reset()         { *m = SetCollateralRiskParams{} }
-func (m *SetCollateralRiskParams) String() string { return proto.CompactTextString(m) }
-func (*SetCollateralRiskParams) ProtoMessage()    {}
-func (*SetCollateralRiskParams) Descriptor() ([]byte, []int) {
+func (m *SetCollateralRiskParamsProposal) Reset()         { *m = SetCollateralRiskParamsProposal{} }
+func (m *SetCollateralRiskParamsProposal) String() string { return proto.CompactTextString(m) }
+func (*SetCollateralRiskParamsProposal) ProtoMessage()    {}
+func (*SetCollateralRiskParamsProposal) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ee82e911d469b50f, []int{5}
 }
-func (m *SetCollateralRiskParams) XXX_Unmarshal(b []byte) error {
+func (m *SetCollateralRiskParamsProposal) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *SetCollateralRiskParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *SetCollateralRiskParamsProposal) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_SetCollateralRiskParams.Marshal(b, m, deterministic)
+		return xxx_messageInfo_SetCollateralRiskParamsProposal.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -391,41 +399,42 @@ func (m *SetCollateralRiskParams) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *SetCollateralRiskParams) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SetCollateralRiskParams.Merge(m, src)
+func (m *SetCollateralRiskParamsProposal) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetCollateralRiskParamsProposal.Merge(m, src)
 }
-func (m *SetCollateralRiskParams) XXX_Size() int {
+func (m *SetCollateralRiskParamsProposal) XXX_Size() int {
 	return m.Size()
 }
-func (m *SetCollateralRiskParams) XXX_DiscardUnknown() {
-	xxx_messageInfo_SetCollateralRiskParams.DiscardUnknown(m)
+func (m *SetCollateralRiskParamsProposal) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetCollateralRiskParamsProposal.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_SetCollateralRiskParams proto.InternalMessageInfo
+var xxx_messageInfo_SetCollateralRiskParamsProposal proto.InternalMessageInfo
 
-func (m *SetCollateralRiskParams) GetTitle() string {
+func (m *SetCollateralRiskParamsProposal) GetTitle() string {
 	if m != nil {
 		return m.Title
 	}
 	return ""
 }
 
-func (m *SetCollateralRiskParams) GetDescription() string {
+func (m *SetCollateralRiskParamsProposal) GetDescription() string {
 	if m != nil {
 		return m.Description
 	}
 	return ""
 }
 
-func (m *SetCollateralRiskParams) GetRiskParams() *CollateralRiskParams {
+func (m *SetCollateralRiskParamsProposal) GetRiskParams() *CollateralRiskParams {
 	if m != nil {
 		return m.RiskParams
 	}
 	return nil
 }
 
-// BatchSetBackingRiskParams is a gov Content type to batch set backing coin risk parameters.
-type BatchSetBackingRiskParams struct {
+// BatchSetBackingRiskParamsProposal is a gov Content type to batch set backing
+// coin risk parameters.
+type BatchSetBackingRiskParamsProposal struct {
 	// title of the proposal
 	Title string `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	// proposal description
@@ -434,18 +443,18 @@ type BatchSetBackingRiskParams struct {
 	RiskParams []*BackingRiskParams `protobuf:"bytes,3,rep,name=risk_params,json=riskParams,proto3" json:"risk_params,omitempty"`
 }
 
-func (m *BatchSetBackingRiskParams) Reset()         { *m = BatchSetBackingRiskParams{} }
-func (m *BatchSetBackingRiskParams) String() string { return proto.CompactTextString(m) }
-func (*BatchSetBackingRiskParams) ProtoMessage()    {}
-func (*BatchSetBackingRiskParams) Descriptor() ([]byte, []int) {
+func (m *BatchSetBackingRiskParamsProposal) Reset()         { *m = BatchSetBackingRiskParamsProposal{} }
+func (m *BatchSetBackingRiskParamsProposal) String() string { return proto.CompactTextString(m) }
+func (*BatchSetBackingRiskParamsProposal) ProtoMessage()    {}
+func (*BatchSetBackingRiskParamsProposal) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ee82e911d469b50f, []int{6}
 }
-func (m *BatchSetBackingRiskParams) XXX_Unmarshal(b []byte) error {
+func (m *BatchSetBackingRiskParamsProposal) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *BatchSetBackingRiskParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *BatchSetBackingRiskParamsProposal) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_BatchSetBackingRiskParams.Marshal(b, m, deterministic)
+		return xxx_messageInfo_BatchSetBackingRiskParamsProposal.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -455,41 +464,42 @@ func (m *BatchSetBackingRiskParams) XXX_Marshal(b []byte, deterministic bool) ([
 		return b[:n], nil
 	}
 }
-func (m *BatchSetBackingRiskParams) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BatchSetBackingRiskParams.Merge(m, src)
+func (m *BatchSetBackingRiskParamsProposal) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BatchSetBackingRiskParamsProposal.Merge(m, src)
 }
-func (m *BatchSetBackingRiskParams) XXX_Size() int {
+func (m *BatchSetBackingRiskParamsProposal) XXX_Size() int {
 	return m.Size()
 }
-func (m *BatchSetBackingRiskParams) XXX_DiscardUnknown() {
-	xxx_messageInfo_BatchSetBackingRiskParams.DiscardUnknown(m)
+func (m *BatchSetBackingRiskParamsProposal) XXX_DiscardUnknown() {
+	xxx_messageInfo_BatchSetBackingRiskParamsProposal.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_BatchSetBackingRiskParams proto.InternalMessageInfo
+var xxx_messageInfo_BatchSetBackingRiskParamsProposal proto.InternalMessageInfo
 
-func (m *BatchSetBackingRiskParams) GetTitle() string {
+func (m *BatchSetBackingRiskParamsProposal) GetTitle() string {
 	if m != nil {
 		return m.Title
 	}
 	return ""
 }
 
-func (m *BatchSetBackingRiskParams) GetDescription() string {
+func (m *BatchSetBackingRiskParamsProposal) GetDescription() string {
 	if m != nil {
 		return m.Description
 	}
 	return ""
 }
 
-func (m *BatchSetBackingRiskParams) GetRiskParams() []*BackingRiskParams {
+func (m *BatchSetBackingRiskParamsProposal) GetRiskParams() []*BackingRiskParams {
 	if m != nil {
 		return m.RiskParams
 	}
 	return nil
 }
 
-// BatchSetCollateralRiskParams is a gov Content type to batch set collateral risk parameters.
-type BatchSetCollateralRiskParams struct {
+// BatchSetCollateralRiskParamsProposal is a gov Content type to batch set
+// collateral risk parameters.
+type BatchSetCollateralRiskParamsProposal struct {
 	// title of the proposal
 	Title string `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	// proposal description
@@ -498,18 +508,18 @@ type BatchSetCollateralRiskParams struct {
 	RiskParams []*CollateralRiskParams `protobuf:"bytes,3,rep,name=risk_params,json=riskParams,proto3" json:"risk_params,omitempty"`
 }
 
-func (m *BatchSetCollateralRiskParams) Reset()         { *m = BatchSetCollateralRiskParams{} }
-func (m *BatchSetCollateralRiskParams) String() string { return proto.CompactTextString(m) }
-func (*BatchSetCollateralRiskParams) ProtoMessage()    {}
-func (*BatchSetCollateralRiskParams) Descriptor() ([]byte, []int) {
+func (m *BatchSetCollateralRiskParamsProposal) Reset()         { *m = BatchSetCollateralRiskParamsProposal{} }
+func (m *BatchSetCollateralRiskParamsProposal) String() string { return proto.CompactTextString(m) }
+func (*BatchSetCollateralRiskParamsProposal) ProtoMessage()    {}
+func (*BatchSetCollateralRiskParamsProposal) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ee82e911d469b50f, []int{7}
 }
-func (m *BatchSetCollateralRiskParams) XXX_Unmarshal(b []byte) error {
+func (m *BatchSetCollateralRiskParamsProposal) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *BatchSetCollateralRiskParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *BatchSetCollateralRiskParamsProposal) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_BatchSetCollateralRiskParams.Marshal(b, m, deterministic)
+		return xxx_messageInfo_BatchSetCollateralRiskParamsProposal.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -519,33 +529,33 @@ func (m *BatchSetCollateralRiskParams) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
-func (m *BatchSetCollateralRiskParams) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BatchSetCollateralRiskParams.Merge(m, src)
+func (m *BatchSetCollateralRiskParamsProposal) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BatchSetCollateralRiskParamsProposal.Merge(m, src)
 }
-func (m *BatchSetCollateralRiskParams) XXX_Size() int {
+func (m *BatchSetCollateralRiskParamsProposal) XXX_Size() int {
 	return m.Size()
 }
-func (m *BatchSetCollateralRiskParams) XXX_DiscardUnknown() {
-	xxx_messageInfo_BatchSetCollateralRiskParams.DiscardUnknown(m)
+func (m *BatchSetCollateralRiskParamsProposal) XXX_DiscardUnknown() {
+	xxx_messageInfo_BatchSetCollateralRiskParamsProposal.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_BatchSetCollateralRiskParams proto.InternalMessageInfo
+var xxx_messageInfo_BatchSetCollateralRiskParamsProposal proto.InternalMessageInfo
 
-func (m *BatchSetCollateralRiskParams) GetTitle() string {
+func (m *BatchSetCollateralRiskParamsProposal) GetTitle() string {
 	if m != nil {
 		return m.Title
 	}
 	return ""
 }
 
-func (m *BatchSetCollateralRiskParams) GetDescription() string {
+func (m *BatchSetCollateralRiskParamsProposal) GetDescription() string {
 	if m != nil {
 		return m.Description
 	}
 	return ""
 }
 
-func (m *BatchSetCollateralRiskParams) GetRiskParams() []*CollateralRiskParams {
+func (m *BatchSetCollateralRiskParamsProposal) GetRiskParams() []*CollateralRiskParams {
 	if m != nil {
 		return m.RiskParams
 	}
@@ -557,62 +567,62 @@ func init() {
 	proto.RegisterType((*CollateralRiskParams)(nil), "merlion.maker.v1.CollateralRiskParams")
 	proto.RegisterType((*RegisterBackingProposal)(nil), "merlion.maker.v1.RegisterBackingProposal")
 	proto.RegisterType((*RegisterCollateralProposal)(nil), "merlion.maker.v1.RegisterCollateralProposal")
-	proto.RegisterType((*SetBackingRiskParams)(nil), "merlion.maker.v1.SetBackingRiskParams")
-	proto.RegisterType((*SetCollateralRiskParams)(nil), "merlion.maker.v1.SetCollateralRiskParams")
-	proto.RegisterType((*BatchSetBackingRiskParams)(nil), "merlion.maker.v1.BatchSetBackingRiskParams")
-	proto.RegisterType((*BatchSetCollateralRiskParams)(nil), "merlion.maker.v1.BatchSetCollateralRiskParams")
+	proto.RegisterType((*SetBackingRiskParamsProposal)(nil), "merlion.maker.v1.SetBackingRiskParamsProposal")
+	proto.RegisterType((*SetCollateralRiskParamsProposal)(nil), "merlion.maker.v1.SetCollateralRiskParamsProposal")
+	proto.RegisterType((*BatchSetBackingRiskParamsProposal)(nil), "merlion.maker.v1.BatchSetBackingRiskParamsProposal")
+	proto.RegisterType((*BatchSetCollateralRiskParamsProposal)(nil), "merlion.maker.v1.BatchSetCollateralRiskParamsProposal")
 }
 
 func init() { proto.RegisterFile("merlion/maker/v1/maker.proto", fileDescriptor_ee82e911d469b50f) }
 
 var fileDescriptor_ee82e911d469b50f = []byte{
-	// 727 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x96, 0x5d, 0x4b, 0x1b, 0x4d,
-	0x14, 0xc7, 0xb3, 0x8f, 0xef, 0x67, 0x7d, 0x7b, 0xd6, 0x7d, 0x70, 0x1f, 0x91, 0x28, 0x0a, 0x62,
-	0x0b, 0x26, 0xd8, 0xde, 0xf5, 0x32, 0xb5, 0x7a, 0xa1, 0x16, 0xbb, 0x4a, 0xa1, 0xad, 0xb0, 0xcc,
-	0x6e, 0x4e, 0x93, 0x21, 0xbb, 0x3b, 0xe9, 0xcc, 0x44, 0xa2, 0x9f, 0xa2, 0xd7, 0x85, 0x52, 0xa1,
-	0xf4, 0xbb, 0xf4, 0xd2, 0xbb, 0x96, 0x5e, 0x94, 0xa2, 0x17, 0xed, 0xc7, 0x28, 0xb3, 0x99, 0x24,
-	0xab, 0x06, 0xca, 0xc6, 0x0a, 0x5e, 0x65, 0xe6, 0x64, 0xcf, 0x8f, 0x33, 0xff, 0x3d, 0xff, 0x33,
-	0x0b, 0xf3, 0x11, 0xf2, 0x90, 0xb2, 0xb8, 0x18, 0x91, 0x1a, 0xf2, 0xe2, 0xd1, 0x7a, 0x6b, 0x51,
-	0xa8, 0x73, 0x26, 0x99, 0x35, 0xad, 0xff, 0x2d, 0xb4, 0x82, 0x47, 0xeb, 0x73, 0x76, 0x85, 0x55,
-	0x58, 0xf2, 0x67, 0x51, 0xad, 0x5a, 0xcf, 0x2d, 0xfd, 0x1c, 0x82, 0x7f, 0x4b, 0x24, 0xa8, 0xd1,
-	0xb8, 0xe2, 0x52, 0x51, 0xdb, 0x23, 0x9c, 0x44, 0xc2, 0x5a, 0x86, 0x09, 0xbf, 0x15, 0xf4, 0xca,
-	0x18, 0xb3, 0xc8, 0x31, 0x16, 0x8d, 0xd5, 0x31, 0x77, 0x5c, 0x07, 0x37, 0x54, 0xcc, 0x72, 0x60,
-	0x04, 0x63, 0xe2, 0x87, 0x58, 0x76, 0xfe, 0x59, 0x34, 0x56, 0x47, 0xdd, 0xf6, 0xd6, 0xda, 0x06,
-	0x33, 0x22, 0x4d, 0x4f, 0x3f, 0xed, 0x0c, 0xa8, 0xe4, 0xd2, 0xfd, 0x6f, 0xdf, 0x17, 0x56, 0x2a,
-	0x54, 0x56, 0x1b, 0x7e, 0x21, 0x60, 0x51, 0x31, 0x60, 0x22, 0x62, 0x42, 0xff, 0xac, 0x89, 0x72,
-	0xad, 0x28, 0x8f, 0xeb, 0x28, 0x0a, 0x1b, 0x18, 0xb8, 0x10, 0x91, 0xa6, 0xae, 0xca, 0xda, 0x81,
-	0x71, 0x05, 0x8b, 0x90, 0x7b, 0x11, 0x8d, 0xa5, 0x33, 0xd8, 0x17, 0x6d, 0x17, 0xf9, 0x2e, 0x8d,
-	0xa5, 0xf5, 0x04, 0x46, 0x15, 0xc5, 0x7b, 0x8d, 0xe8, 0x0c, 0x65, 0x26, 0x8d, 0xa8, 0xdc, 0x4d,
-	0x44, 0x85, 0xf1, 0x1b, 0x3c, 0x4e, 0x30, 0xc3, 0xd9, 0x31, 0x2a, 0x57, 0x61, 0xb6, 0xc1, 0xf4,
-	0x1b, 0xc7, 0x4a, 0xa7, 0x84, 0x34, 0x92, 0xfd, 0x68, 0x3a, 0x5d, 0xc1, 0x5e, 0xc1, 0x0c, 0xc7,
-	0x80, 0x85, 0x21, 0x91, 0xc8, 0x49, 0x48, 0x4f, 0x30, 0x81, 0x8e, 0x66, 0x86, 0x5a, 0x57, 0x30,
-	0x0a, 0x7e, 0x08, 0x76, 0xa2, 0x5b, 0x9d, 0xd3, 0x00, 0x3d, 0x59, 0xe5, 0x28, 0xaa, 0x2c, 0x2c,
-	0x3b, 0x63, 0xd9, 0xe9, 0x8a, 0xb3, 0xa7, 0x30, 0x07, 0x6d, 0x8a, 0xa2, 0x27, 0x72, 0x5e, 0xa5,
-	0x43, 0x76, 0xba, 0xe2, 0x5c, 0xa6, 0x3f, 0x1a, 0xfc, 0x75, 0xba, 0x90, 0x5b, 0xfa, 0x32, 0x0c,
-	0xf6, 0xe3, 0xce, 0xb1, 0x52, 0xcd, 0x7e, 0x0f, 0xa6, 0xbb, 0xc7, 0xbd, 0xd4, 0xef, 0x53, 0xdd,
-	0xf8, 0x9f, 0x5a, 0xfe, 0x19, 0x4c, 0xaa, 0x2e, 0xed, 0x26, 0xf4, 0xd1, 0xf5, 0x13, 0x11, 0x69,
-	0x76, 0x2b, 0xfc, 0xcb, 0x8d, 0xef, 0xc1, 0x7f, 0x21, 0x7d, 0xd3, 0xa0, 0x65, 0x22, 0x29, 0x8b,
-	0x53, 0x1a, 0x67, 0x77, 0x81, 0x9d, 0x02, 0x75, 0xdf, 0xe1, 0x53, 0x98, 0x08, 0x19, 0x89, 0x3d,
-	0xc9, 0xbc, 0x23, 0x12, 0x36, 0xfa, 0xf1, 0x85, 0xa9, 0x00, 0x07, 0xec, 0xb9, 0x4a, 0xb7, 0x5e,
-	0xc0, 0x8c, 0x4f, 0x04, 0x0d, 0xbc, 0xcb, 0xd4, 0xec, 0x1e, 0x99, 0x4e, 0x30, 0x3b, 0x29, 0xf4,
-	0x21, 0xd8, 0x01, 0x91, 0x24, 0x3c, 0x96, 0x0a, 0xaf, 0xe4, 0xe0, 0xea, 0x30, 0xfd, 0x58, 0xa5,
-	0xc3, 0xd9, 0xa1, 0x2c, 0x76, 0x15, 0xc5, 0xda, 0x87, 0xa9, 0xb4, 0xd2, 0xca, 0x83, 0xd9, 0x5d,
-	0x32, 0x99, 0x42, 0xe8, 0x81, 0xd3, 0x99, 0x5b, 0xd0, 0xff, 0xdc, 0xda, 0x85, 0x71, 0x1a, 0x4b,
-	0xe4, 0x28, 0x5a, 0x28, 0x33, 0xfb, 0x3b, 0x6a, 0xe7, 0x6f, 0x22, 0x6a, 0x67, 0xbd, 0x37, 0x60,
-	0xd6, 0xc5, 0x0a, 0x15, 0x12, 0xb9, 0x9e, 0xda, 0x7b, 0x9c, 0xd5, 0x99, 0x20, 0xa1, 0x65, 0xc3,
-	0x90, 0xa4, 0x32, 0x44, 0xed, 0xa8, 0xd6, 0xc6, 0x5a, 0x04, 0xb3, 0x8c, 0x22, 0xe0, 0xb4, 0xae,
-	0xce, 0x97, 0x78, 0x69, 0xcc, 0x4d, 0x87, 0xac, 0x0d, 0x30, 0x39, 0x15, 0x35, 0xaf, 0x9e, 0x78,
-	0x34, 0x31, 0x93, 0xf9, 0x60, 0xb9, 0x70, 0xf5, 0x56, 0x2b, 0x5c, 0xbb, 0xbb, 0x5c, 0xe0, 0x9d,
-	0xb5, 0xae, 0xef, 0xa3, 0x01, 0x73, 0xed, 0xfa, 0xba, 0xfe, 0xba, 0x71, 0x89, 0x5b, 0xbd, 0x4a,
-	0x5c, 0xb9, 0x5e, 0x62, 0xaf, 0xa1, 0xd3, 0xa3, 0xca, 0x77, 0x06, 0xd8, 0xfb, 0x28, 0xaf, 0x5f,
-	0xc6, 0x77, 0x41, 0xc2, 0x53, 0x03, 0x66, 0xf7, 0x51, 0xf6, 0x9c, 0x9f, 0x77, 0x44, 0xbf, 0x0f,
-	0x06, 0xfc, 0x5f, 0x22, 0x32, 0xa8, 0xde, 0xae, 0x88, 0x03, 0xfd, 0x8b, 0xf8, 0xc9, 0x80, 0xf9,
-	0x76, 0x85, 0xb7, 0xab, 0xe4, 0xc0, 0x4d, 0x94, 0x2c, 0x6d, 0x7d, 0x3e, 0xcf, 0x1b, 0x67, 0xe7,
-	0x79, 0xe3, 0xc7, 0x79, 0xde, 0x78, 0x7b, 0x91, 0xcf, 0x9d, 0x5d, 0xe4, 0x73, 0x5f, 0x2f, 0xf2,
-	0xb9, 0x97, 0x6b, 0xa9, 0x21, 0xa1, 0xe9, 0x6b, 0x27, 0x2c, 0xc6, 0xf6, 0xa6, 0xd8, 0xd4, 0x5f,
-	0xa3, 0xc9, 0xbc, 0xf0, 0x87, 0x93, 0x6f, 0xcc, 0x87, 0xbf, 0x03, 0x00, 0x00, 0xff, 0xff, 0x20,
-	0x41, 0x17, 0x0a, 0xab, 0x0a, 0x00, 0x00,
+	// 726 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x96, 0xcd, 0x6e, 0xd3, 0x40,
+	0x10, 0xc7, 0x63, 0xfa, 0x3d, 0xee, 0x17, 0x6e, 0x10, 0x56, 0x55, 0xa5, 0xa5, 0x45, 0x55, 0x41,
+	0x6a, 0xa2, 0xc2, 0x8d, 0x63, 0x28, 0xed, 0xa1, 0x2d, 0x2a, 0x6e, 0x85, 0x04, 0x54, 0xb2, 0xd6,
+	0xce, 0x90, 0xac, 0x62, 0x7b, 0xc3, 0xee, 0xa6, 0x4a, 0xfb, 0x14, 0xbc, 0x00, 0x12, 0x82, 0x03,
+	0x5c, 0x78, 0x0f, 0x8e, 0xbd, 0x81, 0x38, 0x20, 0xd4, 0x1e, 0xe0, 0x31, 0xd0, 0x3a, 0x9b, 0xc4,
+	0x6d, 0x22, 0x21, 0xa7, 0xa8, 0xea, 0x29, 0xde, 0x89, 0xe7, 0xa7, 0x99, 0xbf, 0xe7, 0x3f, 0x36,
+	0xcc, 0x85, 0xc8, 0x03, 0xca, 0xa2, 0x42, 0x48, 0xaa, 0xc8, 0x0b, 0x87, 0x6b, 0xcd, 0x8b, 0x7c,
+	0x8d, 0x33, 0xc9, 0xac, 0x69, 0xfd, 0x6f, 0xbe, 0x19, 0x3c, 0x5c, 0x9b, 0xcd, 0x96, 0x59, 0x99,
+	0xc5, 0x7f, 0x16, 0xd4, 0x55, 0xf3, 0xbe, 0xc5, 0xdf, 0x43, 0x70, 0xb3, 0x48, 0xfc, 0x2a, 0x8d,
+	0xca, 0x0e, 0x15, 0xd5, 0x5d, 0xc2, 0x49, 0x28, 0xac, 0x25, 0x98, 0xf0, 0x9a, 0x41, 0xb7, 0x84,
+	0x11, 0x0b, 0x6d, 0x63, 0xc1, 0x58, 0x19, 0x73, 0xc6, 0x75, 0x70, 0x5d, 0xc5, 0x2c, 0x1b, 0x46,
+	0x30, 0x22, 0x5e, 0x80, 0x25, 0xfb, 0xc6, 0x82, 0xb1, 0x32, 0xea, 0xb4, 0x8e, 0xd6, 0x16, 0x98,
+	0x21, 0x69, 0xb8, 0xfa, 0x6e, 0x7b, 0x40, 0x25, 0x17, 0xef, 0xff, 0xf8, 0x39, 0xbf, 0x5c, 0xa6,
+	0xb2, 0x52, 0xf7, 0xf2, 0x3e, 0x0b, 0x0b, 0x3e, 0x13, 0x21, 0x13, 0xfa, 0x67, 0x55, 0x94, 0xaa,
+	0x05, 0x79, 0x54, 0x43, 0x91, 0x5f, 0x47, 0xdf, 0x81, 0x90, 0x34, 0x74, 0x55, 0xd6, 0x36, 0x8c,
+	0x2b, 0x58, 0x88, 0xdc, 0x0d, 0x69, 0x24, 0xed, 0xc1, 0xbe, 0x68, 0x3b, 0xc8, 0x77, 0x68, 0x24,
+	0xad, 0x27, 0x30, 0xaa, 0x28, 0xee, 0x6b, 0x44, 0x7b, 0x28, 0x35, 0x69, 0x44, 0xe5, 0x6e, 0x20,
+	0x2a, 0x8c, 0x57, 0xe7, 0x51, 0x8c, 0x19, 0x4e, 0x8f, 0x51, 0xb9, 0x0a, 0xb3, 0x05, 0xa6, 0x57,
+	0x3f, 0x52, 0x3a, 0xc5, 0xa4, 0x91, 0xf4, 0xad, 0xe9, 0x74, 0x05, 0x7b, 0x05, 0x33, 0x1c, 0x7d,
+	0x16, 0x04, 0x44, 0x22, 0x27, 0x01, 0x3d, 0xc6, 0x18, 0x3a, 0x9a, 0x1a, 0x6a, 0x5d, 0xc0, 0x28,
+	0xf8, 0x01, 0x64, 0x63, 0xdd, 0x6a, 0x9c, 0xfa, 0xe8, 0xca, 0x0a, 0x47, 0x51, 0x61, 0x41, 0xc9,
+	0x1e, 0x4b, 0x4f, 0x57, 0x9c, 0x5d, 0x85, 0xd9, 0x6f, 0x51, 0x14, 0x3d, 0x96, 0xf3, 0x22, 0x1d,
+	0xd2, 0xd3, 0x15, 0xe7, 0x3c, 0xfd, 0xd1, 0xe0, 0x9f, 0xf7, 0xf3, 0x99, 0xc5, 0x6f, 0xc3, 0x90,
+	0x7d, 0xdc, 0x6e, 0x2b, 0x31, 0xec, 0xf7, 0x60, 0xba, 0xd3, 0xee, 0xb9, 0x79, 0x9f, 0xea, 0xc4,
+	0xff, 0x35, 0xf2, 0xcf, 0x60, 0x52, 0x4d, 0x69, 0x27, 0xa1, 0x8f, 0xa9, 0x9f, 0x08, 0x49, 0xa3,
+	0x53, 0xe1, 0x7f, 0x1e, 0x7c, 0x17, 0x6e, 0x05, 0xf4, 0x4d, 0x9d, 0x96, 0x88, 0xa4, 0x2c, 0x4a,
+	0x68, 0x9c, 0xde, 0x05, 0xd9, 0x04, 0xa8, 0xf3, 0x0c, 0x9f, 0xc2, 0x44, 0xc0, 0x48, 0xe4, 0x4a,
+	0xe6, 0x1e, 0x92, 0xa0, 0xde, 0x8f, 0x2f, 0x4c, 0x05, 0xd8, 0x67, 0xcf, 0x55, 0xba, 0xf5, 0x02,
+	0x66, 0x3c, 0x22, 0xa8, 0xef, 0x9e, 0xa7, 0xa6, 0xf7, 0xc8, 0x74, 0x8c, 0xd9, 0x4e, 0xa0, 0x0f,
+	0x20, 0xeb, 0x13, 0x49, 0x82, 0x23, 0xa9, 0xf0, 0x4a, 0x0e, 0xae, 0x9a, 0xe9, 0xc7, 0x2a, 0x6d,
+	0xce, 0x36, 0x65, 0x91, 0xa3, 0x28, 0xd6, 0x1e, 0x4c, 0x25, 0x95, 0x56, 0x1e, 0x4c, 0xef, 0x92,
+	0xc9, 0x04, 0x42, 0x2f, 0x9c, 0xf6, 0xde, 0x82, 0xfe, 0xf7, 0xd6, 0x0e, 0x8c, 0xd3, 0x48, 0x22,
+	0x47, 0xd1, 0x44, 0x99, 0xe9, 0x9f, 0x51, 0x2b, 0x7f, 0x03, 0x51, 0x3b, 0xeb, 0x9d, 0x01, 0xb7,
+	0x1d, 0x2c, 0x53, 0x21, 0x91, 0xeb, 0xad, 0xbd, 0xcb, 0x59, 0x8d, 0x09, 0x12, 0x58, 0x59, 0x18,
+	0x92, 0x54, 0x06, 0xa8, 0x1d, 0xd5, 0x3c, 0x58, 0x0b, 0x60, 0x96, 0x50, 0xf8, 0x9c, 0xd6, 0x54,
+	0x7f, 0xb1, 0x97, 0xc6, 0x9c, 0x64, 0xc8, 0x5a, 0x07, 0x93, 0x53, 0x51, 0x75, 0x6b, 0xb1, 0x47,
+	0x63, 0x33, 0x99, 0x0f, 0x96, 0xf2, 0x17, 0xdf, 0x6a, 0xf9, 0xae, 0x77, 0x97, 0x03, 0xbc, 0x7d,
+	0xad, 0xeb, 0xfb, 0x68, 0xc0, 0x6c, 0xab, 0xbe, 0x8e, 0xbf, 0x2e, 0x5d, 0xe2, 0x66, 0xaf, 0x12,
+	0x97, 0xbb, 0x4b, 0xec, 0xb5, 0x74, 0x7a, 0x54, 0xf9, 0xc1, 0x80, 0xb9, 0x3d, 0x94, 0x5d, 0x0d,
+	0x5d, 0x2b, 0x29, 0x3f, 0x1b, 0x30, 0xbf, 0x87, 0xb2, 0x57, 0x4b, 0xd7, 0x4d, 0xcf, 0x4f, 0x06,
+	0xdc, 0x29, 0x12, 0xe9, 0x57, 0xae, 0x46, 0xd4, 0x81, 0xfe, 0x45, 0xfd, 0x62, 0xc0, 0xdd, 0x56,
+	0xa5, 0x57, 0xa3, 0xec, 0xc0, 0x65, 0x94, 0x2d, 0x6e, 0x7e, 0x3d, 0xcd, 0x19, 0x27, 0xa7, 0x39,
+	0xe3, 0xd7, 0x69, 0xce, 0x78, 0x7b, 0x96, 0xcb, 0x9c, 0x9c, 0xe5, 0x32, 0xdf, 0xcf, 0x72, 0x99,
+	0x97, 0xab, 0x89, 0x25, 0xa2, 0xe9, 0xab, 0xc7, 0x2c, 0xc2, 0xd6, 0xa1, 0xd0, 0xd0, 0x5f, 0xab,
+	0xf1, 0x3e, 0xf1, 0x86, 0xe3, 0x6f, 0xd0, 0x87, 0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0xbb, 0xf6,
+	0x45, 0x6c, 0xcb, 0x0a, 0x00, 0x00,
 }
 
 func (m *BackingRiskParams) Marshal() (dAtA []byte, err error) {
@@ -997,7 +1007,7 @@ func (m *RegisterCollateralProposal) MarshalToSizedBuffer(dAtA []byte) (int, err
 	return len(dAtA) - i, nil
 }
 
-func (m *SetBackingRiskParams) Marshal() (dAtA []byte, err error) {
+func (m *SetBackingRiskParamsProposal) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1007,12 +1017,12 @@ func (m *SetBackingRiskParams) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *SetBackingRiskParams) MarshalTo(dAtA []byte) (int, error) {
+func (m *SetBackingRiskParamsProposal) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *SetBackingRiskParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *SetBackingRiskParamsProposal) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1046,7 +1056,7 @@ func (m *SetBackingRiskParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *SetCollateralRiskParams) Marshal() (dAtA []byte, err error) {
+func (m *SetCollateralRiskParamsProposal) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1056,12 +1066,12 @@ func (m *SetCollateralRiskParams) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *SetCollateralRiskParams) MarshalTo(dAtA []byte) (int, error) {
+func (m *SetCollateralRiskParamsProposal) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *SetCollateralRiskParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *SetCollateralRiskParamsProposal) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1095,7 +1105,7 @@ func (m *SetCollateralRiskParams) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *BatchSetBackingRiskParams) Marshal() (dAtA []byte, err error) {
+func (m *BatchSetBackingRiskParamsProposal) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1105,12 +1115,12 @@ func (m *BatchSetBackingRiskParams) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *BatchSetBackingRiskParams) MarshalTo(dAtA []byte) (int, error) {
+func (m *BatchSetBackingRiskParamsProposal) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *BatchSetBackingRiskParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *BatchSetBackingRiskParamsProposal) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1146,7 +1156,7 @@ func (m *BatchSetBackingRiskParams) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
-func (m *BatchSetCollateralRiskParams) Marshal() (dAtA []byte, err error) {
+func (m *BatchSetCollateralRiskParamsProposal) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1156,12 +1166,12 @@ func (m *BatchSetCollateralRiskParams) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *BatchSetCollateralRiskParams) MarshalTo(dAtA []byte) (int, error) {
+func (m *BatchSetCollateralRiskParamsProposal) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *BatchSetCollateralRiskParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *BatchSetCollateralRiskParamsProposal) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1350,7 +1360,7 @@ func (m *RegisterCollateralProposal) Size() (n int) {
 	return n
 }
 
-func (m *SetBackingRiskParams) Size() (n int) {
+func (m *SetBackingRiskParamsProposal) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1371,7 +1381,7 @@ func (m *SetBackingRiskParams) Size() (n int) {
 	return n
 }
 
-func (m *SetCollateralRiskParams) Size() (n int) {
+func (m *SetCollateralRiskParamsProposal) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1392,7 +1402,7 @@ func (m *SetCollateralRiskParams) Size() (n int) {
 	return n
 }
 
-func (m *BatchSetBackingRiskParams) Size() (n int) {
+func (m *BatchSetBackingRiskParamsProposal) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1415,7 +1425,7 @@ func (m *BatchSetBackingRiskParams) Size() (n int) {
 	return n
 }
 
-func (m *BatchSetCollateralRiskParams) Size() (n int) {
+func (m *BatchSetCollateralRiskParamsProposal) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2560,7 +2570,7 @@ func (m *RegisterCollateralProposal) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *SetBackingRiskParams) Unmarshal(dAtA []byte) error {
+func (m *SetBackingRiskParamsProposal) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2583,10 +2593,10 @@ func (m *SetBackingRiskParams) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: SetBackingRiskParams: wiretype end group for non-group")
+			return fmt.Errorf("proto: SetBackingRiskParamsProposal: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: SetBackingRiskParams: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: SetBackingRiskParamsProposal: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2710,7 +2720,7 @@ func (m *SetBackingRiskParams) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *SetCollateralRiskParams) Unmarshal(dAtA []byte) error {
+func (m *SetCollateralRiskParamsProposal) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2733,10 +2743,10 @@ func (m *SetCollateralRiskParams) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: SetCollateralRiskParams: wiretype end group for non-group")
+			return fmt.Errorf("proto: SetCollateralRiskParamsProposal: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: SetCollateralRiskParams: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: SetCollateralRiskParamsProposal: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2860,7 +2870,7 @@ func (m *SetCollateralRiskParams) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *BatchSetBackingRiskParams) Unmarshal(dAtA []byte) error {
+func (m *BatchSetBackingRiskParamsProposal) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2883,10 +2893,10 @@ func (m *BatchSetBackingRiskParams) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: BatchSetBackingRiskParams: wiretype end group for non-group")
+			return fmt.Errorf("proto: BatchSetBackingRiskParamsProposal: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: BatchSetBackingRiskParams: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: BatchSetBackingRiskParamsProposal: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3008,7 +3018,7 @@ func (m *BatchSetBackingRiskParams) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *BatchSetCollateralRiskParams) Unmarshal(dAtA []byte) error {
+func (m *BatchSetCollateralRiskParamsProposal) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3031,10 +3041,10 @@ func (m *BatchSetCollateralRiskParams) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: BatchSetCollateralRiskParams: wiretype end group for non-group")
+			return fmt.Errorf("proto: BatchSetCollateralRiskParamsProposal: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: BatchSetCollateralRiskParams: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: BatchSetCollateralRiskParamsProposal: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

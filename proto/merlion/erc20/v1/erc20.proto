@@ -2,7 +2,6 @@ syntax = "proto3";
 package merlion.erc20.v1;
 
 import "gogoproto/gogo.proto";
-import "cosmos/bank/v1beta1/bank.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/erc20/types";
 

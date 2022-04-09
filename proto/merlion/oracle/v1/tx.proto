@@ -1,6 +1,7 @@
 syntax = "proto3";
 package merlion.oracle.v1;
 
+import "google/api/annotations.proto";
 import "gogoproto/gogo.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/oracle/types";
@@ -8,13 +9,25 @@ option go_package = "github.com/merlion-zone/merlion/x/oracle/types";
 // Msg defines the Msg service.
 service Msg {
   // AggregateExchangeRatePrevote submits aggregate exchange rate prevote.
-  rpc AggregateExchangeRatePrevote(MsgAggregateExchangeRatePrevote) returns (MsgAggregateExchangeRatePrevoteResponse);
+  rpc AggregateExchangeRatePrevote(MsgAggregateExchangeRatePrevote)
+      returns (MsgAggregateExchangeRatePrevoteResponse) {
+    option (google.api.http).get =
+        "/merlion/oracle/v1/tx/aggregate_exchange_rate_prevote";
+  }
 
   // AggregateExchangeRateVote submits aggregate exchange rate vote.
-  rpc AggregateExchangeRateVote(MsgAggregateExchangeRateVote) returns (MsgAggregateExchangeRateVoteResponse);
+  rpc AggregateExchangeRateVote(MsgAggregateExchangeRateVote)
+      returns (MsgAggregateExchangeRateVoteResponse) {
+    option (google.api.http).get =
+        "/merlion/oracle/v1/tx/aggregate_exchange_rate_vote";
+  }
 
   // DelegateFeedConsent sets the feeder delegation.
-  rpc DelegateFeedConsent(MsgDelegateFeedConsent) returns (MsgDelegateFeedConsentResponse);
+  rpc DelegateFeedConsent(MsgDelegateFeedConsent)
+      returns (MsgDelegateFeedConsentResponse) {
+    option (google.api.http).get =
+        "/merlion/oracle/v1/tx/delegate_feed_consent";
+  }
 }
 
 // MsgAggregateExchangeRatePrevote defines a message to submit
@@ -28,9 +41,9 @@ message MsgAggregateExchangeRatePrevote {
   string validator = 3;
 }
 
-// MsgAggregateExchangeRatePrevoteResponse defines the MsgAggregateExchangeRatePrevote response type.
-message MsgAggregateExchangeRatePrevoteResponse {
-}
+// MsgAggregateExchangeRatePrevoteResponse defines the
+// MsgAggregateExchangeRatePrevote response type.
+message MsgAggregateExchangeRatePrevoteResponse {}
 
 // MsgAggregateExchangeRateVote defines a message to submit
 // aggregate exchange rate vote.
@@ -44,7 +57,8 @@ message MsgAggregateExchangeRateVote {
   string validator = 4;
 }
 
-// MsgAggregateExchangeRateVoteResponse defines the MsgAggregateExchangeRateVote response type.
+// MsgAggregateExchangeRateVoteResponse defines the MsgAggregateExchangeRateVote
+// response type.
 message MsgAggregateExchangeRateVoteResponse {}
 
 // MsgDelegateFeedConsent defines a message to
@@ -57,5 +71,6 @@ message MsgDelegateFeedConsent {
   string delegate = 2;
 }
 
-// MsgDelegateFeedConsentResponse defines the MsgDelegateFeedConsent response type.
+// MsgDelegateFeedConsentResponse defines the MsgDelegateFeedConsent response
+// type.
 message MsgDelegateFeedConsentResponse {}

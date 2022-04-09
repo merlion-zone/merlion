@@ -236,7 +236,8 @@ func (m *MsgBurnBySwapResponse) GetLionOut() types.Coin {
 	return types.Coin{}
 }
 
-// MsgMintByCollateral represents a message to mint Mer stablecoins by locking collateral.
+// MsgMintByCollateral represents a message to mint Mer stablecoins by locking
+// collateral.
 type MsgMintByCollateral struct {
 	Sender    string     `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty" yaml:"sender"`
 	To        string     `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty" yaml:"to"`
@@ -330,7 +331,8 @@ func (m *MsgMintByCollateralResponse) GetLionIn() types.Coin {
 	return types.Coin{}
 }
 
-// MsgBurnByCollateral represents a message to burn Mer stablecoins by unlocking collateral.
+// MsgBurnByCollateral represents a message to burn Mer stablecoins by unlocking
+// collateral.
 type MsgBurnByCollateral struct {
 	Sender     string     `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty" yaml:"sender"`
 	To         string     `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty" yaml:"to"`
@@ -664,7 +666,8 @@ func (m *MsgBuyBackResponse) GetBackingOut() types.Coin {
 	return types.Coin{}
 }
 
-// MsgReCollateralize represents a message to re-collateralize strong-backing assets.
+// MsgReCollateralize represents a message to re-collateralize strong-backing
+// assets.
 type MsgReCollateralize struct {
 	Sender     string     `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty" yaml:"sender"`
 	To         string     `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty" yaml:"to"`
@@ -853,13 +856,17 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// MintBySwap mints Mer stablecoins by swapping in strong-backing assets and Lion coins.
+	// MintBySwap mints Mer stablecoins by swapping in strong-backing assets and
+	// Lion coins.
 	MintBySwap(ctx context.Context, in *MsgMintBySwap, opts ...grpc.CallOption) (*MsgMintBySwapResponse, error)
-	// BurnBySwap burns Mer stablecoins by swapping out strong-backing assets and Lion coins.
+	// BurnBySwap burns Mer stablecoins by swapping out strong-backing assets and
+	// Lion coins.
 	BurnBySwap(ctx context.Context, in *MsgBurnBySwap, opts ...grpc.CallOption) (*MsgBurnBySwapResponse, error)
-	// MintByCollateral mints Mer stablecoins by locking collateral assets and spending Lion coins.
+	// MintByCollateral mints Mer stablecoins by locking collateral assets and
+	// spending Lion coins.
 	MintByCollateral(ctx context.Context, in *MsgMintByCollateral, opts ...grpc.CallOption) (*MsgMintByCollateralResponse, error)
-	// BurnByCollateral burns Mer stablecoins by unlocking collateral assets and earning Lion coins.
+	// BurnByCollateral burns Mer stablecoins by unlocking collateral assets and
+	// earning Lion coins.
 	BurnByCollateral(ctx context.Context, in *MsgBurnByCollateral, opts ...grpc.CallOption) (*MsgBurnByCollateralResponse, error)
 	// DepositCollateral deposits collateral assets.
 	DepositCollateral(ctx context.Context, in *MsgDepositCollateral, opts ...grpc.CallOption) (*MsgDepositCollateralResponse, error)
@@ -867,7 +874,8 @@ type MsgClient interface {
 	RedeemCollateral(ctx context.Context, in *MsgRedeemCollateral, opts ...grpc.CallOption) (*MsgRedeemCollateralResponse, error)
 	// BuyBack buybacks strong-backing assets by spending Lion coins.
 	BuyBack(ctx context.Context, in *MsgBuyBack, opts ...grpc.CallOption) (*MsgBuyBackResponse, error)
-	// ReCollateralize re-collateralizes strong-backing assets by earning Lion coins.
+	// ReCollateralize re-collateralizes strong-backing assets by earning Lion
+	// coins.
 	ReCollateralize(ctx context.Context, in *MsgReCollateralize, opts ...grpc.CallOption) (*MsgReCollateralizeResponse, error)
 }
 
@@ -953,13 +961,17 @@ func (c *msgClient) ReCollateralize(ctx context.Context, in *MsgReCollateralize,
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// MintBySwap mints Mer stablecoins by swapping in strong-backing assets and Lion coins.
+	// MintBySwap mints Mer stablecoins by swapping in strong-backing assets and
+	// Lion coins.
 	MintBySwap(context.Context, *MsgMintBySwap) (*MsgMintBySwapResponse, error)
-	// BurnBySwap burns Mer stablecoins by swapping out strong-backing assets and Lion coins.
+	// BurnBySwap burns Mer stablecoins by swapping out strong-backing assets and
+	// Lion coins.
 	BurnBySwap(context.Context, *MsgBurnBySwap) (*MsgBurnBySwapResponse, error)
-	// MintByCollateral mints Mer stablecoins by locking collateral assets and spending Lion coins.
+	// MintByCollateral mints Mer stablecoins by locking collateral assets and
+	// spending Lion coins.
 	MintByCollateral(context.Context, *MsgMintByCollateral) (*MsgMintByCollateralResponse, error)
-	// BurnByCollateral burns Mer stablecoins by unlocking collateral assets and earning Lion coins.
+	// BurnByCollateral burns Mer stablecoins by unlocking collateral assets and
+	// earning Lion coins.
 	BurnByCollateral(context.Context, *MsgBurnByCollateral) (*MsgBurnByCollateralResponse, error)
 	// DepositCollateral deposits collateral assets.
 	DepositCollateral(context.Context, *MsgDepositCollateral) (*MsgDepositCollateralResponse, error)
@@ -967,7 +979,8 @@ type MsgServer interface {
 	RedeemCollateral(context.Context, *MsgRedeemCollateral) (*MsgRedeemCollateralResponse, error)
 	// BuyBack buybacks strong-backing assets by spending Lion coins.
 	BuyBack(context.Context, *MsgBuyBack) (*MsgBuyBackResponse, error)
-	// ReCollateralize re-collateralizes strong-backing assets by earning Lion coins.
+	// ReCollateralize re-collateralizes strong-backing assets by earning Lion
+	// coins.
 	ReCollateralize(context.Context, *MsgReCollateralize) (*MsgReCollateralizeResponse, error)
 }
 

@@ -134,9 +134,10 @@ func (m *Denom) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Denom proto.InternalMessageInfo
 
-// AggregateExchangeRatePrevote represents the aggregate prevoting on the ExchangeRateVote.
-// The purpose of aggregate prevoting is to hide vote exchange rates with hash
-// which is formatted as hex string in SHA256("{salt}:{exchange rate}{denom},...,{exchange rate}{denom}:{voter}")
+// AggregateExchangeRatePrevote represents the aggregate prevoting on the
+// ExchangeRateVote. The purpose of aggregate prevoting is to hide vote exchange
+// rates with hash which is formatted as hex string in SHA256("{salt}:{exchange
+// rate}{denom},...,{exchange rate}{denom}:{voter}")
 type AggregateExchangeRatePrevote struct {
 	Hash        string `protobuf:"bytes,1,opt,name=hash,proto3" json:"hash,omitempty" yaml:"hash"`
 	Voter       string `protobuf:"bytes,2,opt,name=voter,proto3" json:"voter,omitempty" yaml:"voter"`
