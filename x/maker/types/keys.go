@@ -17,6 +17,12 @@ const (
 	MemStoreKey = "mem_maker"
 )
 
-func KeyPrefix(p string) []byte {
-	return []byte(p)
-}
+const (
+	prefixBacking    = iota + 1
+	prefixCollateral = iota + 1
+)
+
+var (
+	KeyPrefixBacking    = []byte{prefixBacking}
+	KeyPrefixCollateral = []byte{prefixCollateral}
+)

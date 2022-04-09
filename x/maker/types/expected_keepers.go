@@ -17,6 +17,7 @@ type AccountKeeper interface {
 
 // BankKeeper defines the expected interface needed to retrieve account balances.
 type BankKeeper interface {
+	HasSupply(ctx sdk.Context, denom string) bool
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
 	// Methods imported from bank should be defined here
 }
