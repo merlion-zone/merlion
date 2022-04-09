@@ -31539,6 +31539,14 @@ paths:
               params:
                 description: params holds all the parameters of this module.
                 type: object
+                properties:
+                  collateral_ratio_step:
+                    type: string
+                  collateral_ratio_price_band:
+                    type: string
+                  collateral_ration_cooldown_period:
+                    type: string
+                    format: uint64
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -53416,13 +53424,29 @@ definitions:
       type.
   merlion.maker.v1.Params:
     type: object
-    description: Params defines the parameters for the module.
+    properties:
+      collateral_ratio_step:
+        type: string
+      collateral_ratio_price_band:
+        type: string
+      collateral_ration_cooldown_period:
+        type: string
+        format: uint64
+    description: Params defines the parameters for the maker module.
   merlion.maker.v1.QueryParamsResponse:
     type: object
     properties:
       params:
         description: params holds all the parameters of this module.
         type: object
+        properties:
+          collateral_ratio_step:
+            type: string
+          collateral_ratio_price_band:
+            type: string
+          collateral_ration_cooldown_period:
+            type: string
+            format: uint64
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   merlion.oracle.v1.AggregateExchangeRatePrevote:
     type: object

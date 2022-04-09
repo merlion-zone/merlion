@@ -9,7 +9,7 @@ import "merlion/maker/v1/params.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/maker/types";
 
-// Query defines the gRPC querier service.
+// Query defines the maker gRPC querier service.
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {

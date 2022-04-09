@@ -5,8 +5,20 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/maker/types";
 
-// Params defines the parameters for the module.
+// Params defines the parameters for the maker module.
 message Params {
+  option (gogoproto.equal) = true;
   option (gogoproto.goproto_stringer) = false;
-  
+
+  string collateral_ratio_step = 1 [
+    (gogoproto.moretags) = "yaml:\"collateral_ratio_step\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  string collateral_ratio_price_band = 2 [
+    (gogoproto.moretags) = "yaml:\"collateral_ratio_price_band\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  uint64 collateral_ration_cooldown_period = 3 [(gogoproto.moretags) = "yaml:\"collateral_ration_cooldown_period\""];
 }

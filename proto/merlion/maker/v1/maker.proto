@@ -1,0 +1,132 @@
+syntax = "proto3";
+package merlion.maker.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/maker/types";
+
+// BackingRiskParams represents an object of backing coin risk parameters.
+message BackingRiskParams {
+  option (gogoproto.equal) = false;
+
+  // backing coin denom
+  string backing_denom = 1;
+  // whether enabled
+  bool enabled = 2;
+  // maximum total backing amount
+  string max_backing = 3 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // maximum mintable Mer amount
+  string max_mer_mint = 4 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // mint fee rate
+  string mint_fee = 5 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // burn fee rate
+  string burn_fee = 6 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // buyback fee rate
+  string buyback_fee = 7 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // recollateralize fee rate
+  string recollateralize_fee = 8 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // mint Mer price threshold
+  string mint_price_threshold = 9 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // burn Mer price threshold
+  string burn_price_threshold = 10 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+}
+
+// CollateralRiskParams represents an object of collateral risk parameters.
+message CollateralRiskParams {
+  option (gogoproto.equal) = false;
+
+  // collateral coin denom
+  string collateral_denom = 1;
+  // whether enabled
+  bool enabled = 2;
+  // maximum total collateral amount
+  string max_collateral = 3 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // maximum total mintable Mer amount
+  string max_mer_mint = 4 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // ratio at which a position is defined as undercollateralized
+  string liquidation_threshold = 5 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // maximum ratio of maximum amount of currency that can be borrowed with a specific collateral
+  string loan_to_value = 6 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // basic ratio of maximum amount of currency that can be borrowed with a specific collateral
+  string basic_loan_to_value = 7 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // catalytic ratio of burned Lion to minted stablecoins, to maximize the LTV in [basic-LTV, LTV]
+  string catalytic_lion_ratio = 8 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // liquidation fee rate, i.e., the discount a liquidator gets when buying collateral flagged for a liquidation
+  string liquidation_fee = 9 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // mint fee rate, i.e., extra fee debt
+  string mint_fee = 10 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  // annual interest fee rate (APR)
+  string interest_fee = 11 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+}
+
+// RegisterBacking is a gov Content type to register eligible strong-backing asset with backing risk parameters.
+message RegisterBackingProposal {
+  option (gogoproto.equal) = false;
+
+  // title of the proposal
+  string title = 1;
+  // proposal description
+  string description = 2;
+  // backing risk params
+  BackingRiskParams risk_params = 3;
+}
+
+// RegisterCollateral is a gov Content type to register eligible collateral with collateral risk parameters.
+message RegisterCollateralProposal {
+  option (gogoproto.equal) = false;
+
+  // title of the proposal
+  string title = 1;
+  // proposal description
+  string description = 2;
+  // collateral risk params
+  CollateralRiskParams risk_params = 3;
+}
+
+// SetBackingRiskParams is a gov Content type to set backing coin risk parameters.
+message SetBackingRiskParams {
+  option (gogoproto.equal) = false;
+
+  // title of the proposal
+  string title = 1;
+  // proposal description
+  string description = 2;
+  // backing risk params
+  BackingRiskParams risk_params = 3;
+}
+
+// SetCollateralRiskParams is a gov Content type to set collateral risk parameters.
+message SetCollateralRiskParams {
+  option (gogoproto.equal) = false;
+
+  // title of the proposal
+  string title = 1;
+  // proposal description
+  string description = 2;
+  // collateral risk params
+  CollateralRiskParams risk_params = 3;
+}
+
+// BatchSetBackingRiskParams is a gov Content type to batch set backing coin risk parameters.
+message BatchSetBackingRiskParams {
+  option (gogoproto.equal) = false;
+
+  // title of the proposal
+  string title = 1;
+  // proposal description
+  string description = 2;
+  // batch of collateral risk params
+  repeated BackingRiskParams risk_params = 3;
+}
+
+// BatchSetCollateralRiskParams is a gov Content type to batch set collateral risk parameters.
+message BatchSetCollateralRiskParams {
+  option (gogoproto.equal) = false;
+
+  // title of the proposal
+  string title = 1;
+  // proposal description
+  string description = 2;
+  // batch of collateral risk params
+  repeated CollateralRiskParams risk_params = 3;
+}

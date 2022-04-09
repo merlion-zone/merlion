@@ -5,6 +5,7 @@ package types
 
 import (
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
@@ -23,8 +24,11 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// Params defines the parameters for the module.
+// Params defines the parameters for the maker module.
 type Params struct {
+	CollateralRatioStep            github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,1,opt,name=collateral_ratio_step,json=collateralRatioStep,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"collateral_ratio_step" yaml:"collateral_ratio_step"`
+	CollateralRatioPriceBand       github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=collateral_ratio_price_band,json=collateralRatioPriceBand,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"collateral_ratio_price_band" yaml:"collateral_ratio_price_band"`
+	CollateralRationCooldownPeriod uint64                                 `protobuf:"varint,3,opt,name=collateral_ration_cooldown_period,json=collateralRationCooldownPeriod,proto3" json:"collateral_ration_cooldown_period,omitempty" yaml:"collateral_ration_cooldown_period"`
 }
 
 func (m *Params) Reset()      { *m = Params{} }
@@ -59,6 +63,13 @@ func (m *Params) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Params proto.InternalMessageInfo
 
+func (m *Params) GetCollateralRationCooldownPeriod() uint64 {
+	if m != nil {
+		return m.CollateralRationCooldownPeriod
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*Params)(nil), "merlion.maker.v1.Params")
 }
@@ -66,19 +77,61 @@ func init() {
 func init() { proto.RegisterFile("merlion/maker/v1/params.proto", fileDescriptor_0e3d0cbfc4bbb89c) }
 
 var fileDescriptor_0e3d0cbfc4bbb89c = []byte{
-	// 154 bytes of a gzipped FileDescriptorProto
+	// 344 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0xcd, 0x4d, 0x2d, 0xca,
 	0xc9, 0xcc, 0xcf, 0xd3, 0xcf, 0x4d, 0xcc, 0x4e, 0x2d, 0xd2, 0x2f, 0x33, 0xd4, 0x2f, 0x48, 0x2c,
 	0x4a, 0xcc, 0x2d, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x80, 0x4a, 0xeb, 0x81, 0xa5,
 	0xf5, 0xca, 0x0c, 0xa5, 0x44, 0xd2, 0xf3, 0xd3, 0xf3, 0xc1, 0x92, 0xfa, 0x20, 0x16, 0x44, 0x9d,
-	0x12, 0x1f, 0x17, 0x5b, 0x00, 0x58, 0x9f, 0x15, 0xcb, 0x8c, 0x05, 0xf2, 0x0c, 0x4e, 0xee, 0x27,
-	0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8, 0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c,
-	0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7, 0x10, 0xa5, 0x9b, 0x9e, 0x59, 0x92, 0x51, 0x9a,
-	0xa4, 0x97, 0x9c, 0x9f, 0xab, 0x0f, 0x35, 0x5c, 0xb7, 0x2a, 0x3f, 0x2f, 0x15, 0xc6, 0xd1, 0xaf,
-	0x80, 0x3a, 0xa5, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0x6c, 0xbe, 0x31, 0x20, 0x00, 0x00,
-	0xff, 0xff, 0x32, 0x40, 0xff, 0x03, 0xa8, 0x00, 0x00, 0x00,
+	0xd2, 0x32, 0x66, 0x2e, 0xb6, 0x00, 0xb0, 0x46, 0xa1, 0x26, 0x46, 0x2e, 0xd1, 0xe4, 0xfc, 0x9c,
+	0x9c, 0xc4, 0x92, 0xd4, 0xa2, 0xc4, 0x9c, 0xf8, 0xa2, 0xc4, 0x92, 0xcc, 0xfc, 0xf8, 0xe2, 0x92,
+	0xd4, 0x02, 0x09, 0x46, 0x05, 0x46, 0x0d, 0x4e, 0x27, 0xbf, 0x13, 0xf7, 0xe4, 0x19, 0x6e, 0xdd,
+	0x93, 0x57, 0x4b, 0xcf, 0x2c, 0xc9, 0x28, 0x4d, 0xd2, 0x4b, 0xce, 0xcf, 0xd5, 0x4f, 0xce, 0x2f,
+	0xce, 0xcd, 0x2f, 0x86, 0x52, 0xba, 0xc5, 0x29, 0xd9, 0xfa, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x7a,
+	0x2e, 0xa9, 0xc9, 0x9f, 0xee, 0xc9, 0xcb, 0x54, 0x26, 0xe6, 0xe6, 0x58, 0x29, 0x61, 0x35, 0x54,
+	0x29, 0x48, 0x18, 0x21, 0x1e, 0x04, 0x12, 0x0e, 0x2e, 0x49, 0x2d, 0x10, 0x9a, 0xcc, 0xc8, 0x25,
+	0x8d, 0xa1, 0xbe, 0xa0, 0x28, 0x33, 0x39, 0x35, 0x3e, 0x29, 0x31, 0x2f, 0x45, 0x82, 0x09, 0xec,
+	0x94, 0x10, 0x92, 0x9d, 0xa2, 0x84, 0xc3, 0x29, 0x08, 0xa3, 0x95, 0x82, 0x24, 0xd0, 0x1c, 0x14,
+	0x00, 0x92, 0x73, 0x4a, 0xcc, 0x4b, 0x11, 0x2a, 0xe7, 0x52, 0x44, 0xd7, 0x99, 0x17, 0x9f, 0x9c,
+	0x9f, 0x9f, 0x93, 0x92, 0x5f, 0x9e, 0x17, 0x5f, 0x90, 0x5a, 0x94, 0x99, 0x9f, 0x22, 0xc1, 0xac,
+	0xc0, 0xa8, 0xc1, 0xe2, 0xa4, 0xf3, 0xe9, 0x9e, 0xbc, 0x06, 0x76, 0xcb, 0x30, 0xb4, 0x28, 0x05,
+	0xc9, 0xa1, 0x59, 0x99, 0xe7, 0x0c, 0x55, 0x11, 0x00, 0x56, 0x60, 0xc5, 0x31, 0x63, 0x81, 0x3c,
+	0xc3, 0x8b, 0x05, 0xf2, 0x8c, 0x4e, 0xee, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8,
+	0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7,
+	0x10, 0xa5, 0x8b, 0x14, 0x08, 0xd0, 0x58, 0xd7, 0xad, 0xca, 0xcf, 0x4b, 0x85, 0x71, 0xf4, 0x2b,
+	0xa0, 0x69, 0x04, 0x1c, 0x1e, 0x49, 0x6c, 0xe0, 0x88, 0x37, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff,
+	0x93, 0xf5, 0x01, 0x0b, 0x41, 0x02, 0x00, 0x00,
 }
 
+func (this *Params) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Params)
+	if !ok {
+		that2, ok := that.(Params)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.CollateralRatioStep.Equal(that1.CollateralRatioStep) {
+		return false
+	}
+	if !this.CollateralRatioPriceBand.Equal(that1.CollateralRatioPriceBand) {
+		return false
+	}
+	if this.CollateralRationCooldownPeriod != that1.CollateralRationCooldownPeriod {
+		return false
+	}
+	return true
+}
 func (m *Params) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -99,6 +152,31 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if m.CollateralRationCooldownPeriod != 0 {
+		i = encodeVarintParams(dAtA, i, uint64(m.CollateralRationCooldownPeriod))
+		i--
+		dAtA[i] = 0x18
+	}
+	{
+		size := m.CollateralRatioPriceBand.Size()
+		i -= size
+		if _, err := m.CollateralRatioPriceBand.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintParams(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	{
+		size := m.CollateralRatioStep.Size()
+		i -= size
+		if _, err := m.CollateralRatioStep.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintParams(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -119,6 +197,13 @@ func (m *Params) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = m.CollateralRatioStep.Size()
+	n += 1 + l + sovParams(uint64(l))
+	l = m.CollateralRatioPriceBand.Size()
+	n += 1 + l + sovParams(uint64(l))
+	if m.CollateralRationCooldownPeriod != 0 {
+		n += 1 + sovParams(uint64(m.CollateralRationCooldownPeriod))
+	}
 	return n
 }
 
@@ -157,6 +242,93 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: Params: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CollateralRatioStep", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.CollateralRatioStep.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CollateralRatioPriceBand", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.CollateralRatioPriceBand.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CollateralRationCooldownPeriod", wireType)
+			}
+			m.CollateralRationCooldownPeriod = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CollateralRationCooldownPeriod |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipParams(dAtA[iNdEx:])
