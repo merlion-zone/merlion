@@ -1,6 +1,9 @@
 package types
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+)
 
 const (
 	TypeMsgMintBySwap        = "mint_by_swap"
@@ -37,8 +40,26 @@ func (m *MsgMintBySwap) GetSignBytes() []byte {
 
 // ValidateBasic sdk.Msg
 func (m *MsgMintBySwap) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	_, err := sdk.AccAddressFromBech32(m.Sender)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
+	}
+	if len(m.To) > 0 {
+		_, err = sdk.AccAddressFromBech32(m.To)
+		if err != nil {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+		}
+	}
+	if !m.MintOut.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.MintOut.String())
+	}
+	if m.BackingInMax.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.BackingInMax.String())
+	}
+	if m.LionInMax.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionInMax.String())
+	}
+	return nil
 }
 
 // GetSigners sdk.Msg
@@ -63,8 +84,26 @@ func (m *MsgBurnBySwap) GetSignBytes() []byte {
 
 // ValidateBasic sdk.Msg
 func (m *MsgBurnBySwap) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	_, err := sdk.AccAddressFromBech32(m.Sender)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
+	}
+	if len(m.To) > 0 {
+		_, err = sdk.AccAddressFromBech32(m.To)
+		if err != nil {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+		}
+	}
+	if !m.BurnIn.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.BurnIn.String())
+	}
+	if m.BackingOutMin.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.BackingOutMin.String())
+	}
+	if m.LionOutMin.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionOutMin.String())
+	}
+	return nil
 }
 
 // GetSigners sdk.Msg
@@ -89,8 +128,23 @@ func (m *MsgMintByCollateral) GetSignBytes() []byte {
 
 // ValidateBasic sdk.Msg
 func (m *MsgMintByCollateral) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	_, err := sdk.AccAddressFromBech32(m.Sender)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
+	}
+	if len(m.To) > 0 {
+		_, err = sdk.AccAddressFromBech32(m.To)
+		if err != nil {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+		}
+	}
+	if !m.MintOut.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.MintOut.String())
+	}
+	if m.LionInMax.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionInMax.String())
+	}
+	return nil
 }
 
 // GetSigners sdk.Msg
@@ -115,8 +169,23 @@ func (m *MsgBurnByCollateral) GetSignBytes() []byte {
 
 // ValidateBasic sdk.Msg
 func (m *MsgBurnByCollateral) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	_, err := sdk.AccAddressFromBech32(m.Sender)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
+	}
+	if len(m.To) > 0 {
+		_, err = sdk.AccAddressFromBech32(m.To)
+		if err != nil {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+		}
+	}
+	if !m.BurnIn.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.BurnIn.String())
+	}
+	if m.LionOutMin.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionOutMin.String())
+	}
+	return nil
 }
 
 // GetSigners sdk.Msg
@@ -141,8 +210,20 @@ func (m *MsgDepositCollateral) GetSignBytes() []byte {
 
 // ValidateBasic sdk.Msg
 func (m *MsgDepositCollateral) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	_, err := sdk.AccAddressFromBech32(m.Sender)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
+	}
+	if len(m.To) > 0 {
+		_, err = sdk.AccAddressFromBech32(m.To)
+		if err != nil {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+		}
+	}
+	if !m.Collateral.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.Collateral.String())
+	}
+	return nil
 }
 
 // GetSigners sdk.Msg
@@ -167,8 +248,20 @@ func (m *MsgRedeemCollateral) GetSignBytes() []byte {
 
 // ValidateBasic sdk.Msg
 func (m *MsgRedeemCollateral) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	_, err := sdk.AccAddressFromBech32(m.Sender)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
+	}
+	if len(m.To) > 0 {
+		_, err = sdk.AccAddressFromBech32(m.To)
+		if err != nil {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+		}
+	}
+	if !m.Collateral.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.Collateral.String())
+	}
+	return nil
 }
 
 // GetSigners sdk.Msg
@@ -193,8 +286,23 @@ func (m *MsgBuyBack) GetSignBytes() []byte {
 
 // ValidateBasic sdk.Msg
 func (m *MsgBuyBack) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	_, err := sdk.AccAddressFromBech32(m.Sender)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
+	}
+	if len(m.To) > 0 {
+		_, err = sdk.AccAddressFromBech32(m.To)
+		if err != nil {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+		}
+	}
+	if !m.LionIn.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionIn.String())
+	}
+	if m.BackingOutMin.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.BackingOutMin.String())
+	}
+	return nil
 }
 
 // GetSigners sdk.Msg
@@ -219,8 +327,23 @@ func (m *MsgReCollateralize) GetSignBytes() []byte {
 
 // ValidateBasic sdk.Msg
 func (m *MsgReCollateralize) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	_, err := sdk.AccAddressFromBech32(m.Sender)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
+	}
+	if len(m.To) > 0 {
+		_, err = sdk.AccAddressFromBech32(m.To)
+		if err != nil {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
+		}
+	}
+	if !m.BackingIn.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.BackingIn.String())
+	}
+	if m.LionOutMin.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionOutMin.String())
+	}
+	return nil
 }
 
 // GetSigners sdk.Msg

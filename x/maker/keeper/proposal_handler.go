@@ -7,7 +7,8 @@ import (
 )
 
 func HandleRegisterBackingProposal(ctx sdk.Context, k Keeper, p *types.RegisterBackingProposal) error {
-	params := p.RiskParams
+	params := *p.RiskParams
+
 	if k.IsBackingRegistered(ctx, params.BackingDenom) {
 		return sdkerrors.Wrapf(types.ErrBackingCoinAlreadyExists, "backing coin denomination already registered: %s", params.BackingDenom)
 	}
@@ -17,14 +18,34 @@ func HandleRegisterBackingProposal(ctx sdk.Context, k Keeper, p *types.RegisterB
 			"denomination '%s' cannot have a supply of 0", params.BackingDenom,
 		)
 	}
-	k.SetBackingRiskParams(ctx, *params)
+
+	// assign missing fields with default value
+	if params.MintFee == nil {
+		dec := sdk.ZeroDec()
+		params.MintFee = &dec
+	}
+	if params.BurnFee == nil {
+		dec := sdk.ZeroDec()
+		params.BurnFee = &dec
+	}
+	if params.BuybackFee == nil {
+		dec := sdk.ZeroDec()
+		params.BuybackFee = &dec
+	}
+	if params.RecollateralizeFee == nil {
+		dec := sdk.ZeroDec()
+		params.RecollateralizeFee = &dec
+	}
+
+	k.SetBackingRiskParams(ctx, params)
 	// TODO: event
 	return nil
 }
 
 func HandleRegisterCollateralProposal(ctx sdk.Context, k Keeper, p *types.RegisterCollateralProposal) error {
-	params := p.RiskParams
-	if k.IsBackingRegistered(ctx, params.CollateralDenom) {
+	params := *p.RiskParams
+
+	if k.IsCollateralRegistered(ctx, params.CollateralDenom) {
 		return sdkerrors.Wrapf(types.ErrCollateralCoinAlreadyExists, "collateral coin denomination already registered: %s", params.CollateralDenom)
 	}
 	if !k.bankKeeper.HasSupply(ctx, params.CollateralDenom) {
@@ -33,18 +54,60 @@ func HandleRegisterCollateralProposal(ctx sdk.Context, k Keeper, p *types.Regist
 			"denomination '%s' cannot have a supply of 0", params.CollateralDenom,
 		)
 	}
-	k.SetCollateralRiskParams(ctx, *params)
+
+	// assign missing fields with default value
+	if params.LiquidationThreshold == nil {
+		dec := sdk.NewDecWithPrec(70, 2)
+		params.LiquidationThreshold = &dec
+	}
+	if params.LoanToValue == nil {
+		dec := sdk.NewDecWithPrec(60, 2)
+		params.LoanToValue = &dec
+	}
+	if params.BasicLoanToValue == nil {
+		dec := sdk.NewDecWithPrec(40, 2)
+		params.BasicLoanToValue = &dec
+	}
+	if params.CatalyticLionRatio == nil {
+		dec := sdk.NewDecWithPrec(10, 2)
+		params.CatalyticLionRatio = &dec
+	}
+	if params.LiquidationFee == nil {
+		dec := sdk.NewDecWithPrec(10, 2)
+		params.LiquidationFee = &dec
+	}
+	if params.MintFee == nil {
+		dec := sdk.NewDecWithPrec(5, 3)
+		params.MintFee = &dec
+	}
+	if params.InterestFee == nil {
+		dec := sdk.NewDecWithPrec(1, 2)
+		params.InterestFee = &dec
+	}
+
+	if err := validateCollateralRiskParams(&params); err != nil {
+		return err
+	}
+
+	k.SetCollateralRiskParams(ctx, params)
 	// TODO: event
 	return nil
 }
 
-func updateDecimal(target *sdk.Dec, patch *sdk.Dec) uint8 {
-	if patch == nil || patch.IsZero() {
+func updateInt(target *sdk.Int, patch *sdk.Int) uint8 {
+	if patch == nil {
 		// no set
 		return 0
-	} else if patch.IsNegative() {
-		// negative means the maximum
-		*target = sdk.MaxSortableDec
+	} else {
+		*target = *patch
+	}
+	return 1
+}
+
+func updateDecimal(target *sdk.Dec, patch *sdk.Dec) uint8 {
+	if patch == nil {
+		// no set
+		return 0
 	} else {
 		*target = *patch
 	}
@@ -62,14 +125,12 @@ func setBackingRiskParamsProposal(ctx sdk.Context, k Keeper, patch *types.Backin
 		params.Enabled = patch.Enabled
 		updated |= 1
 	}
-	updated |= updateDecimal(params.MaxBacking, patch.MaxBacking)
-	updated |= updateDecimal(params.MaxMerMint, patch.MaxMerMint)
+	updated |= updateInt(params.MaxBacking, patch.MaxBacking)
+	updated |= updateInt(params.MaxMerMint, patch.MaxMerMint)
 	updated |= updateDecimal(params.MintFee, patch.MintFee)
 	updated |= updateDecimal(params.BurnFee, patch.BurnFee)
 	updated |= updateDecimal(params.BuybackFee, patch.BuybackFee)
 	updated |= updateDecimal(params.RecollateralizeFee, patch.RecollateralizeFee)
-	updated |= updateDecimal(params.MintPriceThreshold, patch.MintPriceThreshold)
-	updated |= updateDecimal(params.BurnPriceThreshold, patch.BurnPriceThreshold)
 
 	if updated > 0 {
 		k.SetBackingRiskParams(ctx, params)
@@ -89,8 +150,8 @@ func setCollateralRiskParamsProposal(ctx sdk.Context, k Keeper, patch *types.Col
 		params.Enabled = patch.Enabled
 		updated |= 1
 	}
-	updated |= updateDecimal(params.MaxCollateral, patch.MaxCollateral)
-	updated |= updateDecimal(params.MaxMerMint, patch.MaxMerMint)
+	updated |= updateInt(params.MaxCollateral, patch.MaxCollateral)
+	updated |= updateInt(params.MaxMerMint, patch.MaxMerMint)
 	updated |= updateDecimal(params.LiquidationThreshold, patch.LiquidationThreshold)
 	updated |= updateDecimal(params.LoanToValue, patch.LoanToValue)
 	updated |= updateDecimal(params.BasicLoanToValue, patch.BasicLoanToValue)
@@ -100,8 +161,21 @@ func setCollateralRiskParamsProposal(ctx sdk.Context, k Keeper, patch *types.Col
 	updated |= updateDecimal(params.InterestFee, patch.InterestFee)
 
 	if updated > 0 {
+		if err := validateCollateralRiskParams(&params); err != nil {
+			return err
+		}
 		k.SetCollateralRiskParams(ctx, params)
 		// TODO: event
+	}
+	return nil
+}
+
+func validateCollateralRiskParams(params *types.CollateralRiskParams) error {
+	if params.LoanToValue.GTE(*params.LiquidationThreshold) {
+		return sdkerrors.Wrap(types.ErrCollateralParamsInvalid, "loan-to-value must be < liquidation threshold")
+	}
+	if params.BasicLoanToValue.GT(*params.LoanToValue) {
+		return sdkerrors.Wrap(types.ErrCollateralParamsInvalid, "basic loan-to-value must be <= loan-to-value")
 	}
 	return nil
 }

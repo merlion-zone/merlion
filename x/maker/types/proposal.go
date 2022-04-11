@@ -1,6 +1,11 @@
 package types
 
-import govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+import (
+	"fmt"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+)
 
 const (
 	ProposalTypeRegisterBacking              = "RegisterBacking"
@@ -44,8 +49,7 @@ func (m *RegisterBackingProposal) ProposalType() string {
 }
 
 func (m *RegisterBackingProposal) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	return validateBackingRiskParams(m.RiskParams)
 }
 
 func (m *RegisterCollateralProposal) ProposalRoute() string {
@@ -57,8 +61,7 @@ func (m *RegisterCollateralProposal) ProposalType() string {
 }
 
 func (m *RegisterCollateralProposal) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	return validateCollateralRiskParams(m.RiskParams)
 }
 
 func (m *SetBackingRiskParamsProposal) ProposalRoute() string {
@@ -70,8 +73,7 @@ func (m *SetBackingRiskParamsProposal) ProposalType() string {
 }
 
 func (m *SetBackingRiskParamsProposal) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	return validateBackingRiskParams(m.RiskParams)
 }
 
 func (m *SetCollateralRiskParamsProposal) ProposalRoute() string {
@@ -83,8 +85,7 @@ func (m *SetCollateralRiskParamsProposal) ProposalType() string {
 }
 
 func (m *SetCollateralRiskParamsProposal) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	return validateCollateralRiskParams(m.RiskParams)
 }
 
 func (m *BatchSetBackingRiskParamsProposal) ProposalRoute() string {
@@ -96,8 +97,12 @@ func (m *BatchSetBackingRiskParamsProposal) ProposalType() string {
 }
 
 func (m *BatchSetBackingRiskParamsProposal) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	for _, params := range m.RiskParams {
+		if err := validateBackingRiskParams(params); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (m *BatchSetCollateralRiskParamsProposal) ProposalRoute() string {
@@ -109,6 +114,63 @@ func (m *BatchSetCollateralRiskParamsProposal) ProposalType() string {
 }
 
 func (m *BatchSetCollateralRiskParamsProposal) ValidateBasic() error {
-	// TODO implement me
-	panic("implement me")
+	for _, params := range m.RiskParams {
+		if err := validateCollateralRatioPriceBand(params); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func validateBackingRiskParams(params *BackingRiskParams) error {
+	if params.MaxBacking != nil && params.MaxBacking.IsNegative() {
+		return fmt.Errorf("max backing value must be not negative")
+	}
+	if params.MaxMerMint != nil && params.MaxMerMint.IsNegative() {
+		return fmt.Errorf("max mer mint value must be not negative")
+	}
+	if params.MintFee != nil && (params.MintFee.IsNegative() || params.MintFee.GT(sdk.OneDec())) {
+		return fmt.Errorf("mint fee must be in [0, 1]")
+	}
+	if params.BurnFee != nil && (params.BurnFee.IsNegative() || params.BurnFee.GT(sdk.OneDec())) {
+		return fmt.Errorf("burn fee must be in [0, 1]")
+	}
+	if params.BuybackFee != nil && (params.BuybackFee.IsNegative() || params.BuybackFee.GT(sdk.OneDec())) {
+		return fmt.Errorf("buyback fee must be in [0, 1]")
+	}
+	if params.RecollateralizeFee != nil && (params.RecollateralizeFee.IsNegative() || params.RecollateralizeFee.GT(sdk.OneDec())) {
+		return fmt.Errorf("recollateralize fee must be in [0, 1]")
+	}
+	return nil
+}
+
+func validateCollateralRiskParams(params *CollateralRiskParams) error {
+	if params.MaxCollateral != nil && params.MaxCollateral.IsNegative() {
+		return fmt.Errorf("max collateral value must be not negative")
+	}
+	if params.MaxMerMint != nil && params.MaxMerMint.IsNegative() {
+		return fmt.Errorf("max mer mint value must be not negative")
+	}
+	if params.LiquidationThreshold != nil && (params.LiquidationThreshold.IsNegative() || params.LiquidationThreshold.GT(sdk.OneDec())) {
+		return fmt.Errorf("liquidation threshold must be in [0, 1]")
+	}
+	if params.LoanToValue != nil && (params.LoanToValue.IsNegative() || params.LoanToValue.GT(sdk.OneDec())) {
+		return fmt.Errorf("loan-to-value must be in [0, 1]")
+	}
+	if params.BasicLoanToValue != nil && (params.BasicLoanToValue.IsNegative() || params.BasicLoanToValue.GT(sdk.OneDec())) {
+		return fmt.Errorf("basic loan-to-value must be in [0, 1]")
+	}
+	if params.CatalyticLionRatio != nil && (params.CatalyticLionRatio.IsNegative() || params.CatalyticLionRatio.GT(sdk.OneDec())) {
+		return fmt.Errorf("catalytic lion ratio must be in [0, 1]")
+	}
+	if params.LiquidationFee != nil && (params.LiquidationFee.IsNegative() || params.LiquidationFee.GT(sdk.OneDec())) {
+		return fmt.Errorf("liquidation fee must be in [0, 1]")
+	}
+	if params.MintFee != nil && (params.MintFee.IsNegative() || params.MintFee.GT(sdk.OneDec())) {
+		return fmt.Errorf("mint fee must be in [0, 1]")
+	}
+	if params.InterestFee != nil && (params.InterestFee.IsNegative() || params.InterestFee.GT(sdk.OneDec())) {
+		return fmt.Errorf("interest fee must be in [0, 1]")
+	}
+	return nil
 }

@@ -22,7 +22,19 @@ message Params {
   ];
   uint64 collateral_ratio_cooldown_period = 3
       [ (gogoproto.moretags) = "yaml:\"collateral_ration_cooldown_period\"" ];
-  string liquidation_commission_fee = 4 [
+  // mint Mer price threshold
+  string mint_price_threshold = 4 [
+    (gogoproto.moretags) = "yaml:\"mint_price_threshold\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  // burn Mer price threshold
+  string burn_price_threshold = 5 [
+    (gogoproto.moretags) = "yaml:\"burn_price_threshold\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  string liquidation_commission_fee = 6 [
     (gogoproto.moretags) = "yaml:\"liquidation_commission_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false

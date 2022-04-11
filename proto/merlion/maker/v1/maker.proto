@@ -15,10 +15,10 @@ message BackingRiskParams {
   bool enabled = 2;
   // maximum total backing amount
   string max_backing = 3
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
   // maximum mintable Mer amount
   string max_mer_mint = 4
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
   // mint fee rate
   string mint_fee = 5
       [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
@@ -30,12 +30,6 @@ message BackingRiskParams {
       [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
   // recollateralize fee rate
   string recollateralize_fee = 8
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
-  // mint Mer price threshold
-  string mint_price_threshold = 9
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
-  // burn Mer price threshold
-  string burn_price_threshold = 10
       [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
 }
 
@@ -49,10 +43,10 @@ message CollateralRiskParams {
   bool enabled = 2;
   // maximum total collateral amount
   string max_collateral = 3
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
   // maximum total mintable Mer amount
   string max_mer_mint = 4
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
   // ratio at which a position is defined as undercollateralized
   string liquidation_threshold = 5
       [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];

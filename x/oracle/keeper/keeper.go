@@ -85,6 +85,10 @@ func (k Keeper) GetRewardPool(ctx sdk.Context, denom string) sdk.Coin {
 // -----------------------------------
 // ExchangeRate logic
 
+func (k Keeper) GetExchangeRate(ctx sdk.Context, denom string) (price sdk.Dec, err error) {
+	panic("implement me")
+}
+
 // GetLionExchangeRate gets the consensus exchange rate of Lion denominated in the denom asset from the store.
 func (k Keeper) GetLionExchangeRate(ctx sdk.Context, denom string) (sdk.Dec, error) {
 	if denom == merlion.MicroLionDenom {

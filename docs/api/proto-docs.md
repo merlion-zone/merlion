@@ -375,6 +375,8 @@ Params defines the parameters for the maker module.
 | `collateral_ratio_step` | [string](#string) |  |  |
 | `collateral_ratio_price_band` | [string](#string) |  |  |
 | `collateral_ratio_cooldown_period` | [uint64](#uint64) |  |  |
+| `mint_price_threshold` | [string](#string) |  | mint Mer price threshold |
+| `burn_price_threshold` | [string](#string) |  | burn Mer price threshold |
 | `liquidation_commission_fee` | [string](#string) |  |  |
 
 
@@ -446,8 +448,6 @@ BackingRiskParams represents an object of backing coin risk parameters.
 | `burn_fee` | [string](#string) |  | burn fee rate |
 | `buyback_fee` | [string](#string) |  | buyback fee rate |
 | `recollateralize_fee` | [string](#string) |  | recollateralize fee rate |
-| `mint_price_threshold` | [string](#string) |  | mint Mer price threshold |
-| `burn_price_threshold` | [string](#string) |  | burn Mer price threshold |
 
 
 

@@ -18,11 +18,13 @@ const (
 )
 
 const (
-	prefixBacking    = iota + 1
-	prefixCollateral = iota + 1
+	prefixCollateralRatio = iota + 1
+	prefixBacking
+	prefixCollateral
 )
 
 var (
-	KeyPrefixBacking    = []byte{prefixBacking}
-	KeyPrefixCollateral = []byte{prefixCollateral}
+	KeyPrefixCollateralRatio = []byte{prefixCollateralRatio}
+	KeyPrefixBacking         = []byte{prefixBacking}
+	KeyPrefixCollateral      = []byte{prefixCollateral}
 )
