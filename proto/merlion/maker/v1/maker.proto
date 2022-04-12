@@ -153,9 +153,29 @@ message BatchSetCollateralRiskParamsProposal {
   repeated CollateralRiskParams risk_params = 3;
 }
 
-message PoolBacking {}
+message TotalBacking {
+  option (gogoproto.equal) = false;
 
-message AccountBacking {}
+  // total minted mer
+  cosmos.base.v1beta1.Coin mer_minted = 1 [ (gogoproto.nullable) = false ];
+  // total burned lion
+  cosmos.base.v1beta1.Coin lion_burned = 2 [ (gogoproto.nullable) = false ];
+}
+
+message PoolBacking {
+  option (gogoproto.equal) = false;
+
+  // total minted mer
+  cosmos.base.v1beta1.Coin mer_minted = 1 [ (gogoproto.nullable) = false ];
+  // total backing
+  cosmos.base.v1beta1.Coin backing = 2 [ (gogoproto.nullable) = false ];
+  // total burned lion
+  cosmos.base.v1beta1.Coin lion_burned = 3 [ (gogoproto.nullable) = false ];
+}
+
+message AccountBacking { option (gogoproto.equal) = false; }
+
+message TotalCollateral { option (gogoproto.equal) = false; }
 
 message PoolCollateral {
   option (gogoproto.equal) = false;

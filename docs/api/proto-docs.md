@@ -45,6 +45,8 @@
     - [RegisterCollateralProposal](#merlion.maker.v1.RegisterCollateralProposal)
     - [SetBackingRiskParamsProposal](#merlion.maker.v1.SetBackingRiskParamsProposal)
     - [SetCollateralRiskParamsProposal](#merlion.maker.v1.SetCollateralRiskParamsProposal)
+    - [TotalBacking](#merlion.maker.v1.TotalBacking)
+    - [TotalCollateral](#merlion.maker.v1.TotalCollateral)
   
 - [merlion/maker/v1/query.proto](#merlion/maker/v1/query.proto)
     - [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest)
@@ -383,6 +385,7 @@ Params defines the parameters for the maker module.
 | `collateral_ratio_cooldown_period` | [uint64](#uint64) |  | cooldown period for adjusting collateral ratio |
 | `mint_price_bias` | [string](#string) |  | mint Mer price bias ratio |
 | `burn_price_bias` | [string](#string) |  | burn Mer price bias ratio |
+| `recollateralize_bonus` | [string](#string) |  | recollateralization bonus ratio |
 | `liquidation_commission_fee` | [string](#string) |  | liquidation commission fee ratio |
 
 
@@ -557,6 +560,13 @@ CollateralRiskParams represents an object of collateral risk parameters.
 
 
 
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `mer_minted` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted mer |
+| `backing` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total backing |
+| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
+
+
 
 
 
@@ -644,6 +654,32 @@ parameters.
 | `title` | [string](#string) |  | title of the proposal |
 | `description` | [string](#string) |  | proposal description |
 | `risk_params` | [CollateralRiskParams](#merlion.maker.v1.CollateralRiskParams) |  | collateral risk params |
+
+
+
+
+
+
+<a name="merlion.maker.v1.TotalBacking"></a>
+
+### TotalBacking
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `mer_minted` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted mer |
+| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
+
+
+
+
+
+
+<a name="merlion.maker.v1.TotalCollateral"></a>
+
+### TotalCollateral
+
 
 
 

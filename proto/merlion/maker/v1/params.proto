@@ -37,8 +37,14 @@ message Params {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
+  // recollateralization bonus ratio
+  string recollateralize_bonus = 6 [
+    (gogoproto.moretags) = "yaml:\"recollateralize_bonus\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
   // liquidation commission fee ratio
-  string liquidation_commission_fee = 6 [
+  string liquidation_commission_fee = 7 [
     (gogoproto.moretags) = "yaml:\"liquidation_commission_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false

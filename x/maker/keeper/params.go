@@ -34,12 +34,6 @@ func (k Keeper) CollateralRatioCooldownPeriod(ctx sdk.Context) (res uint64) {
 	return
 }
 
-// LiquidationCommissionFee is liquidation commission fee ratio
-func (k Keeper) LiquidationCommissionFee(ctx sdk.Context) (res sdk.Dec) {
-	k.paramstore.Get(ctx, types.KeyLiquidationCommissionFee, &res)
-	return
-}
-
 // MintPriceBias is mint price bias ratio
 func (k Keeper) MintPriceBias(ctx sdk.Context) (res sdk.Dec) {
 	k.paramstore.Get(ctx, types.KeyMintPriceBias, &res)
@@ -49,5 +43,17 @@ func (k Keeper) MintPriceBias(ctx sdk.Context) (res sdk.Dec) {
 // BurnPriceBias is burn price bias ratio
 func (k Keeper) BurnPriceBias(ctx sdk.Context) (res sdk.Dec) {
 	k.paramstore.Get(ctx, types.KeyMintPriceBias, &res)
+	return
+}
+
+// RecollateralizeBonus is recollateralization bonus ratio
+func (k Keeper) RecollateralizeBonus(ctx sdk.Context) (res sdk.Dec) {
+	k.paramstore.Get(ctx, types.KeyRecollateralizeBonus, &res)
+	return
+}
+
+// LiquidationCommissionFee is liquidation commission fee ratio
+func (k Keeper) LiquidationCommissionFee(ctx sdk.Context) (res sdk.Dec) {
+	k.paramstore.Get(ctx, types.KeyLiquidationCommissionFee, &res)
 	return
 }

@@ -629,13 +629,235 @@ func (m msgServer) LiquidateCollateral(c context.Context, msg *types.MsgLiquidat
 }
 
 func (m msgServer) BuyBacking(c context.Context, msg *types.MsgBuyBacking) (*types.MsgBuyBackingResponse, error) {
-	// TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+	receiver := sender
+	if len(msg.To) > 0 {
+		// user specifies receiver
+		receiver, err = sdk.AccAddressFromBech32(msg.To)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	collateralRatio := m.Keeper.GetCollateralRatio(ctx)
+
+	backingParams, found := m.Keeper.GetBackingRiskParams(ctx, msg.BackingOutMin.Denom)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", msg.BackingOutMin.Denom)
+	}
+
+	if !backingParams.Enabled {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", msg.BackingOutMin.Denom)
+	}
+
+	// get backing and lion price in usd
+	backingPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, msg.BackingOutMin.Denom)
+	if err != nil {
+		return nil, err
+	}
+	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroLionDenom)
+	if err != nil {
+		return nil, err
+	}
+
+	totalBacking, found := m.Keeper.GetTotalBacking(ctx)
+	if !found {
+		// TODO
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", msg.BackingOutMin.Denom)
+	}
+	poolBacking, found := m.Keeper.GetPoolBacking(ctx, msg.BackingOutMin.Denom)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", msg.BackingOutMin.Denom)
+	}
+
+	totalBackingValue, err := m.Keeper.totalBackingInUSD(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(collateralRatio).TruncateInt()
+
+	availableExcessBackingValue := sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
+	if requiredBackingValue.LT(totalBackingValue.Amount) {
+		availableExcessBackingValue.Amount = totalBackingValue.Amount.Sub(requiredBackingValue)
+	}
+
+	lionInValue := msg.LionIn.Amount.ToDec().Mul(lionPrice)
+	if lionInValue.TruncateInt().GT(availableExcessBackingValue.Amount) {
+		return nil, sdkerrors.Wrap(types.ErrBackingCoinInsufficient, "insufficient available backing coin")
+	}
+
+	backingOut := sdk.NewCoin(msg.BackingOutMin.Denom, lionInValue.Quo(backingPrice).TruncateInt())
+	if poolBacking.Backing.IsLT(backingOut) {
+		return nil, sdkerrors.Wrap(types.ErrBackingCoinInsufficient, "insufficient available backing coin")
+	}
+	poolBacking.Backing = poolBacking.Backing.Sub(backingOut)
+
+	fee := computeFee(backingOut, backingParams.BuybackFee)
+	backingOut = backingOut.Sub(fee)
+
+	if backingOut.IsLT(msg.BackingOutMin) {
+		return nil, sdkerrors.Wrap(types.ErrBackingCoinSlippage, "backing coin over slippage")
+	}
+
+	m.Keeper.SetPoolBacking(ctx, poolBacking)
+
+	// take lion-in
+	err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(msg.LionIn))
+	if err != nil {
+		return nil, err
+	}
+	// burn lion
+	err = m.Keeper.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(msg.LionIn))
+	if err != nil {
+		return nil, err
+	}
+
+	// send backing to receiver
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(backingOut))
+	if err != nil {
+		return nil, err
+	}
+	// send fee to oracle
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, oracletypes.ModuleName, sdk.NewCoins(fee))
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: event
+	return &types.MsgBuyBackingResponse{
+		BackingOut: backingOut,
+	}, nil
 }
 
 func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*types.MsgSellBackingResponse, error) {
-	// TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+	receiver := sender
+	if len(msg.To) > 0 {
+		// user specifies receiver
+		receiver, err = sdk.AccAddressFromBech32(msg.To)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	collateralRatio := m.Keeper.GetCollateralRatio(ctx)
+
+	backingParams, found := m.Keeper.GetBackingRiskParams(ctx, msg.BackingIn.Denom)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", msg.BackingIn.Denom)
+	}
+
+	if !backingParams.Enabled {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", msg.BackingIn.Denom)
+	}
+
+	// get backing and lion price in usd
+	backingPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, msg.BackingIn.Denom)
+	if err != nil {
+		return nil, err
+	}
+	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroLionDenom)
+	if err != nil {
+		return nil, err
+	}
+
+	totalBacking, found := m.Keeper.GetTotalBacking(ctx)
+	if !found {
+		// TODO
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", msg.BackingIn.Denom)
+	}
+	poolBacking, found := m.Keeper.GetPoolBacking(ctx, msg.BackingIn.Denom)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", msg.BackingIn.Denom)
+	}
+
+	totalBackingValue, err := m.Keeper.totalBackingInUSD(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(collateralRatio).TruncateInt()
+
+	availableMissingBackingValue := sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
+	if requiredBackingValue.GT(totalBackingValue.Amount) {
+		availableMissingBackingValue.Amount = requiredBackingValue.Sub(totalBackingValue.Amount)
+	}
+	availableLionOut := availableMissingBackingValue.Amount.ToDec().Quo(lionPrice)
+
+	bonusRatio := m.Keeper.RecollateralizeBonus(ctx)
+	mint := sdk.NewCoin(merlion.MicroLionDenom, msg.BackingIn.Amount.ToDec().Mul(backingPrice).Quo(lionPrice).TruncateInt())
+	bonus := computeFee(mint, &bonusRatio)
+	fee := computeFee(mint, backingParams.RecollateralizeFee)
+
+	mint = mint.Add(bonus)
+	if mint.Amount.ToDec().GT(availableLionOut) {
+		return nil, sdkerrors.Wrap(types.ErrLionCoinInsufficient, "insufficient available lion coin")
+	}
+	lionOut := mint.Sub(fee)
+
+	if lionOut.IsLT(msg.LionOutMin) {
+		return nil, sdkerrors.Wrap(types.ErrLionCoinSlippage, "lion coin over slippage")
+	}
+
+	poolBacking.Backing = poolBacking.Backing.Add(msg.BackingIn)
+	if backingParams.MaxBacking != nil {
+		if poolBacking.Backing.Amount.GT(*backingParams.MaxBacking) {
+			return nil, sdkerrors.Wrap(types.ErrBackingCeiling, "over ceiling")
+		}
+	}
+
+	m.Keeper.SetPoolBacking(ctx, poolBacking)
+
+	// take backing-in
+	err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(msg.BackingIn))
+	if err != nil {
+		return nil, err
+	}
+
+	// mint lion
+	err = m.Keeper.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mint))
+	if err != nil {
+		return nil, err
+	}
+	// send lion to receiver
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(lionOut))
+	if err != nil {
+		return nil, err
+	}
+	// send fee to oracle
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, oracletypes.ModuleName, sdk.NewCoins(fee))
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: event
+
+	return &types.MsgSellBackingResponse{
+		LionOut: lionOut,
+	}, nil
+}
+
+func (k Keeper) totalBackingInUSD(ctx sdk.Context) (sdk.Coin, error) {
+	totalBackingValue := sdk.ZeroDec()
+	for _, pool := range k.GetAllPoolBacking(ctx) {
+		backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, pool.Backing.Denom)
+		if err != nil {
+			return sdk.Coin{}, err
+		}
+		totalBackingValue = totalBackingValue.Add(pool.Backing.Amount.ToDec().Mul(backingPrice))
+	}
+	return sdk.NewCoin(merlion.MicroUSDDenom, totalBackingValue.TruncateInt()), nil
 }
 
 func settleInterestFee(ctx sdk.Context, acc *types.AccountCollateral, pool *types.PoolCollateral, apr *sdk.Dec) {

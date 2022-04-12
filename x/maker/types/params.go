@@ -14,9 +14,10 @@ var (
 	KeyCollateralRatioStep           = []byte("CollateralRatioStep")
 	KeyCollateralRatioPriceBand      = []byte("CollateralRatioPriceBand")
 	KeyCollateralRatioCooldownPeriod = []byte("CollateralRatioCooldownPeriod")
-	KeyLiquidationCommissionFee      = []byte("LiquidationCommissionFee")
 	KeyMintPriceBias                 = []byte("MintPriceBias")
 	KeyBurnPriceBias                 = []byte("BurnPriceBias")
+	KeyRecollateralizeBonus          = []byte("RecollateralizeBonus")
+	KeyLiquidationCommissionFee      = []byte("LiquidationCommissionFee")
 )
 
 // Default parameter values
@@ -24,9 +25,10 @@ var (
 	DefaultCollateralRatioStep           = sdk.NewDecWithPrec(25, 4) // 0.25%
 	DefaultCollateralRatioPriceBand      = sdk.NewDecWithPrec(5, 3)  // 0.5%
 	DefaultCollateralRatioCooldownPeriod = merlion.BlocksPerHour     // 600
-	DefaultLiquidationCommissionFee      = sdk.NewDecWithPrec(10, 2) // 10%
 	DefaultMintPriceBias                 = sdk.NewDecWithPrec(1, 2)  // 1%
 	DefaultBurnPriceBias                 = sdk.NewDecWithPrec(1, 2)  // 1%
+	DefaultRecollateralizeBonus          = sdk.NewDecWithPrec(75, 4) // 0.75%
+	DefaultLiquidationCommissionFee      = sdk.NewDecWithPrec(10, 2) // 10%
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -42,9 +44,10 @@ func DefaultParams() Params {
 		CollateralRatioStep:           DefaultCollateralRatioStep,
 		CollateralRatioPriceBand:      DefaultCollateralRatioPriceBand,
 		CollateralRatioCooldownPeriod: DefaultCollateralRatioCooldownPeriod,
-		LiquidationCommissionFee:      DefaultLiquidationCommissionFee,
 		MintPriceBias:                 DefaultMintPriceBias,
 		BurnPriceBias:                 DefaultBurnPriceBias,
+		RecollateralizeBonus:          DefaultRecollateralizeBonus,
+		LiquidationCommissionFee:      DefaultLiquidationCommissionFee,
 	}
 }
 
@@ -54,9 +57,10 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyCollateralRatioStep, &p.CollateralRatioStep, validateCollateralRatioStep),
 		paramtypes.NewParamSetPair(KeyCollateralRatioPriceBand, &p.CollateralRatioPriceBand, validateCollateralRatioPriceBand),
 		paramtypes.NewParamSetPair(KeyCollateralRatioCooldownPeriod, &p.CollateralRatioCooldownPeriod, validateCollateralRatioCooldownPeriod),
-		paramtypes.NewParamSetPair(KeyLiquidationCommissionFee, &p.LiquidationCommissionFee, validateLiquidationCommissionFee),
 		paramtypes.NewParamSetPair(KeyMintPriceBias, &p.MintPriceBias, validateMintBurnPriceBias),
 		paramtypes.NewParamSetPair(KeyBurnPriceBias, &p.BurnPriceBias, validateMintBurnPriceBias),
+		paramtypes.NewParamSetPair(KeyRecollateralizeBonus, &p.RecollateralizeBonus, validateRecollateralizeBonus),
+		paramtypes.NewParamSetPair(KeyLiquidationCommissionFee, &p.LiquidationCommissionFee, validateLiquidationCommissionFee),
 	}
 }
 
@@ -71,14 +75,17 @@ func (p Params) Validate() error {
 	if p.CollateralRatioCooldownPeriod == 0 {
 		return fmt.Errorf("cooldown period for adjusting collateral ratio should be positive, is %d", p.CollateralRatioCooldownPeriod)
 	}
-	if p.LiquidationCommissionFee.IsNegative() || p.LiquidationCommissionFee.GT(sdk.OneDec()) {
-		return fmt.Errorf("liquidation commission fee ratio should be a value between [0,1], is %s", p.LiquidationCommissionFee)
-	}
 	if !p.MintPriceBias.IsPositive() || p.MintPriceBias.GT(sdk.OneDec()) {
 		return fmt.Errorf("mint price bias ratio should be a value between (0,1], is %s", p.MintPriceBias)
 	}
 	if !p.BurnPriceBias.IsPositive() || p.BurnPriceBias.GT(sdk.OneDec()) {
 		return fmt.Errorf("burn price bias ratio should be a value between (0,1], is %s", p.MintPriceBias)
+	}
+	if p.RecollateralizeBonus.IsNegative() || p.RecollateralizeBonus.GT(sdk.OneDec()) {
+		return fmt.Errorf("recollateralization bonus ratio should be a value between [0,1], is %s", p.RecollateralizeBonus)
+	}
+	if p.LiquidationCommissionFee.IsNegative() || p.LiquidationCommissionFee.GT(sdk.OneDec()) {
+		return fmt.Errorf("liquidation commission fee ratio should be a value between [0,1], is %s", p.LiquidationCommissionFee)
 	}
 	return nil
 }
@@ -136,23 +143,6 @@ func validateCollateralRatioCooldownPeriod(i interface{}) error {
 	return nil
 }
 
-func validateLiquidationCommissionFee(i interface{}) error {
-	v, ok := i.(sdk.Dec)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
-	if v.IsNegative() {
-		return fmt.Errorf("liquidation commission fee ratio must be positive or zero: %s", v)
-	}
-
-	if v.GT(sdk.OneDec()) {
-		return fmt.Errorf("liquidation commission fee ratio is too large: %s", v)
-	}
-
-	return nil
-}
-
 func validateMintBurnPriceBias(i interface{}) error {
 	v, ok := i.(sdk.Dec)
 	if !ok {
@@ -165,6 +155,40 @@ func validateMintBurnPriceBias(i interface{}) error {
 
 	if v.GT(sdk.OneDec()) {
 		return fmt.Errorf("mint/burn price bias ratio is too large: %s", v)
+	}
+
+	return nil
+}
+
+func validateRecollateralizeBonus(i interface{}) error {
+	v, ok := i.(sdk.Dec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNegative() {
+		return fmt.Errorf("recollateralization bonus ratio must be positive or zero: %s", v)
+	}
+
+	if v.GT(sdk.OneDec()) {
+		return fmt.Errorf("recollateralization bonus ratio is too large: %s", v)
+	}
+
+	return nil
+}
+
+func validateLiquidationCommissionFee(i interface{}) error {
+	v, ok := i.(sdk.Dec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNegative() {
+		return fmt.Errorf("liquidation commission fee ratio must be positive or zero: %s", v)
+	}
+
+	if v.GT(sdk.OneDec()) {
+		return fmt.Errorf("liquidation commission fee ratio is too large: %s", v)
 	}
 
 	return nil
