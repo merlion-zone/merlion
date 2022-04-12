@@ -39,3 +39,15 @@ func (k Keeper) LiquidationCommissionFee(ctx sdk.Context) (res sdk.Dec) {
 	k.paramstore.Get(ctx, types.KeyLiquidationCommissionFee, &res)
 	return
 }
+
+// MintPriceBias is mint price bias ratio
+func (k Keeper) MintPriceBias(ctx sdk.Context) (res sdk.Dec) {
+	k.paramstore.Get(ctx, types.KeyMintPriceBias, &res)
+	return
+}
+
+// BurnPriceBias is burn price bias ratio
+func (k Keeper) BurnPriceBias(ctx sdk.Context) (res sdk.Dec) {
+	k.paramstore.Get(ctx, types.KeyMintPriceBias, &res)
+	return
+}

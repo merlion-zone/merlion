@@ -7,24 +7,24 @@ import (
 )
 
 func (k Keeper) SetBackingRiskParams(ctx sdk.Context, params types.BackingRiskParams) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixBacking)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixBackingParams)
 	bz := k.cdc.MustMarshal(&params)
 	store.Set([]byte(params.BackingDenom), bz)
 }
 
 func (k Keeper) SetCollateralRiskParams(ctx sdk.Context, params types.CollateralRiskParams) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixCollateral)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixCollateralParams)
 	bz := k.cdc.MustMarshal(&params)
 	store.Set([]byte(params.CollateralDenom), bz)
 }
 
 func (k Keeper) IsBackingRegistered(ctx sdk.Context, denom string) bool {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixBacking)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixBackingParams)
 	return store.Has([]byte(denom))
 }
 
 func (k Keeper) GetBackingRiskParams(ctx sdk.Context, denom string) (types.BackingRiskParams, bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixBacking)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixBackingParams)
 	bz := store.Get([]byte(denom))
 	var params types.BackingRiskParams
 	if len(bz) == 0 {
@@ -36,7 +36,7 @@ func (k Keeper) GetBackingRiskParams(ctx sdk.Context, denom string) (types.Backi
 
 func (k Keeper) GetAllBackingRiskParams(ctx sdk.Context) []types.BackingRiskParams {
 	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, types.KeyPrefixBacking)
+	iterator := sdk.KVStorePrefixIterator(store, types.KeyPrefixBackingParams)
 	defer iterator.Close()
 
 	var allParams []types.BackingRiskParams
@@ -51,12 +51,12 @@ func (k Keeper) GetAllBackingRiskParams(ctx sdk.Context) []types.BackingRiskPara
 }
 
 func (k Keeper) IsCollateralRegistered(ctx sdk.Context, denom string) bool {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixCollateral)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixCollateralParams)
 	return store.Has([]byte(denom))
 }
 
 func (k Keeper) GetCollateralRiskParams(ctx sdk.Context, denom string) (types.CollateralRiskParams, bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixCollateral)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixCollateralParams)
 	bz := store.Get([]byte(denom))
 	var params types.CollateralRiskParams
 	if len(bz) == 0 {
@@ -68,7 +68,7 @@ func (k Keeper) GetCollateralRiskParams(ctx sdk.Context, denom string) (types.Co
 
 func (k Keeper) GetAllCollateralRiskParams(ctx sdk.Context) []types.CollateralRiskParams {
 	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, types.KeyPrefixCollateral)
+	iterator := sdk.KVStorePrefixIterator(store, types.KeyPrefixCollateralParams)
 	defer iterator.Close()
 
 	var allParams []types.CollateralRiskParams

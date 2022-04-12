@@ -2,6 +2,7 @@ syntax = "proto3";
 package merlion.maker.v1;
 
 import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/maker/types";
 
@@ -150,4 +151,36 @@ message BatchSetCollateralRiskParamsProposal {
   string description = 2;
   // batch of collateral risk params
   repeated CollateralRiskParams risk_params = 3;
+}
+
+message PoolBacking {}
+
+message AccountBacking {}
+
+message PoolCollateral {
+  option (gogoproto.equal) = false;
+
+  // total collateral
+  cosmos.base.v1beta1.Coin collateral = 1 [ (gogoproto.nullable) = false ];
+  // total existing mer debt
+  cosmos.base.v1beta1.Coin mer_debt = 2 [ (gogoproto.nullable) = false ];
+  // total minted merl by burning lion
+  cosmos.base.v1beta1.Coin mer_by_lion = 3 [ (gogoproto.nullable) = false ];
+}
+
+message AccountCollateral {
+  option (gogoproto.equal) = false;
+
+  // account who owns collateral
+  string account = 1;
+  // existing collateral
+  cosmos.base.v1beta1.Coin collateral = 2 [ (gogoproto.nullable) = false ];
+  // remaining mer debt, including minted by collateral, mint fee, last interest
+  cosmos.base.v1beta1.Coin mer_debt = 3 [ (gogoproto.nullable) = false ];
+  // minted mer by burning lion
+  cosmos.base.v1beta1.Coin mer_by_lion = 4 [ (gogoproto.nullable) = false ];
+  // remaining interest debt after last settlement
+  cosmos.base.v1beta1.Coin last_interest = 5 [ (gogoproto.nullable) = false ];
+  // the block of last settlement
+  int64 last_settlement_block = 6;
 }

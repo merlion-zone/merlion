@@ -6,14 +6,15 @@ import (
 )
 
 const (
-	TypeMsgMintBySwap        = "mint_by_swap"
-	TypeMsgBurnBySwap        = "burn_by_swap"
-	TypeMsgMintByCollateral  = "mint_by_collateral"
-	TypeMsgBurnByCollateral  = "burn_by_collateral"
-	TypeMsgDepositCollateral = "deposit_collateral"
-	TypeMsgRedeemCollateral  = "redeem_collateral"
-	TypeMsgBuyBack           = "buyback"
-	TypeMsgReCollateralize   = "recollateralize"
+	TypeMsgMintBySwap          = "mint_by_swap"
+	TypeMsgBurnBySwap          = "burn_by_swap"
+	TypeMsgMintByCollateral    = "mint_by_collateral"
+	TypeMsgBurnByCollateral    = "burn_by_collateral"
+	TypeMsgDepositCollateral   = "deposit_collateral"
+	TypeMsgRedeemCollateral    = "redeem_collateral"
+	TypeMsgBuyBacking          = "buy_backing"
+	TypeMsgSellBacking         = "sell_backing"
+	TypeMsgLiquidateCollateral = "liquidate_collateral"
 )
 
 var (
@@ -23,8 +24,9 @@ var (
 	_ sdk.Msg = &MsgBurnByCollateral{}
 	_ sdk.Msg = &MsgDepositCollateral{}
 	_ sdk.Msg = &MsgRedeemCollateral{}
-	_ sdk.Msg = &MsgBuyBack{}
-	_ sdk.Msg = &MsgReCollateralize{}
+	_ sdk.Msg = &MsgBuyBacking{}
+	_ sdk.Msg = &MsgSellBacking{}
+	_ sdk.Msg = &MsgLiquidateCollateral{}
 )
 
 // Route Implements sdk.Msg
@@ -141,7 +143,7 @@ func (m *MsgMintByCollateral) ValidateBasic() error {
 	if !m.MintOut.Amount.IsPositive() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.MintOut.String())
 	}
-	if m.LionInMax.Amount.IsNegative() {
+	if !m.LionInMax.Amount.IsPositive() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionInMax.String())
 	}
 	return nil
@@ -173,17 +175,8 @@ func (m *MsgBurnByCollateral) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
 	}
-	if len(m.To) > 0 {
-		_, err = sdk.AccAddressFromBech32(m.To)
-		if err != nil {
-			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
-		}
-	}
-	if !m.BurnIn.Amount.IsPositive() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.BurnIn.String())
-	}
-	if m.LionOutMin.Amount.IsNegative() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionOutMin.String())
+	if !m.RepayInMax.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.RepayInMax.String())
 	}
 	return nil
 }
@@ -274,18 +267,18 @@ func (m *MsgRedeemCollateral) GetSigners() []sdk.AccAddress {
 }
 
 // Route Implements sdk.Msg
-func (m *MsgBuyBack) Route() string { return RouterKey }
+func (m *MsgBuyBacking) Route() string { return RouterKey }
 
 // Type Implements sdk.Msg
-func (m *MsgBuyBack) Type() string { return TypeMsgBuyBack }
+func (m *MsgBuyBacking) Type() string { return TypeMsgBuyBacking }
 
 // GetSignBytes implements sdk.Msg
-func (m *MsgBuyBack) GetSignBytes() []byte {
+func (m *MsgBuyBacking) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
 // ValidateBasic sdk.Msg
-func (m *MsgBuyBack) ValidateBasic() error {
+func (m *MsgBuyBacking) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
@@ -306,7 +299,7 @@ func (m *MsgBuyBack) ValidateBasic() error {
 }
 
 // GetSigners sdk.Msg
-func (m *MsgBuyBack) GetSigners() []sdk.AccAddress {
+func (m *MsgBuyBacking) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
 		panic(err)
@@ -315,18 +308,18 @@ func (m *MsgBuyBack) GetSigners() []sdk.AccAddress {
 }
 
 // Route Implements sdk.Msg
-func (m *MsgReCollateralize) Route() string { return RouterKey }
+func (m *MsgSellBacking) Route() string { return RouterKey }
 
 // Type Implements sdk.Msg
-func (m *MsgReCollateralize) Type() string { return TypeMsgReCollateralize }
+func (m *MsgSellBacking) Type() string { return TypeMsgSellBacking }
 
 // GetSignBytes implements sdk.Msg
-func (m *MsgReCollateralize) GetSignBytes() []byte {
+func (m *MsgSellBacking) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
 // ValidateBasic sdk.Msg
-func (m *MsgReCollateralize) ValidateBasic() error {
+func (m *MsgSellBacking) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
@@ -347,7 +340,31 @@ func (m *MsgReCollateralize) ValidateBasic() error {
 }
 
 // GetSigners sdk.Msg
-func (m *MsgReCollateralize) GetSigners() []sdk.AccAddress {
+func (m *MsgSellBacking) GetSigners() []sdk.AccAddress {
+	sender, err := sdk.AccAddressFromBech32(m.Sender)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{sender}
+}
+
+// Route Implements sdk.Msg
+func (m *MsgLiquidateCollateral) Route() string { return RouterKey }
+
+// Type Implements sdk.Msg
+func (m *MsgLiquidateCollateral) Type() string { return TypeMsgLiquidateCollateral }
+
+// GetSignBytes implements sdk.Msg
+func (m *MsgLiquidateCollateral) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
+}
+
+func (m *MsgLiquidateCollateral) ValidateBasic() error {
+	// TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgLiquidateCollateral) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
 		panic(err)

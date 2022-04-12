@@ -6,6 +6,7 @@ package types
 import (
 	fmt "fmt"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
@@ -558,6 +559,231 @@ func (m *BatchSetCollateralRiskParamsProposal) GetRiskParams() []*CollateralRisk
 	return nil
 }
 
+type PoolBacking struct {
+}
+
+func (m *PoolBacking) Reset()         { *m = PoolBacking{} }
+func (m *PoolBacking) String() string { return proto.CompactTextString(m) }
+func (*PoolBacking) ProtoMessage()    {}
+func (*PoolBacking) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ee82e911d469b50f, []int{8}
+}
+func (m *PoolBacking) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *PoolBacking) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_PoolBacking.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *PoolBacking) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PoolBacking.Merge(m, src)
+}
+func (m *PoolBacking) XXX_Size() int {
+	return m.Size()
+}
+func (m *PoolBacking) XXX_DiscardUnknown() {
+	xxx_messageInfo_PoolBacking.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PoolBacking proto.InternalMessageInfo
+
+type AccountBacking struct {
+}
+
+func (m *AccountBacking) Reset()         { *m = AccountBacking{} }
+func (m *AccountBacking) String() string { return proto.CompactTextString(m) }
+func (*AccountBacking) ProtoMessage()    {}
+func (*AccountBacking) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ee82e911d469b50f, []int{9}
+}
+func (m *AccountBacking) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AccountBacking) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AccountBacking.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AccountBacking) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AccountBacking.Merge(m, src)
+}
+func (m *AccountBacking) XXX_Size() int {
+	return m.Size()
+}
+func (m *AccountBacking) XXX_DiscardUnknown() {
+	xxx_messageInfo_AccountBacking.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AccountBacking proto.InternalMessageInfo
+
+type PoolCollateral struct {
+	// total collateral
+	Collateral types.Coin `protobuf:"bytes,1,opt,name=collateral,proto3" json:"collateral"`
+	// total existing mer debt
+	MerDebt types.Coin `protobuf:"bytes,2,opt,name=mer_debt,json=merDebt,proto3" json:"mer_debt"`
+	// total minted merl by burning lion
+	MerByLion types.Coin `protobuf:"bytes,3,opt,name=mer_by_lion,json=merByLion,proto3" json:"mer_by_lion"`
+}
+
+func (m *PoolCollateral) Reset()         { *m = PoolCollateral{} }
+func (m *PoolCollateral) String() string { return proto.CompactTextString(m) }
+func (*PoolCollateral) ProtoMessage()    {}
+func (*PoolCollateral) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ee82e911d469b50f, []int{10}
+}
+func (m *PoolCollateral) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *PoolCollateral) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_PoolCollateral.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *PoolCollateral) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PoolCollateral.Merge(m, src)
+}
+func (m *PoolCollateral) XXX_Size() int {
+	return m.Size()
+}
+func (m *PoolCollateral) XXX_DiscardUnknown() {
+	xxx_messageInfo_PoolCollateral.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PoolCollateral proto.InternalMessageInfo
+
+func (m *PoolCollateral) GetCollateral() types.Coin {
+	if m != nil {
+		return m.Collateral
+	}
+	return types.Coin{}
+}
+
+func (m *PoolCollateral) GetMerDebt() types.Coin {
+	if m != nil {
+		return m.MerDebt
+	}
+	return types.Coin{}
+}
+
+func (m *PoolCollateral) GetMerByLion() types.Coin {
+	if m != nil {
+		return m.MerByLion
+	}
+	return types.Coin{}
+}
+
+type AccountCollateral struct {
+	// account who owns collateral
+	Account string `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	// existing collateral
+	Collateral types.Coin `protobuf:"bytes,2,opt,name=collateral,proto3" json:"collateral"`
+	// remaining mer debt, including minted by collateral, mint fee, last interest
+	MerDebt types.Coin `protobuf:"bytes,3,opt,name=mer_debt,json=merDebt,proto3" json:"mer_debt"`
+	// minted mer by burning lion
+	MerByLion types.Coin `protobuf:"bytes,4,opt,name=mer_by_lion,json=merByLion,proto3" json:"mer_by_lion"`
+	// remaining interest debt after last settlement
+	LastInterest types.Coin `protobuf:"bytes,5,opt,name=last_interest,json=lastInterest,proto3" json:"last_interest"`
+	// the block of last settlement
+	LastSettlementBlock int64 `protobuf:"varint,6,opt,name=last_settlement_block,json=lastSettlementBlock,proto3" json:"last_settlement_block,omitempty"`
+}
+
+func (m *AccountCollateral) Reset()         { *m = AccountCollateral{} }
+func (m *AccountCollateral) String() string { return proto.CompactTextString(m) }
+func (*AccountCollateral) ProtoMessage()    {}
+func (*AccountCollateral) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ee82e911d469b50f, []int{11}
+}
+func (m *AccountCollateral) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AccountCollateral) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AccountCollateral.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AccountCollateral) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AccountCollateral.Merge(m, src)
+}
+func (m *AccountCollateral) XXX_Size() int {
+	return m.Size()
+}
+func (m *AccountCollateral) XXX_DiscardUnknown() {
+	xxx_messageInfo_AccountCollateral.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AccountCollateral proto.InternalMessageInfo
+
+func (m *AccountCollateral) GetAccount() string {
+	if m != nil {
+		return m.Account
+	}
+	return ""
+}
+
+func (m *AccountCollateral) GetCollateral() types.Coin {
+	if m != nil {
+		return m.Collateral
+	}
+	return types.Coin{}
+}
+
+func (m *AccountCollateral) GetMerDebt() types.Coin {
+	if m != nil {
+		return m.MerDebt
+	}
+	return types.Coin{}
+}
+
+func (m *AccountCollateral) GetMerByLion() types.Coin {
+	if m != nil {
+		return m.MerByLion
+	}
+	return types.Coin{}
+}
+
+func (m *AccountCollateral) GetLastInterest() types.Coin {
+	if m != nil {
+		return m.LastInterest
+	}
+	return types.Coin{}
+}
+
+func (m *AccountCollateral) GetLastSettlementBlock() int64 {
+	if m != nil {
+		return m.LastSettlementBlock
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*BackingRiskParams)(nil), "merlion.maker.v1.BackingRiskParams")
 	proto.RegisterType((*CollateralRiskParams)(nil), "merlion.maker.v1.CollateralRiskParams")
@@ -567,56 +793,73 @@ func init() {
 	proto.RegisterType((*SetCollateralRiskParamsProposal)(nil), "merlion.maker.v1.SetCollateralRiskParamsProposal")
 	proto.RegisterType((*BatchSetBackingRiskParamsProposal)(nil), "merlion.maker.v1.BatchSetBackingRiskParamsProposal")
 	proto.RegisterType((*BatchSetCollateralRiskParamsProposal)(nil), "merlion.maker.v1.BatchSetCollateralRiskParamsProposal")
+	proto.RegisterType((*PoolBacking)(nil), "merlion.maker.v1.PoolBacking")
+	proto.RegisterType((*AccountBacking)(nil), "merlion.maker.v1.AccountBacking")
+	proto.RegisterType((*PoolCollateral)(nil), "merlion.maker.v1.PoolCollateral")
+	proto.RegisterType((*AccountCollateral)(nil), "merlion.maker.v1.AccountCollateral")
 }
 
 func init() { proto.RegisterFile("merlion/maker/v1/maker.proto", fileDescriptor_ee82e911d469b50f) }
 
 var fileDescriptor_ee82e911d469b50f = []byte{
-	// 697 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x96, 0xdd, 0x6a, 0x13, 0x41,
-	0x14, 0xc7, 0xb3, 0xf6, 0xfb, 0x6c, 0xbf, 0xdc, 0x46, 0x0c, 0xa5, 0xa4, 0xb5, 0x95, 0x52, 0x85,
-	0x26, 0x54, 0xef, 0xbc, 0x8c, 0xb5, 0x45, 0xda, 0x4a, 0xdd, 0x16, 0xc1, 0x0f, 0x58, 0x66, 0x37,
-	0xc7, 0x64, 0xc8, 0xee, 0x4c, 0x9c, 0x99, 0x94, 0xb4, 0x4f, 0xe1, 0x0b, 0x08, 0xa2, 0x17, 0x0a,
-	0xe2, 0x7b, 0x78, 0xd9, 0x3b, 0xc5, 0x0b, 0x91, 0xf6, 0xc6, 0xc7, 0x90, 0xd9, 0x6c, 0x92, 0x6d,
-	0x13, 0x90, 0xdd, 0x4a, 0xe9, 0x55, 0x66, 0xce, 0xec, 0xf9, 0x71, 0xe6, 0xec, 0xff, 0x7f, 0xb2,
-	0x30, 0x17, 0xa0, 0xf0, 0x29, 0x67, 0xc5, 0x80, 0xd4, 0x50, 0x14, 0x0f, 0xd6, 0x5a, 0x8b, 0x42,
-	0x5d, 0x70, 0xc5, 0xad, 0xe9, 0xe8, 0xb4, 0xd0, 0x0a, 0x1e, 0xac, 0xcd, 0x66, 0x2b, 0xbc, 0xc2,
-	0xc3, 0xc3, 0xa2, 0x5e, 0xb5, 0x9e, 0x5b, 0xfc, 0x32, 0x08, 0xd7, 0x4b, 0xc4, 0xab, 0x51, 0x56,
-	0xb1, 0xa9, 0xac, 0xed, 0x12, 0x41, 0x02, 0x69, 0x2d, 0xc1, 0x84, 0xdb, 0x0a, 0x3a, 0x65, 0x64,
-	0x3c, 0xc8, 0x19, 0x0b, 0xc6, 0xca, 0x98, 0x3d, 0x1e, 0x05, 0xd7, 0x75, 0xcc, 0xca, 0xc1, 0x08,
-	0x32, 0xe2, 0xfa, 0x58, 0xce, 0x5d, 0x5b, 0x30, 0x56, 0x46, 0xed, 0xf6, 0xd6, 0xda, 0x02, 0x33,
-	0x20, 0x4d, 0x27, 0x7a, 0x3a, 0x37, 0xa0, 0x93, 0x4b, 0x77, 0x7f, 0xfe, 0x9a, 0x5f, 0xae, 0x50,
-	0x55, 0x6d, 0xb8, 0x05, 0x8f, 0x07, 0x45, 0x8f, 0xcb, 0x80, 0xcb, 0xe8, 0x67, 0x55, 0x96, 0x6b,
-	0x45, 0x75, 0x58, 0x47, 0x59, 0x78, 0xcc, 0x94, 0x0d, 0x01, 0x69, 0x46, 0x55, 0x59, 0xdb, 0x30,
-	0xae, 0x61, 0x01, 0x0a, 0x27, 0xa0, 0x4c, 0xe5, 0x06, 0x53, 0xd1, 0x76, 0x50, 0xec, 0x50, 0xa6,
-	0xac, 0x47, 0x30, 0xaa, 0x29, 0xce, 0x6b, 0xc4, 0xdc, 0x50, 0x22, 0xd2, 0x3a, 0x7a, 0xf6, 0x88,
-	0xce, 0xdd, 0x40, 0xd4, 0x18, 0xb7, 0x21, 0x58, 0x88, 0x19, 0x4e, 0x8e, 0xd1, 0xb9, 0x1a, 0xb3,
-	0x05, 0xa6, 0xdb, 0x38, 0xd4, 0x7d, 0x0a, 0x49, 0x23, 0x89, 0x49, 0x10, 0xa5, 0x6b, 0xd8, 0x4b,
-	0x98, 0x11, 0xe8, 0x71, 0xdf, 0x27, 0x0a, 0x05, 0xf1, 0xe9, 0x11, 0x86, 0xd0, 0xd1, 0xc4, 0x50,
-	0xeb, 0x1c, 0x66, 0x03, 0xf1, 0xc1, 0xe0, 0x9f, 0xf7, 0xf3, 0x99, 0xc5, 0xef, 0xc3, 0x90, 0x7d,
-	0xd8, 0x39, 0x8a, 0x09, 0xe6, 0x0e, 0x4c, 0x77, 0x53, 0xce, 0x68, 0x66, 0xaa, 0x1b, 0xff, 0x97,
-	0x6c, 0x9e, 0xc2, 0xa4, 0x7e, 0xd3, 0xdd, 0x84, 0x14, 0xca, 0x99, 0x08, 0x48, 0xb3, 0x5b, 0xe1,
-	0x7f, 0x16, 0x8f, 0x03, 0x37, 0x7c, 0xfa, 0xa6, 0x41, 0xcb, 0x44, 0x51, 0xce, 0x1c, 0x55, 0x15,
-	0x28, 0xab, 0xdc, 0x2f, 0xa7, 0x50, 0x52, 0x36, 0x06, 0xda, 0x6f, 0x73, 0xac, 0x27, 0x30, 0xe1,
-	0x73, 0xc2, 0x1c, 0xc5, 0x9d, 0x03, 0xe2, 0x37, 0xd2, 0x68, 0xcb, 0xd4, 0x80, 0x7d, 0xfe, 0x4c,
-	0xa7, 0x5b, 0xcf, 0x61, 0xc6, 0x25, 0x92, 0x7a, 0xce, 0x59, 0x6a, 0x72, 0x9d, 0x4d, 0x87, 0x98,
-	0xed, 0x18, 0xfa, 0x15, 0x64, 0x3d, 0xa2, 0x88, 0x7f, 0xa8, 0x34, 0x5e, 0xb7, 0x43, 0xe8, 0xcb,
-	0xa4, 0x91, 0x5b, 0x87, 0xb3, 0x4d, 0x39, 0xb3, 0x35, 0xc5, 0xda, 0x83, 0xa9, 0x78, 0xa7, 0xb5,
-	0x8e, 0xc7, 0x12, 0x83, 0x27, 0x63, 0x88, 0xc8, 0xb4, 0x1d, 0xef, 0x43, 0x7a, 0xef, 0xef, 0xc0,
-	0x38, 0x65, 0x0a, 0x05, 0xca, 0x16, 0xca, 0x4c, 0xfe, 0x8e, 0xda, 0xf9, 0x5d, 0x67, 0xbd, 0x33,
-	0xe0, 0xa6, 0x8d, 0x15, 0x2a, 0x15, 0x8a, 0x68, 0xf2, 0xed, 0x0a, 0x5e, 0xe7, 0x92, 0xf8, 0x56,
-	0x16, 0x86, 0x14, 0x55, 0x3e, 0x46, 0x8e, 0x6a, 0x6d, 0xac, 0x05, 0x30, 0xcb, 0x28, 0x3d, 0x41,
-	0xeb, 0xfa, 0x7e, 0xa1, 0x97, 0xc6, 0xec, 0x78, 0xc8, 0x5a, 0x07, 0x53, 0x50, 0x59, 0x73, 0xea,
-	0xa1, 0x47, 0x43, 0x33, 0x99, 0xf7, 0x96, 0x0a, 0xe7, 0xff, 0x19, 0x0a, 0x3d, 0xf3, 0xdf, 0x06,
-	0xd1, 0x59, 0x47, 0xf5, 0x7d, 0x34, 0x60, 0xb6, 0x5d, 0x5f, 0xd7, 0x5f, 0x17, 0x2e, 0x71, 0xb3,
-	0x5f, 0x89, 0xcb, 0xbd, 0x25, 0xf6, 0x1b, 0x3a, 0x7d, 0xaa, 0xfc, 0x60, 0xc0, 0xdc, 0x1e, 0xaa,
-	0x9e, 0x0b, 0x5d, 0xa9, 0x56, 0x7e, 0x36, 0x60, 0x7e, 0x0f, 0x55, 0xbf, 0x2b, 0x5d, 0xb5, 0x7e,
-	0x7e, 0x32, 0xe0, 0x56, 0x89, 0x28, 0xaf, 0x7a, 0x39, 0x4d, 0x1d, 0x48, 0xdf, 0xd4, 0xaf, 0x06,
-	0xdc, 0x6e, 0x57, 0x7a, 0x39, 0x9d, 0x1d, 0xb8, 0x48, 0x67, 0x4b, 0x9b, 0xdf, 0x4e, 0xf2, 0xc6,
-	0xf1, 0x49, 0xde, 0xf8, 0x7d, 0x92, 0x37, 0xde, 0x9e, 0xe6, 0x33, 0xc7, 0xa7, 0xf9, 0xcc, 0x8f,
-	0xd3, 0x7c, 0xe6, 0xc5, 0x6a, 0x6c, 0x88, 0x44, 0xf4, 0xd5, 0x23, 0xce, 0xb0, 0xbd, 0x29, 0x36,
-	0xa3, 0x2f, 0xbe, 0x70, 0x9e, 0xb8, 0xc3, 0xe1, 0x77, 0xdc, 0xfd, 0xbf, 0x01, 0x00, 0x00, 0xff,
-	0xff, 0x02, 0x63, 0xe3, 0xef, 0x0f, 0x0a, 0x00, 0x00,
+	// 906 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x97, 0xdf, 0x6b, 0x1b, 0x47,
+	0x10, 0xc7, 0x75, 0x96, 0x62, 0xd9, 0x73, 0x96, 0xe3, 0xac, 0x15, 0xaa, 0x9a, 0x20, 0xbb, 0x4e,
+	0x09, 0x69, 0xc1, 0x77, 0x38, 0x7d, 0xcb, 0x4b, 0xa8, 0xa2, 0x26, 0x84, 0xd8, 0xc5, 0x3d, 0x87,
+	0x42, 0x7f, 0xc0, 0xb1, 0x77, 0x9a, 0xca, 0x8b, 0xee, 0x76, 0xd5, 0xbd, 0x95, 0xb1, 0xf2, 0x57,
+	0xf4, 0x1f, 0x28, 0x94, 0xf6, 0xa1, 0x85, 0xd2, 0xff, 0x23, 0x8f, 0x79, 0x28, 0xb4, 0xf4, 0x21,
+	0x14, 0xfb, 0xa5, 0xd0, 0x7f, 0xa2, 0xec, 0xdd, 0x9e, 0x74, 0xb1, 0x0d, 0xc9, 0x49, 0x25, 0xe4,
+	0x49, 0x77, 0x3b, 0xf7, 0xfd, 0x30, 0x33, 0x3b, 0x33, 0xbb, 0x82, 0x1b, 0x31, 0xca, 0x88, 0x09,
+	0xee, 0xc6, 0x74, 0x80, 0xd2, 0x3d, 0xde, 0xcd, 0x1e, 0x9c, 0xa1, 0x14, 0x4a, 0x90, 0x35, 0x63,
+	0x75, 0xb2, 0xc5, 0xe3, 0xdd, 0x8d, 0x66, 0x5f, 0xf4, 0x45, 0x6a, 0x74, 0xf5, 0x53, 0xf6, 0xdd,
+	0x46, 0x3b, 0x14, 0x49, 0x2c, 0x12, 0x37, 0xa0, 0x09, 0xba, 0xc7, 0xbb, 0x01, 0x2a, 0xba, 0xeb,
+	0x86, 0x82, 0xf1, 0xcc, 0xbe, 0xfd, 0x6b, 0x0d, 0xae, 0x75, 0x68, 0x38, 0x60, 0xbc, 0xef, 0xb1,
+	0x64, 0x70, 0x40, 0x25, 0x8d, 0x13, 0x72, 0x13, 0x1a, 0x41, 0xb6, 0xe8, 0xf7, 0x90, 0x8b, 0xb8,
+	0x65, 0x6d, 0x59, 0xb7, 0x97, 0xbd, 0x15, 0xb3, 0xd8, 0xd5, 0x6b, 0xa4, 0x05, 0x75, 0xe4, 0x34,
+	0x88, 0xb0, 0xd7, 0x5a, 0xd8, 0xb2, 0x6e, 0x2f, 0x79, 0xf9, 0x2b, 0x79, 0x0c, 0x76, 0x4c, 0x4f,
+	0x7c, 0xf3, 0x75, 0xab, 0xaa, 0xc5, 0x9d, 0x0f, 0xff, 0x7a, 0xb1, 0x79, 0xab, 0xcf, 0xd4, 0xd1,
+	0x28, 0x70, 0x42, 0x11, 0xbb, 0xc6, 0xb1, 0xec, 0x67, 0x27, 0xe9, 0x0d, 0x5c, 0x35, 0x1e, 0x62,
+	0xe2, 0x3c, 0xe2, 0xca, 0x83, 0x98, 0x9e, 0x18, 0xaf, 0xc8, 0x1e, 0xac, 0x68, 0x58, 0x8c, 0xd2,
+	0x8f, 0x19, 0x57, 0xad, 0xda, 0x4c, 0xb4, 0x7d, 0x94, 0xfb, 0x8c, 0x2b, 0xf2, 0x09, 0x2c, 0x69,
+	0x8a, 0xff, 0x0d, 0x62, 0xeb, 0x4a, 0x29, 0x52, 0x17, 0x43, 0xaf, 0xae, 0xb5, 0x0f, 0x10, 0x35,
+	0x26, 0x18, 0x49, 0x9e, 0x62, 0x16, 0xcb, 0x63, 0xb4, 0x56, 0x63, 0x1e, 0x83, 0x1d, 0x8c, 0xc6,
+	0x3a, 0x4f, 0x29, 0xa9, 0x5e, 0x9a, 0x04, 0x46, 0xae, 0x61, 0x5f, 0xc1, 0xba, 0xc4, 0x50, 0x44,
+	0x11, 0x55, 0x28, 0x69, 0xc4, 0x9e, 0x62, 0x0a, 0x5d, 0x2a, 0x0d, 0x25, 0xe7, 0x30, 0x0f, 0x10,
+	0xef, 0xd6, 0xfe, 0xf9, 0x61, 0xb3, 0xb2, 0xfd, 0xc7, 0x22, 0x34, 0xef, 0x4f, 0x4c, 0x85, 0x82,
+	0xf9, 0x00, 0xd6, 0xa6, 0x92, 0x97, 0x6a, 0xe6, 0xea, 0x74, 0xfd, 0x55, 0x65, 0xf3, 0x19, 0xac,
+	0xea, 0x9d, 0x9e, 0x0a, 0x66, 0xa8, 0x9c, 0x46, 0x4c, 0x4f, 0xa6, 0x1e, 0xfe, 0xcf, 0xc5, 0xe3,
+	0xc3, 0xf5, 0x88, 0x7d, 0x3b, 0x62, 0x3d, 0xaa, 0x98, 0xe0, 0xbe, 0x3a, 0x92, 0x98, 0x1c, 0x89,
+	0xa8, 0x37, 0x43, 0x25, 0x35, 0x0b, 0xa0, 0x27, 0x39, 0x87, 0x7c, 0x0a, 0x8d, 0x48, 0x50, 0xee,
+	0x2b, 0xe1, 0x1f, 0xd3, 0x68, 0x34, 0x4b, 0x6d, 0xd9, 0x1a, 0xf0, 0x44, 0x7c, 0xae, 0xe5, 0xe4,
+	0x0b, 0x58, 0x0f, 0x68, 0xc2, 0x42, 0xff, 0x65, 0x6a, 0xf9, 0x3a, 0x5b, 0x4b, 0x31, 0x7b, 0x05,
+	0xf4, 0xd7, 0xd0, 0x0c, 0xa9, 0xa2, 0xd1, 0x58, 0x69, 0xbc, 0x4e, 0x87, 0xd4, 0xc1, 0xcc, 0x52,
+	0x6e, 0x13, 0xce, 0x1e, 0x13, 0xdc, 0xd3, 0x14, 0x72, 0x08, 0x57, 0x8b, 0x99, 0xd6, 0x75, 0xbc,
+	0x5c, 0x1a, 0xbc, 0x5a, 0x40, 0x98, 0xa6, 0x9d, 0xf4, 0x3e, 0xcc, 0xde, 0xfb, 0xfb, 0xb0, 0xc2,
+	0xb8, 0x42, 0x89, 0x49, 0x86, 0xb2, 0xcb, 0xef, 0x51, 0xae, 0x9f, 0x76, 0xd6, 0xf7, 0x16, 0xbc,
+	0xe3, 0x61, 0x9f, 0x25, 0x0a, 0xa5, 0x99, 0x7c, 0x07, 0x52, 0x0c, 0x45, 0x42, 0x23, 0xd2, 0x84,
+	0x2b, 0x8a, 0xa9, 0x08, 0x4d, 0x47, 0x65, 0x2f, 0x64, 0x0b, 0xec, 0x1e, 0x26, 0xa1, 0x64, 0x43,
+	0x1d, 0x5f, 0xda, 0x4b, 0xcb, 0x5e, 0x71, 0x89, 0x74, 0xc1, 0x96, 0x2c, 0x19, 0xf8, 0xc3, 0xb4,
+	0x47, 0xd3, 0x66, 0xb2, 0xef, 0xdc, 0x74, 0xce, 0x9f, 0x1c, 0xce, 0x85, 0xf9, 0xef, 0x81, 0x9c,
+	0x3c, 0x1b, 0xff, 0x7e, 0xb2, 0x60, 0x23, 0xf7, 0x6f, 0xda, 0x5f, 0x73, 0xbb, 0xf8, 0xf0, 0x32,
+	0x17, 0x6f, 0x5d, 0x74, 0xf1, 0xb2, 0xa1, 0x73, 0x89, 0x97, 0x3f, 0x5a, 0x70, 0xe3, 0x10, 0xd5,
+	0x85, 0x80, 0xde, 0xaa, 0x54, 0xfe, 0x62, 0xc1, 0xe6, 0x21, 0xaa, 0xcb, 0x42, 0x7a, 0xdb, 0xf2,
+	0xf9, 0xb3, 0x05, 0xef, 0x75, 0xa8, 0x0a, 0x8f, 0xde, 0x4c, 0x52, 0xab, 0xb3, 0x27, 0xf5, 0x37,
+	0x0b, 0xde, 0xcf, 0x3d, 0x7d, 0x33, 0x99, 0xad, 0xce, 0x95, 0xd9, 0x06, 0xd8, 0x07, 0x42, 0x44,
+	0x26, 0xb4, 0xed, 0x35, 0x58, 0xfd, 0x38, 0x0c, 0xc5, 0x88, 0xe7, 0x69, 0xde, 0xfe, 0xdd, 0x82,
+	0x55, 0xfd, 0x45, 0xe1, 0x30, 0xbb, 0x07, 0x50, 0x38, 0x1b, 0xad, 0x74, 0x6f, 0xdf, 0x75, 0xb2,
+	0x09, 0xe3, 0xe8, 0x0b, 0x9e, 0x63, 0x2e, 0x78, 0xce, 0x7d, 0xc1, 0x78, 0xa7, 0xf6, 0xec, 0xc5,
+	0x66, 0xc5, 0x2b, 0x48, 0xc8, 0x5d, 0x58, 0xd2, 0x27, 0x61, 0x0f, 0x03, 0x95, 0x86, 0xf8, 0x1a,
+	0xf2, 0x7a, 0x8c, 0xb2, 0x8b, 0x81, 0x22, 0xf7, 0xc0, 0xd6, 0xda, 0x60, 0x9c, 0x0e, 0x7b, 0x53,
+	0x59, 0xaf, 0x94, 0x2f, 0xc7, 0x28, 0x3b, 0x63, 0x3d, 0xd7, 0x4d, 0xdc, 0xff, 0x2e, 0xc0, 0x35,
+	0x13, 0x69, 0x21, 0xb2, 0x16, 0xd4, 0x69, 0xb6, 0x68, 0xb6, 0x25, 0x7f, 0x3d, 0x17, 0xf3, 0xc2,
+	0x7c, 0x31, 0x57, 0xe7, 0x8b, 0xb9, 0x56, 0x36, 0x66, 0xd2, 0x85, 0x46, 0x44, 0x13, 0xe5, 0xe7,
+	0xf3, 0x3e, 0xbd, 0x28, 0xbc, 0x06, 0x62, 0x45, 0xab, 0x1e, 0x19, 0x11, 0xb9, 0x03, 0xd7, 0x53,
+	0x4a, 0x82, 0x4a, 0x45, 0x18, 0x23, 0x57, 0x7e, 0x10, 0x89, 0x70, 0x90, 0xde, 0x0e, 0xaa, 0xde,
+	0xba, 0x36, 0x1e, 0x4e, 0x6c, 0x1d, 0x6d, 0xca, 0xb2, 0xdd, 0x79, 0xf8, 0xec, 0xb4, 0x6d, 0x3d,
+	0x3f, 0x6d, 0x5b, 0x7f, 0x9f, 0xb6, 0xad, 0xef, 0xce, 0xda, 0x95, 0xe7, 0x67, 0xed, 0xca, 0x9f,
+	0x67, 0xed, 0xca, 0x97, 0x3b, 0x85, 0xa3, 0xca, 0xd4, 0xf0, 0xce, 0x53, 0xc1, 0x31, 0x7f, 0x71,
+	0x4f, 0xcc, 0xff, 0x8e, 0xf4, 0xd4, 0x0a, 0x16, 0xd3, 0x7f, 0x0b, 0x1f, 0xfd, 0x17, 0x00, 0x00,
+	0xff, 0xff, 0xbc, 0x58, 0x41, 0x4f, 0x95, 0x0c, 0x00, 0x00,
 }
 
 func (m *BackingRiskParams) Marshal() (dAtA []byte, err error) {
@@ -1177,6 +1420,180 @@ func (m *BatchSetCollateralRiskParamsProposal) MarshalToSizedBuffer(dAtA []byte)
 	return len(dAtA) - i, nil
 }
 
+func (m *PoolBacking) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PoolBacking) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *PoolBacking) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *AccountBacking) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AccountBacking) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AccountBacking) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *PoolCollateral) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PoolCollateral) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *PoolCollateral) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.MerByLion.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintMaker(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	{
+		size, err := m.MerDebt.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintMaker(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.Collateral.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintMaker(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *AccountCollateral) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AccountCollateral) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AccountCollateral) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.LastSettlementBlock != 0 {
+		i = encodeVarintMaker(dAtA, i, uint64(m.LastSettlementBlock))
+		i--
+		dAtA[i] = 0x30
+	}
+	{
+		size, err := m.LastInterest.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintMaker(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
+	{
+		size, err := m.MerByLion.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintMaker(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	{
+		size, err := m.MerDebt.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintMaker(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	{
+		size, err := m.Collateral.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintMaker(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Account) > 0 {
+		i -= len(m.Account)
+		copy(dAtA[i:], m.Account)
+		i = encodeVarintMaker(dAtA, i, uint64(len(m.Account)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintMaker(dAtA []byte, offset int, v uint64) int {
 	offset -= sovMaker(v)
 	base := offset
@@ -1406,6 +1823,63 @@ func (m *BatchSetCollateralRiskParamsProposal) Size() (n int) {
 			l = e.Size()
 			n += 1 + l + sovMaker(uint64(l))
 		}
+	}
+	return n
+}
+
+func (m *PoolBacking) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *AccountBacking) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *PoolCollateral) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.Collateral.Size()
+	n += 1 + l + sovMaker(uint64(l))
+	l = m.MerDebt.Size()
+	n += 1 + l + sovMaker(uint64(l))
+	l = m.MerByLion.Size()
+	n += 1 + l + sovMaker(uint64(l))
+	return n
+}
+
+func (m *AccountCollateral) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Account)
+	if l > 0 {
+		n += 1 + l + sovMaker(uint64(l))
+	}
+	l = m.Collateral.Size()
+	n += 1 + l + sovMaker(uint64(l))
+	l = m.MerDebt.Size()
+	n += 1 + l + sovMaker(uint64(l))
+	l = m.MerByLion.Size()
+	n += 1 + l + sovMaker(uint64(l))
+	l = m.LastInterest.Size()
+	n += 1 + l + sovMaker(uint64(l))
+	if m.LastSettlementBlock != 0 {
+		n += 1 + sovMaker(uint64(m.LastSettlementBlock))
 	}
 	return n
 }
@@ -3035,6 +3509,488 @@ func (m *BatchSetCollateralRiskParamsProposal) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMaker(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PoolBacking) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMaker
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PoolBacking: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PoolBacking: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMaker(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *AccountBacking) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMaker
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AccountBacking: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AccountBacking: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMaker(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PoolCollateral) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMaker
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PoolCollateral: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PoolCollateral: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Collateral", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMaker
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMaker
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Collateral.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MerDebt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMaker
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMaker
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MerDebt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MerByLion", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMaker
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMaker
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MerByLion.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMaker(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *AccountCollateral) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMaker
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AccountCollateral: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AccountCollateral: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Account", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMaker
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMaker
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Account = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Collateral", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMaker
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMaker
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Collateral.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MerDebt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMaker
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMaker
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MerDebt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MerByLion", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMaker
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMaker
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MerByLion.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LastInterest", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMaker
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMaker
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMaker
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.LastInterest.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LastSettlementBlock", wireType)
+			}
+			m.LastSettlementBlock = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMaker
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LastSettlementBlock |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipMaker(dAtA[iNdEx:])

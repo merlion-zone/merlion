@@ -15,6 +15,8 @@ var (
 	KeyCollateralRatioPriceBand      = []byte("CollateralRatioPriceBand")
 	KeyCollateralRatioCooldownPeriod = []byte("CollateralRatioCooldownPeriod")
 	KeyLiquidationCommissionFee      = []byte("LiquidationCommissionFee")
+	KeyMintPriceBias                 = []byte("MintPriceBias")
+	KeyBurnPriceBias                 = []byte("BurnPriceBias")
 )
 
 // Default parameter values
@@ -23,6 +25,8 @@ var (
 	DefaultCollateralRatioPriceBand      = sdk.NewDecWithPrec(5, 3)  // 0.5%
 	DefaultCollateralRatioCooldownPeriod = merlion.BlocksPerHour     // 600
 	DefaultLiquidationCommissionFee      = sdk.NewDecWithPrec(10, 2) // 10%
+	DefaultMintPriceBias                 = sdk.NewDecWithPrec(1, 2)  // 1%
+	DefaultBurnPriceBias                 = sdk.NewDecWithPrec(1, 2)  // 1%
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -39,6 +43,8 @@ func DefaultParams() Params {
 		CollateralRatioPriceBand:      DefaultCollateralRatioPriceBand,
 		CollateralRatioCooldownPeriod: DefaultCollateralRatioCooldownPeriod,
 		LiquidationCommissionFee:      DefaultLiquidationCommissionFee,
+		MintPriceBias:                 DefaultMintPriceBias,
+		BurnPriceBias:                 DefaultBurnPriceBias,
 	}
 }
 
@@ -49,22 +55,30 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyCollateralRatioPriceBand, &p.CollateralRatioPriceBand, validateCollateralRatioPriceBand),
 		paramtypes.NewParamSetPair(KeyCollateralRatioCooldownPeriod, &p.CollateralRatioCooldownPeriod, validateCollateralRatioCooldownPeriod),
 		paramtypes.NewParamSetPair(KeyLiquidationCommissionFee, &p.LiquidationCommissionFee, validateLiquidationCommissionFee),
+		paramtypes.NewParamSetPair(KeyMintPriceBias, &p.MintPriceBias, validateMintBurnPriceBias),
+		paramtypes.NewParamSetPair(KeyBurnPriceBias, &p.BurnPriceBias, validateMintBurnPriceBias),
 	}
 }
 
 // Validate validates the set of params
 func (p Params) Validate() error {
-	if !p.CollateralRatioStep.IsPositive() {
-		return fmt.Errorf("collateral ratio adjusting step should be positive, is %s", p.CollateralRatioStep)
+	if !p.CollateralRatioStep.IsPositive() || p.CollateralRatioStep.GT(sdk.OneDec()) {
+		return fmt.Errorf("collateral ratio adjusting step should be a value between (0,1], is %s", p.CollateralRatioStep)
 	}
-	if !p.CollateralRatioPriceBand.IsPositive() {
-		return fmt.Errorf("price band for adjusting collateral ratio should be positive, is %s", p.CollateralRatioPriceBand)
+	if !p.CollateralRatioPriceBand.IsPositive() || p.CollateralRatioPriceBand.GT(sdk.OneDec()) {
+		return fmt.Errorf("price band for adjusting collateral ratio should be a value between (0,1], is %s", p.CollateralRatioPriceBand)
 	}
 	if p.CollateralRatioCooldownPeriod == 0 {
-		return fmt.Errorf("cooldown period for adjusting collateral ratio should be positive, is %s", p.CollateralRatioCooldownPeriod)
+		return fmt.Errorf("cooldown period for adjusting collateral ratio should be positive, is %d", p.CollateralRatioCooldownPeriod)
 	}
 	if p.LiquidationCommissionFee.IsNegative() || p.LiquidationCommissionFee.GT(sdk.OneDec()) {
 		return fmt.Errorf("liquidation commission fee ratio should be a value between [0,1], is %s", p.LiquidationCommissionFee)
+	}
+	if !p.MintPriceBias.IsPositive() || p.MintPriceBias.GT(sdk.OneDec()) {
+		return fmt.Errorf("mint price bias ratio should be a value between (0,1], is %s", p.MintPriceBias)
+	}
+	if !p.BurnPriceBias.IsPositive() || p.BurnPriceBias.GT(sdk.OneDec()) {
+		return fmt.Errorf("burn price bias ratio should be a value between (0,1], is %s", p.MintPriceBias)
 	}
 	return nil
 }
@@ -134,6 +148,23 @@ func validateLiquidationCommissionFee(i interface{}) error {
 
 	if v.GT(sdk.OneDec()) {
 		return fmt.Errorf("liquidation commission fee ratio is too large: %s", v)
+	}
+
+	return nil
+}
+
+func validateMintBurnPriceBias(i interface{}) error {
+	v, ok := i.(sdk.Dec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if !v.IsPositive() {
+		return fmt.Errorf("mint/burn price bias ratio must be positive: %s", v)
+	}
+
+	if v.GT(sdk.OneDec()) {
+		return fmt.Errorf("mint/burn price bias ratio is too large: %s", v)
 	}
 
 	return nil

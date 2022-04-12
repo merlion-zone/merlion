@@ -19,12 +19,20 @@ const (
 
 const (
 	prefixCollateralRatio = iota + 1
-	prefixBacking
-	prefixCollateral
+	prefixBackingParams
+	prefixCollateralParams
+	prefixBackingPool
+	prefixCollateralPool
+	prefixBackingAccount
+	prefixCollateralAccount
 )
 
 var (
-	KeyPrefixCollateralRatio = []byte{prefixCollateralRatio}
-	KeyPrefixBacking         = []byte{prefixBacking}
-	KeyPrefixCollateral      = []byte{prefixCollateral}
+	KeyPrefixCollateralRatio   = []byte{prefixCollateralRatio}
+	KeyPrefixBackingParams     = []byte{prefixBackingParams}
+	KeyPrefixCollateralParams  = []byte{prefixCollateralParams}
+	KeyPrefixBackingPool       = []byte{prefixBackingPool}
+	KeyPrefixCollateralPool    = []byte{prefixCollateralPool}
+	KeyPrefixBackingAccount    = []byte{prefixBackingAccount}
+	KeyPrefixCollateralAccount = []byte{prefixCollateralAccount}
 )

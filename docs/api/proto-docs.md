@@ -33,10 +33,14 @@
     - [GenesisState](#merlion.maker.v1.GenesisState)
   
 - [merlion/maker/v1/maker.proto](#merlion/maker/v1/maker.proto)
+    - [AccountBacking](#merlion.maker.v1.AccountBacking)
+    - [AccountCollateral](#merlion.maker.v1.AccountCollateral)
     - [BackingRiskParams](#merlion.maker.v1.BackingRiskParams)
     - [BatchSetBackingRiskParamsProposal](#merlion.maker.v1.BatchSetBackingRiskParamsProposal)
     - [BatchSetCollateralRiskParamsProposal](#merlion.maker.v1.BatchSetCollateralRiskParamsProposal)
     - [CollateralRiskParams](#merlion.maker.v1.CollateralRiskParams)
+    - [PoolBacking](#merlion.maker.v1.PoolBacking)
+    - [PoolCollateral](#merlion.maker.v1.PoolCollateral)
     - [RegisterBackingProposal](#merlion.maker.v1.RegisterBackingProposal)
     - [RegisterCollateralProposal](#merlion.maker.v1.RegisterCollateralProposal)
     - [SetBackingRiskParamsProposal](#merlion.maker.v1.SetBackingRiskParamsProposal)
@@ -53,18 +57,20 @@
     - [MsgBurnByCollateralResponse](#merlion.maker.v1.MsgBurnByCollateralResponse)
     - [MsgBurnBySwap](#merlion.maker.v1.MsgBurnBySwap)
     - [MsgBurnBySwapResponse](#merlion.maker.v1.MsgBurnBySwapResponse)
-    - [MsgBuyBack](#merlion.maker.v1.MsgBuyBack)
-    - [MsgBuyBackResponse](#merlion.maker.v1.MsgBuyBackResponse)
+    - [MsgBuyBacking](#merlion.maker.v1.MsgBuyBacking)
+    - [MsgBuyBackingResponse](#merlion.maker.v1.MsgBuyBackingResponse)
     - [MsgDepositCollateral](#merlion.maker.v1.MsgDepositCollateral)
     - [MsgDepositCollateralResponse](#merlion.maker.v1.MsgDepositCollateralResponse)
+    - [MsgLiquidateCollateral](#merlion.maker.v1.MsgLiquidateCollateral)
+    - [MsgLiquidateCollateralResponse](#merlion.maker.v1.MsgLiquidateCollateralResponse)
     - [MsgMintByCollateral](#merlion.maker.v1.MsgMintByCollateral)
     - [MsgMintByCollateralResponse](#merlion.maker.v1.MsgMintByCollateralResponse)
     - [MsgMintBySwap](#merlion.maker.v1.MsgMintBySwap)
     - [MsgMintBySwapResponse](#merlion.maker.v1.MsgMintBySwapResponse)
-    - [MsgReCollateralize](#merlion.maker.v1.MsgReCollateralize)
-    - [MsgReCollateralizeResponse](#merlion.maker.v1.MsgReCollateralizeResponse)
     - [MsgRedeemCollateral](#merlion.maker.v1.MsgRedeemCollateral)
     - [MsgRedeemCollateralResponse](#merlion.maker.v1.MsgRedeemCollateralResponse)
+    - [MsgSellBacking](#merlion.maker.v1.MsgSellBacking)
+    - [MsgSellBackingResponse](#merlion.maker.v1.MsgSellBackingResponse)
   
     - [Msg](#merlion.maker.v1.Msg)
   
@@ -372,12 +378,12 @@ Params defines the parameters for the maker module.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `collateral_ratio_step` | [string](#string) |  |  |
-| `collateral_ratio_price_band` | [string](#string) |  |  |
-| `collateral_ratio_cooldown_period` | [uint64](#uint64) |  |  |
-| `mint_price_threshold` | [string](#string) |  | mint Mer price threshold |
-| `burn_price_threshold` | [string](#string) |  | burn Mer price threshold |
-| `liquidation_commission_fee` | [string](#string) |  |  |
+| `collateral_ratio_step` | [string](#string) |  | adjusting collateral step |
+| `collateral_ratio_price_band` | [string](#string) |  | price band for adjusting collateral ratio |
+| `collateral_ratio_cooldown_period` | [uint64](#uint64) |  | cooldown period for adjusting collateral ratio |
+| `mint_price_bias` | [string](#string) |  | mint Mer price bias ratio |
+| `burn_price_bias` | [string](#string) |  | burn Mer price bias ratio |
+| `liquidation_commission_fee` | [string](#string) |  | liquidation commission fee ratio |
 
 
 
@@ -429,6 +435,36 @@ GenesisState defines the maker module's genesis state.
 <p align="right"><a href="#top">Top</a></p>
 
 ## merlion/maker/v1/maker.proto
+
+
+
+<a name="merlion.maker.v1.AccountBacking"></a>
+
+### AccountBacking
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.AccountCollateral"></a>
+
+### AccountCollateral
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `account` | [string](#string) |  | account who owns collateral |
+| `collateral` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | existing collateral |
+| `mer_debt` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | remaining mer debt, including minted by collateral, mint fee, last interest |
+| `mer_by_lion` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | minted mer by burning lion |
+| `last_interest` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | remaining interest debt after last settlement |
+| `last_settlement_block` | [int64](#int64) |  | the block of last settlement |
+
+
+
 
 
 
@@ -509,6 +545,33 @@ CollateralRiskParams represents an object of collateral risk parameters.
 | `liquidation_fee` | [string](#string) |  | liquidation fee rate, i.e., the discount a liquidator gets when buying collateral flagged for a liquidation |
 | `mint_fee` | [string](#string) |  | mint fee rate, i.e., extra fee debt |
 | `interest_fee` | [string](#string) |  | annual interest fee rate (APR) |
+
+
+
+
+
+
+<a name="merlion.maker.v1.PoolBacking"></a>
+
+### PoolBacking
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.PoolCollateral"></a>
+
+### PoolCollateral
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `collateral` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total collateral |
+| `mer_debt` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total existing mer debt |
+| `mer_by_lion` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted merl by burning lion |
 
 
 
@@ -666,9 +729,8 @@ collateral.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [string](#string) |  |  |
-| `to` | [string](#string) |  |  |
-| `burn_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `lion_out_min` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `collateral_denom` | [string](#string) |  |  |
+| `repay_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -683,8 +745,7 @@ MsgBurnByCollateralResponse defines the Msg/BurnByCollateral response type.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `burn_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `repay_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -727,10 +788,10 @@ MsgBurnBySwapResponse defines the Msg/BurnBySwap response type.
 
 
 
-<a name="merlion.maker.v1.MsgBuyBack"></a>
+<a name="merlion.maker.v1.MsgBuyBacking"></a>
 
-### MsgBuyBack
-MsgBuyBack represents a message to buyback strong-backing assets.
+### MsgBuyBacking
+MsgBuyBacking represents a message to buy strong-backing assets.
 
 
 | Field | Type | Label | Description |
@@ -745,10 +806,10 @@ MsgBuyBack represents a message to buyback strong-backing assets.
 
 
 
-<a name="merlion.maker.v1.MsgBuyBackResponse"></a>
+<a name="merlion.maker.v1.MsgBuyBackingResponse"></a>
 
-### MsgBuyBackResponse
-MsgBuyBackResponse defines the Msg/BuyBack response type.
+### MsgBuyBackingResponse
+MsgBuyBackingResponse defines the Msg/BuyBacking response type.
 
 
 | Field | Type | Label | Description |
@@ -787,6 +848,34 @@ MsgDepositCollateralResponse defines the Msg/DepositCollateral response type.
 
 
 
+<a name="merlion.maker.v1.MsgLiquidateCollateral"></a>
+
+### MsgLiquidateCollateral
+MsgLiquidateCollateral represents a message to liquidates collateral assets.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `to` | [string](#string) |  |  |
+| `debtor` | [string](#string) |  |  |
+| `collateral` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.MsgLiquidateCollateralResponse"></a>
+
+### MsgLiquidateCollateralResponse
+MsgReCollateralizeResponse defines the Msg/LiquidateCollateral response type.
+
+
+
+
+
+
 <a name="merlion.maker.v1.MsgMintByCollateral"></a>
 
 ### MsgMintByCollateral
@@ -798,6 +887,7 @@ collateral.
 | ----- | ---- | ----- | ----------- |
 | `sender` | [string](#string) |  |  |
 | `to` | [string](#string) |  |  |
+| `collateral_denom` | [string](#string) |  |  |
 | `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
@@ -858,40 +948,6 @@ MsgMintBySwapResponse defines the Msg/MintBySwap response type.
 
 
 
-<a name="merlion.maker.v1.MsgReCollateralize"></a>
-
-### MsgReCollateralize
-MsgReCollateralize represents a message to re-collateralize strong-backing
-assets.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [string](#string) |  |  |
-| `to` | [string](#string) |  |  |
-| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `lion_out_min` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.MsgReCollateralizeResponse"></a>
-
-### MsgReCollateralizeResponse
-MsgReCollateralizeResponse defines the Msg/ReCollateralize response type.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
 <a name="merlion.maker.v1.MsgRedeemCollateral"></a>
 
 ### MsgRedeemCollateral
@@ -918,6 +974,40 @@ MsgRedeemCollateralResponse defines the Msg/RedeemCollateral response type.
 
 
 
+
+<a name="merlion.maker.v1.MsgSellBacking"></a>
+
+### MsgSellBacking
+MsgSellBacking represents a message to sell strong-backing
+assets.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `to` | [string](#string) |  |  |
+| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_out_min` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.MsgSellBackingResponse"></a>
+
+### MsgSellBackingResponse
+MsgSellBackingResponse defines the Msg/SellBacking response type.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
@@ -938,8 +1028,9 @@ Msg defines the maker Msg service.
 | `BurnByCollateral` | [MsgBurnByCollateral](#merlion.maker.v1.MsgBurnByCollateral) | [MsgBurnByCollateralResponse](#merlion.maker.v1.MsgBurnByCollateralResponse) | BurnByCollateral burns Mer stablecoins by unlocking collateral assets and earning Lion coins. | GET|/merlion/maker/v1/tx/burn_by_collateral|
 | `DepositCollateral` | [MsgDepositCollateral](#merlion.maker.v1.MsgDepositCollateral) | [MsgDepositCollateralResponse](#merlion.maker.v1.MsgDepositCollateralResponse) | DepositCollateral deposits collateral assets. | GET|/merlion/maker/v1/tx/deposit_collateral|
 | `RedeemCollateral` | [MsgRedeemCollateral](#merlion.maker.v1.MsgRedeemCollateral) | [MsgRedeemCollateralResponse](#merlion.maker.v1.MsgRedeemCollateralResponse) | RedeemCollateral redeems collateral assets. | GET|/merlion/maker/v1/tx/redeem_collateral|
-| `BuyBack` | [MsgBuyBack](#merlion.maker.v1.MsgBuyBack) | [MsgBuyBackResponse](#merlion.maker.v1.MsgBuyBackResponse) | BuyBack buybacks strong-backing assets by spending Lion coins. | GET|/merlion/maker/v1/tx/buyback|
-| `ReCollateralize` | [MsgReCollateralize](#merlion.maker.v1.MsgReCollateralize) | [MsgReCollateralizeResponse](#merlion.maker.v1.MsgReCollateralizeResponse) | ReCollateralize re-collateralizes strong-backing assets by earning Lion coins. | GET|/merlion/maker/v1/tx/recollateralize|
+| `BuyBacking` | [MsgBuyBacking](#merlion.maker.v1.MsgBuyBacking) | [MsgBuyBackingResponse](#merlion.maker.v1.MsgBuyBackingResponse) | BuyBacking buys strong-backing assets by spending Lion coins. | GET|/merlion/maker/v1/tx/buy_backing|
+| `SellBacking` | [MsgSellBacking](#merlion.maker.v1.MsgSellBacking) | [MsgSellBackingResponse](#merlion.maker.v1.MsgSellBackingResponse) | SellBacking sells strong-backing assets by earning Lion coins. | GET|/merlion/maker/v1/tx/sell_backing|
+| `LiquidateCollateral` | [MsgLiquidateCollateral](#merlion.maker.v1.MsgLiquidateCollateral) | [MsgLiquidateCollateralResponse](#merlion.maker.v1.MsgLiquidateCollateralResponse) | LiquidateCollateral liquidates collateral assets which is undercollateralized. | GET|/merlion/maker/v1/tx/liquidate_collateral|
 
  <!-- end services -->
 

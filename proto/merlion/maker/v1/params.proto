@@ -10,30 +10,34 @@ message Params {
   option (gogoproto.equal) = true;
   option (gogoproto.goproto_stringer) = false;
 
+  // adjusting collateral step
   string collateral_ratio_step = 1 [
     (gogoproto.moretags) = "yaml:\"collateral_ratio_step\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
+  // price band for adjusting collateral ratio
   string collateral_ratio_price_band = 2 [
     (gogoproto.moretags) = "yaml:\"collateral_ratio_price_band\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
+  // cooldown period for adjusting collateral ratio
   uint64 collateral_ratio_cooldown_period = 3
       [ (gogoproto.moretags) = "yaml:\"collateral_ration_cooldown_period\"" ];
-  // mint Mer price threshold
-  string mint_price_threshold = 4 [
-    (gogoproto.moretags) = "yaml:\"mint_price_threshold\"",
+  // mint Mer price bias ratio
+  string mint_price_bias = 4 [
+    (gogoproto.moretags) = "yaml:\"mint_price_bias\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
-  // burn Mer price threshold
-  string burn_price_threshold = 5 [
-    (gogoproto.moretags) = "yaml:\"burn_price_threshold\"",
+  // burn Mer price bias ratio
+  string burn_price_bias = 5 [
+    (gogoproto.moretags) = "yaml:\"burn_price_bias\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
+  // liquidation commission fee ratio
   string liquidation_commission_fee = 6 [
     (gogoproto.moretags) = "yaml:\"liquidation_commission_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
