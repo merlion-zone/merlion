@@ -4,17 +4,144 @@ package merlion.maker.v1;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "merlion/maker/v1/genesis.proto";
-// this line is used by starport scaffolding # 1
+import "merlion/maker/v1/maker.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/maker/types";
 
 // Query defines the maker gRPC querier service.
 service Query {
+  // AllBackingRiskParams queries risk params of all the backing pools.
+  rpc AllBackingRiskParams(QueryAllBackingRiskParamsRequest)
+      returns (QueryAllBackingRiskParamsResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/all_backing_risk_params";
+  }
+
+  // AllCollateralRiskParams queries risk params of all the collateral pools.
+  rpc AllCollateralRiskParams(QueryAllCollateralRiskParamsRequest)
+      returns (QueryAllCollateralRiskParamsResponse) {
+    option (google.api.http).get =
+        "/merlion/maker/v1/all_collateral_risk_params";
+  }
+
+  // AllBackingPools queries all the backing pools.
+  rpc AllBackingPools(QueryAllBackingPoolsRequest)
+      returns (QueryAllBackingPoolsResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/all_backing_pools";
+  }
+
+  // AllCollateralPools queries all the collateral pools.
+  rpc AllCollateralPools(QueryAllCollateralPoolsRequest)
+      returns (QueryAllCollateralPoolsResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/all_collateral_pools";
+  }
+
+  // BackingPool queries a backing pool.
+  rpc BackingPool(QueryBackingPoolRequest) returns (QueryBackingPoolResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/backing_pool";
+  }
+
+  // CollateralPool queries a collateral pool.
+  rpc CollateralPool(QueryCollateralPoolRequest)
+      returns (QueryCollateralPoolResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/collateral_pool";
+  }
+
+  // CollateralOfAccount queries the collateral of an account.
+  rpc CollateralOfAccount(QueryCollateralOfAccountRequest)
+      returns (QueryCollateralOfAccountResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/collateral_account";
+  }
+
+  // TotalBacking queries the total backing.
+  rpc TotalBacking(QueryTotalBackingRequest)
+      returns (QueryTotalBackingResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/total_backing";
+  }
+
+  // TotalCollateral queries the total collateral.
+  rpc TotalCollateral(QueryTotalCollateralRequest)
+      returns (QueryTotalCollateralResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/total_collateral";
+  }
+
+  // CollateralRatio queries the collateral ratio.
+  rpc CollateralRatio(QueryCollateralRatioRequest)
+      returns (QueryCollateralRatioResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/collateral_ratio";
+  }
+
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/merlion/maker/v1/params";
   }
-  // this line is used by starport scaffolding # 2
+}
+
+message QueryAllBackingRiskParamsRequest {}
+
+message QueryAllBackingRiskParamsResponse {
+  repeated BackingRiskParams risk_params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllCollateralRiskParamsRequest {}
+
+message QueryAllCollateralRiskParamsResponse {
+  repeated CollateralRiskParams risk_params = 1
+      [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllBackingPoolsRequest {}
+
+message QueryAllBackingPoolsResponse {
+  repeated PoolBacking backing_pools = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllCollateralPoolsRequest {}
+
+message QueryAllCollateralPoolsResponse {
+  repeated PoolCollateral collateral_pools = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryBackingPoolRequest { string backing_denom = 1; }
+
+message QueryBackingPoolResponse {
+  PoolBacking backing_pool = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryCollateralPoolRequest { string collateral_denom = 1; }
+
+message QueryCollateralPoolResponse {
+  PoolCollateral collateral_pool = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryCollateralOfAccountRequest {
+  string account = 1;
+  string collateral_denom = 2;
+}
+
+message QueryCollateralOfAccountResponse {
+  AccountCollateral account_collateral = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryTotalBackingRequest {}
+
+message QueryTotalBackingResponse {
+  TotalBacking total_backing = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryTotalCollateralRequest {}
+
+message QueryTotalCollateralResponse {
+  TotalCollateral total_collateral = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryCollateralRatioRequest {}
+
+message QueryCollateralRatioResponse {
+  string collateral_ratio = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  int64 last_update_block = 2;
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -25,5 +152,3 @@ message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
-
-// this line is used by starport scaffolding # 3

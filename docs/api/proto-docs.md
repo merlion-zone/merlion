@@ -47,8 +47,28 @@
     - [TotalCollateral](#merlion.maker.v1.TotalCollateral)
   
 - [merlion/maker/v1/query.proto](#merlion/maker/v1/query.proto)
+    - [QueryAllBackingPoolsRequest](#merlion.maker.v1.QueryAllBackingPoolsRequest)
+    - [QueryAllBackingPoolsResponse](#merlion.maker.v1.QueryAllBackingPoolsResponse)
+    - [QueryAllBackingRiskParamsRequest](#merlion.maker.v1.QueryAllBackingRiskParamsRequest)
+    - [QueryAllBackingRiskParamsResponse](#merlion.maker.v1.QueryAllBackingRiskParamsResponse)
+    - [QueryAllCollateralPoolsRequest](#merlion.maker.v1.QueryAllCollateralPoolsRequest)
+    - [QueryAllCollateralPoolsResponse](#merlion.maker.v1.QueryAllCollateralPoolsResponse)
+    - [QueryAllCollateralRiskParamsRequest](#merlion.maker.v1.QueryAllCollateralRiskParamsRequest)
+    - [QueryAllCollateralRiskParamsResponse](#merlion.maker.v1.QueryAllCollateralRiskParamsResponse)
+    - [QueryBackingPoolRequest](#merlion.maker.v1.QueryBackingPoolRequest)
+    - [QueryBackingPoolResponse](#merlion.maker.v1.QueryBackingPoolResponse)
+    - [QueryCollateralOfAccountRequest](#merlion.maker.v1.QueryCollateralOfAccountRequest)
+    - [QueryCollateralOfAccountResponse](#merlion.maker.v1.QueryCollateralOfAccountResponse)
+    - [QueryCollateralPoolRequest](#merlion.maker.v1.QueryCollateralPoolRequest)
+    - [QueryCollateralPoolResponse](#merlion.maker.v1.QueryCollateralPoolResponse)
+    - [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest)
+    - [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse)
     - [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest)
     - [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse)
+    - [QueryTotalBackingRequest](#merlion.maker.v1.QueryTotalBackingRequest)
+    - [QueryTotalBackingResponse](#merlion.maker.v1.QueryTotalBackingResponse)
+    - [QueryTotalCollateralRequest](#merlion.maker.v1.QueryTotalCollateralRequest)
+    - [QueryTotalCollateralResponse](#merlion.maker.v1.QueryTotalCollateralResponse)
   
     - [Query](#merlion.maker.v1.Query)
   
@@ -684,6 +704,223 @@ parameters.
 
 
 
+<a name="merlion.maker.v1.QueryAllBackingPoolsRequest"></a>
+
+### QueryAllBackingPoolsRequest
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryAllBackingPoolsResponse"></a>
+
+### QueryAllBackingPoolsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_pools` | [PoolBacking](#merlion.maker.v1.PoolBacking) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryAllBackingRiskParamsRequest"></a>
+
+### QueryAllBackingRiskParamsRequest
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryAllBackingRiskParamsResponse"></a>
+
+### QueryAllBackingRiskParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `risk_params` | [BackingRiskParams](#merlion.maker.v1.BackingRiskParams) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryAllCollateralPoolsRequest"></a>
+
+### QueryAllCollateralPoolsRequest
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryAllCollateralPoolsResponse"></a>
+
+### QueryAllCollateralPoolsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `collateral_pools` | [PoolCollateral](#merlion.maker.v1.PoolCollateral) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryAllCollateralRiskParamsRequest"></a>
+
+### QueryAllCollateralRiskParamsRequest
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryAllCollateralRiskParamsResponse"></a>
+
+### QueryAllCollateralRiskParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `risk_params` | [CollateralRiskParams](#merlion.maker.v1.CollateralRiskParams) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryBackingPoolRequest"></a>
+
+### QueryBackingPoolRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_denom` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryBackingPoolResponse"></a>
+
+### QueryBackingPoolResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_pool` | [PoolBacking](#merlion.maker.v1.PoolBacking) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryCollateralOfAccountRequest"></a>
+
+### QueryCollateralOfAccountRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `account` | [string](#string) |  |  |
+| `collateral_denom` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryCollateralOfAccountResponse"></a>
+
+### QueryCollateralOfAccountResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `account_collateral` | [AccountCollateral](#merlion.maker.v1.AccountCollateral) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryCollateralPoolRequest"></a>
+
+### QueryCollateralPoolRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `collateral_denom` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryCollateralPoolResponse"></a>
+
+### QueryCollateralPoolResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `collateral_pool` | [PoolCollateral](#merlion.maker.v1.PoolCollateral) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryCollateralRatioRequest"></a>
+
+### QueryCollateralRatioRequest
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryCollateralRatioResponse"></a>
+
+### QueryCollateralRatioResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `collateral_ratio` | [string](#string) |  |  |
+| `last_update_block` | [int64](#int64) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.QueryParamsRequest"></a>
 
 ### QueryParamsRequest
@@ -708,6 +945,56 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 
 
 
+
+<a name="merlion.maker.v1.QueryTotalBackingRequest"></a>
+
+### QueryTotalBackingRequest
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryTotalBackingResponse"></a>
+
+### QueryTotalBackingResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `total_backing` | [TotalBacking](#merlion.maker.v1.TotalBacking) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryTotalCollateralRequest"></a>
+
+### QueryTotalCollateralRequest
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryTotalCollateralResponse"></a>
+
+### QueryTotalCollateralResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `total_collateral` | [TotalCollateral](#merlion.maker.v1.TotalCollateral) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
@@ -722,9 +1009,17 @@ Query defines the maker gRPC querier service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `Params` | [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse) | Parameters queries the parameters of the module.
-
-this line is used by starport scaffolding # 2 | GET|/merlion/maker/v1/params|
+| `AllBackingRiskParams` | [QueryAllBackingRiskParamsRequest](#merlion.maker.v1.QueryAllBackingRiskParamsRequest) | [QueryAllBackingRiskParamsResponse](#merlion.maker.v1.QueryAllBackingRiskParamsResponse) | AllBackingRiskParams queries risk params of all the backing pools. | GET|/merlion/maker/v1/all_backing_risk_params|
+| `AllCollateralRiskParams` | [QueryAllCollateralRiskParamsRequest](#merlion.maker.v1.QueryAllCollateralRiskParamsRequest) | [QueryAllCollateralRiskParamsResponse](#merlion.maker.v1.QueryAllCollateralRiskParamsResponse) | AllCollateralRiskParams queries risk params of all the collateral pools. | GET|/merlion/maker/v1/all_collateral_risk_params|
+| `AllBackingPools` | [QueryAllBackingPoolsRequest](#merlion.maker.v1.QueryAllBackingPoolsRequest) | [QueryAllBackingPoolsResponse](#merlion.maker.v1.QueryAllBackingPoolsResponse) | AllBackingPools queries all the backing pools. | GET|/merlion/maker/v1/all_backing_pools|
+| `AllCollateralPools` | [QueryAllCollateralPoolsRequest](#merlion.maker.v1.QueryAllCollateralPoolsRequest) | [QueryAllCollateralPoolsResponse](#merlion.maker.v1.QueryAllCollateralPoolsResponse) | AllCollateralPools queries all the collateral pools. | GET|/merlion/maker/v1/all_collateral_pools|
+| `BackingPool` | [QueryBackingPoolRequest](#merlion.maker.v1.QueryBackingPoolRequest) | [QueryBackingPoolResponse](#merlion.maker.v1.QueryBackingPoolResponse) | BackingPool queries a backing pool. | GET|/merlion/maker/v1/backing_pool|
+| `CollateralPool` | [QueryCollateralPoolRequest](#merlion.maker.v1.QueryCollateralPoolRequest) | [QueryCollateralPoolResponse](#merlion.maker.v1.QueryCollateralPoolResponse) | CollateralPool queries a collateral pool. | GET|/merlion/maker/v1/collateral_pool|
+| `CollateralOfAccount` | [QueryCollateralOfAccountRequest](#merlion.maker.v1.QueryCollateralOfAccountRequest) | [QueryCollateralOfAccountResponse](#merlion.maker.v1.QueryCollateralOfAccountResponse) | CollateralOfAccount queries the collateral of an account. | GET|/merlion/maker/v1/collateral_account|
+| `TotalBacking` | [QueryTotalBackingRequest](#merlion.maker.v1.QueryTotalBackingRequest) | [QueryTotalBackingResponse](#merlion.maker.v1.QueryTotalBackingResponse) | TotalBacking queries the total backing. | GET|/merlion/maker/v1/total_backing|
+| `TotalCollateral` | [QueryTotalCollateralRequest](#merlion.maker.v1.QueryTotalCollateralRequest) | [QueryTotalCollateralResponse](#merlion.maker.v1.QueryTotalCollateralResponse) | TotalCollateral queries the total collateral. | GET|/merlion/maker/v1/total_collateral|
+| `CollateralRatio` | [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest) | [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse) | CollateralRatio queries the collateral ratio. | GET|/merlion/maker/v1/collateral_ratio|
+| `Params` | [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/maker/v1/params|
 
  <!-- end services -->
 

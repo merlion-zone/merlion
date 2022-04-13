@@ -6,6 +6,7 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
@@ -29,6 +30,839 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type QueryAllBackingRiskParamsRequest struct {
+}
+
+func (m *QueryAllBackingRiskParamsRequest) Reset()         { *m = QueryAllBackingRiskParamsRequest{} }
+func (m *QueryAllBackingRiskParamsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllBackingRiskParamsRequest) ProtoMessage()    {}
+func (*QueryAllBackingRiskParamsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{0}
+}
+func (m *QueryAllBackingRiskParamsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllBackingRiskParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllBackingRiskParamsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllBackingRiskParamsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllBackingRiskParamsRequest.Merge(m, src)
+}
+func (m *QueryAllBackingRiskParamsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllBackingRiskParamsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllBackingRiskParamsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllBackingRiskParamsRequest proto.InternalMessageInfo
+
+type QueryAllBackingRiskParamsResponse struct {
+	RiskParams []BackingRiskParams `protobuf:"bytes,1,rep,name=risk_params,json=riskParams,proto3" json:"risk_params"`
+}
+
+func (m *QueryAllBackingRiskParamsResponse) Reset()         { *m = QueryAllBackingRiskParamsResponse{} }
+func (m *QueryAllBackingRiskParamsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllBackingRiskParamsResponse) ProtoMessage()    {}
+func (*QueryAllBackingRiskParamsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{1}
+}
+func (m *QueryAllBackingRiskParamsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllBackingRiskParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllBackingRiskParamsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllBackingRiskParamsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllBackingRiskParamsResponse.Merge(m, src)
+}
+func (m *QueryAllBackingRiskParamsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllBackingRiskParamsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllBackingRiskParamsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllBackingRiskParamsResponse proto.InternalMessageInfo
+
+func (m *QueryAllBackingRiskParamsResponse) GetRiskParams() []BackingRiskParams {
+	if m != nil {
+		return m.RiskParams
+	}
+	return nil
+}
+
+type QueryAllCollateralRiskParamsRequest struct {
+}
+
+func (m *QueryAllCollateralRiskParamsRequest) Reset()         { *m = QueryAllCollateralRiskParamsRequest{} }
+func (m *QueryAllCollateralRiskParamsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllCollateralRiskParamsRequest) ProtoMessage()    {}
+func (*QueryAllCollateralRiskParamsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{2}
+}
+func (m *QueryAllCollateralRiskParamsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllCollateralRiskParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllCollateralRiskParamsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllCollateralRiskParamsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllCollateralRiskParamsRequest.Merge(m, src)
+}
+func (m *QueryAllCollateralRiskParamsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllCollateralRiskParamsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllCollateralRiskParamsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllCollateralRiskParamsRequest proto.InternalMessageInfo
+
+type QueryAllCollateralRiskParamsResponse struct {
+	RiskParams []CollateralRiskParams `protobuf:"bytes,1,rep,name=risk_params,json=riskParams,proto3" json:"risk_params"`
+}
+
+func (m *QueryAllCollateralRiskParamsResponse) Reset()         { *m = QueryAllCollateralRiskParamsResponse{} }
+func (m *QueryAllCollateralRiskParamsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllCollateralRiskParamsResponse) ProtoMessage()    {}
+func (*QueryAllCollateralRiskParamsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{3}
+}
+func (m *QueryAllCollateralRiskParamsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllCollateralRiskParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllCollateralRiskParamsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllCollateralRiskParamsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllCollateralRiskParamsResponse.Merge(m, src)
+}
+func (m *QueryAllCollateralRiskParamsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllCollateralRiskParamsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllCollateralRiskParamsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllCollateralRiskParamsResponse proto.InternalMessageInfo
+
+func (m *QueryAllCollateralRiskParamsResponse) GetRiskParams() []CollateralRiskParams {
+	if m != nil {
+		return m.RiskParams
+	}
+	return nil
+}
+
+type QueryAllBackingPoolsRequest struct {
+}
+
+func (m *QueryAllBackingPoolsRequest) Reset()         { *m = QueryAllBackingPoolsRequest{} }
+func (m *QueryAllBackingPoolsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllBackingPoolsRequest) ProtoMessage()    {}
+func (*QueryAllBackingPoolsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{4}
+}
+func (m *QueryAllBackingPoolsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllBackingPoolsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllBackingPoolsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllBackingPoolsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllBackingPoolsRequest.Merge(m, src)
+}
+func (m *QueryAllBackingPoolsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllBackingPoolsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllBackingPoolsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllBackingPoolsRequest proto.InternalMessageInfo
+
+type QueryAllBackingPoolsResponse struct {
+	BackingPools []PoolBacking `protobuf:"bytes,1,rep,name=backing_pools,json=backingPools,proto3" json:"backing_pools"`
+}
+
+func (m *QueryAllBackingPoolsResponse) Reset()         { *m = QueryAllBackingPoolsResponse{} }
+func (m *QueryAllBackingPoolsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllBackingPoolsResponse) ProtoMessage()    {}
+func (*QueryAllBackingPoolsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{5}
+}
+func (m *QueryAllBackingPoolsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllBackingPoolsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllBackingPoolsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllBackingPoolsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllBackingPoolsResponse.Merge(m, src)
+}
+func (m *QueryAllBackingPoolsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllBackingPoolsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllBackingPoolsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllBackingPoolsResponse proto.InternalMessageInfo
+
+func (m *QueryAllBackingPoolsResponse) GetBackingPools() []PoolBacking {
+	if m != nil {
+		return m.BackingPools
+	}
+	return nil
+}
+
+type QueryAllCollateralPoolsRequest struct {
+}
+
+func (m *QueryAllCollateralPoolsRequest) Reset()         { *m = QueryAllCollateralPoolsRequest{} }
+func (m *QueryAllCollateralPoolsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllCollateralPoolsRequest) ProtoMessage()    {}
+func (*QueryAllCollateralPoolsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{6}
+}
+func (m *QueryAllCollateralPoolsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllCollateralPoolsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllCollateralPoolsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllCollateralPoolsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllCollateralPoolsRequest.Merge(m, src)
+}
+func (m *QueryAllCollateralPoolsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllCollateralPoolsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllCollateralPoolsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllCollateralPoolsRequest proto.InternalMessageInfo
+
+type QueryAllCollateralPoolsResponse struct {
+	CollateralPools []PoolCollateral `protobuf:"bytes,1,rep,name=collateral_pools,json=collateralPools,proto3" json:"collateral_pools"`
+}
+
+func (m *QueryAllCollateralPoolsResponse) Reset()         { *m = QueryAllCollateralPoolsResponse{} }
+func (m *QueryAllCollateralPoolsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllCollateralPoolsResponse) ProtoMessage()    {}
+func (*QueryAllCollateralPoolsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{7}
+}
+func (m *QueryAllCollateralPoolsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllCollateralPoolsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllCollateralPoolsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllCollateralPoolsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllCollateralPoolsResponse.Merge(m, src)
+}
+func (m *QueryAllCollateralPoolsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllCollateralPoolsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllCollateralPoolsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllCollateralPoolsResponse proto.InternalMessageInfo
+
+func (m *QueryAllCollateralPoolsResponse) GetCollateralPools() []PoolCollateral {
+	if m != nil {
+		return m.CollateralPools
+	}
+	return nil
+}
+
+type QueryBackingPoolRequest struct {
+	BackingDenom string `protobuf:"bytes,1,opt,name=backing_denom,json=backingDenom,proto3" json:"backing_denom,omitempty"`
+}
+
+func (m *QueryBackingPoolRequest) Reset()         { *m = QueryBackingPoolRequest{} }
+func (m *QueryBackingPoolRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryBackingPoolRequest) ProtoMessage()    {}
+func (*QueryBackingPoolRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{8}
+}
+func (m *QueryBackingPoolRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBackingPoolRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBackingPoolRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBackingPoolRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBackingPoolRequest.Merge(m, src)
+}
+func (m *QueryBackingPoolRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBackingPoolRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBackingPoolRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBackingPoolRequest proto.InternalMessageInfo
+
+func (m *QueryBackingPoolRequest) GetBackingDenom() string {
+	if m != nil {
+		return m.BackingDenom
+	}
+	return ""
+}
+
+type QueryBackingPoolResponse struct {
+	BackingPool PoolBacking `protobuf:"bytes,1,opt,name=backing_pool,json=backingPool,proto3" json:"backing_pool"`
+}
+
+func (m *QueryBackingPoolResponse) Reset()         { *m = QueryBackingPoolResponse{} }
+func (m *QueryBackingPoolResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryBackingPoolResponse) ProtoMessage()    {}
+func (*QueryBackingPoolResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{9}
+}
+func (m *QueryBackingPoolResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBackingPoolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBackingPoolResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBackingPoolResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBackingPoolResponse.Merge(m, src)
+}
+func (m *QueryBackingPoolResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBackingPoolResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBackingPoolResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBackingPoolResponse proto.InternalMessageInfo
+
+func (m *QueryBackingPoolResponse) GetBackingPool() PoolBacking {
+	if m != nil {
+		return m.BackingPool
+	}
+	return PoolBacking{}
+}
+
+type QueryCollateralPoolRequest struct {
+	CollateralDenom string `protobuf:"bytes,1,opt,name=collateral_denom,json=collateralDenom,proto3" json:"collateral_denom,omitempty"`
+}
+
+func (m *QueryCollateralPoolRequest) Reset()         { *m = QueryCollateralPoolRequest{} }
+func (m *QueryCollateralPoolRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryCollateralPoolRequest) ProtoMessage()    {}
+func (*QueryCollateralPoolRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{10}
+}
+func (m *QueryCollateralPoolRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryCollateralPoolRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryCollateralPoolRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryCollateralPoolRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCollateralPoolRequest.Merge(m, src)
+}
+func (m *QueryCollateralPoolRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryCollateralPoolRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCollateralPoolRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryCollateralPoolRequest proto.InternalMessageInfo
+
+func (m *QueryCollateralPoolRequest) GetCollateralDenom() string {
+	if m != nil {
+		return m.CollateralDenom
+	}
+	return ""
+}
+
+type QueryCollateralPoolResponse struct {
+	CollateralPool PoolCollateral `protobuf:"bytes,1,opt,name=collateral_pool,json=collateralPool,proto3" json:"collateral_pool"`
+}
+
+func (m *QueryCollateralPoolResponse) Reset()         { *m = QueryCollateralPoolResponse{} }
+func (m *QueryCollateralPoolResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryCollateralPoolResponse) ProtoMessage()    {}
+func (*QueryCollateralPoolResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{11}
+}
+func (m *QueryCollateralPoolResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryCollateralPoolResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryCollateralPoolResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryCollateralPoolResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCollateralPoolResponse.Merge(m, src)
+}
+func (m *QueryCollateralPoolResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryCollateralPoolResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCollateralPoolResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryCollateralPoolResponse proto.InternalMessageInfo
+
+func (m *QueryCollateralPoolResponse) GetCollateralPool() PoolCollateral {
+	if m != nil {
+		return m.CollateralPool
+	}
+	return PoolCollateral{}
+}
+
+type QueryCollateralOfAccountRequest struct {
+	Account         string `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	CollateralDenom string `protobuf:"bytes,2,opt,name=collateral_denom,json=collateralDenom,proto3" json:"collateral_denom,omitempty"`
+}
+
+func (m *QueryCollateralOfAccountRequest) Reset()         { *m = QueryCollateralOfAccountRequest{} }
+func (m *QueryCollateralOfAccountRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryCollateralOfAccountRequest) ProtoMessage()    {}
+func (*QueryCollateralOfAccountRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{12}
+}
+func (m *QueryCollateralOfAccountRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryCollateralOfAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryCollateralOfAccountRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryCollateralOfAccountRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCollateralOfAccountRequest.Merge(m, src)
+}
+func (m *QueryCollateralOfAccountRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryCollateralOfAccountRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCollateralOfAccountRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryCollateralOfAccountRequest proto.InternalMessageInfo
+
+func (m *QueryCollateralOfAccountRequest) GetAccount() string {
+	if m != nil {
+		return m.Account
+	}
+	return ""
+}
+
+func (m *QueryCollateralOfAccountRequest) GetCollateralDenom() string {
+	if m != nil {
+		return m.CollateralDenom
+	}
+	return ""
+}
+
+type QueryCollateralOfAccountResponse struct {
+	AccountCollateral AccountCollateral `protobuf:"bytes,1,opt,name=account_collateral,json=accountCollateral,proto3" json:"account_collateral"`
+}
+
+func (m *QueryCollateralOfAccountResponse) Reset()         { *m = QueryCollateralOfAccountResponse{} }
+func (m *QueryCollateralOfAccountResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryCollateralOfAccountResponse) ProtoMessage()    {}
+func (*QueryCollateralOfAccountResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{13}
+}
+func (m *QueryCollateralOfAccountResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryCollateralOfAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryCollateralOfAccountResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryCollateralOfAccountResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCollateralOfAccountResponse.Merge(m, src)
+}
+func (m *QueryCollateralOfAccountResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryCollateralOfAccountResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCollateralOfAccountResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryCollateralOfAccountResponse proto.InternalMessageInfo
+
+func (m *QueryCollateralOfAccountResponse) GetAccountCollateral() AccountCollateral {
+	if m != nil {
+		return m.AccountCollateral
+	}
+	return AccountCollateral{}
+}
+
+type QueryTotalBackingRequest struct {
+}
+
+func (m *QueryTotalBackingRequest) Reset()         { *m = QueryTotalBackingRequest{} }
+func (m *QueryTotalBackingRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryTotalBackingRequest) ProtoMessage()    {}
+func (*QueryTotalBackingRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{14}
+}
+func (m *QueryTotalBackingRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryTotalBackingRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryTotalBackingRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryTotalBackingRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryTotalBackingRequest.Merge(m, src)
+}
+func (m *QueryTotalBackingRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryTotalBackingRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryTotalBackingRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryTotalBackingRequest proto.InternalMessageInfo
+
+type QueryTotalBackingResponse struct {
+	TotalBacking TotalBacking `protobuf:"bytes,1,opt,name=total_backing,json=totalBacking,proto3" json:"total_backing"`
+}
+
+func (m *QueryTotalBackingResponse) Reset()         { *m = QueryTotalBackingResponse{} }
+func (m *QueryTotalBackingResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryTotalBackingResponse) ProtoMessage()    {}
+func (*QueryTotalBackingResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{15}
+}
+func (m *QueryTotalBackingResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryTotalBackingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryTotalBackingResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryTotalBackingResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryTotalBackingResponse.Merge(m, src)
+}
+func (m *QueryTotalBackingResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryTotalBackingResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryTotalBackingResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryTotalBackingResponse proto.InternalMessageInfo
+
+func (m *QueryTotalBackingResponse) GetTotalBacking() TotalBacking {
+	if m != nil {
+		return m.TotalBacking
+	}
+	return TotalBacking{}
+}
+
+type QueryTotalCollateralRequest struct {
+}
+
+func (m *QueryTotalCollateralRequest) Reset()         { *m = QueryTotalCollateralRequest{} }
+func (m *QueryTotalCollateralRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryTotalCollateralRequest) ProtoMessage()    {}
+func (*QueryTotalCollateralRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{16}
+}
+func (m *QueryTotalCollateralRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryTotalCollateralRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryTotalCollateralRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryTotalCollateralRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryTotalCollateralRequest.Merge(m, src)
+}
+func (m *QueryTotalCollateralRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryTotalCollateralRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryTotalCollateralRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryTotalCollateralRequest proto.InternalMessageInfo
+
+type QueryTotalCollateralResponse struct {
+	TotalCollateral TotalCollateral `protobuf:"bytes,1,opt,name=total_collateral,json=totalCollateral,proto3" json:"total_collateral"`
+}
+
+func (m *QueryTotalCollateralResponse) Reset()         { *m = QueryTotalCollateralResponse{} }
+func (m *QueryTotalCollateralResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryTotalCollateralResponse) ProtoMessage()    {}
+func (*QueryTotalCollateralResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{17}
+}
+func (m *QueryTotalCollateralResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryTotalCollateralResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryTotalCollateralResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryTotalCollateralResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryTotalCollateralResponse.Merge(m, src)
+}
+func (m *QueryTotalCollateralResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryTotalCollateralResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryTotalCollateralResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryTotalCollateralResponse proto.InternalMessageInfo
+
+func (m *QueryTotalCollateralResponse) GetTotalCollateral() TotalCollateral {
+	if m != nil {
+		return m.TotalCollateral
+	}
+	return TotalCollateral{}
+}
+
+type QueryCollateralRatioRequest struct {
+}
+
+func (m *QueryCollateralRatioRequest) Reset()         { *m = QueryCollateralRatioRequest{} }
+func (m *QueryCollateralRatioRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryCollateralRatioRequest) ProtoMessage()    {}
+func (*QueryCollateralRatioRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{18}
+}
+func (m *QueryCollateralRatioRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryCollateralRatioRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryCollateralRatioRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryCollateralRatioRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCollateralRatioRequest.Merge(m, src)
+}
+func (m *QueryCollateralRatioRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryCollateralRatioRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCollateralRatioRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryCollateralRatioRequest proto.InternalMessageInfo
+
+type QueryCollateralRatioResponse struct {
+	CollateralRatio github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,1,opt,name=collateral_ratio,json=collateralRatio,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"collateral_ratio"`
+	LastUpdateBlock int64                                  `protobuf:"varint,2,opt,name=last_update_block,json=lastUpdateBlock,proto3" json:"last_update_block,omitempty"`
+}
+
+func (m *QueryCollateralRatioResponse) Reset()         { *m = QueryCollateralRatioResponse{} }
+func (m *QueryCollateralRatioResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryCollateralRatioResponse) ProtoMessage()    {}
+func (*QueryCollateralRatioResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{19}
+}
+func (m *QueryCollateralRatioResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryCollateralRatioResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryCollateralRatioResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryCollateralRatioResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCollateralRatioResponse.Merge(m, src)
+}
+func (m *QueryCollateralRatioResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryCollateralRatioResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCollateralRatioResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryCollateralRatioResponse proto.InternalMessageInfo
+
+func (m *QueryCollateralRatioResponse) GetLastUpdateBlock() int64 {
+	if m != nil {
+		return m.LastUpdateBlock
+	}
+	return 0
+}
+
 // QueryParamsRequest is request type for the Query/Params RPC method.
 type QueryParamsRequest struct {
 }
@@ -37,7 +871,7 @@ func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
 func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsRequest) ProtoMessage()    {}
 func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{0}
+	return fileDescriptor_0c6c4552b535aace, []int{20}
 }
 func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -76,7 +910,7 @@ func (m *QueryParamsResponse) Reset()         { *m = QueryParamsResponse{} }
 func (m *QueryParamsResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsResponse) ProtoMessage()    {}
 func (*QueryParamsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{1}
+	return fileDescriptor_0c6c4552b535aace, []int{21}
 }
 func (m *QueryParamsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -113,6 +947,26 @@ func (m *QueryParamsResponse) GetParams() Params {
 }
 
 func init() {
+	proto.RegisterType((*QueryAllBackingRiskParamsRequest)(nil), "merlion.maker.v1.QueryAllBackingRiskParamsRequest")
+	proto.RegisterType((*QueryAllBackingRiskParamsResponse)(nil), "merlion.maker.v1.QueryAllBackingRiskParamsResponse")
+	proto.RegisterType((*QueryAllCollateralRiskParamsRequest)(nil), "merlion.maker.v1.QueryAllCollateralRiskParamsRequest")
+	proto.RegisterType((*QueryAllCollateralRiskParamsResponse)(nil), "merlion.maker.v1.QueryAllCollateralRiskParamsResponse")
+	proto.RegisterType((*QueryAllBackingPoolsRequest)(nil), "merlion.maker.v1.QueryAllBackingPoolsRequest")
+	proto.RegisterType((*QueryAllBackingPoolsResponse)(nil), "merlion.maker.v1.QueryAllBackingPoolsResponse")
+	proto.RegisterType((*QueryAllCollateralPoolsRequest)(nil), "merlion.maker.v1.QueryAllCollateralPoolsRequest")
+	proto.RegisterType((*QueryAllCollateralPoolsResponse)(nil), "merlion.maker.v1.QueryAllCollateralPoolsResponse")
+	proto.RegisterType((*QueryBackingPoolRequest)(nil), "merlion.maker.v1.QueryBackingPoolRequest")
+	proto.RegisterType((*QueryBackingPoolResponse)(nil), "merlion.maker.v1.QueryBackingPoolResponse")
+	proto.RegisterType((*QueryCollateralPoolRequest)(nil), "merlion.maker.v1.QueryCollateralPoolRequest")
+	proto.RegisterType((*QueryCollateralPoolResponse)(nil), "merlion.maker.v1.QueryCollateralPoolResponse")
+	proto.RegisterType((*QueryCollateralOfAccountRequest)(nil), "merlion.maker.v1.QueryCollateralOfAccountRequest")
+	proto.RegisterType((*QueryCollateralOfAccountResponse)(nil), "merlion.maker.v1.QueryCollateralOfAccountResponse")
+	proto.RegisterType((*QueryTotalBackingRequest)(nil), "merlion.maker.v1.QueryTotalBackingRequest")
+	proto.RegisterType((*QueryTotalBackingResponse)(nil), "merlion.maker.v1.QueryTotalBackingResponse")
+	proto.RegisterType((*QueryTotalCollateralRequest)(nil), "merlion.maker.v1.QueryTotalCollateralRequest")
+	proto.RegisterType((*QueryTotalCollateralResponse)(nil), "merlion.maker.v1.QueryTotalCollateralResponse")
+	proto.RegisterType((*QueryCollateralRatioRequest)(nil), "merlion.maker.v1.QueryCollateralRatioRequest")
+	proto.RegisterType((*QueryCollateralRatioResponse)(nil), "merlion.maker.v1.QueryCollateralRatioResponse")
 	proto.RegisterType((*QueryParamsRequest)(nil), "merlion.maker.v1.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "merlion.maker.v1.QueryParamsResponse")
 }
@@ -120,25 +974,72 @@ func init() {
 func init() { proto.RegisterFile("merlion/maker/v1/query.proto", fileDescriptor_0c6c4552b535aace) }
 
 var fileDescriptor_0c6c4552b535aace = []byte{
-	// 280 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0xc9, 0x4d, 0x2d, 0xca,
-	0xc9, 0xcc, 0xcf, 0xd3, 0xcf, 0x4d, 0xcc, 0x4e, 0x2d, 0xd2, 0x2f, 0x33, 0xd4, 0x2f, 0x2c, 0x4d,
-	0x2d, 0xaa, 0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x80, 0xca, 0xea, 0x81, 0x65, 0xf5,
-	0xca, 0x0c, 0xa5, 0x44, 0xd2, 0xf3, 0xd3, 0xf3, 0xc1, 0x92, 0xfa, 0x20, 0x16, 0x44, 0x9d, 0x94,
-	0x4c, 0x7a, 0x7e, 0x7e, 0x7a, 0x4e, 0xaa, 0x7e, 0x62, 0x41, 0xa6, 0x7e, 0x62, 0x5e, 0x5e, 0x7e,
-	0x49, 0x62, 0x49, 0x66, 0x7e, 0x5e, 0x31, 0x54, 0x56, 0x0e, 0xc3, 0x8e, 0xf4, 0xd4, 0xbc, 0xd4,
-	0xe2, 0x4c, 0xa8, 0xbc, 0x92, 0x08, 0x97, 0x50, 0x20, 0xc8, 0xd2, 0x80, 0xc4, 0xa2, 0xc4, 0xdc,
-	0xe2, 0xa0, 0xd4, 0xc2, 0xd2, 0xd4, 0xe2, 0x12, 0x25, 0x5f, 0x2e, 0x61, 0x14, 0xd1, 0xe2, 0x82,
-	0xfc, 0xbc, 0xe2, 0x54, 0x21, 0x33, 0x2e, 0xb6, 0x02, 0xb0, 0x88, 0x04, 0xa3, 0x02, 0xa3, 0x06,
-	0xb7, 0x91, 0x84, 0x1e, 0xba, 0x1b, 0xf5, 0x20, 0x3a, 0x9c, 0x58, 0x4e, 0xdc, 0x93, 0x67, 0x08,
-	0x82, 0xaa, 0x36, 0x6a, 0x60, 0xe4, 0x62, 0x05, 0x9b, 0x27, 0x54, 0xce, 0xc5, 0x06, 0x51, 0x21,
-	0xa4, 0x82, 0xa9, 0x17, 0xd3, 0x21, 0x52, 0xaa, 0x04, 0x54, 0x41, 0x1c, 0xa6, 0xa4, 0xd0, 0x74,
-	0xf9, 0xc9, 0x64, 0x26, 0x29, 0x21, 0x09, 0x7d, 0x0c, 0xef, 0x42, 0x9c, 0xe0, 0xe4, 0x7e, 0xe2,
-	0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70,
-	0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0xba, 0xe9, 0x99, 0x25, 0x19, 0xa5, 0x49,
-	0x7a, 0xc9, 0xf9, 0xb9, 0x30, 0xdd, 0xba, 0x55, 0xf9, 0x79, 0xa9, 0x70, 0xa3, 0x2a, 0xa0, 0x86,
-	0x95, 0x54, 0x16, 0xa4, 0x16, 0x27, 0xb1, 0x81, 0xc3, 0xcd, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff,
-	0x5c, 0xde, 0x83, 0x06, 0xbd, 0x01, 0x00, 0x00,
+	// 1033 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x97, 0xcf, 0x6f, 0x1b, 0x45,
+	0x14, 0xc7, 0xb3, 0x2d, 0x04, 0xf1, 0x92, 0xd4, 0xe9, 0x6b, 0xa4, 0x9a, 0x25, 0xdd, 0x38, 0xeb,
+	0xc4, 0xe4, 0x97, 0xd7, 0x38, 0x85, 0x1e, 0x91, 0x6a, 0x2a, 0x0a, 0x48, 0x55, 0x5b, 0x0b, 0x24,
+	0xe0, 0x62, 0xad, 0x37, 0x1b, 0xd7, 0xf2, 0x7a, 0xc7, 0xdd, 0x5d, 0x17, 0x8a, 0x38, 0x71, 0xe6,
+	0x50, 0x89, 0x0b, 0x07, 0x38, 0x72, 0x80, 0x23, 0x7f, 0x00, 0xe7, 0x1e, 0x2b, 0x71, 0x41, 0x1c,
+	0x2a, 0x94, 0x70, 0xe2, 0xaf, 0xa8, 0x76, 0xf6, 0x79, 0x3d, 0xbb, 0x33, 0x6b, 0x3b, 0xa7, 0x24,
+	0xef, 0xe7, 0xe7, 0xbd, 0x9d, 0x99, 0xaf, 0x02, 0x9b, 0x43, 0x37, 0xf0, 0xfa, 0xcc, 0x6f, 0x0c,
+	0xed, 0x81, 0x1b, 0x34, 0x9e, 0x34, 0x1b, 0x8f, 0xc7, 0x6e, 0xf0, 0xd4, 0x1a, 0x05, 0x2c, 0x62,
+	0xb8, 0x4e, 0x5e, 0x8b, 0x7b, 0xad, 0x27, 0x4d, 0x7d, 0xa3, 0xc7, 0x7a, 0x8c, 0x3b, 0x1b, 0xf1,
+	0x6f, 0x49, 0x9c, 0xbe, 0xd9, 0x63, 0xac, 0xe7, 0xb9, 0x0d, 0x7b, 0xd4, 0x6f, 0xd8, 0xbe, 0xcf,
+	0x22, 0x3b, 0xea, 0x33, 0x3f, 0x24, 0xaf, 0x21, 0xf5, 0xe8, 0xb9, 0xbe, 0x1b, 0xf6, 0x27, 0x7e,
+	0x99, 0x21, 0x69, 0xc7, 0xbd, 0xa6, 0x09, 0x95, 0x87, 0x31, 0xd2, 0x6d, 0xcf, 0x6b, 0xd9, 0xce,
+	0xa0, 0xef, 0xf7, 0xda, 0xfd, 0x70, 0xf0, 0xc0, 0x0e, 0xec, 0x61, 0xd8, 0x76, 0x1f, 0x8f, 0xdd,
+	0x30, 0x32, 0x19, 0x6c, 0xcf, 0x88, 0x09, 0x47, 0xcc, 0x0f, 0x5d, 0xfc, 0x14, 0x56, 0x82, 0x7e,
+	0x38, 0xe8, 0x8c, 0xb8, 0xb9, 0xac, 0x55, 0x2e, 0xef, 0xad, 0x1c, 0x57, 0xad, 0xfc, 0x88, 0x96,
+	0x54, 0xa1, 0xf5, 0xda, 0xf3, 0x97, 0x5b, 0x4b, 0x6d, 0x08, 0x52, 0x8b, 0xb9, 0x0b, 0xd5, 0x49,
+	0xc3, 0x0f, 0x99, 0xe7, 0xd9, 0x91, 0x1b, 0xd8, 0x9e, 0xcc, 0x35, 0x86, 0x9d, 0xd9, 0x61, 0x84,
+	0x76, 0x4f, 0x85, 0x56, 0x93, 0xd1, 0x54, 0x45, 0x14, 0x74, 0x37, 0xe0, 0xed, 0xdc, 0x3a, 0x1e,
+	0x30, 0xe6, 0xa5, 0x54, 0x8f, 0x60, 0x53, 0xed, 0x26, 0x9a, 0x8f, 0x61, 0xad, 0x9b, 0xd8, 0x3b,
+	0xa3, 0xd8, 0x41, 0x3c, 0x37, 0x64, 0x9e, 0x38, 0x8f, 0x4a, 0x10, 0xc6, 0x6a, 0x57, 0xa8, 0x68,
+	0x56, 0xc0, 0x90, 0xe7, 0xcf, 0xb0, 0x44, 0xb0, 0x55, 0x18, 0x41, 0x38, 0x0f, 0x61, 0xdd, 0x49,
+	0x5d, 0x19, 0xa2, 0x8a, 0x9a, 0x68, 0x5a, 0x88, 0xa0, 0x4a, 0x4e, 0xb6, 0xb4, 0xf9, 0x01, 0x5c,
+	0xe7, 0x5d, 0x85, 0xf1, 0x09, 0x08, 0xab, 0xd3, 0xe1, 0x4f, 0x5c, 0x9f, 0x0d, 0xcb, 0x5a, 0x45,
+	0xdb, 0x7b, 0x33, 0x9d, 0xeb, 0x4e, 0x6c, 0x33, 0xbb, 0x50, 0x96, 0xf3, 0x09, 0xf7, 0x23, 0x58,
+	0x15, 0xb7, 0xc7, 0xf3, 0x17, 0x5c, 0xde, 0x8a, 0xb0, 0x3c, 0xf3, 0x2e, 0xe8, 0xbc, 0x47, 0x76,
+	0x2d, 0x13, 0xcc, 0xfd, 0xcc, 0x52, 0x44, 0x52, 0x61, 0xd8, 0x04, 0xd6, 0xa7, 0xd3, 0x90, 0x2f,
+	0x44, 0xbc, 0xf7, 0xa1, 0x94, 0x5b, 0x2f, 0x21, 0x2f, 0xba, 0xdd, 0x2b, 0xd9, 0xed, 0x9a, 0xa7,
+	0xf4, 0x49, 0xa7, 0x81, 0xf7, 0x4f, 0x6f, 0x3b, 0x0e, 0x1b, 0xfb, 0xd1, 0x84, 0xbe, 0x0c, 0x6f,
+	0xd8, 0x89, 0x85, 0xa0, 0x27, 0x7f, 0x2a, 0xe7, 0xba, 0xa4, 0x9e, 0xeb, 0x3b, 0x7a, 0x18, 0x94,
+	0x7d, 0x68, 0xb8, 0x2f, 0x00, 0xa9, 0x72, 0x67, 0x9a, 0x4e, 0xf3, 0x29, 0xae, 0x3e, 0xa5, 0x4b,
+	0x23, 0x5e, 0xb5, 0xf3, 0x0e, 0x53, 0xa7, 0x23, 0xf0, 0x19, 0x8b, 0xec, 0xf4, 0xd1, 0xa1, 0x43,
+	0x7d, 0x0a, 0x6f, 0x29, 0x7c, 0x84, 0xf4, 0x09, 0xac, 0x45, 0xb1, 0xbd, 0x43, 0x1f, 0x9b, 0x68,
+	0x0c, 0x99, 0x46, 0x4c, 0x9f, 0x5c, 0xaf, 0x48, 0xb0, 0xa5, 0xf7, 0x9c, 0x07, 0x0a, 0x6f, 0x03,
+	0x61, 0x04, 0x74, 0xcf, 0x25, 0x37, 0x91, 0xb4, 0x61, 0x3d, 0x21, 0x91, 0x56, 0xb3, 0x5d, 0x00,
+	0x23, 0xdf, 0xac, 0x28, 0x6b, 0x4e, 0x91, 0x84, 0x76, 0xb1, 0x16, 0x4c, 0x90, 0x7e, 0xd5, 0x88,
+	0x49, 0xf2, 0x13, 0xd3, 0x97, 0x99, 0xef, 0x1f, 0xc4, 0xbe, 0xe4, 0x88, 0xb4, 0xac, 0xb8, 0xe1,
+	0x3f, 0x2f, 0xb7, 0x6a, 0xbd, 0x7e, 0xf4, 0x68, 0xdc, 0xb5, 0x1c, 0x36, 0x6c, 0x38, 0x2c, 0x1c,
+	0xb2, 0x90, 0x7e, 0xd4, 0xc3, 0x93, 0x41, 0x23, 0x7a, 0x3a, 0x72, 0x43, 0xeb, 0x8e, 0xeb, 0x88,
+	0xe7, 0x85, 0xb7, 0xc0, 0x03, 0xb8, 0xea, 0xd9, 0x61, 0xd4, 0x19, 0x8f, 0x4e, 0xec, 0xc8, 0xed,
+	0x74, 0x3d, 0xe6, 0x0c, 0xf8, 0xd9, 0xba, 0xdc, 0x2e, 0xc5, 0x8e, 0xcf, 0xb9, 0xbd, 0x15, 0x9b,
+	0xcd, 0x0d, 0x40, 0x8e, 0x99, 0x7d, 0xce, 0xef, 0xc1, 0xb5, 0x8c, 0x95, 0x98, 0x6f, 0xc1, 0x72,
+	0xfa, 0x70, 0xc7, 0xdb, 0x2b, 0x2b, 0x2e, 0x8e, 0xf8, 0x54, 0x53, 0xf4, 0xf1, 0xff, 0x6b, 0xf0,
+	0x3a, 0xaf, 0x87, 0x7f, 0x68, 0xb0, 0xa1, 0xd2, 0x2e, 0x3c, 0x96, 0x4b, 0xcd, 0x13, 0x43, 0xfd,
+	0xe6, 0x85, 0x72, 0x92, 0x19, 0xcc, 0xe6, 0xf7, 0x7f, 0xfd, 0xf7, 0xe3, 0xa5, 0x43, 0xdc, 0x6f,
+	0x48, 0x62, 0x6c, 0x7b, 0xe9, 0x59, 0xed, 0x08, 0x2a, 0x85, 0x7f, 0x6a, 0x70, 0xbd, 0x40, 0xd8,
+	0xf0, 0xfd, 0x62, 0x86, 0x19, 0x7a, 0xa9, 0xdf, 0xba, 0x68, 0x1a, 0xd1, 0xbf, 0xc7, 0xe9, 0x2d,
+	0x3c, 0x52, 0xd3, 0x8b, 0x27, 0x4a, 0x18, 0xe0, 0x17, 0x0d, 0x4a, 0x39, 0x0d, 0xc4, 0xfa, 0xdc,
+	0xe5, 0x89, 0xf2, 0xa5, 0x5b, 0x8b, 0x86, 0x13, 0xe8, 0x21, 0x07, 0xdd, 0xc5, 0xea, 0xec, 0x35,
+	0x73, 0x91, 0xc3, 0xdf, 0x34, 0x40, 0x59, 0x17, 0xf1, 0xdd, 0x45, 0x96, 0x94, 0xa1, 0x6c, 0x5e,
+	0x20, 0x83, 0x40, 0x2d, 0x0e, 0xba, 0x87, 0xb5, 0xb9, 0x1b, 0x4d, 0x58, 0x7f, 0xd0, 0x60, 0x45,
+	0x98, 0x18, 0xf7, 0x0b, 0x5a, 0xca, 0x8a, 0xab, 0x1f, 0x2c, 0x12, 0x4a, 0x58, 0x35, 0x8e, 0x55,
+	0x41, 0x43, 0xc6, 0x12, 0x77, 0x87, 0x3f, 0x69, 0x70, 0x25, 0x3b, 0x1a, 0x1e, 0x15, 0xb4, 0x51,
+	0xea, 0xab, 0x5e, 0x5f, 0x30, 0x9a, 0xb8, 0xf6, 0x39, 0x57, 0x15, 0xb7, 0x65, 0xae, 0xdc, 0xaa,
+	0xf0, 0x77, 0x0d, 0xae, 0x29, 0x24, 0x0b, 0x9b, 0x73, 0x3b, 0xe6, 0x65, 0x54, 0x3f, 0xbe, 0x48,
+	0x0a, 0x91, 0x1e, 0x71, 0xd2, 0x1a, 0xee, 0xcc, 0x24, 0x9d, 0xc8, 0xf1, 0x33, 0x0d, 0x56, 0x45,
+	0x19, 0xc2, 0xa2, 0x8f, 0xa5, 0x90, 0x41, 0xfd, 0x70, 0xa1, 0x58, 0xe2, 0x7a, 0x87, 0x73, 0x6d,
+	0xe3, 0x96, 0xcc, 0x95, 0x91, 0x4b, 0xfc, 0x59, 0x83, 0x52, 0x4e, 0x8c, 0x0a, 0x6f, 0xad, 0x5a,
+	0x18, 0x0b, 0x6f, 0x6d, 0x81, 0x50, 0x9a, 0x07, 0x9c, 0x6d, 0x07, 0xcd, 0x22, 0xb6, 0xe9, 0xe6,
+	0x38, 0x5e, 0x4e, 0xdc, 0x70, 0xfe, 0x61, 0x12, 0x45, 0xb2, 0x10, 0xaf, 0x40, 0x33, 0x67, 0xe1,
+	0xe5, 0xb5, 0x14, 0xbf, 0x86, 0x65, 0x7a, 0xa2, 0x77, 0x0a, 0xba, 0x64, 0x5f, 0xe4, 0xdd, 0x39,
+	0x51, 0x84, 0x50, 0xe1, 0x08, 0x3a, 0x96, 0x65, 0x84, 0xe4, 0xb1, 0x6d, 0xdd, 0x7d, 0x7e, 0x66,
+	0x68, 0x2f, 0xce, 0x0c, 0xed, 0xdf, 0x33, 0x43, 0x7b, 0x76, 0x6e, 0x2c, 0xbd, 0x38, 0x37, 0x96,
+	0xfe, 0x3e, 0x37, 0x96, 0xbe, 0xaa, 0x0b, 0x82, 0x4e, 0xd9, 0xf5, 0x6f, 0x99, 0xef, 0xa6, 0xa5,
+	0xbe, 0xa1, 0x62, 0x5c, 0xdb, 0xbb, 0xcb, 0xfc, 0xdf, 0xc2, 0x9b, 0xaf, 0x02, 0x00, 0x00, 0xff,
+	0xff, 0x7c, 0x84, 0xfe, 0xeb, 0xba, 0x0e, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -153,6 +1054,26 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
+	// AllBackingRiskParams queries risk params of all the backing pools.
+	AllBackingRiskParams(ctx context.Context, in *QueryAllBackingRiskParamsRequest, opts ...grpc.CallOption) (*QueryAllBackingRiskParamsResponse, error)
+	// AllCollateralRiskParams queries risk params of all the collateral pools.
+	AllCollateralRiskParams(ctx context.Context, in *QueryAllCollateralRiskParamsRequest, opts ...grpc.CallOption) (*QueryAllCollateralRiskParamsResponse, error)
+	// AllBackingPools queries all the backing pools.
+	AllBackingPools(ctx context.Context, in *QueryAllBackingPoolsRequest, opts ...grpc.CallOption) (*QueryAllBackingPoolsResponse, error)
+	// AllCollateralPools queries all the collateral pools.
+	AllCollateralPools(ctx context.Context, in *QueryAllCollateralPoolsRequest, opts ...grpc.CallOption) (*QueryAllCollateralPoolsResponse, error)
+	// BackingPool queries a backing pool.
+	BackingPool(ctx context.Context, in *QueryBackingPoolRequest, opts ...grpc.CallOption) (*QueryBackingPoolResponse, error)
+	// CollateralPool queries a collateral pool.
+	CollateralPool(ctx context.Context, in *QueryCollateralPoolRequest, opts ...grpc.CallOption) (*QueryCollateralPoolResponse, error)
+	// CollateralOfAccount queries the collateral of an account.
+	CollateralOfAccount(ctx context.Context, in *QueryCollateralOfAccountRequest, opts ...grpc.CallOption) (*QueryCollateralOfAccountResponse, error)
+	// TotalBacking queries the total backing.
+	TotalBacking(ctx context.Context, in *QueryTotalBackingRequest, opts ...grpc.CallOption) (*QueryTotalBackingResponse, error)
+	// TotalCollateral queries the total collateral.
+	TotalCollateral(ctx context.Context, in *QueryTotalCollateralRequest, opts ...grpc.CallOption) (*QueryTotalCollateralResponse, error)
+	// CollateralRatio queries the collateral ratio.
+	CollateralRatio(ctx context.Context, in *QueryCollateralRatioRequest, opts ...grpc.CallOption) (*QueryCollateralRatioResponse, error)
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 }
@@ -163,6 +1084,96 @@ type queryClient struct {
 
 func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
+}
+
+func (c *queryClient) AllBackingRiskParams(ctx context.Context, in *QueryAllBackingRiskParamsRequest, opts ...grpc.CallOption) (*QueryAllBackingRiskParamsResponse, error) {
+	out := new(QueryAllBackingRiskParamsResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/AllBackingRiskParams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) AllCollateralRiskParams(ctx context.Context, in *QueryAllCollateralRiskParamsRequest, opts ...grpc.CallOption) (*QueryAllCollateralRiskParamsResponse, error) {
+	out := new(QueryAllCollateralRiskParamsResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/AllCollateralRiskParams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) AllBackingPools(ctx context.Context, in *QueryAllBackingPoolsRequest, opts ...grpc.CallOption) (*QueryAllBackingPoolsResponse, error) {
+	out := new(QueryAllBackingPoolsResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/AllBackingPools", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) AllCollateralPools(ctx context.Context, in *QueryAllCollateralPoolsRequest, opts ...grpc.CallOption) (*QueryAllCollateralPoolsResponse, error) {
+	out := new(QueryAllCollateralPoolsResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/AllCollateralPools", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) BackingPool(ctx context.Context, in *QueryBackingPoolRequest, opts ...grpc.CallOption) (*QueryBackingPoolResponse, error) {
+	out := new(QueryBackingPoolResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/BackingPool", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) CollateralPool(ctx context.Context, in *QueryCollateralPoolRequest, opts ...grpc.CallOption) (*QueryCollateralPoolResponse, error) {
+	out := new(QueryCollateralPoolResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/CollateralPool", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) CollateralOfAccount(ctx context.Context, in *QueryCollateralOfAccountRequest, opts ...grpc.CallOption) (*QueryCollateralOfAccountResponse, error) {
+	out := new(QueryCollateralOfAccountResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/CollateralOfAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) TotalBacking(ctx context.Context, in *QueryTotalBackingRequest, opts ...grpc.CallOption) (*QueryTotalBackingResponse, error) {
+	out := new(QueryTotalBackingResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/TotalBacking", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) TotalCollateral(ctx context.Context, in *QueryTotalCollateralRequest, opts ...grpc.CallOption) (*QueryTotalCollateralResponse, error) {
+	out := new(QueryTotalCollateralResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/TotalCollateral", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) CollateralRatio(ctx context.Context, in *QueryCollateralRatioRequest, opts ...grpc.CallOption) (*QueryCollateralRatioResponse, error) {
+	out := new(QueryCollateralRatioResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/CollateralRatio", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
@@ -176,6 +1187,26 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
+	// AllBackingRiskParams queries risk params of all the backing pools.
+	AllBackingRiskParams(context.Context, *QueryAllBackingRiskParamsRequest) (*QueryAllBackingRiskParamsResponse, error)
+	// AllCollateralRiskParams queries risk params of all the collateral pools.
+	AllCollateralRiskParams(context.Context, *QueryAllCollateralRiskParamsRequest) (*QueryAllCollateralRiskParamsResponse, error)
+	// AllBackingPools queries all the backing pools.
+	AllBackingPools(context.Context, *QueryAllBackingPoolsRequest) (*QueryAllBackingPoolsResponse, error)
+	// AllCollateralPools queries all the collateral pools.
+	AllCollateralPools(context.Context, *QueryAllCollateralPoolsRequest) (*QueryAllCollateralPoolsResponse, error)
+	// BackingPool queries a backing pool.
+	BackingPool(context.Context, *QueryBackingPoolRequest) (*QueryBackingPoolResponse, error)
+	// CollateralPool queries a collateral pool.
+	CollateralPool(context.Context, *QueryCollateralPoolRequest) (*QueryCollateralPoolResponse, error)
+	// CollateralOfAccount queries the collateral of an account.
+	CollateralOfAccount(context.Context, *QueryCollateralOfAccountRequest) (*QueryCollateralOfAccountResponse, error)
+	// TotalBacking queries the total backing.
+	TotalBacking(context.Context, *QueryTotalBackingRequest) (*QueryTotalBackingResponse, error)
+	// TotalCollateral queries the total collateral.
+	TotalCollateral(context.Context, *QueryTotalCollateralRequest) (*QueryTotalCollateralResponse, error)
+	// CollateralRatio queries the collateral ratio.
+	CollateralRatio(context.Context, *QueryCollateralRatioRequest) (*QueryCollateralRatioResponse, error)
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 }
@@ -184,12 +1215,222 @@ type QueryServer interface {
 type UnimplementedQueryServer struct {
 }
 
+func (*UnimplementedQueryServer) AllBackingRiskParams(ctx context.Context, req *QueryAllBackingRiskParamsRequest) (*QueryAllBackingRiskParamsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllBackingRiskParams not implemented")
+}
+func (*UnimplementedQueryServer) AllCollateralRiskParams(ctx context.Context, req *QueryAllCollateralRiskParamsRequest) (*QueryAllCollateralRiskParamsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllCollateralRiskParams not implemented")
+}
+func (*UnimplementedQueryServer) AllBackingPools(ctx context.Context, req *QueryAllBackingPoolsRequest) (*QueryAllBackingPoolsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllBackingPools not implemented")
+}
+func (*UnimplementedQueryServer) AllCollateralPools(ctx context.Context, req *QueryAllCollateralPoolsRequest) (*QueryAllCollateralPoolsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllCollateralPools not implemented")
+}
+func (*UnimplementedQueryServer) BackingPool(ctx context.Context, req *QueryBackingPoolRequest) (*QueryBackingPoolResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BackingPool not implemented")
+}
+func (*UnimplementedQueryServer) CollateralPool(ctx context.Context, req *QueryCollateralPoolRequest) (*QueryCollateralPoolResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CollateralPool not implemented")
+}
+func (*UnimplementedQueryServer) CollateralOfAccount(ctx context.Context, req *QueryCollateralOfAccountRequest) (*QueryCollateralOfAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CollateralOfAccount not implemented")
+}
+func (*UnimplementedQueryServer) TotalBacking(ctx context.Context, req *QueryTotalBackingRequest) (*QueryTotalBackingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TotalBacking not implemented")
+}
+func (*UnimplementedQueryServer) TotalCollateral(ctx context.Context, req *QueryTotalCollateralRequest) (*QueryTotalCollateralResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TotalCollateral not implemented")
+}
+func (*UnimplementedQueryServer) CollateralRatio(ctx context.Context, req *QueryCollateralRatioRequest) (*QueryCollateralRatioResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CollateralRatio not implemented")
+}
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 	s.RegisterService(&_Query_serviceDesc, srv)
+}
+
+func _Query_AllBackingRiskParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllBackingRiskParamsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).AllBackingRiskParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/AllBackingRiskParams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).AllBackingRiskParams(ctx, req.(*QueryAllBackingRiskParamsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_AllCollateralRiskParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllCollateralRiskParamsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).AllCollateralRiskParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/AllCollateralRiskParams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).AllCollateralRiskParams(ctx, req.(*QueryAllCollateralRiskParamsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_AllBackingPools_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllBackingPoolsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).AllBackingPools(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/AllBackingPools",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).AllBackingPools(ctx, req.(*QueryAllBackingPoolsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_AllCollateralPools_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllCollateralPoolsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).AllCollateralPools(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/AllCollateralPools",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).AllCollateralPools(ctx, req.(*QueryAllCollateralPoolsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_BackingPool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBackingPoolRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).BackingPool(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/BackingPool",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).BackingPool(ctx, req.(*QueryBackingPoolRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_CollateralPool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryCollateralPoolRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).CollateralPool(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/CollateralPool",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).CollateralPool(ctx, req.(*QueryCollateralPoolRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_CollateralOfAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryCollateralOfAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).CollateralOfAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/CollateralOfAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).CollateralOfAccount(ctx, req.(*QueryCollateralOfAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_TotalBacking_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryTotalBackingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).TotalBacking(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/TotalBacking",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).TotalBacking(ctx, req.(*QueryTotalBackingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_TotalCollateral_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryTotalCollateralRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).TotalCollateral(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/TotalCollateral",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).TotalCollateral(ctx, req.(*QueryTotalCollateralRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_CollateralRatio_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryCollateralRatioRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).CollateralRatio(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Query/CollateralRatio",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).CollateralRatio(ctx, req.(*QueryCollateralRatioRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -215,12 +1456,661 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "AllBackingRiskParams",
+			Handler:    _Query_AllBackingRiskParams_Handler,
+		},
+		{
+			MethodName: "AllCollateralRiskParams",
+			Handler:    _Query_AllCollateralRiskParams_Handler,
+		},
+		{
+			MethodName: "AllBackingPools",
+			Handler:    _Query_AllBackingPools_Handler,
+		},
+		{
+			MethodName: "AllCollateralPools",
+			Handler:    _Query_AllCollateralPools_Handler,
+		},
+		{
+			MethodName: "BackingPool",
+			Handler:    _Query_BackingPool_Handler,
+		},
+		{
+			MethodName: "CollateralPool",
+			Handler:    _Query_CollateralPool_Handler,
+		},
+		{
+			MethodName: "CollateralOfAccount",
+			Handler:    _Query_CollateralOfAccount_Handler,
+		},
+		{
+			MethodName: "TotalBacking",
+			Handler:    _Query_TotalBacking_Handler,
+		},
+		{
+			MethodName: "TotalCollateral",
+			Handler:    _Query_TotalCollateral_Handler,
+		},
+		{
+			MethodName: "CollateralRatio",
+			Handler:    _Query_CollateralRatio_Handler,
+		},
+		{
 			MethodName: "Params",
 			Handler:    _Query_Params_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "merlion/maker/v1/query.proto",
+}
+
+func (m *QueryAllBackingRiskParamsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllBackingRiskParamsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllBackingRiskParamsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllBackingRiskParamsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllBackingRiskParamsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllBackingRiskParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.RiskParams) > 0 {
+		for iNdEx := len(m.RiskParams) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.RiskParams[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllCollateralRiskParamsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllCollateralRiskParamsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllCollateralRiskParamsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllCollateralRiskParamsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllCollateralRiskParamsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllCollateralRiskParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.RiskParams) > 0 {
+		for iNdEx := len(m.RiskParams) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.RiskParams[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllBackingPoolsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllBackingPoolsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllBackingPoolsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllBackingPoolsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllBackingPoolsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllBackingPoolsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.BackingPools) > 0 {
+		for iNdEx := len(m.BackingPools) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.BackingPools[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllCollateralPoolsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllCollateralPoolsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllCollateralPoolsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllCollateralPoolsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllCollateralPoolsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllCollateralPoolsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.CollateralPools) > 0 {
+		for iNdEx := len(m.CollateralPools) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.CollateralPools[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBackingPoolRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBackingPoolRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBackingPoolRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.BackingDenom) > 0 {
+		i -= len(m.BackingDenom)
+		copy(dAtA[i:], m.BackingDenom)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.BackingDenom)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBackingPoolResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBackingPoolResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBackingPoolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.BackingPool.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryCollateralPoolRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryCollateralPoolRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryCollateralPoolRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.CollateralDenom) > 0 {
+		i -= len(m.CollateralDenom)
+		copy(dAtA[i:], m.CollateralDenom)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.CollateralDenom)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryCollateralPoolResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryCollateralPoolResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryCollateralPoolResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.CollateralPool.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryCollateralOfAccountRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryCollateralOfAccountRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryCollateralOfAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.CollateralDenom) > 0 {
+		i -= len(m.CollateralDenom)
+		copy(dAtA[i:], m.CollateralDenom)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.CollateralDenom)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Account) > 0 {
+		i -= len(m.Account)
+		copy(dAtA[i:], m.Account)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Account)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryCollateralOfAccountResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryCollateralOfAccountResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryCollateralOfAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.AccountCollateral.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryTotalBackingRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryTotalBackingRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryTotalBackingRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryTotalBackingResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryTotalBackingResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryTotalBackingResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.TotalBacking.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryTotalCollateralRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryTotalCollateralRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryTotalCollateralRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryTotalCollateralResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryTotalCollateralResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryTotalCollateralResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.TotalCollateral.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryCollateralRatioRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryCollateralRatioRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryCollateralRatioRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryCollateralRatioResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryCollateralRatioResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryCollateralRatioResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.LastUpdateBlock != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.LastUpdateBlock))
+		i--
+		dAtA[i] = 0x10
+	}
+	{
+		size := m.CollateralRatio.Size()
+		i -= size
+		if _, err := m.CollateralRatio.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
 }
 
 func (m *QueryParamsRequest) Marshal() (dAtA []byte, err error) {
@@ -290,6 +2180,241 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *QueryAllBackingRiskParamsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryAllBackingRiskParamsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.RiskParams) > 0 {
+		for _, e := range m.RiskParams {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryAllCollateralRiskParamsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryAllCollateralRiskParamsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.RiskParams) > 0 {
+		for _, e := range m.RiskParams {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryAllBackingPoolsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryAllBackingPoolsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.BackingPools) > 0 {
+		for _, e := range m.BackingPools {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryAllCollateralPoolsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryAllCollateralPoolsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.CollateralPools) > 0 {
+		for _, e := range m.CollateralPools {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryBackingPoolRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.BackingDenom)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryBackingPoolResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.BackingPool.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryCollateralPoolRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.CollateralDenom)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryCollateralPoolResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.CollateralPool.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryCollateralOfAccountRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Account)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.CollateralDenom)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryCollateralOfAccountResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.AccountCollateral.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryTotalBackingRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryTotalBackingResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.TotalBacking.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryTotalCollateralRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryTotalCollateralResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.TotalCollateral.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryCollateralRatioRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryCollateralRatioResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.CollateralRatio.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	if m.LastUpdateBlock != 0 {
+		n += 1 + sovQuery(uint64(m.LastUpdateBlock))
+	}
+	return n
+}
+
 func (m *QueryParamsRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -315,6 +2440,1488 @@ func sovQuery(x uint64) (n int) {
 }
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *QueryAllBackingRiskParamsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllBackingRiskParamsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllBackingRiskParamsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllBackingRiskParamsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllBackingRiskParamsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllBackingRiskParamsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RiskParams", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RiskParams = append(m.RiskParams, BackingRiskParams{})
+			if err := m.RiskParams[len(m.RiskParams)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllCollateralRiskParamsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllCollateralRiskParamsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllCollateralRiskParamsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllCollateralRiskParamsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllCollateralRiskParamsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllCollateralRiskParamsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RiskParams", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RiskParams = append(m.RiskParams, CollateralRiskParams{})
+			if err := m.RiskParams[len(m.RiskParams)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllBackingPoolsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllBackingPoolsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllBackingPoolsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllBackingPoolsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllBackingPoolsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllBackingPoolsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackingPools", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BackingPools = append(m.BackingPools, PoolBacking{})
+			if err := m.BackingPools[len(m.BackingPools)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllCollateralPoolsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllCollateralPoolsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllCollateralPoolsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllCollateralPoolsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllCollateralPoolsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllCollateralPoolsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CollateralPools", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CollateralPools = append(m.CollateralPools, PoolCollateral{})
+			if err := m.CollateralPools[len(m.CollateralPools)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBackingPoolRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBackingPoolRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBackingPoolRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackingDenom", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BackingDenom = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBackingPoolResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBackingPoolResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBackingPoolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackingPool", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BackingPool.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryCollateralPoolRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryCollateralPoolRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryCollateralPoolRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CollateralDenom", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CollateralDenom = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryCollateralPoolResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryCollateralPoolResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryCollateralPoolResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CollateralPool", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.CollateralPool.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryCollateralOfAccountRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryCollateralOfAccountRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryCollateralOfAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Account", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Account = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CollateralDenom", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CollateralDenom = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryCollateralOfAccountResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryCollateralOfAccountResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryCollateralOfAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AccountCollateral", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.AccountCollateral.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryTotalBackingRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryTotalBackingRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryTotalBackingRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryTotalBackingResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryTotalBackingResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryTotalBackingResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TotalBacking", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.TotalBacking.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryTotalCollateralRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryTotalCollateralRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryTotalCollateralRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryTotalCollateralResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryTotalCollateralResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryTotalCollateralResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TotalCollateral", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.TotalCollateral.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryCollateralRatioRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryCollateralRatioRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryCollateralRatioRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryCollateralRatioResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryCollateralRatioResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryCollateralRatioResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CollateralRatio", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.CollateralRatio.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LastUpdateBlock", wireType)
+			}
+			m.LastUpdateBlock = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LastUpdateBlock |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
