@@ -22,13 +22,13 @@ var (
 
 // Default parameter values
 var (
-	DefaultCollateralRatioStep           = sdk.NewDecWithPrec(25, 4) // 0.25%
-	DefaultCollateralRatioPriceBand      = sdk.NewDecWithPrec(5, 3)  // 0.5%
-	DefaultCollateralRatioCooldownPeriod = merlion.BlocksPerHour     // 600
-	DefaultMintPriceBias                 = sdk.NewDecWithPrec(1, 2)  // 1%
-	DefaultBurnPriceBias                 = sdk.NewDecWithPrec(1, 2)  // 1%
-	DefaultRecollateralizeBonus          = sdk.NewDecWithPrec(75, 4) // 0.75%
-	DefaultLiquidationCommissionFee      = sdk.NewDecWithPrec(10, 2) // 10%
+	DefaultCollateralRatioStep           = sdk.NewDecWithPrec(25, 4)    // 0.25%
+	DefaultCollateralRatioPriceBand      = sdk.NewDecWithPrec(5, 3)     // 0.5%
+	DefaultCollateralRatioCooldownPeriod = int64(merlion.BlocksPerHour) // 600
+	DefaultMintPriceBias                 = sdk.NewDecWithPrec(1, 2)     // 1%
+	DefaultBurnPriceBias                 = sdk.NewDecWithPrec(1, 2)     // 1%
+	DefaultRecollateralizeBonus          = sdk.NewDecWithPrec(75, 4)    // 0.75%
+	DefaultLiquidationCommissionFee      = sdk.NewDecWithPrec(10, 2)    // 10%
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -72,7 +72,7 @@ func (p Params) Validate() error {
 	if !p.CollateralRatioPriceBand.IsPositive() || p.CollateralRatioPriceBand.GT(sdk.OneDec()) {
 		return fmt.Errorf("price band for adjusting collateral ratio should be a value between (0,1], is %s", p.CollateralRatioPriceBand)
 	}
-	if p.CollateralRatioCooldownPeriod == 0 {
+	if p.CollateralRatioCooldownPeriod <= 0 {
 		return fmt.Errorf("cooldown period for adjusting collateral ratio should be positive, is %d", p.CollateralRatioCooldownPeriod)
 	}
 	if !p.MintPriceBias.IsPositive() || p.MintPriceBias.GT(sdk.OneDec()) {
@@ -131,7 +131,7 @@ func validateCollateralRatioPriceBand(i interface{}) error {
 }
 
 func validateCollateralRatioCooldownPeriod(i interface{}) error {
-	v, ok := i.(uint64)
+	v, ok := i.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}

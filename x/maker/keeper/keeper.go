@@ -58,23 +58,6 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-func (k Keeper) SetCollateralRatio(ctx sdk.Context, cr sdk.Dec) {
-	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.DecProto{Dec: cr})
-	store.Set(types.KeyPrefixCollateralRatio, bz)
-}
-
-func (k Keeper) GetCollateralRatio(ctx sdk.Context) sdk.Dec {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.KeyPrefixCollateralRatio)
-	if bz == nil {
-		return sdk.OneDec()
-	}
-	dp := sdk.DecProto{}
-	k.cdc.MustUnmarshal(bz, &dp)
-	return dp.Dec
-}
-
 // GetMakerAccount returns the maker ModuleAccount
 func (k Keeper) GetMakerAccount(ctx sdk.Context) authtypes.ModuleAccountI {
 	return k.accountKeeper.GetModuleAccount(ctx, types.ModuleName)

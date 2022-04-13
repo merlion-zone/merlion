@@ -26,11 +26,9 @@
 - [merlion/erc20/v1/tx.proto](#merlion/erc20/v1/tx.proto)
     - [Msg](#merlion.erc20.v1.Msg)
   
-- [merlion/maker/v1/params.proto](#merlion/maker/v1/params.proto)
-    - [Params](#merlion.maker.v1.Params)
-  
 - [merlion/maker/v1/genesis.proto](#merlion/maker/v1/genesis.proto)
     - [GenesisState](#merlion.maker.v1.GenesisState)
+    - [Params](#merlion.maker.v1.Params)
   
 - [merlion/maker/v1/maker.proto](#merlion/maker/v1/maker.proto)
     - [AccountBacking](#merlion.maker.v1.AccountBacking)
@@ -365,43 +363,6 @@ Msg defines the erc20 Msg service.
 
 
 
-<a name="merlion/maker/v1/params.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## merlion/maker/v1/params.proto
-
-
-
-<a name="merlion.maker.v1.Params"></a>
-
-### Params
-Params defines the parameters for the maker module.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `collateral_ratio_step` | [string](#string) |  | adjusting collateral step |
-| `collateral_ratio_price_band` | [string](#string) |  | price band for adjusting collateral ratio |
-| `collateral_ratio_cooldown_period` | [uint64](#uint64) |  | cooldown period for adjusting collateral ratio |
-| `mint_price_bias` | [string](#string) |  | mint Mer price bias ratio |
-| `burn_price_bias` | [string](#string) |  | burn Mer price bias ratio |
-| `recollateralize_bonus` | [string](#string) |  | recollateralization bonus ratio |
-| `liquidation_commission_fee` | [string](#string) |  | liquidation commission fee ratio |
-
-
-
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
 <a name="merlion/maker/v1/genesis.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -419,6 +380,27 @@ GenesisState defines the maker module's genesis state.
 | ----- | ---- | ----- | ----------- |
 | `params` | [Params](#merlion.maker.v1.Params) |  |  |
 | `collateral_ratio` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.Params"></a>
+
+### Params
+Params defines the parameters for the maker module.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `collateral_ratio_step` | [string](#string) |  | adjusting collateral step |
+| `collateral_ratio_price_band` | [string](#string) |  | price band for adjusting collateral ratio |
+| `collateral_ratio_cooldown_period` | [int64](#int64) |  | cooldown period for adjusting collateral ratio |
+| `mint_price_bias` | [string](#string) |  | mint Mer price bias ratio |
+| `burn_price_bias` | [string](#string) |  | burn Mer price bias ratio |
+| `recollateralize_bonus` | [string](#string) |  | recollateralization bonus ratio |
+| `liquidation_commission_fee` | [string](#string) |  | liquidation commission fee ratio |
 
 
 

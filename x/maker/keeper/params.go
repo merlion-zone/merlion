@@ -29,7 +29,7 @@ func (k Keeper) CollateralRatioPriceBand(ctx sdk.Context) (res sdk.Dec) {
 }
 
 // CollateralRatioCooldownPeriod is minimum cooldown period after which collateral ratio can be adjusted
-func (k Keeper) CollateralRatioCooldownPeriod(ctx sdk.Context) (res uint64) {
+func (k Keeper) CollateralRatioCooldownPeriod(ctx sdk.Context) (res int64) {
 	k.paramstore.Get(ctx, types.KeyCollateralRatioCooldownPeriod, &res)
 	return
 }

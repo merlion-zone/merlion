@@ -3,7 +3,7 @@ package merlion.maker.v1;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "merlion/maker/v1/params.proto";
+import "merlion/maker/v1/genesis.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/merlion-zone/merlion/x/maker/types";
