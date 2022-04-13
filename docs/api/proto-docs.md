@@ -908,6 +908,12 @@ MsgLiquidateCollateral represents a message to liquidates collateral assets.
 MsgReCollateralizeResponse defines the Msg/LiquidateCollateral response type.
 
 
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `repay_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `collateral_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
 
 
 

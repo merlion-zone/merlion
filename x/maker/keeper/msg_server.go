@@ -597,12 +597,7 @@ func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemColla
 		return nil, err
 	}
 
-	merTotal := acc.MerDebt.Add(acc.MerByLion)
-	catalyticRatio := acc.MerByLion.Amount.ToDec().QuoInt(merTotal.Amount).Quo(*collateralParams.CatalyticLionRatio)
-	if catalyticRatio.GT(sdk.OneDec()) {
-		catalyticRatio = sdk.OneDec()
-	}
-	maxLoanToValue := collateralParams.BasicLoanToValue.Add(collateralParams.LoanToValue.Sub(*collateralParams.BasicLoanToValue).Mul(catalyticRatio))
+	maxLoanToValue := maxLoanToValueForAccount(&acc, &collateralParams)
 
 	collateralInUSD := acc.Collateral.Amount.ToDec().Mul(collateralPrice)
 	if acc.MerDebt.Amount.ToDec().LT(collateralInUSD.Mul(maxLoanToValue)) {
@@ -624,8 +619,111 @@ func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemColla
 }
 
 func (m msgServer) LiquidateCollateral(c context.Context, msg *types.MsgLiquidateCollateral) (*types.MsgLiquidateCollateralResponse, error) {
-	// TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+	receiver := sender
+	if len(msg.To) > 0 {
+		// user specifies receiver
+		receiver, err = sdk.AccAddressFromBech32(msg.To)
+		if err != nil {
+			return nil, err
+		}
+	}
+	debtor, err := sdk.AccAddressFromBech32(msg.Debtor)
+	if err != nil {
+		return nil, err
+	}
+
+	collateralParams, found := m.Keeper.GetCollateralRiskParams(ctx, msg.Collateral.Denom)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", msg.Collateral.Denom)
+	}
+
+	if !collateralParams.Enabled {
+		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", msg.Collateral.Denom)
+	}
+
+	pool, found := m.Keeper.GetPoolCollateral(ctx, msg.Collateral.Denom)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrAccountNoCollateral, "account has no collateral: %s", msg.Collateral.Denom)
+	}
+
+	acc, found := m.Keeper.GetAccountCollateral(ctx, debtor, msg.Collateral.Denom)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrAccountNoCollateral, "account has no collateral: %s", msg.Collateral.Denom)
+	}
+
+	settleInterestFee(ctx, &acc, &pool, collateralParams.InterestFee)
+
+	collateralPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, msg.Collateral.Denom)
+	if err != nil {
+		return nil, err
+	}
+
+	// check whether undercollateralized
+	liquidationValue := acc.Collateral.Amount.ToDec().Mul(collateralPrice).Mul(*collateralParams.LiquidationThreshold)
+	if acc.MerDebt.Amount.ToDec().LTE(liquidationValue) {
+		return nil, sdkerrors.Wrap(types.ErrNotUndercollateralized, "not undercollateralized")
+	}
+
+	if msg.Collateral.Amount.GT(acc.Collateral.Amount) {
+		return nil, sdkerrors.Wrap(types.ErrCollateralCoinInsufficient, "collateral coin balance insufficient")
+	}
+
+	liquidationFee := msg.Collateral.Amount.ToDec().Mul(*collateralParams.LiquidationFee)
+	repayIn := sdk.NewCoin(msg.Collateral.Denom, msg.Collateral.Amount.ToDec().Sub(liquidationFee).Mul(collateralPrice).TruncateInt())
+	commissionFee := sdk.NewCoin(msg.Collateral.Denom, liquidationFee.Mul(m.Keeper.LiquidationCommissionFee(ctx)).TruncateInt())
+	collateralOut := msg.Collateral.Sub(commissionFee)
+
+	// repay for debtor as much as possible
+	repayDebt := sdk.NewCoin(merlion.MicroUSDDenom, sdk.MinInt(acc.MerDebt.Amount, repayIn.Amount))
+	merRefund := repayIn.Sub(repayDebt)
+	acc.MerDebt = acc.MerDebt.Sub(repayDebt)
+	pool.MerDebt = pool.MerDebt.Sub(repayDebt)
+
+	// eventually persist collateral
+	m.Keeper.SetPoolCollateral(ctx, pool)
+	m.Keeper.SetAccountCollateral(ctx, sender, acc)
+
+	// take mer from sender
+	err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(repayIn))
+	if err != nil {
+		return nil, err
+	}
+	// burn mer debt
+	err = m.Keeper.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(repayDebt))
+	if err != nil {
+		return nil, err
+	}
+	// send excess mer to debtor
+	if merRefund.IsPositive() {
+		err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, debtor, sdk.NewCoins(merRefund))
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// send collateral to receiver
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(collateralOut))
+	if err != nil {
+		return nil, err
+	}
+	// send liquidation commission fee to oracle
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, oracletypes.ModuleName, sdk.NewCoins(commissionFee))
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: event
+
+	return &types.MsgLiquidateCollateralResponse{
+		RepayIn:       repayIn,
+		CollateralOut: collateralOut,
+	}, nil
 }
 
 func (m msgServer) BuyBacking(c context.Context, msg *types.MsgBuyBacking) (*types.MsgBuyBackingResponse, error) {
@@ -882,4 +980,13 @@ func computeFee(coin sdk.Coin, rate *sdk.Dec) sdk.Coin {
 		amt = coin.Amount.ToDec().Mul(*rate).TruncateInt()
 	}
 	return sdk.NewCoin(coin.Denom, amt)
+}
+
+func maxLoanToValueForAccount(acc *types.AccountCollateral, collateralParams *types.CollateralRiskParams) sdk.Dec {
+	merTotal := acc.MerDebt.Add(acc.MerByLion)
+	catalyticRatio := acc.MerByLion.Amount.ToDec().QuoInt(merTotal.Amount).Quo(*collateralParams.CatalyticLionRatio)
+	if catalyticRatio.GT(sdk.OneDec()) {
+		catalyticRatio = sdk.OneDec()
+	}
+	return collateralParams.BasicLoanToValue.Add(collateralParams.LoanToValue.Sub(*collateralParams.BasicLoanToValue).Mul(catalyticRatio))
 }

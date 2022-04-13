@@ -293,4 +293,13 @@ message MsgLiquidateCollateral {
 }
 
 // MsgReCollateralizeResponse defines the Msg/LiquidateCollateral response type.
-message MsgLiquidateCollateralResponse {}
+message MsgLiquidateCollateralResponse {
+  cosmos.base.v1beta1.Coin repay_in = 1 [
+    (gogoproto.moretags) = "yaml:\"repay_in\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin collateral_out = 2 [
+    (gogoproto.moretags) = "yaml:\"collateral_out\"",
+    (gogoproto.nullable) = false
+  ];
+}
