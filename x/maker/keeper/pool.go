@@ -57,6 +57,23 @@ func (k Keeper) GetAllPoolBacking(ctx sdk.Context) []types.PoolBacking {
 	return allParams
 }
 
+func (k Keeper) SetTotalCollateral(ctx sdk.Context, pool types.TotalCollateral) {
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshal(&pool)
+	store.Set(types.KeyPrefixCollateralTotal, bz)
+}
+
+func (k Keeper) GetTotalCollateral(ctx sdk.Context) (types.TotalCollateral, bool) {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.KeyPrefixCollateralTotal)
+	var total types.TotalCollateral
+	if len(bz) == 0 {
+		return total, false
+	}
+	k.cdc.MustUnmarshal(bz, &total)
+	return total, true
+}
+
 func (k Keeper) SetPoolCollateral(ctx sdk.Context, pool types.PoolCollateral) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixCollateralPool)
 	bz := k.cdc.MustMarshal(&pool)

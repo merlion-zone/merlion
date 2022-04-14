@@ -98,8 +98,13 @@ func (k Keeper) TotalBacking(c context.Context, req *types.QueryTotalBackingRequ
 }
 
 func (k Keeper) TotalCollateral(c context.Context, req *types.QueryTotalCollateralRequest) (*types.QueryTotalCollateralResponse, error) {
-	// TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+
+	total, _ := k.GetTotalCollateral(ctx)
+
+	return &types.QueryTotalCollateralResponse{
+		TotalCollateral: total,
+	}, nil
 }
 
 func (k Keeper) CollateralRatio(c context.Context, req *types.QueryCollateralRatioRequest) (*types.QueryCollateralRatioResponse, error) {

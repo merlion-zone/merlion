@@ -465,6 +465,7 @@ Params defines the parameters for the maker module.
 | `collateral` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | existing collateral |
 | `mer_debt` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | remaining mer debt, including minted by collateral, mint fee, last interest |
 | `mer_by_lion` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | minted mer by burning lion |
+| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
 | `last_interest` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | remaining interest debt after last settlement |
 | `last_settlement_block` | [int64](#int64) |  | the block of last settlement |
 
@@ -582,8 +583,9 @@ CollateralRiskParams represents an object of collateral risk parameters.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `collateral` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total collateral |
-| `mer_debt` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total existing mer debt |
+| `mer_debt` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total existing mer debt, including minted by collateral, mint fee, last interest |
 | `mer_by_lion` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted merl by burning lion |
+| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
 
 
 
@@ -682,6 +684,13 @@ parameters.
 
 ### TotalCollateral
 
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `mer_debt` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total existing mer debt, including minted by collateral, mint fee, last interest |
+| `mer_by_lion` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted merl by burning lion |
+| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
 
 
 
@@ -1343,12 +1352,12 @@ Msg defines the maker Msg service.
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `MintBySwap` | [MsgMintBySwap](#merlion.maker.v1.MsgMintBySwap) | [MsgMintBySwapResponse](#merlion.maker.v1.MsgMintBySwapResponse) | MintBySwap mints Mer stablecoins by swapping in strong-backing assets and Lion coins. | GET|/merlion/maker/v1/tx/mint_by_swap|
 | `BurnBySwap` | [MsgBurnBySwap](#merlion.maker.v1.MsgBurnBySwap) | [MsgBurnBySwapResponse](#merlion.maker.v1.MsgBurnBySwapResponse) | BurnBySwap burns Mer stablecoins by swapping out strong-backing assets and Lion coins. | GET|/merlion/maker/v1/tx/burn_by_swap|
+| `BuyBacking` | [MsgBuyBacking](#merlion.maker.v1.MsgBuyBacking) | [MsgBuyBackingResponse](#merlion.maker.v1.MsgBuyBackingResponse) | BuyBacking buys strong-backing assets by spending Lion coins. | GET|/merlion/maker/v1/tx/buy_backing|
+| `SellBacking` | [MsgSellBacking](#merlion.maker.v1.MsgSellBacking) | [MsgSellBackingResponse](#merlion.maker.v1.MsgSellBackingResponse) | SellBacking sells strong-backing assets by earning Lion coins. | GET|/merlion/maker/v1/tx/sell_backing|
 | `MintByCollateral` | [MsgMintByCollateral](#merlion.maker.v1.MsgMintByCollateral) | [MsgMintByCollateralResponse](#merlion.maker.v1.MsgMintByCollateralResponse) | MintByCollateral mints Mer stablecoins by locking collateral assets and spending Lion coins. | GET|/merlion/maker/v1/tx/mint_by_collateral|
 | `BurnByCollateral` | [MsgBurnByCollateral](#merlion.maker.v1.MsgBurnByCollateral) | [MsgBurnByCollateralResponse](#merlion.maker.v1.MsgBurnByCollateralResponse) | BurnByCollateral burns Mer stablecoins by unlocking collateral assets and earning Lion coins. | GET|/merlion/maker/v1/tx/burn_by_collateral|
 | `DepositCollateral` | [MsgDepositCollateral](#merlion.maker.v1.MsgDepositCollateral) | [MsgDepositCollateralResponse](#merlion.maker.v1.MsgDepositCollateralResponse) | DepositCollateral deposits collateral assets. | GET|/merlion/maker/v1/tx/deposit_collateral|
 | `RedeemCollateral` | [MsgRedeemCollateral](#merlion.maker.v1.MsgRedeemCollateral) | [MsgRedeemCollateralResponse](#merlion.maker.v1.MsgRedeemCollateralResponse) | RedeemCollateral redeems collateral assets. | GET|/merlion/maker/v1/tx/redeem_collateral|
-| `BuyBacking` | [MsgBuyBacking](#merlion.maker.v1.MsgBuyBacking) | [MsgBuyBackingResponse](#merlion.maker.v1.MsgBuyBackingResponse) | BuyBacking buys strong-backing assets by spending Lion coins. | GET|/merlion/maker/v1/tx/buy_backing|
-| `SellBacking` | [MsgSellBacking](#merlion.maker.v1.MsgSellBacking) | [MsgSellBackingResponse](#merlion.maker.v1.MsgSellBackingResponse) | SellBacking sells strong-backing assets by earning Lion coins. | GET|/merlion/maker/v1/tx/sell_backing|
 | `LiquidateCollateral` | [MsgLiquidateCollateral](#merlion.maker.v1.MsgLiquidateCollateral) | [MsgLiquidateCollateralResponse](#merlion.maker.v1.MsgLiquidateCollateralResponse) | LiquidateCollateral liquidates collateral assets which is undercollateralized. | GET|/merlion/maker/v1/tx/liquidate_collateral|
 
  <!-- end services -->

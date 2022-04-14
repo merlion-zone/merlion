@@ -32,6 +32,8 @@ func (k Keeper) AdjustCollateralRatio(ctx sdk.Context) {
 		collateralRatio = sdk.MinDec(collateralRatio.Add(ratioStep), sdk.OneDec())
 	}
 
+	// TODO: consider adjusting CR based on total minted Mer, even though Mer price is within the band
+
 	k.SetCollateralRatio(ctx, collateralRatio)
 	k.SetCollateralRatioLastBlock(ctx, ctx.BlockHeight())
 }

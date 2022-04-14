@@ -3,6 +3,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/maker/types"
 )
 
@@ -37,8 +38,36 @@ func HandleRegisterBackingProposal(ctx sdk.Context, k Keeper, p *types.RegisterB
 		params.RecollateralizeFee = &dec
 	}
 
+	if err := validateBackingRiskParams(ctx, k, &params); err != nil {
+		return err
+	}
+
 	k.SetBackingRiskParams(ctx, params)
-	// TODO: event
+
+	_, found := k.GetTotalBacking(ctx)
+	if !found {
+		k.SetTotalBacking(ctx, types.TotalBacking{
+			MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
+			LionBurned: sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt()),
+		})
+	}
+
+	k.SetPoolBacking(ctx, types.PoolBacking{
+		MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
+		Backing:    sdk.NewCoin(params.BackingDenom, sdk.ZeroInt()),
+		LionBurned: sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt()),
+	})
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(types.EventTypeRegisterBacking,
+			sdk.NewAttribute(types.AttributeKeyRiskParams, params.String()),
+		),
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	})
+
 	return nil
 }
 
@@ -90,7 +119,33 @@ func HandleRegisterCollateralProposal(ctx sdk.Context, k Keeper, p *types.Regist
 	}
 
 	k.SetCollateralRiskParams(ctx, params)
-	// TODO: event
+
+	_, found := k.GetTotalCollateral(ctx)
+	if !found {
+		k.SetTotalCollateral(ctx, types.TotalCollateral{
+			MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
+			MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
+			LionBurned: sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt()),
+		})
+	}
+
+	k.SetPoolCollateral(ctx, types.PoolCollateral{
+		Collateral: sdk.NewCoin(params.CollateralDenom, sdk.ZeroInt()),
+		MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
+		MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
+		LionBurned: sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt()),
+	})
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(types.EventTypeRegisterCollateral,
+			sdk.NewAttribute(types.AttributeKeyRiskParams, params.String()),
+		),
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		),
+	})
+
 	return nil
 }
 
@@ -133,8 +188,21 @@ func setBackingRiskParamsProposal(ctx sdk.Context, k Keeper, patch *types.Backin
 	updated |= updateDecimal(params.RecollateralizeFee, patch.RecollateralizeFee)
 
 	if updated > 0 {
+		if err := validateBackingRiskParams(ctx, k, &params); err != nil {
+			return err
+		}
+
 		k.SetBackingRiskParams(ctx, params)
-		// TODO: event
+
+		ctx.EventManager().EmitEvents(sdk.Events{
+			sdk.NewEvent(types.EventTypeSetBackingRiskParams,
+				sdk.NewAttribute(types.AttributeKeyRiskParams, params.String()),
+			),
+			sdk.NewEvent(
+				sdk.EventTypeMessage,
+				sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			),
+		})
 	}
 	return nil
 }
@@ -164,8 +232,25 @@ func setCollateralRiskParamsProposal(ctx sdk.Context, k Keeper, patch *types.Col
 		if err := validateCollateralRiskParams(&params); err != nil {
 			return err
 		}
+
 		k.SetCollateralRiskParams(ctx, params)
-		// TODO: event
+
+		ctx.EventManager().EmitEvents(sdk.Events{
+			sdk.NewEvent(types.EventTypeSetCollateralRiskParams,
+				sdk.NewAttribute(types.AttributeKeyRiskParams, params.String()),
+			),
+			sdk.NewEvent(
+				sdk.EventTypeMessage,
+				sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			),
+		})
+	}
+	return nil
+}
+
+func validateBackingRiskParams(ctx sdk.Context, keeper Keeper, params *types.BackingRiskParams) error {
+	if params.RecollateralizeFee.GT(keeper.RecollateralizeBonus(ctx)) {
+		return sdkerrors.Wrap(types.ErrBackingParamsInvalid, "recollateralize fee ratio should not be greater than recollateralize bonus ratio")
 	}
 	return nil
 }

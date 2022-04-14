@@ -236,6 +236,179 @@ func (m *MsgBurnBySwapResponse) GetLionOut() types.Coin {
 	return types.Coin{}
 }
 
+// MsgBuyBacking represents a message to buy strong-backing assets.
+type MsgBuyBacking struct {
+	Sender        string     `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty" yaml:"sender"`
+	To            string     `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty" yaml:"to"`
+	LionIn        types.Coin `protobuf:"bytes,3,opt,name=lion_in,json=lionIn,proto3" json:"lion_in" yaml:"lion_in"`
+	BackingOutMin types.Coin `protobuf:"bytes,4,opt,name=backing_out_min,json=backingOutMin,proto3" json:"backing_out_min" yaml:"backing_out_min"`
+}
+
+func (m *MsgBuyBacking) Reset()         { *m = MsgBuyBacking{} }
+func (m *MsgBuyBacking) String() string { return proto.CompactTextString(m) }
+func (*MsgBuyBacking) ProtoMessage()    {}
+func (*MsgBuyBacking) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2797be2e51038e24, []int{4}
+}
+func (m *MsgBuyBacking) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgBuyBacking) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgBuyBacking.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgBuyBacking) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgBuyBacking.Merge(m, src)
+}
+func (m *MsgBuyBacking) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgBuyBacking) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgBuyBacking.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgBuyBacking proto.InternalMessageInfo
+
+// MsgBuyBackingResponse defines the Msg/BuyBacking response type.
+type MsgBuyBackingResponse struct {
+	BackingOut types.Coin `protobuf:"bytes,4,opt,name=backing_out,json=backingOut,proto3" json:"backing_out" yaml:"backing_out"`
+}
+
+func (m *MsgBuyBackingResponse) Reset()         { *m = MsgBuyBackingResponse{} }
+func (m *MsgBuyBackingResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgBuyBackingResponse) ProtoMessage()    {}
+func (*MsgBuyBackingResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2797be2e51038e24, []int{5}
+}
+func (m *MsgBuyBackingResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgBuyBackingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgBuyBackingResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgBuyBackingResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgBuyBackingResponse.Merge(m, src)
+}
+func (m *MsgBuyBackingResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgBuyBackingResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgBuyBackingResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgBuyBackingResponse proto.InternalMessageInfo
+
+func (m *MsgBuyBackingResponse) GetBackingOut() types.Coin {
+	if m != nil {
+		return m.BackingOut
+	}
+	return types.Coin{}
+}
+
+// MsgSellBacking represents a message to sell strong-backing
+// assets.
+type MsgSellBacking struct {
+	Sender     string     `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty" yaml:"sender"`
+	To         string     `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty" yaml:"to"`
+	BackingIn  types.Coin `protobuf:"bytes,3,opt,name=backing_in,json=backingIn,proto3" json:"backing_in" yaml:"backing_in"`
+	LionOutMin types.Coin `protobuf:"bytes,4,opt,name=lion_out_min,json=lionOutMin,proto3" json:"lion_out_min" yaml:"lion_out_min"`
+}
+
+func (m *MsgSellBacking) Reset()         { *m = MsgSellBacking{} }
+func (m *MsgSellBacking) String() string { return proto.CompactTextString(m) }
+func (*MsgSellBacking) ProtoMessage()    {}
+func (*MsgSellBacking) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2797be2e51038e24, []int{6}
+}
+func (m *MsgSellBacking) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgSellBacking) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgSellBacking.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgSellBacking) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSellBacking.Merge(m, src)
+}
+func (m *MsgSellBacking) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgSellBacking) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSellBacking.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgSellBacking proto.InternalMessageInfo
+
+// MsgSellBackingResponse defines the Msg/SellBacking response type.
+type MsgSellBackingResponse struct {
+	LionOut types.Coin `protobuf:"bytes,4,opt,name=lion_out,json=lionOut,proto3" json:"lion_out" yaml:"lion_out"`
+}
+
+func (m *MsgSellBackingResponse) Reset()         { *m = MsgSellBackingResponse{} }
+func (m *MsgSellBackingResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgSellBackingResponse) ProtoMessage()    {}
+func (*MsgSellBackingResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2797be2e51038e24, []int{7}
+}
+func (m *MsgSellBackingResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgSellBackingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgSellBackingResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgSellBackingResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSellBackingResponse.Merge(m, src)
+}
+func (m *MsgSellBackingResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgSellBackingResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSellBackingResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgSellBackingResponse proto.InternalMessageInfo
+
+func (m *MsgSellBackingResponse) GetLionOut() types.Coin {
+	if m != nil {
+		return m.LionOut
+	}
+	return types.Coin{}
+}
+
 // MsgMintByCollateral represents a message to mint Mer stablecoins by locking
 // collateral.
 type MsgMintByCollateral struct {
@@ -250,7 +423,7 @@ func (m *MsgMintByCollateral) Reset()         { *m = MsgMintByCollateral{} }
 func (m *MsgMintByCollateral) String() string { return proto.CompactTextString(m) }
 func (*MsgMintByCollateral) ProtoMessage()    {}
 func (*MsgMintByCollateral) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{4}
+	return fileDescriptor_2797be2e51038e24, []int{8}
 }
 func (m *MsgMintByCollateral) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -289,7 +462,7 @@ func (m *MsgMintByCollateralResponse) Reset()         { *m = MsgMintByCollateral
 func (m *MsgMintByCollateralResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgMintByCollateralResponse) ProtoMessage()    {}
 func (*MsgMintByCollateralResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{5}
+	return fileDescriptor_2797be2e51038e24, []int{9}
 }
 func (m *MsgMintByCollateralResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -344,7 +517,7 @@ func (m *MsgBurnByCollateral) Reset()         { *m = MsgBurnByCollateral{} }
 func (m *MsgBurnByCollateral) String() string { return proto.CompactTextString(m) }
 func (*MsgBurnByCollateral) ProtoMessage()    {}
 func (*MsgBurnByCollateral) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{6}
+	return fileDescriptor_2797be2e51038e24, []int{10}
 }
 func (m *MsgBurnByCollateral) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -382,7 +555,7 @@ func (m *MsgBurnByCollateralResponse) Reset()         { *m = MsgBurnByCollateral
 func (m *MsgBurnByCollateralResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgBurnByCollateralResponse) ProtoMessage()    {}
 func (*MsgBurnByCollateralResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{7}
+	return fileDescriptor_2797be2e51038e24, []int{11}
 }
 func (m *MsgBurnByCollateralResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -429,7 +602,7 @@ func (m *MsgDepositCollateral) Reset()         { *m = MsgDepositCollateral{} }
 func (m *MsgDepositCollateral) String() string { return proto.CompactTextString(m) }
 func (*MsgDepositCollateral) ProtoMessage()    {}
 func (*MsgDepositCollateral) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{8}
+	return fileDescriptor_2797be2e51038e24, []int{12}
 }
 func (m *MsgDepositCollateral) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -466,7 +639,7 @@ func (m *MsgDepositCollateralResponse) Reset()         { *m = MsgDepositCollater
 func (m *MsgDepositCollateralResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgDepositCollateralResponse) ProtoMessage()    {}
 func (*MsgDepositCollateralResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{9}
+	return fileDescriptor_2797be2e51038e24, []int{13}
 }
 func (m *MsgDepositCollateralResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -506,7 +679,7 @@ func (m *MsgRedeemCollateral) Reset()         { *m = MsgRedeemCollateral{} }
 func (m *MsgRedeemCollateral) String() string { return proto.CompactTextString(m) }
 func (*MsgRedeemCollateral) ProtoMessage()    {}
 func (*MsgRedeemCollateral) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{10}
+	return fileDescriptor_2797be2e51038e24, []int{14}
 }
 func (m *MsgRedeemCollateral) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -543,7 +716,7 @@ func (m *MsgRedeemCollateralResponse) Reset()         { *m = MsgRedeemCollateral
 func (m *MsgRedeemCollateralResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgRedeemCollateralResponse) ProtoMessage()    {}
 func (*MsgRedeemCollateralResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{11}
+	return fileDescriptor_2797be2e51038e24, []int{15}
 }
 func (m *MsgRedeemCollateralResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -571,179 +744,6 @@ func (m *MsgRedeemCollateralResponse) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_MsgRedeemCollateralResponse proto.InternalMessageInfo
-
-// MsgBuyBacking represents a message to buy strong-backing assets.
-type MsgBuyBacking struct {
-	Sender        string     `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty" yaml:"sender"`
-	To            string     `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty" yaml:"to"`
-	LionIn        types.Coin `protobuf:"bytes,3,opt,name=lion_in,json=lionIn,proto3" json:"lion_in" yaml:"lion_in"`
-	BackingOutMin types.Coin `protobuf:"bytes,4,opt,name=backing_out_min,json=backingOutMin,proto3" json:"backing_out_min" yaml:"backing_out_min"`
-}
-
-func (m *MsgBuyBacking) Reset()         { *m = MsgBuyBacking{} }
-func (m *MsgBuyBacking) String() string { return proto.CompactTextString(m) }
-func (*MsgBuyBacking) ProtoMessage()    {}
-func (*MsgBuyBacking) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{12}
-}
-func (m *MsgBuyBacking) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgBuyBacking) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgBuyBacking.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgBuyBacking) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgBuyBacking.Merge(m, src)
-}
-func (m *MsgBuyBacking) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgBuyBacking) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgBuyBacking.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgBuyBacking proto.InternalMessageInfo
-
-// MsgBuyBackingResponse defines the Msg/BuyBacking response type.
-type MsgBuyBackingResponse struct {
-	BackingOut types.Coin `protobuf:"bytes,4,opt,name=backing_out,json=backingOut,proto3" json:"backing_out" yaml:"backing_out"`
-}
-
-func (m *MsgBuyBackingResponse) Reset()         { *m = MsgBuyBackingResponse{} }
-func (m *MsgBuyBackingResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgBuyBackingResponse) ProtoMessage()    {}
-func (*MsgBuyBackingResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{13}
-}
-func (m *MsgBuyBackingResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgBuyBackingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgBuyBackingResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgBuyBackingResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgBuyBackingResponse.Merge(m, src)
-}
-func (m *MsgBuyBackingResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgBuyBackingResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgBuyBackingResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgBuyBackingResponse proto.InternalMessageInfo
-
-func (m *MsgBuyBackingResponse) GetBackingOut() types.Coin {
-	if m != nil {
-		return m.BackingOut
-	}
-	return types.Coin{}
-}
-
-// MsgSellBacking represents a message to sell strong-backing
-// assets.
-type MsgSellBacking struct {
-	Sender     string     `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty" yaml:"sender"`
-	To         string     `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty" yaml:"to"`
-	BackingIn  types.Coin `protobuf:"bytes,3,opt,name=backing_in,json=backingIn,proto3" json:"backing_in" yaml:"backing_in"`
-	LionOutMin types.Coin `protobuf:"bytes,4,opt,name=lion_out_min,json=lionOutMin,proto3" json:"lion_out_min" yaml:"lion_out_min"`
-}
-
-func (m *MsgSellBacking) Reset()         { *m = MsgSellBacking{} }
-func (m *MsgSellBacking) String() string { return proto.CompactTextString(m) }
-func (*MsgSellBacking) ProtoMessage()    {}
-func (*MsgSellBacking) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{14}
-}
-func (m *MsgSellBacking) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgSellBacking) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgSellBacking.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgSellBacking) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSellBacking.Merge(m, src)
-}
-func (m *MsgSellBacking) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgSellBacking) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSellBacking.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgSellBacking proto.InternalMessageInfo
-
-// MsgSellBackingResponse defines the Msg/SellBacking response type.
-type MsgSellBackingResponse struct {
-	LionOut types.Coin `protobuf:"bytes,4,opt,name=lion_out,json=lionOut,proto3" json:"lion_out" yaml:"lion_out"`
-}
-
-func (m *MsgSellBackingResponse) Reset()         { *m = MsgSellBackingResponse{} }
-func (m *MsgSellBackingResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgSellBackingResponse) ProtoMessage()    {}
-func (*MsgSellBackingResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2797be2e51038e24, []int{15}
-}
-func (m *MsgSellBackingResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgSellBackingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgSellBackingResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgSellBackingResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSellBackingResponse.Merge(m, src)
-}
-func (m *MsgSellBackingResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgSellBackingResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSellBackingResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgSellBackingResponse proto.InternalMessageInfo
-
-func (m *MsgSellBackingResponse) GetLionOut() types.Coin {
-	if m != nil {
-		return m.LionOut
-	}
-	return types.Coin{}
-}
 
 // MsgLiquidateCollateral represents a message to liquidates collateral assets.
 type MsgLiquidateCollateral struct {
@@ -844,6 +844,10 @@ func init() {
 	proto.RegisterType((*MsgMintBySwapResponse)(nil), "merlion.maker.v1.MsgMintBySwapResponse")
 	proto.RegisterType((*MsgBurnBySwap)(nil), "merlion.maker.v1.MsgBurnBySwap")
 	proto.RegisterType((*MsgBurnBySwapResponse)(nil), "merlion.maker.v1.MsgBurnBySwapResponse")
+	proto.RegisterType((*MsgBuyBacking)(nil), "merlion.maker.v1.MsgBuyBacking")
+	proto.RegisterType((*MsgBuyBackingResponse)(nil), "merlion.maker.v1.MsgBuyBackingResponse")
+	proto.RegisterType((*MsgSellBacking)(nil), "merlion.maker.v1.MsgSellBacking")
+	proto.RegisterType((*MsgSellBackingResponse)(nil), "merlion.maker.v1.MsgSellBackingResponse")
 	proto.RegisterType((*MsgMintByCollateral)(nil), "merlion.maker.v1.MsgMintByCollateral")
 	proto.RegisterType((*MsgMintByCollateralResponse)(nil), "merlion.maker.v1.MsgMintByCollateralResponse")
 	proto.RegisterType((*MsgBurnByCollateral)(nil), "merlion.maker.v1.MsgBurnByCollateral")
@@ -852,10 +856,6 @@ func init() {
 	proto.RegisterType((*MsgDepositCollateralResponse)(nil), "merlion.maker.v1.MsgDepositCollateralResponse")
 	proto.RegisterType((*MsgRedeemCollateral)(nil), "merlion.maker.v1.MsgRedeemCollateral")
 	proto.RegisterType((*MsgRedeemCollateralResponse)(nil), "merlion.maker.v1.MsgRedeemCollateralResponse")
-	proto.RegisterType((*MsgBuyBacking)(nil), "merlion.maker.v1.MsgBuyBacking")
-	proto.RegisterType((*MsgBuyBackingResponse)(nil), "merlion.maker.v1.MsgBuyBackingResponse")
-	proto.RegisterType((*MsgSellBacking)(nil), "merlion.maker.v1.MsgSellBacking")
-	proto.RegisterType((*MsgSellBackingResponse)(nil), "merlion.maker.v1.MsgSellBackingResponse")
 	proto.RegisterType((*MsgLiquidateCollateral)(nil), "merlion.maker.v1.MsgLiquidateCollateral")
 	proto.RegisterType((*MsgLiquidateCollateralResponse)(nil), "merlion.maker.v1.MsgLiquidateCollateralResponse")
 }
@@ -863,82 +863,82 @@ func init() {
 func init() { proto.RegisterFile("merlion/maker/v1/tx.proto", fileDescriptor_2797be2e51038e24) }
 
 var fileDescriptor_2797be2e51038e24 = []byte{
-	// 1193 bytes of a gzipped FileDescriptorProto
+	// 1186 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x58, 0xcf, 0x6f, 0xdc, 0x44,
-	0x14, 0x5e, 0x3b, 0x21, 0x69, 0x5e, 0x7e, 0x3b, 0x6d, 0x9a, 0x6c, 0x1a, 0x6f, 0x18, 0x94, 0x36,
-	0x11, 0x8a, 0x4d, 0xca, 0xad, 0xc7, 0x6d, 0x55, 0xd4, 0x8a, 0x55, 0x24, 0x07, 0x50, 0xc5, 0x81,
-	0x95, 0x37, 0x3b, 0x35, 0x56, 0x6d, 0xcf, 0x62, 0xcf, 0x86, 0x2c, 0x27, 0x40, 0x48, 0x70, 0x41,
-	0x42, 0xf4, 0x02, 0x12, 0x87, 0x1e, 0xf8, 0x03, 0x38, 0x72, 0x83, 0x63, 0x8f, 0x91, 0x38, 0xc0,
-	0x29, 0x42, 0x09, 0x07, 0x2a, 0x71, 0xca, 0x5f, 0x80, 0x3c, 0x1e, 0xdb, 0xb3, 0x5e, 0x6f, 0x9c,
-	0xa4, 0xbb, 0x48, 0xdc, 0xbc, 0xe3, 0xf7, 0x3e, 0x7f, 0xf3, 0xbd, 0x37, 0xef, 0xbd, 0x59, 0x58,
-	0x76, 0xb1, 0xef, 0xd8, 0xc4, 0xd3, 0x5d, 0xf3, 0x09, 0xf6, 0xf5, 0xfd, 0x6d, 0x9d, 0x1e, 0x68,
-	0x2d, 0x9f, 0x50, 0xa2, 0xcc, 0xf1, 0x57, 0x1a, 0x7b, 0xa5, 0xed, 0x6f, 0x97, 0x6f, 0x58, 0x84,
-	0x58, 0x0e, 0xd6, 0xcd, 0x96, 0xad, 0x9b, 0x9e, 0x47, 0xa8, 0x49, 0x6d, 0xe2, 0x05, 0x91, 0x7d,
-	0xf9, 0xaa, 0x45, 0x2c, 0xc2, 0x1e, 0xf5, 0xf0, 0x89, 0xaf, 0xaa, 0x7b, 0x24, 0x70, 0x49, 0xa0,
-	0x37, 0xcc, 0x00, 0xeb, 0xfb, 0xdb, 0x0d, 0x4c, 0xcd, 0x6d, 0x7d, 0x8f, 0xd8, 0x5e, 0xf4, 0x1e,
-	0xbd, 0x90, 0x61, 0xba, 0x16, 0x58, 0x35, 0xdb, 0xa3, 0xd5, 0xce, 0xee, 0xc7, 0x66, 0x4b, 0xd9,
-	0x84, 0xb1, 0x00, 0x7b, 0x4d, 0xec, 0x2f, 0x49, 0x6b, 0xd2, 0xc6, 0x44, 0x75, 0xfe, 0xf4, 0xa8,
-	0x32, 0xdd, 0x31, 0x5d, 0xe7, 0x0e, 0x8a, 0xd6, 0x91, 0xc1, 0x0d, 0x94, 0x55, 0x90, 0x29, 0x59,
-	0x92, 0x99, 0xd9, 0xf4, 0xe9, 0x51, 0x65, 0x22, 0x32, 0xa3, 0x04, 0x19, 0x32, 0x25, 0x4a, 0x0d,
-	0xae, 0xb8, 0xb6, 0x47, 0xeb, 0xa4, 0x4d, 0x97, 0x46, 0xd6, 0xa4, 0x8d, 0xc9, 0xdb, 0xcb, 0x5a,
-	0x44, 0x47, 0x0b, 0xe9, 0x68, 0x9c, 0x8e, 0x76, 0x97, 0xd8, 0x5e, 0xf5, 0xfa, 0xf3, 0xa3, 0x4a,
-	0xe9, 0xf4, 0xa8, 0x32, 0x1b, 0x61, 0xc4, 0x8e, 0xc8, 0x18, 0x0f, 0x1f, 0x77, 0xda, 0x54, 0xf9,
-	0x00, 0x66, 0x1a, 0xe6, 0xde, 0x13, 0xdb, 0xb3, 0xea, 0xb6, 0x57, 0x77, 0xcd, 0x83, 0xa5, 0xd1,
-	0x22, 0xd0, 0x55, 0x0e, 0x7a, 0x2d, 0x02, 0xed, 0x76, 0x47, 0xc6, 0x14, 0x5f, 0x78, 0xe0, 0xd5,
-	0xcc, 0x03, 0xe5, 0x5d, 0x98, 0x0c, 0xf5, 0x8e, 0xc1, 0x5f, 0x29, 0x02, 0x2f, 0x73, 0x70, 0x25,
-	0x02, 0x17, 0x7c, 0x91, 0x31, 0x11, 0xfe, 0x62, 0xb0, 0x77, 0xae, 0x7c, 0xf5, 0xac, 0x52, 0xfa,
-	0xfb, 0x59, 0xa5, 0x84, 0xbe, 0x94, 0xe1, 0x5a, 0x97, 0xd6, 0x06, 0x0e, 0x5a, 0xc4, 0x0b, 0x70,
-	0xa2, 0xd4, 0x63, 0x8c, 0x99, 0xea, 0x17, 0x56, 0xea, 0x31, 0xc6, 0x5c, 0xa9, 0xfb, 0x18, 0x2b,
-	0xbb, 0x00, 0xe9, 0x56, 0x59, 0x7c, 0xce, 0x04, 0x5c, 0xe6, 0x80, 0xf3, 0x59, 0x95, 0x90, 0x31,
-	0x91, 0x28, 0xa4, 0x3c, 0x84, 0x71, 0xbe, 0xc5, 0xe2, 0x60, 0x2e, 0x72, 0xc4, 0x99, 0x2e, 0x69,
-	0x90, 0x31, 0x16, 0xc9, 0x82, 0xfe, 0x89, 0xb2, 0xae, 0xda, 0xf6, 0xbd, 0x81, 0x67, 0xdd, 0x43,
-	0x18, 0x6f, 0xb4, 0xfd, 0x4b, 0xf1, 0xe4, 0x7e, 0xc8, 0x18, 0x0b, 0x9f, 0x1e, 0x78, 0x8a, 0x09,
-	0xb3, 0xb1, 0x1a, 0xa4, 0x4d, 0xeb, 0xae, 0xed, 0x15, 0xe7, 0x9c, 0xca, 0x31, 0x17, 0xbb, 0xd5,
-	0xe4, 0xfe, 0xc8, 0x98, 0xe6, 0x2b, 0x3b, 0x6d, 0x5a, 0xb3, 0x3d, 0xe5, 0x11, 0x4c, 0x31, 0x79,
-	0x62, 0xfc, 0xc2, 0xb4, 0x5b, 0xe1, 0xf8, 0x0b, 0x82, 0xb6, 0x09, 0x38, 0x84, 0x3f, 0x23, 0x64,
-	0x21, 0xf1, 0xbe, 0x8e, 0x12, 0x2f, 0x95, 0x5b, 0x4c, 0x3c, 0xb6, 0xe9, 0x30, 0xf1, 0xe4, 0x0b,
-	0x26, 0x5e, 0xec, 0x88, 0x0c, 0x26, 0x78, 0x98, 0x78, 0xef, 0xc1, 0xa4, 0xb0, 0xdf, 0x62, 0xfd,
-	0x33, 0x47, 0x48, 0xf0, 0x45, 0x06, 0xa4, 0x3a, 0x85, 0x34, 0xe3, 0x7d, 0x16, 0x07, 0x20, 0x43,
-	0x33, 0x76, 0x44, 0xc6, 0x38, 0x17, 0x07, 0xfd, 0x2e, 0xc3, 0x42, 0x72, 0x10, 0xef, 0x12, 0xc7,
-	0x31, 0x29, 0xf6, 0x4d, 0x67, 0x80, 0x49, 0x78, 0x1f, 0xe6, 0xf6, 0x12, 0xdc, 0x7a, 0x13, 0x7b,
-	0xc4, 0x65, 0x6a, 0x4c, 0x54, 0x57, 0x4e, 0x8f, 0x2a, 0xd7, 0x23, 0xe3, 0xac, 0x05, 0x32, 0x66,
-	0xd3, 0xa5, 0x7b, 0xe1, 0x4a, 0x57, 0x09, 0x1d, 0x7d, 0xf9, 0x12, 0x3a, 0xf4, 0x12, 0xf7, 0xb3,
-	0x04, 0x2b, 0x39, 0xca, 0x0e, 0xab, 0xd0, 0x09, 0x35, 0x49, 0x7e, 0xe9, 0x9a, 0x24, 0xb1, 0xa4,
-	0x88, 0x0e, 0xc9, 0xe5, 0x92, 0x22, 0x2f, 0xea, 0xf2, 0x25, 0xa2, 0xfe, 0x08, 0xa6, 0x7c, 0xdc,
-	0x32, 0x3b, 0x71, 0x9c, 0x46, 0x2e, 0x58, 0x13, 0x44, 0x67, 0x64, 0x00, 0xfb, 0x99, 0x8d, 0x94,
-	0xc3, 0x02, 0x95, 0xdd, 0xad, 0x18, 0xa8, 0x18, 0xe5, 0xc2, 0x81, 0x8a, 0x1d, 0x91, 0x31, 0xce,
-	0x3f, 0x8d, 0x7e, 0x95, 0xe0, 0x6a, 0x2d, 0xb0, 0xee, 0xe1, 0x16, 0x09, 0x6c, 0x3a, 0x94, 0x23,
-	0xf7, 0x0e, 0x40, 0xaa, 0x63, 0xb1, 0x64, 0x99, 0xa6, 0x97, 0xba, 0x22, 0x43, 0xc0, 0x11, 0x04,
-	0x53, 0xe1, 0x46, 0xde, 0x0e, 0x62, 0xc5, 0xd0, 0x2f, 0x51, 0xfe, 0x18, 0xb8, 0x89, 0xb1, 0xfb,
-	0xbf, 0xdc, 0xe1, 0x2a, 0x4b, 0x89, 0xec, 0x06, 0x92, 0x0d, 0x7e, 0x1b, 0x37, 0xed, 0x4e, 0x35,
-	0xaa, 0xcc, 0x83, 0x6d, 0xda, 0x83, 0x1a, 0x2e, 0xfe, 0x83, 0xa6, 0x2d, 0x68, 0x46, 0x78, 0x67,
-	0x8d, 0x35, 0x49, 0x0e, 0x50, 0xa6, 0x15, 0x8e, 0x0e, 0xa8, 0x15, 0xa2, 0xa7, 0x32, 0xcc, 0xd4,
-	0x02, 0x6b, 0x17, 0x3b, 0xce, 0xe0, 0xc3, 0xd0, 0x3d, 0x38, 0x8e, 0x0c, 0x66, 0x70, 0xcc, 0x4e,
-	0x38, 0xa3, 0x43, 0x98, 0x70, 0x2c, 0x58, 0xec, 0x16, 0x45, 0x2c, 0x64, 0x83, 0x1c, 0x1d, 0x5e,
-	0x48, 0xec, 0x4b, 0x6f, 0xdb, 0x1f, 0xb5, 0xed, 0xa6, 0x49, 0xf1, 0x50, 0x0e, 0xfa, 0x3a, 0x8c,
-	0x35, 0x71, 0x83, 0x12, 0x9f, 0xcf, 0x0c, 0x19, 0x13, 0xfe, 0x32, 0x53, 0x0f, 0x46, 0x07, 0x5e,
-	0x0f, 0x0e, 0x25, 0x50, 0xf3, 0xf7, 0x3a, 0xa4, 0x36, 0xa1, 0xd4, 0x61, 0x46, 0x68, 0x8f, 0x61,
-	0xc8, 0xe4, 0x0b, 0x5e, 0xf1, 0xba, 0xdd, 0x91, 0x31, 0x9d, 0x2e, 0xec, 0xb4, 0xe9, 0xed, 0x9f,
-	0x00, 0x46, 0x6a, 0x81, 0xa5, 0x7c, 0x26, 0x01, 0x08, 0x77, 0xde, 0x8a, 0x96, 0xbd, 0x6c, 0x6b,
-	0x5d, 0x17, 0xb5, 0xf2, 0xad, 0x02, 0x83, 0xa4, 0x48, 0x6e, 0x7e, 0xfe, 0xdb, 0x5f, 0x4f, 0xe5,
-	0xd7, 0x94, 0x57, 0xf5, 0x9c, 0x9b, 0xbd, 0xce, 0x46, 0x98, 0x46, 0xa7, 0x1e, 0x84, 0x1f, 0x0d,
-	0x39, 0x08, 0x37, 0xa0, 0x7c, 0x0e, 0xa9, 0x41, 0x1f, 0x0e, 0xbd, 0x43, 0x7d, 0x01, 0x07, 0x36,
-	0xb6, 0xc7, 0x1c, 0xbe, 0x97, 0x60, 0xae, 0x67, 0x0c, 0x5e, 0x3f, 0x63, 0xb3, 0xa9, 0x59, 0x79,
-	0xeb, 0x5c, 0x66, 0x09, 0x2b, 0x9d, 0xb1, 0xda, 0x54, 0x6e, 0x9d, 0xa9, 0x4c, 0x1a, 0x2e, 0xc6,
-	0xad, 0x67, 0x1a, 0x5b, 0x3f, 0x43, 0x84, 0x42, 0x6e, 0xfd, 0xa6, 0x9d, 0x02, 0x6e, 0xb1, 0x62,
-	0x02, 0xb7, 0x1f, 0x24, 0x98, 0xef, 0x1d, 0x66, 0x6e, 0xe6, 0x7e, 0xb5, 0xc7, 0xae, 0xac, 0x9d,
-	0xcf, 0xee, 0x9c, 0xf4, 0x9a, 0x91, 0x9f, 0x48, 0xef, 0x3b, 0x09, 0xe6, 0x7a, 0x06, 0x91, 0x7c,
-	0xe9, 0xb2, 0x66, 0x7d, 0xa4, 0xeb, 0x3b, 0x15, 0x68, 0x8c, 0xdb, 0x86, 0x72, 0x33, 0x97, 0x9b,
-	0xcf, 0xdc, 0x44, 0x6a, 0x9f, 0xb2, 0xac, 0x4f, 0x46, 0x88, 0x7e, 0x59, 0x1f, 0x1b, 0xf4, 0xcd,
-	0xfa, 0x6c, 0xc3, 0x45, 0x1b, 0x8c, 0x08, 0x52, 0xd6, 0xfa, 0xc4, 0xb0, 0x53, 0xe7, 0x2d, 0x49,
-	0xf9, 0x42, 0x82, 0x49, 0xb1, 0x7f, 0xae, 0xe5, 0x7e, 0x42, 0xb0, 0x28, 0x6f, 0x14, 0x59, 0x9c,
-	0xf3, 0xec, 0x05, 0xd8, 0x71, 0x12, 0x1a, 0x3f, 0x4a, 0xb0, 0x90, 0xd7, 0x47, 0xf2, 0x3f, 0x96,
-	0x63, 0x59, 0x7e, 0xe3, 0xbc, 0x96, 0x09, 0xbd, 0x6d, 0x46, 0xef, 0x75, 0x65, 0x33, 0x97, 0x9e,
-	0x13, 0x7b, 0x0a, 0x01, 0xab, 0xbe, 0xf5, 0xfc, 0x58, 0x95, 0x0e, 0x8f, 0x55, 0xe9, 0xcf, 0x63,
-	0x55, 0xfa, 0xe6, 0x44, 0x2d, 0x1d, 0x9e, 0xa8, 0xa5, 0x3f, 0x4e, 0xd4, 0xd2, 0xfb, 0x5b, 0x96,
-	0x4d, 0x3f, 0x6c, 0x37, 0xb4, 0x3d, 0xe2, 0xc6, 0x70, 0x5b, 0x9f, 0x10, 0x0f, 0x27, 0xd8, 0x07,
-	0x1c, 0x9d, 0x76, 0x5a, 0x38, 0x68, 0x8c, 0xb1, 0x7f, 0x1c, 0xdf, 0xfc, 0x37, 0x00, 0x00, 0xff,
-	0xff, 0xe6, 0x36, 0x24, 0x60, 0xf4, 0x14, 0x00, 0x00,
+	0x14, 0x5e, 0x3b, 0x21, 0x69, 0x5e, 0x7e, 0x3b, 0x6d, 0x9a, 0x6c, 0x9a, 0xdd, 0x30, 0x28, 0x6d,
+	0x22, 0x14, 0x9b, 0x94, 0x5b, 0x8f, 0xdb, 0xaa, 0xa8, 0x15, 0xab, 0x48, 0x0e, 0xa0, 0x8a, 0x03,
+	0x2b, 0x6f, 0x76, 0x6a, 0xac, 0xda, 0x9e, 0xc5, 0x9e, 0x0d, 0x59, 0x4e, 0x80, 0x90, 0xe0, 0x82,
+	0x84, 0xe8, 0x05, 0x24, 0x0e, 0x3d, 0xf0, 0x07, 0x70, 0xe4, 0x06, 0xc7, 0x1e, 0x23, 0x71, 0x80,
+	0x53, 0x84, 0x12, 0x0e, 0x54, 0xe2, 0x94, 0xbf, 0x00, 0x79, 0x3c, 0xb6, 0x67, 0xbd, 0xde, 0x78,
+	0x37, 0xdd, 0x45, 0xe2, 0xe6, 0x1d, 0xbf, 0xf7, 0xf9, 0x7b, 0xdf, 0xfb, 0xe6, 0xd7, 0xc2, 0xaa,
+	0x83, 0x3d, 0xdb, 0x22, 0xae, 0xe6, 0x18, 0x4f, 0xb0, 0xa7, 0x1d, 0xee, 0x6a, 0xf4, 0x48, 0x6d,
+	0x7a, 0x84, 0x12, 0x65, 0x81, 0xbf, 0x52, 0xd9, 0x2b, 0xf5, 0x70, 0xb7, 0x78, 0xc3, 0x24, 0xc4,
+	0xb4, 0xb1, 0x66, 0x34, 0x2d, 0xcd, 0x70, 0x5d, 0x42, 0x0d, 0x6a, 0x11, 0xd7, 0x0f, 0xe3, 0x8b,
+	0x57, 0x4d, 0x62, 0x12, 0xf6, 0xa8, 0x05, 0x4f, 0x7c, 0xb4, 0x74, 0x40, 0x7c, 0x87, 0xf8, 0x5a,
+	0xdd, 0xf0, 0xb1, 0x76, 0xb8, 0x5b, 0xc7, 0xd4, 0xd8, 0xd5, 0x0e, 0x88, 0xe5, 0x86, 0xef, 0xd1,
+	0x0b, 0x19, 0x66, 0xab, 0xbe, 0x59, 0xb5, 0x5c, 0x5a, 0x69, 0xef, 0x7f, 0x6c, 0x34, 0x95, 0x6d,
+	0x98, 0xf0, 0xb1, 0xdb, 0xc0, 0xde, 0x8a, 0xb4, 0x21, 0x6d, 0x4d, 0x55, 0x16, 0xcf, 0x4f, 0xca,
+	0xb3, 0x6d, 0xc3, 0xb1, 0xef, 0xa0, 0x70, 0x1c, 0xe9, 0x3c, 0x40, 0x59, 0x07, 0x99, 0x92, 0x15,
+	0x99, 0x85, 0xcd, 0x9e, 0x9f, 0x94, 0xa7, 0xc2, 0x30, 0x4a, 0x90, 0x2e, 0x53, 0xa2, 0x54, 0xe1,
+	0x8a, 0x63, 0xb9, 0xb4, 0x46, 0x5a, 0x74, 0x65, 0x6c, 0x43, 0xda, 0x9a, 0xbe, 0xbd, 0xaa, 0x86,
+	0x74, 0xd4, 0x80, 0x8e, 0xca, 0xe9, 0xa8, 0x77, 0x89, 0xe5, 0x56, 0xae, 0x3f, 0x3f, 0x29, 0x17,
+	0xce, 0x4f, 0xca, 0xf3, 0x21, 0x46, 0x94, 0x88, 0xf4, 0xc9, 0xe0, 0x71, 0xaf, 0x45, 0x95, 0x0f,
+	0x60, 0xae, 0x6e, 0x1c, 0x3c, 0xb1, 0x5c, 0xb3, 0x66, 0xb9, 0x35, 0xc7, 0x38, 0x5a, 0x19, 0xcf,
+	0x03, 0x5d, 0xe7, 0xa0, 0xd7, 0x42, 0xd0, 0xce, 0x74, 0xa4, 0xcf, 0xf0, 0x81, 0x07, 0x6e, 0xd5,
+	0x38, 0x52, 0xde, 0x85, 0xe9, 0x40, 0xef, 0x08, 0xfc, 0x95, 0x3c, 0xf0, 0x22, 0x07, 0x57, 0x42,
+	0x70, 0x21, 0x17, 0xe9, 0x53, 0xc1, 0x2f, 0x06, 0x7b, 0xe7, 0xca, 0x57, 0xcf, 0xca, 0x85, 0xbf,
+	0x9f, 0x95, 0x0b, 0xe8, 0x4b, 0x19, 0xae, 0x75, 0x68, 0xad, 0x63, 0xbf, 0x49, 0x5c, 0x1f, 0xc7,
+	0x4a, 0x3d, 0xc6, 0x98, 0xa9, 0x3e, 0xb0, 0x52, 0x8f, 0x31, 0xe6, 0x4a, 0xdd, 0xc7, 0x58, 0xd9,
+	0x07, 0x48, 0x4a, 0x65, 0xfd, 0xb9, 0x10, 0x70, 0x95, 0x03, 0x2e, 0xa6, 0x55, 0x42, 0xfa, 0x54,
+	0xac, 0x90, 0xf2, 0x10, 0x26, 0x79, 0x89, 0xf9, 0xcd, 0x5c, 0xe6, 0x88, 0x73, 0x1d, 0xd2, 0x20,
+	0x7d, 0x22, 0x94, 0x05, 0xfd, 0x13, 0xba, 0xae, 0xd2, 0xf2, 0xdc, 0xa1, 0xbb, 0xee, 0x21, 0x4c,
+	0xd6, 0x5b, 0xde, 0xa5, 0x78, 0xf2, 0x3c, 0xa4, 0x4f, 0x04, 0x4f, 0x0f, 0x5c, 0xc5, 0x80, 0xf9,
+	0x48, 0x0d, 0xd2, 0xa2, 0x35, 0xc7, 0x72, 0xf3, 0x3d, 0x57, 0xe2, 0x98, 0xcb, 0x9d, 0x6a, 0xf2,
+	0x7c, 0xa4, 0xcf, 0xf2, 0x91, 0xbd, 0x16, 0xad, 0x5a, 0xae, 0xf2, 0x08, 0x66, 0x98, 0x3c, 0x11,
+	0x7e, 0xae, 0xed, 0xd6, 0x38, 0xfe, 0x92, 0xa0, 0x6d, 0x0c, 0x0e, 0xc1, 0xcf, 0x10, 0x59, 0x30,
+	0xde, 0xd7, 0xa1, 0xf1, 0x12, 0xb9, 0x45, 0xe3, 0xb1, 0xa2, 0x03, 0xe3, 0xc9, 0x03, 0x1a, 0x2f,
+	0x4a, 0x44, 0x3a, 0x13, 0x3c, 0x30, 0xde, 0x7b, 0x30, 0x2d, 0xd4, 0x9b, 0xaf, 0x7f, 0x6a, 0x0a,
+	0x09, 0xb9, 0x48, 0x87, 0x44, 0xa7, 0x80, 0x66, 0x54, 0x67, 0x7e, 0x03, 0x52, 0x34, 0xa3, 0x44,
+	0xa4, 0x4f, 0x72, 0x71, 0xd0, 0xb7, 0x91, 0xfd, 0xda, 0x95, 0xf0, 0x1b, 0xc3, 0xb5, 0xdf, 0xb0,
+	0xa6, 0xc9, 0x7f, 0x60, 0x3f, 0xc1, 0x24, 0x84, 0x7b, 0x24, 0xd2, 0x24, 0xf6, 0x48, 0xaa, 0xa9,
+	0xe3, 0x43, 0x6a, 0x2a, 0x7a, 0x2a, 0xc3, 0x5c, 0xd5, 0x37, 0xf7, 0xb1, 0x6d, 0x0f, 0xbf, 0x0d,
+	0x9d, 0x4b, 0xe0, 0xd8, 0x70, 0x96, 0xc0, 0xf4, 0x5c, 0x1d, 0x1f, 0xc1, 0x5c, 0x35, 0x61, 0xb9,
+	0x53, 0x14, 0x71, 0xae, 0x0e, 0x73, 0x12, 0xfc, 0x2e, 0xc3, 0x52, 0xbc, 0x1b, 0xdd, 0x25, 0xb6,
+	0x6d, 0x50, 0xec, 0x19, 0xf6, 0x10, 0x7b, 0x70, 0x1f, 0x16, 0x0e, 0x62, 0xdc, 0x5a, 0x03, 0xbb,
+	0xc4, 0x61, 0x9d, 0x98, 0xaa, 0xac, 0x9d, 0x9f, 0x94, 0xaf, 0x87, 0xc1, 0xe9, 0x08, 0xa4, 0xcf,
+	0x27, 0x43, 0xf7, 0x82, 0x91, 0x8e, 0x73, 0xc4, 0xf8, 0xcb, 0x9f, 0x23, 0x46, 0xbe, 0xcf, 0xff,
+	0x2c, 0xc1, 0x5a, 0x86, 0xb2, 0xa3, 0xda, 0xed, 0x85, 0x15, 0x47, 0x7e, 0xe9, 0x8d, 0x59, 0x62,
+	0xa6, 0x08, 0x77, 0x8a, 0xcb, 0x99, 0x22, 0xab, 0xeb, 0xf2, 0x25, 0xba, 0xfe, 0x08, 0x66, 0x3c,
+	0xdc, 0x34, 0xda, 0x51, 0x9f, 0xc6, 0x06, 0x9c, 0x6c, 0x62, 0x32, 0xd2, 0x81, 0xfd, 0x4c, 0x77,
+	0xca, 0x66, 0x8d, 0x4a, 0x57, 0x2b, 0x36, 0x2a, 0x42, 0x19, 0xb8, 0x51, 0x51, 0x22, 0xd2, 0x27,
+	0xf9, 0xa7, 0xd1, 0xaf, 0x12, 0x5c, 0xad, 0xfa, 0xe6, 0x3d, 0xdc, 0x24, 0xbe, 0x45, 0x47, 0x32,
+	0xe5, 0xde, 0x01, 0x48, 0x74, 0x1c, 0x78, 0xd9, 0x4b, 0x52, 0x91, 0x2e, 0xe0, 0x08, 0x82, 0x95,
+	0xe0, 0x46, 0x56, 0x05, 0x91, 0x62, 0xe8, 0x97, 0xd0, 0x3f, 0x3a, 0x6e, 0x60, 0xec, 0xfc, 0x2f,
+	0x2b, 0x5c, 0x67, 0x96, 0x48, 0x17, 0x10, 0x17, 0xf8, 0x42, 0x62, 0xeb, 0xf3, 0xdb, 0xd6, 0x47,
+	0x2d, 0xab, 0x61, 0x50, 0x3c, 0x92, 0x1a, 0x37, 0x61, 0xa2, 0x81, 0xeb, 0x94, 0x78, 0x7c, 0xb9,
+	0x4c, 0x85, 0xf0, 0x97, 0x29, 0x29, 0xc6, 0x87, 0x2e, 0xc5, 0xb1, 0x04, 0xa5, 0xec, 0x5a, 0x47,
+	0x34, 0x43, 0x94, 0x1a, 0xcc, 0x09, 0x2b, 0x43, 0xb0, 0xde, 0xcb, 0x03, 0x5e, 0xf1, 0x3a, 0xd3,
+	0x91, 0x3e, 0x9b, 0x0c, 0xec, 0xb5, 0xe8, 0xed, 0x9f, 0x00, 0xc6, 0xaa, 0xbe, 0xa9, 0x7c, 0x26,
+	0x01, 0x08, 0x77, 0xde, 0xb2, 0x9a, 0xbe, 0x6c, 0xab, 0x1d, 0x17, 0xb5, 0xe2, 0xad, 0x9c, 0x80,
+	0xd8, 0x1f, 0xdb, 0x9f, 0xff, 0xf6, 0xd7, 0x53, 0xf9, 0x35, 0xe5, 0x55, 0x2d, 0xe3, 0x66, 0xaf,
+	0xb1, 0xd5, 0xbb, 0xde, 0xae, 0xf9, 0xc1, 0x47, 0x03, 0x0e, 0xc2, 0x0d, 0x28, 0x9b, 0x43, 0x12,
+	0xd0, 0x83, 0x43, 0xf7, 0xa1, 0x3e, 0x87, 0x03, 0x3b, 0xb6, 0x47, 0x1c, 0x3e, 0x65, 0x1c, 0xe2,
+	0x63, 0x70, 0x2f, 0x0e, 0x51, 0x40, 0x4f, 0x0e, 0xe9, 0x43, 0x23, 0xda, 0x62, 0x1c, 0x90, 0xb2,
+	0xd1, 0x83, 0x43, 0xbb, 0xc6, 0x8f, 0x55, 0xca, 0x17, 0x12, 0x4c, 0x8b, 0x67, 0xc0, 0x8d, 0xcc,
+	0x4f, 0x08, 0x11, 0xc5, 0xad, 0xbc, 0x88, 0x3e, 0x95, 0xf0, 0xb1, 0x6d, 0xc7, 0x34, 0xbe, 0x97,
+	0x60, 0xa1, 0xeb, 0x2c, 0xb4, 0x79, 0x41, 0xdb, 0x93, 0xb0, 0xe2, 0x4e, 0x5f, 0x61, 0x31, 0x2b,
+	0x8d, 0xb1, 0xda, 0x56, 0x6e, 0x5d, 0xe8, 0x91, 0xc4, 0xb8, 0x8c, 0x5b, 0xd7, 0x96, 0xbc, 0x79,
+	0x81, 0x1d, 0x72, 0xb9, 0xf5, 0xda, 0xf2, 0x72, 0xb8, 0x45, 0xde, 0x11, 0xb8, 0xfd, 0x20, 0xc1,
+	0x62, 0xf7, 0x8e, 0x76, 0x33, 0xf3, 0xab, 0x5d, 0x71, 0x45, 0xb5, 0xbf, 0xb8, 0x3e, 0xe9, 0x35,
+	0xc2, 0x3c, 0x91, 0xde, 0x77, 0x12, 0x2c, 0x74, 0xed, 0x46, 0xd9, 0xd2, 0xa5, 0xc3, 0x7a, 0x48,
+	0xd7, 0x73, 0x6b, 0x50, 0x19, 0xb7, 0x2d, 0xe5, 0x66, 0x26, 0x37, 0x8f, 0xa5, 0x89, 0xd4, 0x7e,
+	0x94, 0x60, 0x29, 0x6b, 0x1f, 0xc9, 0xb6, 0x77, 0x46, 0x64, 0xf1, 0x8d, 0x7e, 0x23, 0x63, 0x8e,
+	0xbb, 0x8c, 0xe3, 0xeb, 0xca, 0x76, 0x26, 0x47, 0x3b, 0xca, 0x14, 0x68, 0x56, 0xde, 0x7a, 0x7e,
+	0x5a, 0x92, 0x8e, 0x4f, 0x4b, 0xd2, 0x9f, 0xa7, 0x25, 0xe9, 0x9b, 0xb3, 0x52, 0xe1, 0xf8, 0xac,
+	0x54, 0xf8, 0xe3, 0xac, 0x54, 0x78, 0x7f, 0xc7, 0xb4, 0xe8, 0x87, 0xad, 0xba, 0x7a, 0x40, 0x9c,
+	0x08, 0x6e, 0xe7, 0x13, 0xe2, 0xe2, 0x18, 0xfb, 0x88, 0xa3, 0xd3, 0x76, 0x13, 0xfb, 0xf5, 0x09,
+	0xf6, 0x8f, 0xe3, 0x9b, 0xff, 0x06, 0x00, 0x00, 0xff, 0xff, 0xba, 0x9f, 0xdf, 0x34, 0xf4, 0x14,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -959,6 +959,11 @@ type MsgClient interface {
 	// BurnBySwap burns Mer stablecoins by swapping out strong-backing assets and
 	// Lion coins.
 	BurnBySwap(ctx context.Context, in *MsgBurnBySwap, opts ...grpc.CallOption) (*MsgBurnBySwapResponse, error)
+	// BuyBacking buys strong-backing assets by spending Lion coins.
+	BuyBacking(ctx context.Context, in *MsgBuyBacking, opts ...grpc.CallOption) (*MsgBuyBackingResponse, error)
+	// SellBacking sells strong-backing assets by earning Lion
+	// coins.
+	SellBacking(ctx context.Context, in *MsgSellBacking, opts ...grpc.CallOption) (*MsgSellBackingResponse, error)
 	// MintByCollateral mints Mer stablecoins by locking collateral assets and
 	// spending Lion coins.
 	MintByCollateral(ctx context.Context, in *MsgMintByCollateral, opts ...grpc.CallOption) (*MsgMintByCollateralResponse, error)
@@ -969,11 +974,6 @@ type MsgClient interface {
 	DepositCollateral(ctx context.Context, in *MsgDepositCollateral, opts ...grpc.CallOption) (*MsgDepositCollateralResponse, error)
 	// RedeemCollateral redeems collateral assets.
 	RedeemCollateral(ctx context.Context, in *MsgRedeemCollateral, opts ...grpc.CallOption) (*MsgRedeemCollateralResponse, error)
-	// BuyBacking buys strong-backing assets by spending Lion coins.
-	BuyBacking(ctx context.Context, in *MsgBuyBacking, opts ...grpc.CallOption) (*MsgBuyBackingResponse, error)
-	// SellBacking sells strong-backing assets by earning Lion
-	// coins.
-	SellBacking(ctx context.Context, in *MsgSellBacking, opts ...grpc.CallOption) (*MsgSellBackingResponse, error)
 	// LiquidateCollateral liquidates collateral assets which is
 	// undercollateralized.
 	LiquidateCollateral(ctx context.Context, in *MsgLiquidateCollateral, opts ...grpc.CallOption) (*MsgLiquidateCollateralResponse, error)
@@ -999,6 +999,24 @@ func (c *msgClient) MintBySwap(ctx context.Context, in *MsgMintBySwap, opts ...g
 func (c *msgClient) BurnBySwap(ctx context.Context, in *MsgBurnBySwap, opts ...grpc.CallOption) (*MsgBurnBySwapResponse, error) {
 	out := new(MsgBurnBySwapResponse)
 	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Msg/BurnBySwap", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) BuyBacking(ctx context.Context, in *MsgBuyBacking, opts ...grpc.CallOption) (*MsgBuyBackingResponse, error) {
+	out := new(MsgBuyBackingResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Msg/BuyBacking", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) SellBacking(ctx context.Context, in *MsgSellBacking, opts ...grpc.CallOption) (*MsgSellBackingResponse, error) {
+	out := new(MsgSellBackingResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Msg/SellBacking", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1041,24 +1059,6 @@ func (c *msgClient) RedeemCollateral(ctx context.Context, in *MsgRedeemCollatera
 	return out, nil
 }
 
-func (c *msgClient) BuyBacking(ctx context.Context, in *MsgBuyBacking, opts ...grpc.CallOption) (*MsgBuyBackingResponse, error) {
-	out := new(MsgBuyBackingResponse)
-	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Msg/BuyBacking", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgClient) SellBacking(ctx context.Context, in *MsgSellBacking, opts ...grpc.CallOption) (*MsgSellBackingResponse, error) {
-	out := new(MsgSellBackingResponse)
-	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Msg/SellBacking", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *msgClient) LiquidateCollateral(ctx context.Context, in *MsgLiquidateCollateral, opts ...grpc.CallOption) (*MsgLiquidateCollateralResponse, error) {
 	out := new(MsgLiquidateCollateralResponse)
 	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Msg/LiquidateCollateral", in, out, opts...)
@@ -1076,6 +1076,11 @@ type MsgServer interface {
 	// BurnBySwap burns Mer stablecoins by swapping out strong-backing assets and
 	// Lion coins.
 	BurnBySwap(context.Context, *MsgBurnBySwap) (*MsgBurnBySwapResponse, error)
+	// BuyBacking buys strong-backing assets by spending Lion coins.
+	BuyBacking(context.Context, *MsgBuyBacking) (*MsgBuyBackingResponse, error)
+	// SellBacking sells strong-backing assets by earning Lion
+	// coins.
+	SellBacking(context.Context, *MsgSellBacking) (*MsgSellBackingResponse, error)
 	// MintByCollateral mints Mer stablecoins by locking collateral assets and
 	// spending Lion coins.
 	MintByCollateral(context.Context, *MsgMintByCollateral) (*MsgMintByCollateralResponse, error)
@@ -1086,11 +1091,6 @@ type MsgServer interface {
 	DepositCollateral(context.Context, *MsgDepositCollateral) (*MsgDepositCollateralResponse, error)
 	// RedeemCollateral redeems collateral assets.
 	RedeemCollateral(context.Context, *MsgRedeemCollateral) (*MsgRedeemCollateralResponse, error)
-	// BuyBacking buys strong-backing assets by spending Lion coins.
-	BuyBacking(context.Context, *MsgBuyBacking) (*MsgBuyBackingResponse, error)
-	// SellBacking sells strong-backing assets by earning Lion
-	// coins.
-	SellBacking(context.Context, *MsgSellBacking) (*MsgSellBackingResponse, error)
 	// LiquidateCollateral liquidates collateral assets which is
 	// undercollateralized.
 	LiquidateCollateral(context.Context, *MsgLiquidateCollateral) (*MsgLiquidateCollateralResponse, error)
@@ -1106,6 +1106,12 @@ func (*UnimplementedMsgServer) MintBySwap(ctx context.Context, req *MsgMintBySwa
 func (*UnimplementedMsgServer) BurnBySwap(ctx context.Context, req *MsgBurnBySwap) (*MsgBurnBySwapResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BurnBySwap not implemented")
 }
+func (*UnimplementedMsgServer) BuyBacking(ctx context.Context, req *MsgBuyBacking) (*MsgBuyBackingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BuyBacking not implemented")
+}
+func (*UnimplementedMsgServer) SellBacking(ctx context.Context, req *MsgSellBacking) (*MsgSellBackingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SellBacking not implemented")
+}
 func (*UnimplementedMsgServer) MintByCollateral(ctx context.Context, req *MsgMintByCollateral) (*MsgMintByCollateralResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MintByCollateral not implemented")
 }
@@ -1117,12 +1123,6 @@ func (*UnimplementedMsgServer) DepositCollateral(ctx context.Context, req *MsgDe
 }
 func (*UnimplementedMsgServer) RedeemCollateral(ctx context.Context, req *MsgRedeemCollateral) (*MsgRedeemCollateralResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RedeemCollateral not implemented")
-}
-func (*UnimplementedMsgServer) BuyBacking(ctx context.Context, req *MsgBuyBacking) (*MsgBuyBackingResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BuyBacking not implemented")
-}
-func (*UnimplementedMsgServer) SellBacking(ctx context.Context, req *MsgSellBacking) (*MsgSellBackingResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SellBacking not implemented")
 }
 func (*UnimplementedMsgServer) LiquidateCollateral(ctx context.Context, req *MsgLiquidateCollateral) (*MsgLiquidateCollateralResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LiquidateCollateral not implemented")
@@ -1164,6 +1164,42 @@ func _Msg_BurnBySwap_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).BurnBySwap(ctx, req.(*MsgBurnBySwap))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_BuyBacking_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgBuyBacking)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).BuyBacking(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Msg/BuyBacking",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).BuyBacking(ctx, req.(*MsgBuyBacking))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_SellBacking_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSellBacking)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).SellBacking(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.maker.v1.Msg/SellBacking",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).SellBacking(ctx, req.(*MsgSellBacking))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1240,42 +1276,6 @@ func _Msg_RedeemCollateral_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_BuyBacking_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgBuyBacking)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).BuyBacking(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/merlion.maker.v1.Msg/BuyBacking",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).BuyBacking(ctx, req.(*MsgBuyBacking))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Msg_SellBacking_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSellBacking)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).SellBacking(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/merlion.maker.v1.Msg/SellBacking",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SellBacking(ctx, req.(*MsgSellBacking))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Msg_LiquidateCollateral_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgLiquidateCollateral)
 	if err := dec(in); err != nil {
@@ -1307,6 +1307,14 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_BurnBySwap_Handler,
 		},
 		{
+			MethodName: "BuyBacking",
+			Handler:    _Msg_BuyBacking_Handler,
+		},
+		{
+			MethodName: "SellBacking",
+			Handler:    _Msg_SellBacking_Handler,
+		},
+		{
 			MethodName: "MintByCollateral",
 			Handler:    _Msg_MintByCollateral_Handler,
 		},
@@ -1321,14 +1329,6 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RedeemCollateral",
 			Handler:    _Msg_RedeemCollateral_Handler,
-		},
-		{
-			MethodName: "BuyBacking",
-			Handler:    _Msg_BuyBacking_Handler,
-		},
-		{
-			MethodName: "SellBacking",
-			Handler:    _Msg_SellBacking_Handler,
 		},
 		{
 			MethodName: "LiquidateCollateral",
@@ -1576,6 +1576,186 @@ func (m *MsgBurnBySwapResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0x12
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgBuyBacking) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgBuyBacking) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgBuyBacking) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.BackingOutMin.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	{
+		size, err := m.LionIn.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	if len(m.To) > 0 {
+		i -= len(m.To)
+		copy(dAtA[i:], m.To)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.To)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgBuyBackingResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgBuyBackingResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgBuyBackingResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.BackingOut.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgSellBacking) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgSellBacking) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgSellBacking) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.LionOutMin.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	{
+		size, err := m.BackingIn.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	if len(m.To) > 0 {
+		i -= len(m.To)
+		copy(dAtA[i:], m.To)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.To)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgSellBackingResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgSellBackingResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgSellBackingResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.LionOut.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
 	return len(dAtA) - i, nil
 }
 
@@ -1906,186 +2086,6 @@ func (m *MsgRedeemCollateralResponse) MarshalToSizedBuffer(dAtA []byte) (int, er
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgBuyBacking) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgBuyBacking) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgBuyBacking) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.BackingOutMin.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintTx(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	{
-		size, err := m.LionIn.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintTx(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x1a
-	if len(m.To) > 0 {
-		i -= len(m.To)
-		copy(dAtA[i:], m.To)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.To)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Sender) > 0 {
-		i -= len(m.Sender)
-		copy(dAtA[i:], m.Sender)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgBuyBackingResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgBuyBackingResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgBuyBackingResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.BackingOut.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintTx(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgSellBacking) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgSellBacking) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgSellBacking) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.LionOutMin.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintTx(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	{
-		size, err := m.BackingIn.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintTx(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x1a
-	if len(m.To) > 0 {
-		i -= len(m.To)
-		copy(dAtA[i:], m.To)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.To)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Sender) > 0 {
-		i -= len(m.Sender)
-		copy(dAtA[i:], m.Sender)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgSellBackingResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgSellBackingResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgSellBackingResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.LionOut.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintTx(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x22
-	return len(dAtA) - i, nil
-}
-
 func (m *MsgLiquidateCollateral) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -2270,6 +2270,70 @@ func (m *MsgBurnBySwapResponse) Size() (n int) {
 	return n
 }
 
+func (m *MsgBuyBacking) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Sender)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.To)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.LionIn.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.BackingOutMin.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgBuyBackingResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.BackingOut.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgSellBacking) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Sender)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.To)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.BackingIn.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.LionOutMin.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgSellBackingResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.LionOut.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
 func (m *MsgMintByCollateral) Size() (n int) {
 	if m == nil {
 		return 0
@@ -2391,70 +2455,6 @@ func (m *MsgRedeemCollateralResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	return n
-}
-
-func (m *MsgBuyBacking) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Sender)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.To)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = m.LionIn.Size()
-	n += 1 + l + sovTx(uint64(l))
-	l = m.BackingOutMin.Size()
-	n += 1 + l + sovTx(uint64(l))
-	return n
-}
-
-func (m *MsgBuyBackingResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = m.BackingOut.Size()
-	n += 1 + l + sovTx(uint64(l))
-	return n
-}
-
-func (m *MsgSellBacking) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Sender)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.To)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = m.BackingIn.Size()
-	n += 1 + l + sovTx(uint64(l))
-	l = m.LionOutMin.Size()
-	n += 1 + l + sovTx(uint64(l))
-	return n
-}
-
-func (m *MsgSellBackingResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = m.LionOut.Size()
-	n += 1 + l + sovTx(uint64(l))
 	return n
 }
 
@@ -3170,6 +3170,532 @@ func (m *MsgBurnBySwapResponse) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LionOut", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.LionOut.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgBuyBacking) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgBuyBacking: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgBuyBacking: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sender = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field To", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.To = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LionIn", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.LionIn.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackingOutMin", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BackingOutMin.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgBuyBackingResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgBuyBackingResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgBuyBackingResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackingOut", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BackingOut.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgSellBacking) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgSellBacking: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgSellBacking: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sender = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field To", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.To = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BackingIn", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BackingIn.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LionOutMin", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.LionOutMin.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgSellBackingResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgSellBackingResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgSellBackingResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
 		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field LionOut", wireType)
@@ -4155,532 +4681,6 @@ func (m *MsgRedeemCollateralResponse) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: MsgRedeemCollateralResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgBuyBacking) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgBuyBacking: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgBuyBacking: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Sender = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field To", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.To = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LionIn", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LionIn.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BackingOutMin", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.BackingOutMin.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgBuyBackingResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgBuyBackingResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgBuyBackingResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BackingOut", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.BackingOut.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgSellBacking) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSellBacking: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSellBacking: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Sender = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field To", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.To = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BackingIn", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.BackingIn.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LionOutMin", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LionOutMin.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgSellBackingResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSellBackingResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSellBackingResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LionOut", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.LionOut.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
