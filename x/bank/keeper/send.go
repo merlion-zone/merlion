@@ -22,7 +22,7 @@ func (k Keeper) InputOutputCoins(ctx sdk.Context, inputs []banktypes.Input, outp
 			return err
 		}
 
-		nativeCoins, nativeErc20Tokens := k.erc20Keeper.SplitCoinsByErc20(in.Coins)
+		nativeCoins, nativeErc20Tokens := k.erc20Keeper().SplitCoinsByErc20(in.Coins)
 
 		err = k.SubUnlockedCoins(ctx, inAddress, nativeCoins)
 		if err != nil {
@@ -34,7 +34,7 @@ func (k Keeper) InputOutputCoins(ctx sdk.Context, inputs []banktypes.Input, outp
 			banktypes.NewCoinSpentEvent(inAddress, nativeErc20Tokens),
 		)
 
-		err = k.erc20Keeper.SendCoins(ctx, inAddress, moduleAddress, nativeCoins, nativeErc20Tokens)
+		err = k.erc20Keeper().SendCoins(ctx, inAddress, moduleAddress, nativeCoins, nativeErc20Tokens)
 		if err != nil {
 			return err
 		}
@@ -53,7 +53,7 @@ func (k Keeper) InputOutputCoins(ctx sdk.Context, inputs []banktypes.Input, outp
 			return err
 		}
 
-		nativeCoins, nativeErc20Tokens := k.erc20Keeper.SplitCoinsByErc20(out.Coins)
+		nativeCoins, nativeErc20Tokens := k.erc20Keeper().SplitCoinsByErc20(out.Coins)
 
 		err = k.AddCoins(ctx, outAddress, nativeCoins)
 		if err != nil {
@@ -65,7 +65,7 @@ func (k Keeper) InputOutputCoins(ctx sdk.Context, inputs []banktypes.Input, outp
 			banktypes.NewCoinReceivedEvent(outAddress, nativeErc20Tokens),
 		)
 
-		err = k.erc20Keeper.SendCoins(ctx, moduleAddress, outAddress, nativeCoins, nativeErc20Tokens)
+		err = k.erc20Keeper().SendCoins(ctx, moduleAddress, outAddress, nativeCoins, nativeErc20Tokens)
 		if err != nil {
 			return err
 		}
@@ -90,7 +90,7 @@ func (k Keeper) InputOutputCoins(ctx sdk.Context, inputs []banktypes.Input, outp
 }
 
 func (k Keeper) SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error {
-	nativeCoins, nativeErc20Tokens := k.erc20Keeper.SplitCoinsByErc20(amt)
+	nativeCoins, nativeErc20Tokens := k.erc20Keeper().SplitCoinsByErc20(amt)
 
 	err := k.BaseKeeper.SubUnlockedCoins(ctx, fromAddr, nativeCoins)
 	if err != nil {
@@ -112,7 +112,7 @@ func (k Keeper) SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.A
 		banktypes.NewCoinReceivedEvent(toAddr, nativeErc20Tokens),
 	)
 
-	err = k.erc20Keeper.SendCoins(ctx, fromAddr, toAddr, nativeCoins, nativeErc20Tokens)
+	err = k.erc20Keeper().SendCoins(ctx, fromAddr, toAddr, nativeCoins, nativeErc20Tokens)
 	if err != nil {
 		return err
 	}

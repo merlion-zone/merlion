@@ -82,6 +82,7 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	custombankkeeper "github.com/merlion-zone/merlion/x/bank/keeper"
+	custombanktypes "github.com/merlion-zone/merlion/x/bank/types"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -346,8 +347,12 @@ func New(
 	app.AccountKeeper = authkeeper.NewAccountKeeper(
 		appCodec, keys[authtypes.StoreKey], app.GetSubspace(authtypes.ModuleName), authtypes.ProtoBaseAccount, maccPerms,
 	)
+	var erc20Keeper erc20keeper.Keeper
+	getErc20Keeper := func() custombanktypes.Erc20Keeper {
+		return erc20Keeper
+	}
 	app.BankKeeper = custombankkeeper.NewKeeper(
-		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.GetSubspace(banktypes.ModuleName), app.BlockedAddrs(),
+		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.GetSubspace(banktypes.ModuleName), app.BlockedAddrs(), getErc20Keeper,
 	)
 	stakingKeeper := stakingkeeper.NewKeeper(
 		appCodec, keys[stakingtypes.StoreKey], app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName),
@@ -432,11 +437,8 @@ func New(
 		app.BankKeeper,
 		app.EvmKeeper,
 	)
+	erc20Keeper = app.Erc20Keeper
 	erc20Module := erc20.NewAppModule(appCodec, app.Erc20Keeper, app.AccountKeeper, app.BankKeeper)
-
-	bankKeeper := app.BankKeeper.(custombankkeeper.Keeper)
-	bankKeeper.SetErc20Keeper(app.Erc20Keeper)
-	app.BankKeeper = bankKeeper
 
 	app.OracleKeeper = *oraclekeeper.NewKeeper(
 		appCodec,

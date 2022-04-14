@@ -6,10 +6,10 @@ import (
 )
 
 func (k Keeper) HasBalance(ctx sdk.Context, addr sdk.AccAddress, amt sdk.Coin) bool {
-	if !k.erc20Keeper.IsDenomForErc20(amt.Denom) {
+	if !k.erc20Keeper().IsDenomForErc20(amt.Denom) {
 		return k.BaseKeeper.HasBalance(ctx, addr, amt)
 	} else {
-		return k.erc20Keeper.GetBalance(ctx, addr, amt.Denom).IsGTE(amt)
+		return k.erc20Keeper().GetBalance(ctx, addr, amt.Denom).IsGTE(amt)
 	}
 }
 
@@ -24,10 +24,10 @@ func (k Keeper) GetAccountsBalances(ctx sdk.Context) []banktypes.Balance {
 }
 
 func (k Keeper) GetBalance(ctx sdk.Context, addr sdk.AccAddress, denom string) sdk.Coin {
-	if !k.erc20Keeper.IsDenomForErc20(denom) {
+	if !k.erc20Keeper().IsDenomForErc20(denom) {
 		return k.BaseKeeper.GetBalance(ctx, addr, denom)
 	} else {
-		return k.erc20Keeper.GetBalance(ctx, addr, denom)
+		return k.erc20Keeper().GetBalance(ctx, addr, denom)
 	}
 }
 

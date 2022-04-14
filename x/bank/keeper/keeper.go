@@ -18,22 +18,21 @@ type Keeper struct {
 	bankkeeper.BaseKeeper
 
 	ak          banktypes.AccountKeeper
-	erc20Keeper types.Erc20Keeper
+	erc20Keeper func() types.Erc20Keeper
 }
 
 func NewKeeper(cdc codec.BinaryCodec,
 	storeKey sdk.StoreKey,
 	ak banktypes.AccountKeeper,
 	paramSpace paramtypes.Subspace,
-	blockedAddrs map[string]bool) Keeper {
+	blockedAddrs map[string]bool,
+	erc20Keeper func() types.Erc20Keeper,
+) Keeper {
 	return Keeper{
-		BaseKeeper: bankkeeper.NewBaseKeeper(cdc, storeKey, ak, paramSpace, blockedAddrs),
-		ak:         ak,
+		BaseKeeper:  bankkeeper.NewBaseKeeper(cdc, storeKey, ak, paramSpace, blockedAddrs),
+		ak:          ak,
+		erc20Keeper: erc20Keeper,
 	}
-}
-
-func (k *Keeper) SetErc20Keeper(erc20Keeper types.Erc20Keeper) {
-	k.erc20Keeper = erc20Keeper
 }
 
 func (k Keeper) GetPaginatedTotalSupply(ctx sdk.Context, pagination *query.PageRequest) (sdk.Coins, *query.PageResponse, error) {
@@ -42,48 +41,48 @@ func (k Keeper) GetPaginatedTotalSupply(ctx sdk.Context, pagination *query.PageR
 }
 
 func (k Keeper) DelegateCoins(ctx sdk.Context, delegatorAddr, moduleAccAddr sdk.AccAddress, amt sdk.Coins) error {
-	nativeCoins, nativeErc20Tokens := k.erc20Keeper.SplitCoinsByErc20(amt)
+	nativeCoins, nativeErc20Tokens := k.erc20Keeper().SplitCoinsByErc20(amt)
 	if !nativeErc20Tokens.Empty() {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "erc20 native tokens unqualified for delegation")
 	}
 	if err := k.BaseKeeper.DelegateCoins(ctx, delegatorAddr, moduleAccAddr, amt); err != nil {
 		return err
 	}
-	return k.erc20Keeper.SendCoins(ctx, delegatorAddr, moduleAccAddr, nativeCoins, nil)
+	return k.erc20Keeper().SendCoins(ctx, delegatorAddr, moduleAccAddr, nativeCoins, nil)
 }
 
 func (k Keeper) UndelegateCoins(ctx sdk.Context, moduleAccAddr, delegatorAddr sdk.AccAddress, amt sdk.Coins) error {
-	nativeCoins, nativeErc20Tokens := k.erc20Keeper.SplitCoinsByErc20(amt)
+	nativeCoins, nativeErc20Tokens := k.erc20Keeper().SplitCoinsByErc20(amt)
 	if !nativeErc20Tokens.Empty() {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "erc20 native tokens unqualified for delegation")
 	}
 	if err := k.BaseKeeper.UndelegateCoins(ctx, moduleAccAddr, delegatorAddr, amt); err != nil {
 		return err
 	}
-	return k.erc20Keeper.SendCoins(ctx, moduleAccAddr, delegatorAddr, nativeCoins, nil)
+	return k.erc20Keeper().SendCoins(ctx, moduleAccAddr, delegatorAddr, nativeCoins, nil)
 }
 
 func (k Keeper) GetSupply(ctx sdk.Context, denom string) sdk.Coin {
-	if !k.erc20Keeper.IsDenomForErc20(denom) {
+	if !k.erc20Keeper().IsDenomForErc20(denom) {
 		return k.BaseKeeper.GetSupply(ctx, denom)
 	} else {
-		return k.erc20Keeper.GetSupply(ctx, denom)
+		return k.erc20Keeper().GetSupply(ctx, denom)
 	}
 }
 
 func (k Keeper) HasSupply(ctx sdk.Context, denom string) bool {
-	if !k.erc20Keeper.IsDenomForErc20(denom) {
+	if !k.erc20Keeper().IsDenomForErc20(denom) {
 		return k.BaseKeeper.HasSupply(ctx, denom)
 	} else {
-		return !k.erc20Keeper.GetSupply(ctx, denom).IsZero()
+		return !k.erc20Keeper().GetSupply(ctx, denom).IsZero()
 	}
 }
 
 func (k Keeper) GetDenomMetaData(ctx sdk.Context, denom string) (banktypes.Metadata, bool) {
-	if !k.erc20Keeper.IsDenomForErc20(denom) {
+	if !k.erc20Keeper().IsDenomForErc20(denom) {
 		return k.BaseKeeper.GetDenomMetaData(ctx, denom)
 	} else {
-		return k.erc20Keeper.GetDenomMetaData(ctx, denom)
+		return k.erc20Keeper().GetDenomMetaData(ctx, denom)
 	}
 }
 
@@ -170,7 +169,7 @@ func (k Keeper) UndelegateCoinsFromModuleToAccount(
 }
 
 func (k Keeper) MintCoins(ctx sdk.Context, moduleName string, amounts sdk.Coins) error {
-	nativeCoins, nativeErc20Tokens := k.erc20Keeper.SplitCoinsByErc20(amounts)
+	nativeCoins, nativeErc20Tokens := k.erc20Keeper().SplitCoinsByErc20(amounts)
 	if !nativeErc20Tokens.Empty() {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "erc20 native tokens unqualified for mint")
 	}
@@ -178,18 +177,18 @@ func (k Keeper) MintCoins(ctx sdk.Context, moduleName string, amounts sdk.Coins)
 		return err
 	}
 	for _, coin := range nativeCoins {
-		if !k.erc20Keeper.IsDenomRegistered(ctx, coin.Denom) {
-			if _, err := k.erc20Keeper.RegisterCoin(ctx, coin.Denom); err != nil {
+		if !k.erc20Keeper().IsDenomRegistered(ctx, coin.Denom) {
+			if _, err := k.erc20Keeper().RegisterCoin(ctx, coin.Denom); err != nil {
 				return err
 			}
 		}
 	}
 	acc := k.ak.GetModuleAccount(ctx, moduleName) // had checked nil
-	return k.erc20Keeper.SendCoins(ctx, nil, acc.GetAddress(), nativeCoins, nil)
+	return k.erc20Keeper().SendCoins(ctx, nil, acc.GetAddress(), nativeCoins, nil)
 }
 
 func (k Keeper) BurnCoins(ctx sdk.Context, moduleName string, amounts sdk.Coins) error {
-	nativeCoins, nativeErc20Tokens := k.erc20Keeper.SplitCoinsByErc20(amounts)
+	nativeCoins, nativeErc20Tokens := k.erc20Keeper().SplitCoinsByErc20(amounts)
 	if !nativeErc20Tokens.Empty() {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "erc20 native tokens unqualified for burn")
 	}
@@ -197,7 +196,7 @@ func (k Keeper) BurnCoins(ctx sdk.Context, moduleName string, amounts sdk.Coins)
 		return err
 	}
 	acc := k.ak.GetModuleAccount(ctx, moduleName) // had checked nil
-	return k.erc20Keeper.SendCoins(ctx, acc.GetAddress(), nil, nativeCoins, nil)
+	return k.erc20Keeper().SendCoins(ctx, acc.GetAddress(), nil, nativeCoins, nil)
 }
 
 func (k Keeper) IterateTotalSupply(ctx sdk.Context, cb func(sdk.Coin) bool) {
