@@ -106,6 +106,7 @@ import (
 	erc20keeper "github.com/merlion-zone/merlion/x/erc20/keeper"
 	erc20types "github.com/merlion-zone/merlion/x/erc20/types"
 	"github.com/merlion-zone/merlion/x/maker"
+	makerclient "github.com/merlion-zone/merlion/x/maker/client"
 	makerkeeper "github.com/merlion-zone/merlion/x/maker/keeper"
 	makertypes "github.com/merlion-zone/merlion/x/maker/types"
 	"github.com/merlion-zone/merlion/x/oracle"
@@ -146,6 +147,12 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		upgradeclient.CancelProposalHandler,
 		ibcclientclient.UpdateClientProposalHandler,
 		ibcclientclient.UpgradeProposalHandler,
+		makerclient.RegisterBackingProposalHandler,
+		makerclient.RegisterCollateralProposalHandler,
+		makerclient.SetBackingProposalHandler,
+		makerclient.SetCollateralProposalHandler,
+		makerclient.BatchSetBackingProposalHandler,
+		makerclient.BatchSetCollateralProposalHandler,
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 

@@ -49,7 +49,7 @@ func (m *RegisterBackingProposal) ProposalType() string {
 }
 
 func (m *RegisterBackingProposal) ValidateBasic() error {
-	return validateBackingRiskParams(m.RiskParams)
+	return validateBackingRiskParams(&m.RiskParams)
 }
 
 func (m *RegisterCollateralProposal) ProposalRoute() string {
@@ -61,7 +61,7 @@ func (m *RegisterCollateralProposal) ProposalType() string {
 }
 
 func (m *RegisterCollateralProposal) ValidateBasic() error {
-	return validateCollateralRiskParams(m.RiskParams)
+	return validateCollateralRiskParams(&m.RiskParams)
 }
 
 func (m *SetBackingRiskParamsProposal) ProposalRoute() string {
@@ -73,7 +73,7 @@ func (m *SetBackingRiskParamsProposal) ProposalType() string {
 }
 
 func (m *SetBackingRiskParamsProposal) ValidateBasic() error {
-	return validateBackingRiskParams(m.RiskParams)
+	return validateBackingRiskParams(&m.RiskParams)
 }
 
 func (m *SetCollateralRiskParamsProposal) ProposalRoute() string {
@@ -85,7 +85,7 @@ func (m *SetCollateralRiskParamsProposal) ProposalType() string {
 }
 
 func (m *SetCollateralRiskParamsProposal) ValidateBasic() error {
-	return validateCollateralRiskParams(m.RiskParams)
+	return validateCollateralRiskParams(&m.RiskParams)
 }
 
 func (m *BatchSetBackingRiskParamsProposal) ProposalRoute() string {
@@ -98,7 +98,7 @@ func (m *BatchSetBackingRiskParamsProposal) ProposalType() string {
 
 func (m *BatchSetBackingRiskParamsProposal) ValidateBasic() error {
 	for _, params := range m.RiskParams {
-		if err := validateBackingRiskParams(params); err != nil {
+		if err := validateBackingRiskParams(&params); err != nil {
 			return err
 		}
 	}
@@ -115,7 +115,7 @@ func (m *BatchSetCollateralRiskParamsProposal) ProposalType() string {
 
 func (m *BatchSetCollateralRiskParamsProposal) ValidateBasic() error {
 	for _, params := range m.RiskParams {
-		if err := validateCollateralRatioPriceBand(params); err != nil {
+		if err := validateCollateralRiskParams(&params); err != nil {
 			return err
 		}
 	}

@@ -34,6 +34,8 @@
     - [AccountBacking](#merlion.maker.v1.AccountBacking)
     - [AccountCollateral](#merlion.maker.v1.AccountCollateral)
     - [BackingRiskParams](#merlion.maker.v1.BackingRiskParams)
+    - [BatchBackingRiskParams](#merlion.maker.v1.BatchBackingRiskParams)
+    - [BatchCollateralRiskParams](#merlion.maker.v1.BatchCollateralRiskParams)
     - [BatchSetBackingRiskParamsProposal](#merlion.maker.v1.BatchSetBackingRiskParamsProposal)
     - [BatchSetCollateralRiskParamsProposal](#merlion.maker.v1.BatchSetCollateralRiskParamsProposal)
     - [CollateralRiskParams](#merlion.maker.v1.CollateralRiskParams)
@@ -490,6 +492,36 @@ BackingRiskParams represents an object of backing coin risk parameters.
 | `burn_fee` | [string](#string) |  | burn fee rate |
 | `buyback_fee` | [string](#string) |  | buyback fee rate |
 | `recollateralize_fee` | [string](#string) |  | recollateralize fee rate |
+
+
+
+
+
+
+<a name="merlion.maker.v1.BatchBackingRiskParams"></a>
+
+### BatchBackingRiskParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `risk_params` | [BackingRiskParams](#merlion.maker.v1.BackingRiskParams) | repeated | batch of collateral risk params |
+
+
+
+
+
+
+<a name="merlion.maker.v1.BatchCollateralRiskParams"></a>
+
+### BatchCollateralRiskParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `risk_params` | [CollateralRiskParams](#merlion.maker.v1.CollateralRiskParams) | repeated | batch of collateral risk params |
 
 
 

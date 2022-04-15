@@ -85,7 +85,7 @@ message RegisterBackingProposal {
   // proposal description
   string description = 2;
   // backing risk params
-  BackingRiskParams risk_params = 3;
+  BackingRiskParams risk_params = 3 [ (gogoproto.nullable) = false ];
 }
 
 // RegisterCollateralProposal is a gov Content type to register eligible
@@ -98,7 +98,7 @@ message RegisterCollateralProposal {
   // proposal description
   string description = 2;
   // collateral risk params
-  CollateralRiskParams risk_params = 3;
+  CollateralRiskParams risk_params = 3 [ (gogoproto.nullable) = false ];
 }
 
 // SetBackingRiskParamsProposal is a gov Content type to set backing coin risk
@@ -111,7 +111,7 @@ message SetBackingRiskParamsProposal {
   // proposal description
   string description = 2;
   // backing risk params
-  BackingRiskParams risk_params = 3;
+  BackingRiskParams risk_params = 3 [ (gogoproto.nullable) = false ];
 }
 
 // SetCollateralRiskParamsProposal is a gov Content type to set collateral risk
@@ -124,7 +124,14 @@ message SetCollateralRiskParamsProposal {
   // proposal description
   string description = 2;
   // collateral risk params
-  CollateralRiskParams risk_params = 3;
+  CollateralRiskParams risk_params = 3 [ (gogoproto.nullable) = false ];
+}
+
+message BatchBackingRiskParams {
+  option (gogoproto.equal) = false;
+
+  // batch of collateral risk params
+  repeated BackingRiskParams risk_params = 1 [ (gogoproto.nullable) = false ];
 }
 
 // BatchSetBackingRiskParamsProposal is a gov Content type to batch set backing
@@ -137,7 +144,15 @@ message BatchSetBackingRiskParamsProposal {
   // proposal description
   string description = 2;
   // batch of collateral risk params
-  repeated BackingRiskParams risk_params = 3;
+  repeated BackingRiskParams risk_params = 3 [ (gogoproto.nullable) = false ];
+}
+
+message BatchCollateralRiskParams {
+  option (gogoproto.equal) = false;
+
+  // batch of collateral risk params
+  repeated CollateralRiskParams risk_params = 1
+      [ (gogoproto.nullable) = false ];
 }
 
 // BatchSetCollateralRiskParamsProposal is a gov Content type to batch set
@@ -150,7 +165,8 @@ message BatchSetCollateralRiskParamsProposal {
   // proposal description
   string description = 2;
   // batch of collateral risk params
-  repeated CollateralRiskParams risk_params = 3;
+  repeated CollateralRiskParams risk_params = 3
+      [ (gogoproto.nullable) = false ];
 }
 
 message TotalBacking {

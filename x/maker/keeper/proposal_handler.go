@@ -8,7 +8,7 @@ import (
 )
 
 func HandleRegisterBackingProposal(ctx sdk.Context, k Keeper, p *types.RegisterBackingProposal) error {
-	params := *p.RiskParams
+	params := p.RiskParams
 
 	if k.IsBackingRegistered(ctx, params.BackingDenom) {
 		return sdkerrors.Wrapf(types.ErrBackingCoinAlreadyExists, "backing coin denomination already registered: %s", params.BackingDenom)
@@ -72,7 +72,7 @@ func HandleRegisterBackingProposal(ctx sdk.Context, k Keeper, p *types.RegisterB
 }
 
 func HandleRegisterCollateralProposal(ctx sdk.Context, k Keeper, p *types.RegisterCollateralProposal) error {
-	params := *p.RiskParams
+	params := p.RiskParams
 
 	if k.IsCollateralRegistered(ctx, params.CollateralDenom) {
 		return sdkerrors.Wrapf(types.ErrCollateralCoinAlreadyExists, "collateral coin denomination already registered: %s", params.CollateralDenom)
@@ -266,16 +266,16 @@ func validateCollateralRiskParams(params *types.CollateralRiskParams) error {
 }
 
 func HandleSetBackingRiskParamsProposal(ctx sdk.Context, k Keeper, p *types.SetBackingRiskParamsProposal) error {
-	return setBackingRiskParamsProposal(ctx, k, p.RiskParams)
+	return setBackingRiskParamsProposal(ctx, k, &p.RiskParams)
 }
 
 func HandleSetCollateralRiskParamsProposal(ctx sdk.Context, k Keeper, p *types.SetCollateralRiskParamsProposal) error {
-	return setCollateralRiskParamsProposal(ctx, k, p.RiskParams)
+	return setCollateralRiskParamsProposal(ctx, k, &p.RiskParams)
 }
 
 func HandleBatchSetBackingRiskParamsProposal(ctx sdk.Context, k Keeper, p *types.BatchSetBackingRiskParamsProposal) error {
 	for _, params := range p.RiskParams {
-		if err := setBackingRiskParamsProposal(ctx, k, params); err != nil {
+		if err := setBackingRiskParamsProposal(ctx, k, &params); err != nil {
 			return err
 		}
 	}
@@ -284,7 +284,7 @@ func HandleBatchSetBackingRiskParamsProposal(ctx sdk.Context, k Keeper, p *types
 
 func HandleBatchSetCollateralRiskParamsProposal(ctx sdk.Context, k Keeper, p *types.BatchSetCollateralRiskParamsProposal) error {
 	for _, params := range p.RiskParams {
-		if err := setCollateralRiskParamsProposal(ctx, k, params); err != nil {
+		if err := setCollateralRiskParamsProposal(ctx, k, &params); err != nil {
 			return err
 		}
 	}
