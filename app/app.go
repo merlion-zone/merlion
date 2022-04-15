@@ -98,6 +98,7 @@ import (
 	feemarketkeeper "github.com/tharsis/ethermint/x/feemarket/keeper"
 	feemarkettypes "github.com/tharsis/ethermint/x/feemarket/types"
 	"github.com/tharsis/evmos/v3/app/ante"
+	vestingtypes "github.com/tharsis/evmos/v3/x/vesting/types"
 
 	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 
@@ -532,17 +533,44 @@ func New(
 		evidencetypes.ModuleName,
 		stakingtypes.ModuleName,
 		ibchost.ModuleName,
+		// no-op modules
+		genutiltypes.ModuleName,
+		authtypes.ModuleName,
+		vestingtypes.ModuleName,
+		banktypes.ModuleName,
 		feegrant.ModuleName,
+		crisistypes.ModuleName,
+		govtypes.ModuleName,
+		paramstypes.ModuleName,
+		ibctransfertypes.ModuleName,
 		erc20types.ModuleName,
+		oracletypes.ModuleName,
+		makertypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
-		oracletypes.ModuleName,
 		evmtypes.ModuleName,
 		feemarkettypes.ModuleName,
+		oracletypes.ModuleName,
+		makertypes.ModuleName,
+		// no-op modules
+		genutiltypes.ModuleName,
+		authtypes.ModuleName,
+		vestingtypes.ModuleName,
+		banktypes.ModuleName,
+		capabilitytypes.ModuleName,
+		feegrant.ModuleName,
+		minttypes.ModuleName,
+		slashingtypes.ModuleName,
+		distrtypes.ModuleName,
+		upgradetypes.ModuleName,
+		evidencetypes.ModuleName,
+		ibchost.ModuleName,
+		paramstypes.ModuleName,
+		ibctransfertypes.ModuleName,
 		erc20types.ModuleName,
 	)
 
@@ -554,6 +582,7 @@ func New(
 	app.mm.SetOrderInitGenesis(
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
+		vestingtypes.ModuleName,
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
 		stakingtypes.ModuleName,
@@ -568,6 +597,9 @@ func New(
 		oracletypes.ModuleName,
 		evmtypes.ModuleName,
 		feemarkettypes.ModuleName,
+		feegrant.ModuleName,
+		paramstypes.ModuleName,
+		upgradetypes.ModuleName,
 		erc20types.ModuleName,
 		makertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
