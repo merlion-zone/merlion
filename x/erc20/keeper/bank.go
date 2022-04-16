@@ -122,9 +122,9 @@ func (k Keeper) GetBalance(ctx sdk.Context, addr sdk.AccAddress, denom string) s
 func (k Keeper) SplitCoinsByErc20(amt sdk.Coins) (nativeCoins sdk.Coins, nativeErc20Tokens sdk.Coins) {
 	for _, coin := range amt {
 		if k.IsDenomForErc20(coin.Denom) {
-			nativeErc20Tokens.Add(coin)
+			nativeErc20Tokens = nativeErc20Tokens.Add(coin)
 		} else {
-			nativeCoins.Add(coin)
+			nativeCoins = nativeCoins.Add(coin)
 		}
 	}
 	return

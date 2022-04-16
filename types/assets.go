@@ -11,8 +11,8 @@ import (
 
 // nolint
 const (
-	AttoLionDenom = "alion"
-	MicroUSDDenom = "uusd"
+	AttoLionDenom = "alion" // 1e-18
+	MicroUSDDenom = "uusd"  // 1e-6
 )
 
 var (
