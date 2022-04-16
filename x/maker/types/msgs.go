@@ -56,7 +56,7 @@ func (m *MsgMintBySwap) ValidateBasic() error {
 	if m.MintOut.Denom != merlion.MicroUSDDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.MintOut.Denom)
 	}
-	if m.LionInMax.Denom != merlion.MicroLionDenom {
+	if m.LionInMax.Denom != merlion.AttoLionDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionInMax.Denom)
 	}
 	if !m.MintOut.Amount.IsPositive() {
@@ -106,7 +106,7 @@ func (m *MsgBurnBySwap) ValidateBasic() error {
 	if m.BurnIn.Denom != merlion.MicroUSDDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.BurnIn.Denom)
 	}
-	if m.LionOutMin.Denom != merlion.MicroLionDenom {
+	if m.LionOutMin.Denom != merlion.AttoLionDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionOutMin.Denom)
 	}
 	if !m.BurnIn.Amount.IsPositive() {
@@ -153,7 +153,7 @@ func (m *MsgBuyBacking) ValidateBasic() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
 		}
 	}
-	if m.LionIn.Denom != merlion.MicroLionDenom {
+	if m.LionIn.Denom != merlion.AttoLionDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionIn.Denom)
 	}
 	if !m.LionIn.Amount.IsPositive() {
@@ -197,7 +197,7 @@ func (m *MsgSellBacking) ValidateBasic() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
 		}
 	}
-	if m.LionOutMin.Denom != merlion.MicroLionDenom {
+	if m.LionOutMin.Denom != merlion.AttoLionDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionOutMin.Denom)
 	}
 	if !m.BackingIn.Amount.IsPositive() {
@@ -244,7 +244,7 @@ func (m *MsgMintByCollateral) ValidateBasic() error {
 	if m.MintOut.Denom != merlion.MicroUSDDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.MintOut.Denom)
 	}
-	if m.LionInMax.Denom != merlion.MicroLionDenom {
+	if m.LionInMax.Denom != merlion.AttoLionDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionInMax.Denom)
 	}
 	if !m.MintOut.Amount.IsPositive() {

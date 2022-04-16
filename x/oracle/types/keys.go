@@ -29,7 +29,7 @@ var (
 	MissCounterKey                  = []byte{0x03} // prefix for each key to a miss counter
 	AggregateExchangeRatePrevoteKey = []byte{0x04} // prefix for each key to a aggregate prevote
 	AggregateExchangeRateVoteKey    = []byte{0x05} // prefix for each key to a aggregate vote
-	TobinTaxKey                     = []byte{0x06} // prefix for each key to a tobin tax
+	VoteTargetKey                   = []byte{0x06} // prefix for each key to a vote target
 )
 
 // GetExchangeRateKey - stored by *denom*
@@ -57,13 +57,13 @@ func GetAggregateExchangeRateVoteKey(v sdk.ValAddress) []byte {
 	return append(AggregateExchangeRateVoteKey, address.MustLengthPrefix(v)...)
 }
 
-// GetTobinTaxKey - stored by *denom* bytes
-func GetTobinTaxKey(d string) []byte {
-	return append(TobinTaxKey, []byte(d)...)
+// GetVoteTargetKey - stored by *denom* bytes
+func GetVoteTargetKey(d string) []byte {
+	return append(VoteTargetKey, []byte(d)...)
 }
 
-// ExtractDenomFromTobinTaxKey - split denom from the tobin tax key
-func ExtractDenomFromTobinTaxKey(key []byte) (denom string) {
+// ExtractDenomFromVoteTargetKey - split denom from the vote target key
+func ExtractDenomFromVoteTargetKey(key []byte) (denom string) {
 	denom = string(key[1:])
 	return
 }

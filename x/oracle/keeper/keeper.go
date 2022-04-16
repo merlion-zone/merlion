@@ -12,7 +12,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/oracle/types"
 )
 
@@ -85,16 +84,8 @@ func (k Keeper) GetRewardPool(ctx sdk.Context, denom string) sdk.Coin {
 // -----------------------------------
 // ExchangeRate logic
 
-func (k Keeper) GetExchangeRate(ctx sdk.Context, denom string) (price sdk.Dec, err error) {
-	panic("implement me")
-}
-
-// GetLionExchangeRate gets the consensus exchange rate of Lion denominated in the denom asset from the store.
-func (k Keeper) GetLionExchangeRate(ctx sdk.Context, denom string) (sdk.Dec, error) {
-	if denom == merlion.MicroLionDenom {
-		return sdk.OneDec(), nil
-	}
-
+// GetExchangeRate gets the consensus exchange rate of denom denominated in uUSD from the store.
+func (k Keeper) GetExchangeRate(ctx sdk.Context, denom string) (sdk.Dec, error) {
 	store := ctx.KVStore(k.storeKey)
 	b := store.Get(types.GetExchangeRateKey(denom))
 	if b == nil {
@@ -106,17 +97,17 @@ func (k Keeper) GetLionExchangeRate(ctx sdk.Context, denom string) (sdk.Dec, err
 	return dp.Dec, nil
 }
 
-// SetLionExchangeRate sets the consensus exchange rate of Lion denominated in the denom asset to the store.
-func (k Keeper) SetLionExchangeRate(ctx sdk.Context, denom string, exchangeRate sdk.Dec) {
+// SetExchangeRate sets the consensus exchange rate of denom denominated in uUSD to the store.
+func (k Keeper) SetExchangeRate(ctx sdk.Context, denom string, exchangeRate sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshal(&sdk.DecProto{Dec: exchangeRate})
 	store.Set(types.GetExchangeRateKey(denom), bz)
 }
 
-// SetLionExchangeRateWithEvent sets the consensus exchange rate of Lion
-// denominated in the denom asset to the store with ABCI event
-func (k Keeper) SetLionExchangeRateWithEvent(ctx sdk.Context, denom string, exchangeRate sdk.Dec) {
-	k.SetLionExchangeRate(ctx, denom, exchangeRate)
+// SetExchangeRateWithEvent sets the consensus exchange rate of denom
+// denominated in uUSD to the store with ABCI event
+func (k Keeper) SetExchangeRateWithEvent(ctx sdk.Context, denom string, exchangeRate sdk.Dec) {
+	k.SetExchangeRate(ctx, denom, exchangeRate)
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(types.EventTypeExchangeRateUpdate,
 			sdk.NewAttribute(types.AttributeKeyDenom, denom),
@@ -125,14 +116,14 @@ func (k Keeper) SetLionExchangeRateWithEvent(ctx sdk.Context, denom string, exch
 	)
 }
 
-// DeleteLionExchangeRate deletes the consensus exchange rate of Lion denominated in the denom asset from the store.
-func (k Keeper) DeleteLionExchangeRate(ctx sdk.Context, denom string) {
+// DeleteExchangeRate deletes the consensus exchange rate of denom denominated in uUSD from the store.
+func (k Keeper) DeleteExchangeRate(ctx sdk.Context, denom string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Delete(types.GetExchangeRateKey(denom))
 }
 
-// IterateLionExchangeRates iterates over Lion rates in the store.
-func (k Keeper) IterateLionExchangeRates(ctx sdk.Context, handler func(denom string, exchangeRate sdk.Dec) (stop bool)) {
+// IterateExchangeRates iterates over denom rates in the store.
+func (k Keeper) IterateExchangeRates(ctx sdk.Context, handler func(denom string, exchangeRate sdk.Dec) (stop bool)) {
 	store := ctx.KVStore(k.storeKey)
 	iter := sdk.KVStorePrefixIterator(store, types.ExchangeRateKey)
 	defer iter.Close()
@@ -323,65 +314,48 @@ func (k Keeper) IterateAggregateExchangeRateVotes(ctx sdk.Context, handler func(
 }
 
 // -----------------------------------
-// TobinTax logic
+// VoteTarget logic
 
-// GetTobinTax return tobin tax for the denom.
-func (k Keeper) GetTobinTax(ctx sdk.Context, denom string) (sdk.Dec, error) {
+// IsVoteTarget returns existence of a denom in the voting target list.
+func (k Keeper) IsVoteTarget(ctx sdk.Context, denom string) bool {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.GetTobinTaxKey(denom))
-	if bz == nil {
-		err := sdkerrors.Wrap(types.ErrNoTobinTax, denom)
-		return sdk.Dec{}, err
-	}
-
-	tobinTax := sdk.DecProto{}
-	k.cdc.MustUnmarshal(bz, &tobinTax)
-
-	return tobinTax.Dec, nil
+	bz := store.Get(types.GetVoteTargetKey(denom))
+	return bz != nil
 }
 
-// SetTobinTax updates tobin tax for the denom.
-func (k Keeper) SetTobinTax(ctx sdk.Context, denom string, tobinTax sdk.Dec) {
+// SetVoteTarget sets vote target for the denom.
+func (k Keeper) SetVoteTarget(ctx sdk.Context, denom string) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.DecProto{Dec: tobinTax})
-	store.Set(types.GetTobinTaxKey(denom), bz)
+	store.Set(types.GetVoteTargetKey(denom), []byte(denom))
 }
 
-// IterateTobinTaxes iterates rate over tobin taxes in the store.
-func (k Keeper) IterateTobinTaxes(ctx sdk.Context, handler func(denom string, tobinTax sdk.Dec) (stop bool)) {
+// IterateVoteTargets iterates rate over vote targets in the store.
+func (k Keeper) IterateVoteTargets(ctx sdk.Context, handler func(denom string) (stop bool)) {
 	store := ctx.KVStore(k.storeKey)
-	iter := sdk.KVStorePrefixIterator(store, types.TobinTaxKey)
+	iter := sdk.KVStorePrefixIterator(store, types.VoteTargetKey)
 	defer iter.Close()
 	for ; iter.Valid(); iter.Next() {
-		denom := types.ExtractDenomFromTobinTaxKey(iter.Key())
+		denom := types.ExtractDenomFromVoteTargetKey(iter.Key())
 
-		var tobinTax sdk.DecProto
-		k.cdc.MustUnmarshal(iter.Value(), &tobinTax)
-		if handler(denom, tobinTax.Dec) {
+		if handler(denom) {
 			break
 		}
 	}
 }
 
-// ClearTobinTaxes clears tobin taxes.
-func (k Keeper) ClearTobinTaxes(ctx sdk.Context) {
+// ClearVoteTargets clears vote targets.
+func (k Keeper) ClearVoteTargets(ctx sdk.Context) {
 	store := ctx.KVStore(k.storeKey)
-	iter := sdk.KVStorePrefixIterator(store, types.TobinTaxKey)
+	iter := sdk.KVStorePrefixIterator(store, types.VoteTargetKey)
 	defer iter.Close()
 	for ; iter.Valid(); iter.Next() {
 		store.Delete(iter.Key())
 	}
 }
 
-// IsVoteTarget returns existence of a denom in the voting target list.
-func (k Keeper) IsVoteTarget(ctx sdk.Context, denom string) bool {
-	_, err := k.GetTobinTax(ctx, denom)
-	return err == nil
-}
-
 // GetVoteTargets returns the voting target list on current vote period.
 func (k Keeper) GetVoteTargets(ctx sdk.Context) (voteTargets []string) {
-	k.IterateTobinTaxes(ctx, func(denom string, _ sdk.Dec) bool {
+	k.IterateVoteTargets(ctx, func(denom string) bool {
 		voteTargets = append(voteTargets, denom)
 		return false
 	})

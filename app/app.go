@@ -81,6 +81,8 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/v3/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
+	custombank "github.com/merlion-zone/merlion/x/bank"
+	custombankclient "github.com/merlion-zone/merlion/x/bank/client"
 	custombankkeeper "github.com/merlion-zone/merlion/x/bank/keeper"
 	custombanktypes "github.com/merlion-zone/merlion/x/bank/types"
 	"github.com/spf13/cast"
@@ -148,6 +150,7 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		upgradeclient.CancelProposalHandler,
 		ibcclientclient.UpdateClientProposalHandler,
 		ibcclientclient.UpgradeProposalHandler,
+		custombankclient.SetDenomMetaDataProposalHandler,
 		makerclient.RegisterBackingProposalHandler,
 		makerclient.RegisterCollateralProposalHandler,
 		makerclient.SetBackingProposalHandler,
@@ -403,7 +406,8 @@ func New(
 		AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(app.DistrKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
-		AddRoute(makertypes.RouterKey, maker.NewMakerProposalHandler(app.MakerKeeper))
+		AddRoute(makertypes.RouterKey, maker.NewMakerProposalHandler(app.MakerKeeper)).
+		AddRoute(banktypes.RouterKey, custombank.NewBankProposalHandler(app.BankKeeper))
 
 	// Create Transfer Keepers
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(

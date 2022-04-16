@@ -1,14 +1,11 @@
 package keeper
 
 import (
-	"fmt"
 	"sort"
-	"strings"
 
 	"github.com/merlion-zone/merlion/x/oracle/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 )
 
 // OrganizeBallotByDenom collects all oracle votes for the period, categorized by the votes' denom parameter.
@@ -73,8 +70,8 @@ func (k Keeper) ClearBallots(ctx sdk.Context, votePeriod uint64) {
 	})
 }
 
-// ApplyWhitelist update vote target denom list and set tobin tax with params whitelist.
-func (k Keeper) ApplyWhitelist(ctx sdk.Context, whitelist types.DenomList, voteTargets map[string]sdk.Dec) {
+// ApplyWhitelist update vote target denom list with params whitelist.
+func (k Keeper) ApplyWhitelist(ctx sdk.Context, whitelist types.DenomList, voteTargets map[string]struct{}) {
 
 	// Check is there any update in whitelist params
 	updateRequired := false
@@ -82,7 +79,7 @@ func (k Keeper) ApplyWhitelist(ctx sdk.Context, whitelist types.DenomList, voteT
 		updateRequired = true
 	} else {
 		for _, item := range whitelist {
-			if tobinTax, ok := voteTargets[item.Name]; !ok || !tobinTax.Equal(item.TobinTax) {
+			if _, ok := voteTargets[item.Name]; !ok {
 				updateRequired = true
 				break
 			}
@@ -90,29 +87,10 @@ func (k Keeper) ApplyWhitelist(ctx sdk.Context, whitelist types.DenomList, voteT
 	}
 
 	if updateRequired {
-		k.ClearTobinTaxes(ctx)
+		k.ClearVoteTargets(ctx)
 
 		for _, item := range whitelist {
-			k.SetTobinTax(ctx, item.Name, item.TobinTax)
-
-			// Register meta data to bank module
-			if _, ok := k.bankKeeper.GetDenomMetaData(ctx, item.Name); !ok {
-				base := item.Name   // e.g., uusd
-				display := base[1:] // e.g., usd
-
-				k.bankKeeper.SetDenomMetaData(ctx, banktypes.Metadata{
-					Description: "The native stable token of the Merlion.",
-					DenomUnits: []*banktypes.DenomUnit{
-						{Denom: "u" + display, Exponent: uint32(0), Aliases: []string{"micro" + display}}, // e.g., uusd
-						{Denom: "m" + display, Exponent: uint32(3), Aliases: []string{"milli" + display}}, // e.g., musd
-						{Denom: display, Exponent: uint32(6), Aliases: []string{}},                        // e.g., usd
-					},
-					Base:    base,
-					Display: display,
-					Name:    fmt.Sprintf("%s MER", strings.ToUpper(display)),               // e.g., USD MER
-					Symbol:  fmt.Sprintf("%sT", strings.ToUpper(display[:len(display)-1])), // e.g., UST
-				})
-			}
+			k.SetVoteTarget(ctx, item.Name)
 		}
 	}
 }

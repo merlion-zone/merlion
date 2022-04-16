@@ -26,7 +26,6 @@ func GetQueryCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		CmdQueryExchangeRates(),
-		CmdQueryTobinTaxes(),
 		CmdQueryActives(),
 		CmdQueryVoteTargets(),
 		CmdQueryFeederDelegation(),
@@ -45,9 +44,9 @@ func CmdQueryExchangeRates() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "exchange-rates [denom]",
 		Args:  cobra.RangeArgs(0, 1),
-		Short: "Query the current Lion exchange rate w.r.t an asset",
+		Short: "Query the current exchange rate of an asset w.r.t $uUSD",
 		Long: strings.TrimSpace(`
-Query the current exchange rate of Lion with an asset. 
+Query the current exchange rate of an asset with an $uUSD. 
 You can find the current list of active denoms by running
 
 $ merliond query oracle exchange-rates 
@@ -83,59 +82,6 @@ $ merliond query oracle exchange-rates uusd
 
 			return clientCtx.PrintProto(res)
 
-		},
-	}
-
-	flags.AddQueryFlagsToCmd(cmd)
-	return cmd
-}
-
-// CmdQueryTobinTaxes implements the query params command.
-func CmdQueryTobinTaxes() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "tobin-taxes [denom]",
-		Args:  cobra.RangeArgs(0, 1),
-		Short: "Query the current Oracle tobin taxes.",
-		Long: strings.TrimSpace(`
-Query the current Oracle tobin taxes.
-
-$ merliond query oracle tobin-taxes
-
-Or, can filter with denom
-
-$ merliond query oracle tobin-taxes uusd
-
-Or, can 
-`),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientQueryContext(cmd)
-			if err != nil {
-				return err
-			}
-			queryClient := types.NewQueryClient(clientCtx)
-
-			if len(args) == 0 {
-				res, err := queryClient.TobinTaxes(
-					context.Background(),
-					&types.QueryTobinTaxesRequest{},
-				)
-				if err != nil {
-					return err
-				}
-
-				return clientCtx.PrintProto(res)
-			}
-
-			denom := args[0]
-			res, err := queryClient.TobinTax(
-				context.Background(),
-				&types.QueryTobinTaxRequest{Denom: denom},
-			)
-			if err != nil {
-				return err
-			}
-
-			return clientCtx.PrintProto(res)
 		},
 	}
 

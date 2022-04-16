@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
+	merlion "github.com/merlion-zone/merlion/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -182,4 +183,6 @@ func (app *MerlionApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddr
 			return false
 		},
 	)
+
+	merlion.SetDenomMetaDataForStableTokens(ctx, app.BankKeeper)
 }

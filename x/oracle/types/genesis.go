@@ -6,7 +6,6 @@ func NewGenesis(
 	feederDelegations []FeederDelegation, missCounters []MissCounter,
 	aggregateExchangeRatePrevotes []AggregateExchangeRatePrevote,
 	aggregateExchangeRateVotes []AggregateExchangeRateVote,
-	TobinTaxes []TobinTax,
 ) *GenesisState {
 	return &GenesisState{
 		Params:                        params,
@@ -15,7 +14,6 @@ func NewGenesis(
 		MissCounters:                  missCounters,
 		AggregateExchangeRatePrevotes: aggregateExchangeRatePrevotes,
 		AggregateExchangeRateVotes:    aggregateExchangeRateVotes,
-		TobinTaxes:                    TobinTaxes,
 	}
 }
 

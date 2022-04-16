@@ -4,6 +4,9 @@
 
 ## Table of Contents
 
+- [merlion/bank/v1beta1/bank.proto](#merlion/bank/v1beta1/bank.proto)
+    - [SetDenomMetadataProposal](#merlion.bank.v1beta1.SetDenomMetadataProposal)
+  
 - [merlion/erc20/v1/erc20.proto](#merlion/erc20/v1/erc20.proto)
     - [TokenPair](#merlion.erc20.v1.TokenPair)
   
@@ -107,7 +110,6 @@
     - [FeederDelegation](#merlion.oracle.v1.FeederDelegation)
     - [GenesisState](#merlion.oracle.v1.GenesisState)
     - [MissCounter](#merlion.oracle.v1.MissCounter)
-    - [TobinTax](#merlion.oracle.v1.TobinTax)
   
 - [merlion/oracle/v1/query.proto](#merlion/oracle/v1/query.proto)
     - [QueryActivesRequest](#merlion.oracle.v1.QueryActivesRequest)
@@ -130,10 +132,6 @@
     - [QueryMissCounterResponse](#merlion.oracle.v1.QueryMissCounterResponse)
     - [QueryParamsRequest](#merlion.oracle.v1.QueryParamsRequest)
     - [QueryParamsResponse](#merlion.oracle.v1.QueryParamsResponse)
-    - [QueryTobinTaxRequest](#merlion.oracle.v1.QueryTobinTaxRequest)
-    - [QueryTobinTaxResponse](#merlion.oracle.v1.QueryTobinTaxResponse)
-    - [QueryTobinTaxesRequest](#merlion.oracle.v1.QueryTobinTaxesRequest)
-    - [QueryTobinTaxesResponse](#merlion.oracle.v1.QueryTobinTaxesResponse)
     - [QueryVoteTargetsRequest](#merlion.oracle.v1.QueryVoteTargetsRequest)
     - [QueryVoteTargetsResponse](#merlion.oracle.v1.QueryVoteTargetsResponse)
   
@@ -150,6 +148,39 @@
     - [Msg](#merlion.oracle.v1.Msg)
   
 - [Scalar Value Types](#scalar-value-types)
+
+
+
+<a name="merlion/bank/v1beta1/bank.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/bank/v1beta1/bank.proto
+
+
+
+<a name="merlion.bank.v1beta1.SetDenomMetadataProposal"></a>
+
+### SetDenomMetadataProposal
+SetDenomMetaDataProposal is a gov Content type to register a DenomMetaData
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `title` | [string](#string) |  | title of the proposal |
+| `description` | [string](#string) |  | proposal description |
+| `metadata` | [cosmos.bank.v1beta1.Metadata](#cosmos.bank.v1beta1.Metadata) |  | token pair of Cosmos native denom and ERC20 token address |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
 
 
 
@@ -1427,7 +1458,7 @@ rate}{denom},...,{exchange rate}{denom}:{voter}")
 
 ### AggregateExchangeRateVote
 AggregateExchangeRateVote represents the voting on
-the exchange rates of Lion denominated in various Mer stablecoin assets.
+the exchange rates of various assets denominated in uUSD.
 
 
 | Field | Type | Label | Description |
@@ -1449,7 +1480,6 @@ Denom represents an object to hold configurations of each denom
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `name` | [string](#string) |  |  |
-| `tobin_tax` | [string](#string) |  |  |
 
 
 
@@ -1542,7 +1572,6 @@ GenesisState defines the oracle module's genesis state.
 | `miss_counters` | [MissCounter](#merlion.oracle.v1.MissCounter) | repeated |  |
 | `aggregate_exchange_rate_prevotes` | [AggregateExchangeRatePrevote](#merlion.oracle.v1.AggregateExchangeRatePrevote) | repeated |  |
 | `aggregate_exchange_rate_votes` | [AggregateExchangeRateVote](#merlion.oracle.v1.AggregateExchangeRateVote) | repeated |  |
-| `tobin_taxes` | [TobinTax](#merlion.oracle.v1.TobinTax) | repeated |  |
 
 
 
@@ -1560,23 +1589,6 @@ oracle module's genesis state.
 | ----- | ---- | ----- | ----------- |
 | `validator_address` | [string](#string) |  |  |
 | `miss_counter` | [uint64](#uint64) |  |  |
-
-
-
-
-
-
-<a name="merlion.oracle.v1.TobinTax"></a>
-
-### TobinTax
-TobinTax defines an denom and tobin_tax pair used in
-oracle module's genesis state.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `denom` | [string](#string) |  |  |
-| `tobin_tax` | [string](#string) |  |  |
 
 
 
@@ -1768,7 +1780,7 @@ Query/ExchangeRate RPC method.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `exchange_rate` | [string](#string) |  | exchange_rate defines the exchange rate of Lion denominated in various Mer stablecoin. |
+| `exchange_rate` | [string](#string) |  | exchange_rate defines the exchange rate of the denom asset denominated in uUSD. |
 
 
 
@@ -1891,64 +1903,6 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 
 
 
-<a name="merlion.oracle.v1.QueryTobinTaxRequest"></a>
-
-### QueryTobinTaxRequest
-QueryTobinTaxRequest is the request type for the Query/TobinTax RPC method.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `denom` | [string](#string) |  | denom defines the denomination to query for. |
-
-
-
-
-
-
-<a name="merlion.oracle.v1.QueryTobinTaxResponse"></a>
-
-### QueryTobinTaxResponse
-QueryTobinTaxResponse is response type for the
-Query/TobinTax RPC method.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tobin_tax` | [string](#string) |  | tobin_taxe defines the tobin tax of a denom. |
-
-
-
-
-
-
-<a name="merlion.oracle.v1.QueryTobinTaxesRequest"></a>
-
-### QueryTobinTaxesRequest
-QueryTobinTaxesRequest is the request type for the Query/TobinTaxes RPC
-method.
-
-
-
-
-
-
-<a name="merlion.oracle.v1.QueryTobinTaxesResponse"></a>
-
-### QueryTobinTaxesResponse
-QueryTobinTaxesResponse is response type for the
-Query/TobinTaxes RPC method.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `tobin_taxes` | [Denom](#merlion.oracle.v1.Denom) | repeated | tobin_taxes defines a list of the tobin tax of all whitelisted denoms. |
-
-
-
-
-
-
 <a name="merlion.oracle.v1.QueryVoteTargetsRequest"></a>
 
 ### QueryVoteTargetsRequest
@@ -1991,8 +1945,6 @@ Query defines the gRPC querier service.
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `ExchangeRate` | [QueryExchangeRateRequest](#merlion.oracle.v1.QueryExchangeRateRequest) | [QueryExchangeRateResponse](#merlion.oracle.v1.QueryExchangeRateResponse) | ExchangeRate returns exchange rate of a denom. | GET|/merlion/oracle/v1/denoms/{denom}/exchange_rate|
 | `ExchangeRates` | [QueryExchangeRatesRequest](#merlion.oracle.v1.QueryExchangeRatesRequest) | [QueryExchangeRatesResponse](#merlion.oracle.v1.QueryExchangeRatesResponse) | ExchangeRates returns exchange rates of all denoms. | GET|/merlion/oracle/v1/denoms/exchange_rates|
-| `TobinTax` | [QueryTobinTaxRequest](#merlion.oracle.v1.QueryTobinTaxRequest) | [QueryTobinTaxResponse](#merlion.oracle.v1.QueryTobinTaxResponse) | TobinTax returns tobin tax of a denom. | GET|/merlion/oracle/v1/denoms/{denom}/tobin_tax|
-| `TobinTaxes` | [QueryTobinTaxesRequest](#merlion.oracle.v1.QueryTobinTaxesRequest) | [QueryTobinTaxesResponse](#merlion.oracle.v1.QueryTobinTaxesResponse) | TobinTaxes returns tobin taxes of all denoms. | GET|/merlion/oracle/v1/denoms/tobin_taxes|
 | `Actives` | [QueryActivesRequest](#merlion.oracle.v1.QueryActivesRequest) | [QueryActivesResponse](#merlion.oracle.v1.QueryActivesResponse) | Actives returns all active denoms. | GET|/merlion/oracle/v1/denoms/actives|
 | `VoteTargets` | [QueryVoteTargetsRequest](#merlion.oracle.v1.QueryVoteTargetsRequest) | [QueryVoteTargetsResponse](#merlion.oracle.v1.QueryVoteTargetsResponse) | VoteTargets returns all vote target denoms. | GET|/merlion/oracle/v1/denoms/vote_targets|
 | `FeederDelegation` | [QueryFeederDelegationRequest](#merlion.oracle.v1.QueryFeederDelegationRequest) | [QueryFeederDelegationResponse](#merlion.oracle.v1.QueryFeederDelegationResponse) | FeederDelegation returns feeder delegation of a validator. | GET|/merlion/oracle/v1/validators/{validator_addr}/feeder|

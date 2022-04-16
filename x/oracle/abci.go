@@ -40,16 +40,16 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 			}
 		}
 
-		// Denom-TobinTax map
-		voteTargets := make(map[string]sdk.Dec)
-		k.IterateTobinTaxes(ctx, func(denom string, tobinTax sdk.Dec) bool {
-			voteTargets[denom] = tobinTax
+		// Denom map
+		voteTargets := make(map[string]struct{})
+		k.IterateVoteTargets(ctx, func(denom string) bool {
+			voteTargets[denom] = struct{}{}
 			return false
 		})
 
 		// Clear all exchange rates
-		k.IterateLionExchangeRates(ctx, func(denom string, _ sdk.Dec) (stop bool) {
-			k.DeleteLionExchangeRate(ctx, denom)
+		k.IterateExchangeRates(ctx, func(denom string, _ sdk.Dec) (stop bool) {
+			k.DeleteExchangeRate(ctx, denom)
 			return false
 		})
 
@@ -79,13 +79,13 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 				// Get weighted median of cross exchange rates
 				exchangeRate := Tally(ctx, ballot, params.RewardBand, validatorClaimMap)
 
-				// Transform into the original form ulion/stablecoin
+				// Transform into the original form {denom}/uUSD
 				if denom != referenceMer {
 					exchangeRate = exchangeRateRT.Quo(exchangeRate)
 				}
 
 				// Set the exchange rate, emit ABCI event
-				k.SetLionExchangeRate(ctx, denom, exchangeRate)
+				k.SetExchangeRate(ctx, denom, exchangeRate)
 			}
 		}
 
@@ -114,7 +114,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 		// Clear the ballot
 		k.ClearBallots(ctx, params.VotePeriod)
 
-		// Update vote targets and tobin tax
+		// Update vote targets
 		k.ApplyWhitelist(ctx, params.Whitelist, voteTargets)
 	}
 

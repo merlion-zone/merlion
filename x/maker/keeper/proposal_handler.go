@@ -48,14 +48,14 @@ func HandleRegisterBackingProposal(ctx sdk.Context, k Keeper, p *types.RegisterB
 	if !found {
 		k.SetTotalBacking(ctx, types.TotalBacking{
 			MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
-			LionBurned: sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt()),
+			LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 		})
 	}
 
 	k.SetPoolBacking(ctx, types.PoolBacking{
 		MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
 		Backing:    sdk.NewCoin(params.BackingDenom, sdk.ZeroInt()),
-		LionBurned: sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt()),
+		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 	})
 
 	ctx.EventManager().EmitEvents(sdk.Events{
@@ -125,7 +125,7 @@ func HandleRegisterCollateralProposal(ctx sdk.Context, k Keeper, p *types.Regist
 		k.SetTotalCollateral(ctx, types.TotalCollateral{
 			MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
 			MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
-			LionBurned: sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt()),
+			LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 		})
 	}
 
@@ -133,7 +133,7 @@ func HandleRegisterCollateralProposal(ctx sdk.Context, k Keeper, p *types.Regist
 		Collateral: sdk.NewCoin(params.CollateralDenom, sdk.ZeroInt()),
 		MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
 		MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
-		LionBurned: sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt()),
+		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 	})
 
 	ctx.EventManager().EmitEvents(sdk.Events{

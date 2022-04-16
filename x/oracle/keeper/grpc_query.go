@@ -30,7 +30,7 @@ func (k Keeper) ExchangeRate(c context.Context, req *types.QueryExchangeRateRequ
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	exchangeRate, err := k.GetLionExchangeRate(ctx, req.Denom)
+	exchangeRate, err := k.GetExchangeRate(ctx, req.Denom)
 	if err != nil {
 		return nil, err
 	}
@@ -46,49 +46,12 @@ func (k Keeper) ExchangeRates(c context.Context, req *types.QueryExchangeRatesRe
 	ctx := sdk.UnwrapSDKContext(c)
 
 	var exchangeRates sdk.DecCoins
-	k.IterateLionExchangeRates(ctx, func(denom string, rate sdk.Dec) (stop bool) {
+	k.IterateExchangeRates(ctx, func(denom string, rate sdk.Dec) (stop bool) {
 		exchangeRates = append(exchangeRates, sdk.NewDecCoinFromDec(denom, rate))
 		return false
 	})
 
 	return &types.QueryExchangeRatesResponse{ExchangeRates: exchangeRates}, nil
-}
-
-func (k Keeper) TobinTax(c context.Context, req *types.QueryTobinTaxRequest) (*types.QueryTobinTaxResponse, error) {
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid request")
-	}
-
-	if len(req.Denom) == 0 {
-		return nil, status.Error(codes.InvalidArgument, "empty denom")
-	}
-
-	ctx := sdk.UnwrapSDKContext(c)
-	tobinTax, err := k.GetTobinTax(ctx, req.Denom)
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.QueryTobinTaxResponse{TobinTax: tobinTax}, nil
-}
-
-func (k Keeper) TobinTaxes(c context.Context, req *types.QueryTobinTaxesRequest) (*types.QueryTobinTaxesResponse, error) {
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "invalid request")
-	}
-
-	ctx := sdk.UnwrapSDKContext(c)
-
-	var tobinTaxes types.DenomList
-	k.IterateTobinTaxes(ctx, func(denom string, rate sdk.Dec) (stop bool) {
-		tobinTaxes = append(tobinTaxes, types.Denom{
-			Name:     denom,
-			TobinTax: rate,
-		})
-		return false
-	})
-
-	return &types.QueryTobinTaxesResponse{TobinTaxes: tobinTaxes}, nil
 }
 
 func (k Keeper) Actives(c context.Context, req *types.QueryActivesRequest) (*types.QueryActivesResponse, error) {
@@ -99,7 +62,7 @@ func (k Keeper) Actives(c context.Context, req *types.QueryActivesRequest) (*typ
 	ctx := sdk.UnwrapSDKContext(c)
 
 	var denoms []string
-	k.IterateLionExchangeRates(ctx, func(denom string, rate sdk.Dec) (stop bool) {
+	k.IterateExchangeRates(ctx, func(denom string, rate sdk.Dec) (stop bool) {
 		denoms = append(denoms, denom)
 		return false
 	})

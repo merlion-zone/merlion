@@ -23,7 +23,7 @@ type AggregateVoteHash []byte
 // Here use exchangeRatesStr string argument to avoid redundant DecCoins stringify operation.
 func GetAggregateVoteHash(salt string, exchangeRatesStr string, voter sdk.ValAddress) AggregateVoteHash {
 	hash := tmhash.NewTruncated()
-	sourceStr := fmt.Sprintf("%s:%s:%s", salt, exchangeRatesStr, voter.String())
+	sourceStr := fmt.Sprintf("%s;%s;%s", salt, exchangeRatesStr, voter.String())
 	_, err := hash.Write([]byte(sourceStr))
 	if err != nil {
 		panic(err)

@@ -32,9 +32,9 @@ const (
 var (
 	DefaultVoteThreshold = sdk.NewDecWithPrec(50, 2) // 50%
 	DefaultRewardBand    = sdk.NewDecWithPrec(2, 2)  // 2% (-1, 1)
-	DefaultTobinTax      = sdk.NewDecWithPrec(25, 4) // 0.25%
 	DefaultWhitelist     = DenomList{
-		{Name: types.MicroUSDDenom, TobinTax: DefaultTobinTax},
+		{Name: types.AttoLionDenom},
+		{Name: types.MicroUSDDenom},
 	}
 	DefaultSlashFraction     = sdk.NewDecWithPrec(1, 4) // 0.01%
 	DefaultMinValidPerWindow = sdk.NewDecWithPrec(5, 2) // 5%
@@ -110,9 +110,6 @@ func (p Params) Validate() error {
 	}
 
 	for _, denom := range p.Whitelist {
-		if denom.TobinTax.GT(sdk.OneDec()) || denom.TobinTax.IsNegative() {
-			return fmt.Errorf("oracle parameter Whitelist Denom must have TobinTax between [0, 1]")
-		}
 		if len(denom.Name) == 0 {
 			return fmt.Errorf("oracle parameter Whitelist Denom must have name")
 		}
@@ -193,9 +190,6 @@ func validateWhitelist(i interface{}) error {
 	}
 
 	for _, d := range v {
-		if d.TobinTax.GT(sdk.OneDec()) || d.TobinTax.IsNegative() {
-			return fmt.Errorf("oracle parameter Whitelist Denom must have TobinTax between [0, 1]")
-		}
 		if len(d.Name) == 0 {
 			return fmt.Errorf("oracle parameter Whitelist Denom must have name")
 		}

@@ -2,6 +2,7 @@ package main
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	merlion "github.com/merlion-zone/merlion/types"
 	ethermint "github.com/tharsis/ethermint/types"
 )
 
@@ -11,7 +12,7 @@ const (
 	// DisplayDenom defines the denomination displayed to users in client applications.
 	DisplayDenom = "lion"
 	// BaseDenom defines to the default denomination used in Merlion (staking, EVM, governance, etc.)
-	BaseDenom = "fur"
+	BaseDenom = merlion.AttoLionDenom
 )
 
 // SetBech32Prefixes sets the global prefixes to be used when serializing addresses and public keys to Bech32 strings.

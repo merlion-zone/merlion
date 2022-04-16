@@ -46,7 +46,7 @@ func ballotIsPassing(ballot types.ExchangeRateBallot, thresholdVotes sdk.Int) (s
 // pickReferenceMer chooses Reference Mer with the highest voter turnout.
 // If the voting power of the two denominations is the same,
 // select reference Mer in alphabetical order.
-func pickReferenceMer(ctx sdk.Context, k keeper.Keeper, voteTargets map[string]sdk.Dec, voteMap map[string]types.ExchangeRateBallot) string {
+func pickReferenceMer(ctx sdk.Context, k keeper.Keeper, voteTargets map[string]struct{}, voteMap map[string]types.ExchangeRateBallot) string {
 	largestBallotPower := int64(0)
 	referenceMer := ""
 

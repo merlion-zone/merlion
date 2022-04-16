@@ -37,7 +37,7 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 	if err != nil {
 		return nil, err
 	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroLionDenom)
+	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 	}
 
 	backingIn := sdk.NewCoin(backingDenom, sdk.ZeroInt())
-	lionIn := sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt())
+	lionIn := sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
 	if collateralRatio.GTE(sdk.OneDec()) || msg.LionInMax.IsZero() {
 		// full/over collateralized, or user selects full collateralization
 		backingIn.Amount = mintTotalInUSD.QuoRoundUp(backingPrice).RoundInt()
@@ -179,7 +179,7 @@ func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*typ
 	if err != nil {
 		return nil, err
 	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroLionDenom)
+	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -215,7 +215,7 @@ func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*typ
 	burnInUSD := burn.Amount.ToDec().Mul(merlion.MicroUSDTarget)
 
 	backingOut := sdk.NewCoin(backingDenom, sdk.ZeroInt())
-	lionOut := sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt())
+	lionOut := sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
 	if collateralRatio.GTE(sdk.OneDec()) {
 		// full/over collateralized
 		backingOut.Amount = burnInUSD.QuoRoundUp(backingPrice).RoundInt()
@@ -313,7 +313,7 @@ func (m msgServer) BuyBacking(c context.Context, msg *types.MsgBuyBacking) (*typ
 	if err != nil {
 		return nil, err
 	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroLionDenom)
+	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -426,7 +426,7 @@ func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*t
 	if err != nil {
 		return nil, err
 	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroLionDenom)
+	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -460,7 +460,7 @@ func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*t
 	availableLionOut := availableMissingBackingValue.Amount.ToDec().Quo(lionPrice)
 
 	bonusRatio := m.Keeper.RecollateralizeBonus(ctx)
-	lionMint := sdk.NewCoin(merlion.MicroLionDenom, msg.BackingIn.Amount.ToDec().Mul(backingPrice).Quo(lionPrice).TruncateInt())
+	lionMint := sdk.NewCoin(merlion.AttoLionDenom, msg.BackingIn.Amount.ToDec().Mul(backingPrice).Quo(lionPrice).TruncateInt())
 	bonus := computeFee(lionMint, &bonusRatio)
 	fee := computeFee(lionMint, backingParams.RecollateralizeFee)
 
@@ -543,7 +543,7 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 	if err != nil {
 		return nil, err
 	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroLionDenom)
+	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -607,7 +607,7 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 		poolColl.MerDebt = poolColl.MerDebt.SubAmount(lionInInUSD)
 		totalColl.MerDebt = totalColl.MerDebt.SubAmount(lionInInUSD)
 	}
-	lionIn := sdk.NewCoin(merlion.MicroLionDenom, lionInInUSD.ToDec().Quo(lionPrice).TruncateInt())
+	lionIn := sdk.NewCoin(merlion.AttoLionDenom, lionInInUSD.ToDec().Quo(lionPrice).TruncateInt())
 
 	accColl.LionBurned = accColl.LionBurned.Add(lionIn)
 	poolColl.LionBurned = poolColl.LionBurned.Add(lionIn)
@@ -1035,7 +1035,7 @@ func (k Keeper) getCollateral(ctx sdk.Context, account sdk.AccAddress, denom str
 				Collateral:          sdk.NewCoin(denom, sdk.ZeroInt()),
 				MerDebt:             sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
 				MerByLion:           sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
-				LionBurned:          sdk.NewCoin(merlion.MicroLionDenom, sdk.ZeroInt()),
+				LionBurned:          sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 				LastInterest:        sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
 				LastSettlementBlock: ctx.BlockHeight(),
 			}

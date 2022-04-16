@@ -1,0 +1,18 @@
+syntax = "proto3";
+package merlion.bank.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/bank/v1beta1/bank.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/bank/types";
+
+// SetDenomMetaDataProposal is a gov Content type to register a DenomMetaData
+message SetDenomMetadataProposal {
+  option (gogoproto.equal) = false;
+  // title of the proposal
+  string title = 1;
+  // proposal description
+  string description = 2;
+  // token pair of Cosmos native denom and ERC20 token address
+  cosmos.bank.v1beta1.Metadata metadata = 3 [ (gogoproto.nullable) = false ];
+}
