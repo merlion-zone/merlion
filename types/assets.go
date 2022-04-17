@@ -19,7 +19,7 @@ var (
 	MicroUSDTarget = sdk.OneDec()
 )
 
-func SetDenomMetaDataForStableTokens(ctx sdk.Context, k bankkeeper.Keeper) {
+func SetDenomMetaDataForStableCoins(ctx sdk.Context, k bankkeeper.Keeper) {
 	for _, base := range []string{MicroUSDDenom} {
 		if _, ok := k.GetDenomMetaData(ctx, base); ok {
 			continue
