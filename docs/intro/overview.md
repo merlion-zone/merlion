@@ -16,13 +16,16 @@ Absorbed the creations and lessons of some pioneering protocols/projects, the ar
 designed to meet the demands of an increasingly diversified multi/cross-chain world. Merlion's tokenomics is elaborately
 formulated to not only incentivize early adopters, but also encourage long-term cooperation to grow bigger and stronger.
 
+Merlion's vision is to become the most decentralized, permissionless, high-throughput, low-cost, easy-to-use cross-chain
+assets settlement center and experimental DeFi innovation zone.
+
 ### Features
 
 Here’s a glance at some key features of Merlion:
 
 - System native stablecoin **MerUSD**, or **USM**
 - Pegging through partial backing/collateral and partial algorithmic
-- ve(3,3) staking of native **Lion** and proportional incentive
+- ve(3,3) time-locked of native **Lion** and proportional incentive
 - Web3 and EVM compatibility
 - High throughput and fast transaction finality via [Tendermint Core](https://github.com/tendermint/tendermint)
 - Horizontal scalability via [IBC](https://cosmos.network/ibc) and [Gravity Bridge](https://www.gravitybridge.net)
@@ -60,7 +63,7 @@ The **over-collateralized-catalytic** (partially inspired by [MIM](https://abrac
 collateralized for interest-bearing lending, and loan-to-value maximized by catalytic Lion. Each kind of supported
 over-collateralized asset forms a separate pool. Users must pre-deposit over-collateralized assets and then lend Mer (
 actually minted directly by the system) when needed. The maximum ratio that can be lent (called loan-to-value, or LTV)
-depends on the parameters set by the system for this collateral pool, and the additional Lion-based assisted minting (
+depends on the parameters set by the system for this collateral pool, and the additional Lion-boosting minting (
 called catalytic) added by the user. If users want to redeem their collateral, they are obliged to repay the principal
 and interest of the lent assets, and they must always pay attention to the price fluctuation of the collateral assets,
 to avoid triggering the liquidation mechanism.
@@ -97,13 +100,78 @@ of $1 to unlock the collateralized assets. This will reduce the circulation of M
 MerUSD back to the price of $1. And for MerUSD above $1, it is obvious and easy to get it back to $1, so we won't go
 into details here.
 
-## The ve(3,3) mechanism and staking
+## Proof-of-Stake and validators
+
+Inherited from [Tendermint Core](https://github.com/tendermint/tendermint)
+and [Cosmos SDK](https://github.com/cosmos/cosmos-sdk), Merlion uses BFT (Byzantine Fault Tolerance)
+consensus protocol to securely and consistently replicate states/blocks/transactions on many machines (or validators)
+all over the world. Validators run Merlion programs called full nodes, and take turns proposing blocks of transactions
+and voting on them. Blocks are committed in a chain, with one block at each height. A block may fail to be committed, in
+which case the protocol moves to the next round, and a new validator gets to propose a block for that height. Two stages
+of voting are required to successfully commit a block; Tendermint call them **pre-vote** and **pre-commit**. A block is
+committed when more than 2/3 of validators pre-commit for the same block in the same round. Merlion can tolerate up to a
+1/3 of validators failures, and those failures can include arbitrary behaviour, e.g., hacking and malicious attacks.
+
+Not all validators will have the same "weight" in the consensus protocol. Every validator will have some voting power,
+which may not be uniformly distributed across individual validators. Merlion denominates the weight or stake in our
+native Lion coin, and hence the system is often referred to as **Proof-of-Stake**. Validators will be forced to "bond"
+or stake their Lion holdings in the security deposit that can be slashed if they're found to misbehave in the consensus
+protocol. This adds an economic element to the security of the protocol, allowing one to quantify the cost of violating
+the assumption that less than one-third of voting power is Byzantine.
+
+Merlion allows up to the top 120 validators to participate in consensus. A validator’s rank is determined by their stake
+or the total amount of Lion bonded to them. Although validators can bond Lion to themselves, they mainly amass larger
+stakes from delegators. Validators with larger stakes get chosen more often to propose new blocks and earn
+proportionally more rewards.
+
+Delegators are users who want to receive rewards from consensus without running a full node. Any user that stakes Lion
+is a delegator. Delegators stake their Lion to a validator, adding to a validator's weight, or total stake. In return,
+delegators receive a portion of system fees as staking rewards.
+
+## The ve(3,3) mechanism and time-locked voting escrow
+
+In addition to the normal Lion staking through the Proof-of-Stake consensus protocol, Merlion brings in another enhanced
+time-locked voting escrow mechanism, called **ve(3,3)**. We use ve(3,3) to incentivize various innovative DeFi DApps in
+the Merlion system as well as getting as many users/investors involved as possible in the governance of the network. We
+define the NFT token **veLion** as the vote-escrowed Lion, which is simply Lion locked for a period of time, from 1 week
+to 4 years. veLion token holders will receive a multiplied amount of voting power, compared to normal PoS staking. Along
+with that, they will gain more staking rewards and voting power on governance proposals. In essence, what is more
+important and further is that they will have certain voting rights to incentivize various innovative DeFi DApps in the
+system. Of course, they will also be rewarded with extra Lion coins, which come from the reserve in the treasury
+according to Merlion's tokenomics.
+
+The rewarded Lion coins will be distributed weekly. The emission amount are adjusted as a percentage of circulating
+supply (`circulating_supply = total_supply - (ve_locked + normal_staked)`). Meaning, assuming the maximum weekly
+emission is 500,000, if 0% of the coin is staked or ve-locked, the weekly emission would be 500,000. If 50% of the coin
+is staked or ve-locked, the weekly emission would be 250,000. If 100% of the coin is staked or ve-locked, the weekly
+emission would be 0.
+
+To ensure that veLion holders are never diluted, their holdings will be increased proportional to the weekly emission.
+And since the lock position veLion is tokenized as NFT, it allows veLion to be traded on future secondary markets, as
+well as to allow participants to borrow against their veLion in future lending marketplaces. This addresses the capital
+inefficiency problem of ve assets, as well as addresses concerns over future liquidity (should it ever be required).
 
 ## Smart contracting and virtual machine
 
-## Inter-blockchain communication
+As a general-purpose DeFi-specific blockchain platform, Merlion must integrate certain smart contract virtual machines
+to facilitate the deployment of innovative DeFi protocols or DApps by various third-party developers/teams. Fortunately,
+nowadays we have many options for mature virtual machine protocols/modules. First and foremost, Merlion will integrate
+the **evm** module from [Ethermint](https://github.com/tharsis/ethermint), to provide native Web3/EVM capabilities and
+be compatible with the huge Ethereum ecosystem.
 
-## Proof-of-Stake and validators
+The growth of EVM-based chains (e.g., Ethereum), however, has uncovered several scalability challenges that are often
+referred to as
+the [Trilemma of decentralization, security, and scalability](https://vitalik.ca/general/2021/04/07/sharding.html).
+Developers are frustrated by high gas fees, slow transaction speed & throughput, and chain-specific governance that can
+only undergo slow change because of its wide range of deployed applications. A solution is required that eliminates
+these concerns for developers, who build applications within a familiar EVM environment.
+
+The evm module provides the EVM familiarity on a scalable, high-throughput Proof-of-Stake blockchain. It allows for the
+deployment of smart contracts, interaction with the EVM state machine (state transitions), and the use of EVM tooling.
+It alleviates the aforementioned concerns through high transaction throughput
+via [Tendermint Core](https://github.com/tendermint/tendermint), fast transaction finality, and horizontal scalability.
+
+## Inter-blockchain communication
 
 ## Governance
 
