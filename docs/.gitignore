@@ -1,3 +1,4 @@
+.vuepress/dist/
 modules/
 ethermint/
 cosmos-sdk/

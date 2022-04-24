@@ -43,6 +43,12 @@ module.exports = {
   plugins: [
     'vuepress-plugin-element-tabs',
   ],
+  patterns: [
+    '**/*.md',
+    '**/*.vue',
+    '!ethermint/**',
+    '!cosmos-sdk/**',
+    '!ibc-go/**'],
   themeConfig: {
     repo: 'merlion-zone/merlion',
     docsRepo: 'merlion-zone/merlion',
