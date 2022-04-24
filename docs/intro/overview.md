@@ -50,18 +50,17 @@ protocol. But the difference is that Merlion does not rely on any purely algorit
 and exhibits extreme periods of volatility. Merlion stablecoin will be minted in two ways:
 fractional-backing-algorithmic and over-collateralized-catalytic.
 
-The **fractional-backing-algorithmic** (inspired by [Frax](https://frax.finance)), or **FBA**, is with parts of its
-backing assets and parts of the algorithmic supply. The ratio of backing and algorithmic depends on the market's pricing
-of the Mer stablecoin. We named the ratio **CR (Collateral Ratio)**. If MerUSD is trading at above $1, the system
-decreases the ratio. If Mer is trading at under $1, the system increases the ratio. At any point in time, CR is
-determined. If users want to mint Mer, they must **spend** a certain amount of backing assets and a certain amount of
-Lion coins, which will enter the unified swap pool. Conversely, when a user wants to acquire backing assets and Lion
-coins in the swap pool, he must spend a certain amount of Mer coins in exchange, and can only get the proportional coins
-that follow the CR ratio at the market price.
+The **fractional-backing-algorithmic**, or **FBA**, is with parts of its backing assets and parts of the algorithmic
+supply. The ratio of backing and algorithmic depends on the market's pricing of the Mer stablecoin. We named the
+ratio **CR (Collateral Ratio)**. If MerUSD is trading at above $1, the system decreases the ratio. If Mer is trading at
+under $1, the system increases the ratio. At any point in time, CR is determined. If users want to mint Mer, they
+must **spend** a certain amount of backing assets and a certain amount of Lion coins, which will enter the unified swap
+pool. Conversely, when a user wants to acquire backing assets and Lion coins in the swap pool, he must spend a certain
+amount of Mer coins in exchange, and can only get the proportional coins that follow the CR ratio at the market price.
 
-The **over-collateralized-catalytic** (partially inspired by [MIM](https://abracadabra.money)), or **OCC**, is over
-collateralized for interest-bearing lending, and loan-to-value maximized by catalytic Lion. Each kind of supported
-over-collateralized asset forms a separate pool. Users must pre-deposit over-collateralized assets and then lend Mer (
+The **over-collateralized-catalytic**, or **OCC**, is over collateralized for interest-bearing lending, and
+loan-to-value maximized by catalytic Lion. Each kind of supported over-collateralized asset forms a separate pool. Users
+must pre-deposit over-collateralized assets and then lend Mer (
 actually minted directly by the system) when needed. The maximum ratio that can be lent (called loan-to-value, or LTV)
 depends on the parameters set by the system for this collateral pool, and the additional Lion-boosting minting (
 called catalytic) added by the user. If users want to redeem their collateral, they are obliged to repay the principal
@@ -171,8 +170,56 @@ deployment of smart contracts, interaction with the EVM state machine (state tra
 It alleviates the aforementioned concerns through high transaction throughput
 via [Tendermint Core](https://github.com/tendermint/tendermint), fast transaction finality, and horizontal scalability.
 
-## Inter-blockchain communication
+## Cross-chain interoperability
+
+Cross-chain interoperability is increasingly becoming an important infrastructure for all blockchains, and every user
+roaming in the crypto world has a strong demand to use cross-chain facilities to meet their growing asset flowing and
+interoperability needs.
+
+In the past, many blockchains relied on third-party cross-chain bridges or smart contracts. However, the frequent bugs
+and hacking behaviors have caused many users to suffer huge asset losses. At this time, the blockchain infra layer is
+often indifferent or powerless. Now we believe that cross-chain is the basic and core component of a blockchain, and
+security must be given the utmost importance and guarantee. Therefore, we decide that Merlion should have built-in
+cross-chain protocols and facilities, and rely on Merlion's PoS consensus and staking validators to strongly ensure
+asset security.
+
+For the Cosmos ecosystem, we will introduce [IBC modules and protocols](https://ibcprotocol.org) to natively support
+cross-chain communication with other Cosmos SDK-based blockchains. The protocol consists of two distinct layers: the
+transport layer which provides the necessary infrastructure to establish secure connections and authenticate data
+packets between chains, and the application layer, which defines exactly how these data packets should be packaged and
+interpreted by the sending and receiving chains.
+
+For the Ethereum ecosystem, we will introduce [Gravity Bridge](https://github.com/Gravity-Bridge/Gravity-Bridge) as a
+built-in module, making it possible to cross-chain assets from Evm-compatible chains to Merlion or vice versa. Control
+of the bridge mirrors the active validator set on Merlion, and any validator stake on Merlion can be slashed for
+misbehavior.
+
+Not limited to the above, we will also introduce a cross-chain insurance fund in the near future to provide claim
+settlement services for users who have suffered losses from cross-chain hacking.
 
 ## Governance
 
+To fully embody the decentralized, permissionless nature of Merlion, we will introduce a full on-chain governance
+protocol. Holders of native Lion coin can vote on proposals on a 1 staked token 1 vote basis, and also veLion holders
+will gain certain boosting voting power according to length of their locked period.
+
+Any Lion holder can submit proposals by sending TxGovProposal transaction. Once a proposal is submitted, it is
+identified by its unique proposalID. Types of proposals include, but are not limited to:
+
+- text proposal that do not involve a modification of the source code, e.g., an opinion poll.
+- software upgrade proposal that validators are expected to update their software in accordance with the proposal.
+- community pool spend proposal details a proposal for use of community funds, together with how many coins are proposed
+  to be spent, and to which recipient account.
+- parameter change proposal defines a proposal to change one or more parameters. If accepted, the requested parameter
+  change is updated automatically by the proposal handler upon conclusion of the voting period.
+
 ## Tokenomics
+
+Merlion will issue a total supply of **1 billion (1,000,000,000) $LION** at genesis, and there are no inflation after
+mainnet launch. Tokens will be released to the following distribution:
+
+- Airdrop around launch: 5%, fully distributed
+- Staking, ve(3,3) locked and liquidity incentives: 25%, vested 4 years
+- Community pool: 20%, locked on chain
+- Strategic reserve: 30%, locked on chain
+- Core dev team: 20%, vested 4 years
