@@ -35,6 +35,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 	ethermintclient "github.com/tharsis/ethermint/client"
 	"github.com/tharsis/ethermint/encoding"
+	ethermintserver "github.com/tharsis/ethermint/server"
 	evmoskr "github.com/tharsis/evmos/v3/crypto/keyring"
 )
 
@@ -210,7 +211,7 @@ func initRootCmd(
 	}
 
 	// add server commands
-	server.AddCommands(
+	ethermintserver.AddCommands(
 		rootCmd,
 		defaultNodeHome,
 		a.newApp,
