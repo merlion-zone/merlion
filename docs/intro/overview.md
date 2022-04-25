@@ -2,6 +2,8 @@
 order: 1
 ---
 
+[//]: # (![Welcome to Merlion]&#40;../images/merlion-banner.png&#41;)
+
 # High-level Overview
 
 ## What is Merlion
@@ -41,7 +43,7 @@ The merlion system consists of two main native coins, Mer and Lion.
   Lion to validators to add blocks of transactions to the blockchain, and earn various fees and rewards. Holders of Lion
   also can vote on proposals and participate in on-chain governance.
 
-## The stablecoin protocol
+## The Stablecoin Protocol
 
 ### Stablecoin
 
@@ -72,7 +74,7 @@ assets (like Lion, ETH, etc.). Other users want to hold volatile assets for a lo
 appreciation, but have short-term liquidity needs, like to borrow stablecoins, and are willing to pay interest and bear
 possible liquidation risks. Exactly, FBA is suitable for the former, and OCC is suitable for the latter.
 
-### Oracle, maker and arbitrage
+### Oracle, Maker and Arbitrage
 
 The built-in oracle module is responsible for providing fair and true on-chain prices for specified assets. It accepts
 near real-time quotes from active validators, removes deviations, and takes the median as the final standard on-chain
@@ -99,7 +101,7 @@ of $1 to unlock the collateralized assets. This will reduce the circulation of M
 MerUSD back to the price of $1. And for MerUSD above $1, it is obvious and easy to get it back to $1, so we won't go
 into details here.
 
-## Proof-of-Stake and validators
+## Proof-of-Stake and Validators
 
 Inherited from [Tendermint Core](https://github.com/tendermint/tendermint)
 and [Cosmos SDK](https://github.com/cosmos/cosmos-sdk), Merlion uses BFT (Byzantine Fault Tolerance)
@@ -127,7 +129,7 @@ Delegators are users who want to receive rewards from consensus without running 
 is a delegator. Delegators stake their Lion to a validator, adding to a validator's weight, or total stake. In return,
 delegators receive a portion of system fees as staking rewards.
 
-## The ve(3,3) mechanism and time-locked voting escrow
+## The ve(3,3) mechanism and Time-locked Voting Escrow
 
 In addition to the normal Lion staking through the Proof-of-Stake consensus protocol, Merlion brings in another enhanced
 time-locked voting escrow mechanism, called **ve(3,3)**. We use ve(3,3) to incentivize various innovative DeFi DApps in
@@ -150,7 +152,7 @@ And since the lock position veLion is tokenized as NFT, it allows veLion to be t
 well as to allow participants to borrow against their veLion in future lending marketplaces. This addresses the capital
 inefficiency problem of ve assets, as well as addresses concerns over future liquidity (should it ever be required).
 
-## Smart contracting and virtual machine
+## Smart Contracting and Virtual Machine
 
 As a general-purpose DeFi-specific blockchain platform, Merlion must integrate certain smart contract virtual machines
 to facilitate the deployment of innovative DeFi protocols or DApps by various third-party developers/teams. Fortunately,
@@ -170,7 +172,7 @@ deployment of smart contracts, interaction with the EVM state machine (state tra
 It alleviates the aforementioned concerns through high transaction throughput
 via [Tendermint Core](https://github.com/tendermint/tendermint), fast transaction finality, and horizontal scalability.
 
-## Cross-chain interoperability
+## Cross-chain Interoperability
 
 Cross-chain interoperability is increasingly becoming an important infrastructure for all blockchains, and every user
 roaming in the crypto world has a strong demand to use cross-chain facilities to meet their growing asset flowing and

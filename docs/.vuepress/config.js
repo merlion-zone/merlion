@@ -73,6 +73,11 @@ module.exports = {
               directory: true,
               path: '/intro',
             },
+            {
+              title: 'Basics',
+              directory: true,
+              path: '/basics',
+            },
           ],
         },
         {
