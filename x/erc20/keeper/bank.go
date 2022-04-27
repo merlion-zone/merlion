@@ -8,6 +8,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/ethereum/go-ethereum/common"
+	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/erc20/types"
 	"github.com/tharsis/evmos/v3/contracts"
 )
@@ -139,6 +140,11 @@ func (k Keeper) SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.A
 	var amounts []*big.Int
 
 	for _, coin := range nativeCoins {
+		if strings.Contains(coin.Denom, merlion.DisplayDenom) {
+			// Do not touch gas token
+			continue
+		}
+
 		id := k.GetTokenPairID(ctx, coin.Denom)
 		if len(id) == 0 {
 			return sdkerrors.Wrapf(types.ErrTokenPairNotFound, "token pair with denom '%s' not found", coin.Denom)
@@ -170,7 +176,10 @@ func (k Keeper) SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.A
 			// Transfer
 			_, err = k.CallEVM(ctx, erc20, from, contract, "transfer", to, amt)
 		}
+		if err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }

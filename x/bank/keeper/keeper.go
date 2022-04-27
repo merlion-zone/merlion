@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"strings"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -9,6 +11,7 @@ import (
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/bank/types"
 )
 
@@ -177,7 +180,7 @@ func (k Keeper) MintCoins(ctx sdk.Context, moduleName string, amounts sdk.Coins)
 		return err
 	}
 	for _, coin := range nativeCoins {
-		if !k.erc20Keeper().IsDenomRegistered(ctx, coin.Denom) {
+		if !strings.Contains(coin.Denom, merlion.DisplayDenom) && !k.erc20Keeper().IsDenomRegistered(ctx, coin.Denom) {
 			if _, err := k.erc20Keeper().RegisterCoin(ctx, coin.Denom); err != nil {
 				return err
 			}

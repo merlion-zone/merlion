@@ -24,8 +24,8 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState *banktypes.GenesisState) {
 		}
 
 		for _, coin := range balance.Coins {
-			if strings.Contains(coin.Denom, "lion") {
-				// skip lion coin
+			if strings.Contains(coin.Denom, merlion.DisplayDenom) {
+				// skip gas token
 				continue
 			}
 

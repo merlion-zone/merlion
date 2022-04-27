@@ -189,6 +189,7 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		evm.AppModuleBasic{},
+		feemarket.AppModuleBasic{},
 		erc20.AppModuleBasic{},
 		oracle.AppModuleBasic{},
 		maker.AppModuleBasic{},

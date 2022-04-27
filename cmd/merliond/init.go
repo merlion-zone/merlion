@@ -12,6 +12,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/go-bip39"
 	"github.com/gogo/protobuf/proto"
@@ -162,17 +163,6 @@ func InitCmd(mbm module.BasicManager, defaultNodeHome string) *cobra.Command {
 }
 
 func overwriteDefaultGenState(cdc codec.JSONCodec, appState map[string]json.RawMessage) ([]byte, error) {
-	// Supply of LION
-	supply, err := sdk.ParseCoinNormalized("1000000000lion")
-	if err != nil {
-		return nil, err
-	}
-
-	var bankGenState banktypes.GenesisState
-	cdc.MustUnmarshalJSON(appState[banktypes.ModuleName], &bankGenState)
-	bankGenState.Supply = sdk.NewCoins(supply)
-	appState[banktypes.ModuleName] = cdc.MustMarshalJSON(&bankGenState)
-
 	var stakingGenState stakingtypes.GenesisState
 	cdc.MustUnmarshalJSON(appState[stakingtypes.ModuleName], &stakingGenState)
 	stakingGenState.Params.BondDenom = merlion.AttoLionDenom
@@ -192,6 +182,11 @@ func overwriteDefaultGenState(cdc codec.JSONCodec, appState map[string]json.RawM
 	cdc.MustUnmarshalJSON(appState[evmtypes.ModuleName], &evmGenState)
 	evmGenState.Params.EvmDenom = merlion.AttoLionDenom
 	appState[evmtypes.ModuleName] = cdc.MustMarshalJSON(&evmGenState)
+
+	var mintGenState minttypes.GenesisState
+	cdc.MustUnmarshalJSON(appState[minttypes.ModuleName], &mintGenState)
+	mintGenState.Params.MintDenom = merlion.AttoLionDenom
+	appState[minttypes.ModuleName] = cdc.MustMarshalJSON(&mintGenState)
 
 	return json.MarshalIndent(appState, "", " ")
 }

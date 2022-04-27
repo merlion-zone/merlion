@@ -27,6 +27,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	"github.com/merlion-zone/merlion/app"
+	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -36,6 +37,7 @@ import (
 	ethermintclient "github.com/tharsis/ethermint/client"
 	"github.com/tharsis/ethermint/encoding"
 	ethermintserver "github.com/tharsis/ethermint/server"
+	servercfg "github.com/tharsis/ethermint/server/config"
 	evmoskr "github.com/tharsis/evmos/v3/crypto/keyring"
 )
 
@@ -427,7 +429,7 @@ func initAppConfig() (string, interface{}) {
 	}
 
 	type CustomAppConfig struct {
-		serverconfig.Config
+		servercfg.Config
 
 		WASM WASMConfig `mapstructure:"wasm"`
 	}
@@ -447,17 +449,26 @@ func initAppConfig() (string, interface{}) {
 	//   own app.toml to override, or use this default value.
 	//
 	// In simapp, we set the min gas prices to 0.
-	srvCfg.MinGasPrices = "0stake"
+	srvCfg.MinGasPrices = "0" + merlion.BaseDenom
 
 	customAppConfig := CustomAppConfig{
-		Config: *srvCfg,
+		Config: servercfg.Config{
+			Config:  *srvCfg,
+			EVM:     *servercfg.DefaultEVMConfig(),
+			JSONRPC: *servercfg.DefaultJSONRPCConfig(),
+			TLS:     *servercfg.DefaultTLSConfig(),
+		},
 		WASM: WASMConfig{
 			LruSize:       1,
 			QueryGasLimit: 300000,
 		},
 	}
 
-	customAppTemplate := serverconfig.DefaultConfigTemplate + `
+	customAppTemplate := serverconfig.DefaultConfigTemplate + servercfg.DefaultConfigTemplate + `
+###############################################################################
+###                             WASM Configuration                          ###
+###############################################################################
+
 [wasm]
 # This is the maximum sdk gas (wasm and storage) that we allow for any x/wasm "smart" queries
 query_gas_limit = 300000
