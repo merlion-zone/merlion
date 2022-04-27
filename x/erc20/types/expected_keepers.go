@@ -33,6 +33,7 @@ type BankKeeper interface {
 	GetDenomMetaData(ctx sdk.Context, denom string) (banktypes.Metadata, bool)
 	SetDenomMetaData(ctx sdk.Context, denomMetaData banktypes.Metadata)
 	HasSupply(ctx sdk.Context, denom string) bool
+	IterateAllBalances(ctx sdk.Context, cb func(address sdk.AccAddress, coin sdk.Coin) (stop bool))
 	// Methods imported from bank should be defined here
 }
 
