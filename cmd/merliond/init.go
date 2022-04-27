@@ -8,7 +8,15 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/cosmos/cosmos-sdk/codec"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/go-bip39"
+	"github.com/gogo/protobuf/proto"
+	merlion "github.com/merlion-zone/merlion/types"
+	evmtypes "github.com/tharsis/ethermint/x/evm/types"
 
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	"github.com/pkg/errors"
@@ -113,7 +121,7 @@ func InitCmd(mbm module.BasicManager, defaultNodeHome string) *cobra.Command {
 				return fmt.Errorf("genesis.json file already exists: %v", genFile)
 			}
 
-			appState, err := json.MarshalIndent(mbm.DefaultGenesis(cdc), "", " ")
+			appState, err := overwriteDefaultGenState(cdc, mbm.DefaultGenesis(cdc))
 			if err != nil {
 				return errors.Wrap(err, "Failed to marshall default genesis state")
 			}
@@ -135,7 +143,7 @@ func InitCmd(mbm module.BasicManager, defaultNodeHome string) *cobra.Command {
 			genDoc.AppState = appState
 
 			if err = genutil.ExportGenesisFile(genDoc, genFile); err != nil {
-				return errors.Wrap(err, "Failed to export gensis file")
+				return errors.Wrap(err, "Failed to export genesis file")
 			}
 
 			toPrint := newPrintInfo(config.Moniker, chainID, nodeID, "", appState)
@@ -152,3 +160,50 @@ func InitCmd(mbm module.BasicManager, defaultNodeHome string) *cobra.Command {
 
 	return cmd
 }
+
+func overwriteDefaultGenState(cdc codec.JSONCodec, appState map[string]json.RawMessage) ([]byte, error) {
+	// Supply of LION
+	supply, err := sdk.ParseCoinNormalized("1000000000lion")
+	if err != nil {
+		return nil, err
+	}
+
+	var bankGenState banktypes.GenesisState
+	cdc.MustUnmarshalJSON(appState[banktypes.ModuleName], &bankGenState)
+	bankGenState.Supply = sdk.NewCoins(supply)
+	appState[banktypes.ModuleName] = cdc.MustMarshalJSON(&bankGenState)
+
+	var stakingGenState stakingtypes.GenesisState
+	cdc.MustUnmarshalJSON(appState[stakingtypes.ModuleName], &stakingGenState)
+	stakingGenState.Params.BondDenom = merlion.AttoLionDenom
+	appState[stakingtypes.ModuleName] = cdc.MustMarshalJSON(&stakingGenState)
+
+	var govGenState govtypes.GenesisState
+	cdc.MustUnmarshalJSON(appState[govtypes.ModuleName], &govGenState)
+	govGenState.DepositParams.MinDeposit[0].Denom = merlion.AttoLionDenom
+	appState[govtypes.ModuleName] = cdc.MustMarshalJSON(&govGenState)
+
+	var crisisGenState crisistypes.GenesisState
+	cdc.MustUnmarshalJSON(appState[crisistypes.ModuleName], &crisisGenState)
+	crisisGenState.ConstantFee.Denom = merlion.AttoLionDenom
+	appState[crisistypes.ModuleName] = cdc.MustMarshalJSON(&crisisGenState)
+
+	var evmGenState evmtypes.GenesisState
+	cdc.MustUnmarshalJSON(appState[evmtypes.ModuleName], &evmGenState)
+	evmGenState.Params.EvmDenom = merlion.AttoLionDenom
+	appState[evmtypes.ModuleName] = cdc.MustMarshalJSON(&evmGenState)
+
+	return json.MarshalIndent(appState, "", " ")
+}
+
+type AppStateParts struct {
+	Bank    banktypes.GenesisState    `json:"bank"`
+	Staking stakingtypes.GenesisState `json:"staking"`
+	Crisis  crisistypes.GenesisState  `json:"crisis"`
+	Gov     govtypes.GenesisState     `json:"gov"`
+	Evm     evmtypes.GenesisState     `json:"evm"`
+}
+
+func (m *AppStateParts) Reset()         { *m = AppStateParts{} }
+func (m *AppStateParts) String() string { return proto.CompactTextString(m) }
+func (*AppStateParts) ProtoMessage()    {}

@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	evmtypes "github.com/tharsis/ethermint/x/evm/types"
 
@@ -29,8 +30,7 @@ func (k Keeper) EvmHooks() EvmHooks {
 // PostTxProcessing implements evmtypes.EvmHooks.PostTxProcessing
 func (h EvmHooks) PostTxProcessing(
 	ctx sdk.Context,
-	from common.Address,
-	to *common.Address,
+	msg core.Message,
 	receipt *ethtypes.Receipt,
 ) error {
 	erc20 := contracts.ERC20MinterBurnerDecimalsContract.ABI

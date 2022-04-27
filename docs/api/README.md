@@ -9,4 +9,4 @@ parent:
 This section contains different client and API reference document.
 
 1. [JSON-RPC](./json-rpc/server.md)
-1. [Protobuf Docs](./proto-docs.md)
+2. [Protobuf Docs](./proto-docs.md)

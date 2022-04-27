@@ -8,11 +8,6 @@ import (
 
 const (
 	AccountAddressPrefix = "mer"
-
-	// DisplayDenom defines the denomination displayed to users in client applications.
-	DisplayDenom = "lion"
-	// BaseDenom defines to the default denomination used in Merlion (staking, EVM, governance, etc.)
-	BaseDenom = merlion.AttoLionDenom
 )
 
 // SetBech32Prefixes sets the global prefixes to be used when serializing addresses and public keys to Bech32 strings.
@@ -38,11 +33,11 @@ func SetBip44CoinType(config *sdk.Config) {
 
 // RegisterDenoms registers the base and display denominations to the SDK.
 func RegisterDenoms() {
-	if err := sdk.RegisterDenom(DisplayDenom, sdk.OneDec()); err != nil {
+	if err := sdk.RegisterDenom(merlion.DisplayDenom, sdk.OneDec()); err != nil {
 		panic(err)
 	}
 
-	if err := sdk.RegisterDenom(BaseDenom, sdk.NewDecWithPrec(1, ethermint.BaseDenomUnit)); err != nil {
+	if err := sdk.RegisterDenom(merlion.BaseDenom, sdk.NewDecWithPrec(1, ethermint.BaseDenomUnit)); err != nil {
 		panic(err)
 	}
 }

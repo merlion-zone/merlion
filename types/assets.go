@@ -11,6 +11,11 @@ import (
 
 // nolint
 const (
+	// DisplayDenom defines the denomination displayed to users in client applications.
+	DisplayDenom = "lion"
+	// BaseDenom defines to the default denomination used in Merlion (staking, EVM, governance, etc.)
+	BaseDenom = AttoLionDenom
+
 	AttoLionDenom = "alion" // 1e-18
 	MicroUSDDenom = "uusd"  // 1e-6
 )
