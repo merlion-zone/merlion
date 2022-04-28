@@ -1598,6 +1598,141 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
+  '/cosmos/bank/v1beta1/spendable_balances/{address}':
+    get:
+      summary: |-
+        SpendableBalances queries the spenable balance of all coins for a single
+        account.
+      operationId: CosmosBankV1Beta1SpendableBalances
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              balances:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    denom:
+                      type: string
+                    amount:
+                      type: string
+                  description: >-
+                    Coin defines a token with a denomination and an amount.
+
+
+                    NOTE: The amount field is an Int which implements the custom
+                    method
+
+                    signatures required by gogoproto.
+                description: balances is the spendable balances of all the coins.
+              pagination:
+                description: pagination defines the pagination in the response.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QuerySpendableBalancesResponse defines the gRPC response structure
+              for querying
+
+              an account's spendable balances.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: address
+          description: address is the address to query spendable balances for.
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
   /cosmos/bank/v1beta1/supply:
     get:
       summary: TotalSupply queries the total supply of all coins.
@@ -16628,6 +16763,266 @@ paths:
               RPC method.
       tags:
         - Service
+  '/cosmos/tx/v1beta1/txs/block/{height}':
+    get:
+      summary: GetBlockWithTxs fetches a block with decoded txs.
+      description: 'Since: cosmos-sdk 0.45.2'
+      operationId: CosmosTxV1Beta1GetBlockWithTxs
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/cosmos.tx.v1beta1.GetBlockWithTxsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                      description: >-
+                        A URL/resource name that uniquely identifies the type of
+                        the serialized
+
+                        protocol buffer message. This string must contain at
+                        least
+
+                        one "/" character. The last segment of the URL's path
+                        must represent
+
+                        the fully qualified name of the type (as in
+
+                        `path/google.protobuf.Duration`). The name should be in
+                        a canonical form
+
+                        (e.g., leading "." is not accepted).
+
+
+                        In practice, teams usually precompile into the binary
+                        all types that they
+
+                        expect it to use in the context of Any. However, for
+                        URLs which use the
+
+                        scheme `http`, `https`, or no scheme, one can optionally
+                        set up a type
+
+                        server that maps type URLs to message definitions as
+                        follows:
+
+
+                        * If no scheme is provided, `https` is assumed.
+
+                        * An HTTP GET on the URL must yield a
+                        [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based
+                        on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in
+                        the official
+
+                        protobuf release, and it is not used for type URLs
+                        beginning with
+
+                        type.googleapis.com.
+
+
+                        Schemes other than `http`, `https` (or the empty scheme)
+                        might be
+
+                        used with implementation specific semantics.
+                  additionalProperties: {}
+                  description: >-
+                    `Any` contains an arbitrary serialized protocol buffer
+                    message along with a
+
+                    URL that describes the type of the serialized message.
+
+
+                    Protobuf library provides support to pack/unpack Any values
+                    in the form
+
+                    of utility functions or additional generated methods of the
+                    Any type.
+
+
+                    Example 1: Pack and unpack a message in C++.
+
+                        Foo foo = ...;
+                        Any any;
+                        any.PackFrom(foo);
+                        ...
+                        if (any.UnpackTo(&foo)) {
+                          ...
+                        }
+
+                    Example 2: Pack and unpack a message in Java.
+
+                        Foo foo = ...;
+                        Any any = Any.pack(foo);
+                        ...
+                        if (any.is(Foo.class)) {
+                          foo = any.unpack(Foo.class);
+                        }
+
+                     Example 3: Pack and unpack a message in Python.
+
+                        foo = Foo(...)
+                        any = Any()
+                        any.Pack(foo)
+                        ...
+                        if any.Is(Foo.DESCRIPTOR):
+                          any.Unpack(foo)
+                          ...
+
+                     Example 4: Pack and unpack a message in Go
+
+                         foo := &pb.Foo{...}
+                         any, err := anypb.New(foo)
+                         if err != nil {
+                           ...
+                         }
+                         ...
+                         foo := &pb.Foo{}
+                         if err := any.UnmarshalTo(foo); err != nil {
+                           ...
+                         }
+
+                    The pack methods provided by protobuf library will by
+                    default use
+
+                    'type.googleapis.com/full.type.name' as the type URL and the
+                    unpack
+
+                    methods only use the fully qualified type name after the
+                    last '/'
+
+                    in the type URL, for example "foo.bar.com/x/y.z" will yield
+                    type
+
+                    name "y.z".
+
+
+
+                    JSON
+
+                    ====
+
+                    The JSON representation of an `Any` value uses the regular
+
+                    representation of the deserialized, embedded message, with
+                    an
+
+                    additional field `@type` which contains the type URL.
+                    Example:
+
+                        package google.profile;
+                        message Person {
+                          string first_name = 1;
+                          string last_name = 2;
+                        }
+
+                        {
+                          "@type": "type.googleapis.com/google.profile.Person",
+                          "firstName": <string>,
+                          "lastName": <string>
+                        }
+
+                    If the embedded message type is well-known and has a custom
+                    JSON
+
+                    representation, that representation will be embedded adding
+                    a field
+
+                    `value` which holds the custom JSON in addition to the
+                    `@type`
+
+                    field. Example (for message [google.protobuf.Duration][]):
+
+                        {
+                          "@type": "type.googleapis.com/google.protobuf.Duration",
+                          "value": "1.212s"
+                        }
+      parameters:
+        - name: height
+          description: height is the height of the block to query.
+          in: path
+          required: true
+          type: string
+          format: int64
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Service
   '/cosmos/tx/v1beta1/txs/{hash}':
     get:
       summary: GetTx fetches a tx by hash.
@@ -20830,12 +21225,6 @@ paths:
           in: query
           required: false
           type: string
-        - name: tx_index
-          description: transaction index
-          in: query
-          required: false
-          type: string
-          format: uint64
         - name: trace_config.tracer
           description: custom javascript tracer
           in: query
@@ -21219,6 +21608,139 @@ paths:
           in: path
           required: true
           type: string
+      tags:
+        - Query
+  /ethermint/feemarket/v1/base_fee:
+    get:
+      summary: BaseFee queries the base fee of the parent block of the current block.
+      operationId: EthermintFeemarketV1BaseFee
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              base_fee:
+                type: string
+            description: BaseFeeResponse returns the EIP1559 base fee.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /ethermint/feemarket/v1/block_gas:
+    get:
+      summary: BlockGas queries the gas used at a given block height
+      operationId: EthermintFeemarketV1BlockGas
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              gas:
+                type: string
+                format: int64
+            description: QueryBlockGasResponse returns block gas used for a given height.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /ethermint/feemarket/v1/params:
+    get:
+      summary: Params queries the parameters of x/feemarket module.
+      operationId: EthermintFeemarketV1Params
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params define the evm module parameters.
+                type: object
+                properties:
+                  no_base_fee:
+                    type: boolean
+                    title: >-
+                      no base fee forces the EIP-1559 base fee to 0 (needed for
+                      0 price calls)
+                  base_fee_change_denominator:
+                    type: integer
+                    format: int64
+                    description: >-
+                      base fee change denominator bounds the amount the base fee
+                      can change
+
+                      between blocks.
+                  elasticity_multiplier:
+                    type: integer
+                    format: int64
+                    description: >-
+                      elasticity multiplier bounds the maximum gas limit an
+                      EIP-1559 block may
+
+                      have.
+                  enable_height:
+                    type: string
+                    format: int64
+                    description: height at which the base fee calculation is enabled.
+                  base_fee:
+                    type: string
+                    description: base fee for EIP-1559 blocks.
+                title: Params defines the EVM module parameters
+            description: >-
+              QueryParamsResponse defines the response type for querying x/evm
+              parameters.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
       tags:
         - Query
   /ibc/apps/interchain_accounts/controller/v1/params:
@@ -31526,6 +32048,701 @@ paths:
           type: string
       tags:
         - Query
+  /merlion/maker/v1/all_backing_pools:
+    get:
+      summary: AllBackingPools queries all the backing pools.
+      operationId: MerlionMakerV1AllBackingPools
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              backing_pools:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    mer_minted:
+                      title: total minted mer
+                      type: object
+                      properties:
+                        denom:
+                          type: string
+                        amount:
+                          type: string
+                      description: >-
+                        Coin defines a token with a denomination and an amount.
+
+
+                        NOTE: The amount field is an Int which implements the
+                        custom method
+
+                        signatures required by gogoproto.
+                    backing:
+                      title: total backing
+                      type: object
+                      properties:
+                        denom:
+                          type: string
+                        amount:
+                          type: string
+                      description: >-
+                        Coin defines a token with a denomination and an amount.
+
+
+                        NOTE: The amount field is an Int which implements the
+                        custom method
+
+                        signatures required by gogoproto.
+                    lion_burned:
+                      title: total burned lion
+                      type: object
+                      properties:
+                        denom:
+                          type: string
+                        amount:
+                          type: string
+                      description: >-
+                        Coin defines a token with a denomination and an amount.
+
+
+                        NOTE: The amount field is an Int which implements the
+                        custom method
+
+                        signatures required by gogoproto.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /merlion/maker/v1/all_backing_risk_params:
+    get:
+      summary: AllBackingRiskParams queries risk params of all the backing pools.
+      operationId: MerlionMakerV1AllBackingRiskParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              risk_params:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    backing_denom:
+                      type: string
+                      title: backing coin denom
+                    enabled:
+                      type: boolean
+                      title: whether enabled
+                    max_backing:
+                      type: string
+                      title: maximum total backing amount
+                    max_mer_mint:
+                      type: string
+                      title: maximum mintable Mer amount
+                    mint_fee:
+                      type: string
+                      title: mint fee rate
+                    burn_fee:
+                      type: string
+                      title: burn fee rate
+                    buyback_fee:
+                      type: string
+                      title: buyback fee rate
+                    recollateralize_fee:
+                      type: string
+                      title: recollateralize fee rate
+                  description: >-
+                    BackingRiskParams represents an object of backing coin risk
+                    parameters.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /merlion/maker/v1/all_collateral_pools:
+    get:
+      summary: AllCollateralPools queries all the collateral pools.
+      operationId: MerlionMakerV1AllCollateralPools
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              collateral_pools:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    collateral:
+                      title: total collateral
+                      type: object
+                      properties:
+                        denom:
+                          type: string
+                        amount:
+                          type: string
+                      description: >-
+                        Coin defines a token with a denomination and an amount.
+
+
+                        NOTE: The amount field is an Int which implements the
+                        custom method
+
+                        signatures required by gogoproto.
+                    mer_debt:
+                      title: >-
+                        total existing mer debt, including minted by collateral,
+                        mint fee, last
+
+                        interest
+                      type: object
+                      properties:
+                        denom:
+                          type: string
+                        amount:
+                          type: string
+                      description: >-
+                        Coin defines a token with a denomination and an amount.
+
+
+                        NOTE: The amount field is an Int which implements the
+                        custom method
+
+                        signatures required by gogoproto.
+                    mer_by_lion:
+                      title: total minted merl by burning lion
+                      type: object
+                      properties:
+                        denom:
+                          type: string
+                        amount:
+                          type: string
+                      description: >-
+                        Coin defines a token with a denomination and an amount.
+
+
+                        NOTE: The amount field is an Int which implements the
+                        custom method
+
+                        signatures required by gogoproto.
+                    lion_burned:
+                      title: total burned lion
+                      type: object
+                      properties:
+                        denom:
+                          type: string
+                        amount:
+                          type: string
+                      description: >-
+                        Coin defines a token with a denomination and an amount.
+
+
+                        NOTE: The amount field is an Int which implements the
+                        custom method
+
+                        signatures required by gogoproto.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /merlion/maker/v1/all_collateral_risk_params:
+    get:
+      summary: AllCollateralRiskParams queries risk params of all the collateral pools.
+      operationId: MerlionMakerV1AllCollateralRiskParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              risk_params:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    collateral_denom:
+                      type: string
+                      title: collateral coin denom
+                    enabled:
+                      type: boolean
+                      title: whether enabled
+                    max_collateral:
+                      type: string
+                      title: maximum total collateral amount
+                    max_mer_mint:
+                      type: string
+                      title: maximum total mintable Mer amount
+                    liquidation_threshold:
+                      type: string
+                      title: >-
+                        ratio at which a position is defined as
+                        undercollateralized
+                    loan_to_value:
+                      type: string
+                      title: >-
+                        maximum ratio of maximum amount of currency that can be
+                        borrowed with a
+
+                        specific collateral
+                    basic_loan_to_value:
+                      type: string
+                      title: >-
+                        basic ratio of maximum amount of currency that can be
+                        borrowed with a
+
+                        specific collateral
+                    catalytic_lion_ratio:
+                      type: string
+                      title: >-
+                        catalytic ratio of burned Lion to minted stablecoins, to
+                        maximize the LTV
+
+                        in [basic-LTV, LTV]
+                    liquidation_fee:
+                      type: string
+                      title: >-
+                        liquidation fee rate, i.e., the discount a liquidator
+                        gets when buying
+
+                        collateral flagged for a liquidation
+                    mint_fee:
+                      type: string
+                      title: 'mint fee rate, i.e., extra fee debt'
+                    interest_fee:
+                      type: string
+                      title: annual interest fee rate (APR)
+                  description: >-
+                    CollateralRiskParams represents an object of collateral risk
+                    parameters.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /merlion/maker/v1/backing_pool:
+    get:
+      summary: BackingPool queries a backing pool.
+      operationId: MerlionMakerV1BackingPool
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              backing_pool:
+                type: object
+                properties:
+                  mer_minted:
+                    title: total minted mer
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  backing:
+                    title: total backing
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  lion_burned:
+                    title: total burned lion
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: backing_denom
+          in: query
+          required: false
+          type: string
+      tags:
+        - Query
+  /merlion/maker/v1/collateral_account:
+    get:
+      summary: CollateralOfAccount queries the collateral of an account.
+      operationId: MerlionMakerV1CollateralOfAccount
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              account_collateral:
+                type: object
+                properties:
+                  account:
+                    type: string
+                    title: account who owns collateral
+                  collateral:
+                    title: existing collateral
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  mer_debt:
+                    title: >-
+                      remaining mer debt, including minted by collateral, mint
+                      fee, last interest
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  mer_by_lion:
+                    title: minted mer by burning lion
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  lion_burned:
+                    title: total burned lion
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  last_interest:
+                    title: remaining interest debt after last settlement
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  last_settlement_block:
+                    type: string
+                    format: int64
+                    title: the block of last settlement
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: account
+          in: query
+          required: false
+          type: string
+        - name: collateral_denom
+          in: query
+          required: false
+          type: string
+      tags:
+        - Query
+  /merlion/maker/v1/collateral_pool:
+    get:
+      summary: CollateralPool queries a collateral pool.
+      operationId: MerlionMakerV1CollateralPool
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              collateral_pool:
+                type: object
+                properties:
+                  collateral:
+                    title: total collateral
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  mer_debt:
+                    title: >-
+                      total existing mer debt, including minted by collateral,
+                      mint fee, last
+
+                      interest
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  mer_by_lion:
+                    title: total minted merl by burning lion
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  lion_burned:
+                    title: total burned lion
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: collateral_denom
+          in: query
+          required: false
+          type: string
+      tags:
+        - Query
+  /merlion/maker/v1/collateral_ratio:
+    get:
+      summary: CollateralRatio queries the collateral ratio.
+      operationId: MerlionMakerV1CollateralRatio
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              collateral_ratio:
+                type: string
+              last_update_block:
+                type: string
+                format: int64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
   /merlion/maker/v1/params:
     get:
       summary: Parameters queries the parameters of the module.
@@ -31542,14 +32759,179 @@ paths:
                 properties:
                   collateral_ratio_step:
                     type: string
+                    title: adjusting collateral step
                   collateral_ratio_price_band:
                     type: string
-                  collateral_ration_cooldown_period:
+                    title: price band for adjusting collateral ratio
+                  collateral_ratio_cooldown_period:
                     type: string
-                    format: uint64
+                    format: int64
+                    title: cooldown period for adjusting collateral ratio
+                  mint_price_bias:
+                    type: string
+                    title: mint Mer price bias ratio
+                  burn_price_bias:
+                    type: string
+                    title: burn Mer price bias ratio
+                  recollateralize_bonus:
+                    type: string
+                    title: recollateralization bonus ratio
+                  liquidation_commission_fee:
+                    type: string
+                    title: liquidation commission fee ratio
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /merlion/maker/v1/total_backing:
+    get:
+      summary: TotalBacking queries the total backing.
+      operationId: MerlionMakerV1TotalBacking
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              total_backing:
+                type: object
+                properties:
+                  mer_minted:
+                    title: total minted mer
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  lion_burned:
+                    title: total burned lion
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /merlion/maker/v1/total_collateral:
+    get:
+      summary: TotalCollateral queries the total collateral.
+      operationId: MerlionMakerV1TotalCollateral
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              total_collateral:
+                type: object
+                properties:
+                  mer_debt:
+                    title: >-
+                      total existing mer debt, including minted by collateral,
+                      mint fee, last
+
+                      interest
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  mer_by_lion:
+                    title: total minted merl by burning lion
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
+                  lion_burned:
+                    title: total burned lion
+                    type: object
+                    properties:
+                      denom:
+                        type: string
+                      amount:
+                        type: string
+                    description: >-
+                      Coin defines a token with a denomination and an amount.
+
+
+                      NOTE: The amount field is an Int which implements the
+                      custom method
+
+                      signatures required by gogoproto.
         default:
           description: An unexpected error response.
           schema:
@@ -31574,7 +32956,9 @@ paths:
     get:
       summary: >-
         BurnByCollateral burns Mer stablecoins by unlocking collateral assets
-        and earning Lion coins.
+        and
+
+        earning Lion coins.
       operationId: MerlionMakerV1BurnByCollateral
       responses:
         '200':
@@ -31582,22 +32966,7 @@ paths:
           schema:
             type: object
             properties:
-              burn_fee:
-                type: object
-                properties:
-                  denom:
-                    type: string
-                  amount:
-                    type: string
-                description: >-
-                  Coin defines a token with a denomination and an amount.
-
-
-                  NOTE: The amount field is an Int which implements the custom
-                  method
-
-                  signatures required by gogoproto.
-              lion_out:
+              repay_in:
                 type: object
                 properties:
                   denom:
@@ -31638,23 +33007,15 @@ paths:
           in: query
           required: false
           type: string
-        - name: to
+        - name: collateral_denom
           in: query
           required: false
           type: string
-        - name: burn_in.denom
+        - name: repay_in_max.denom
           in: query
           required: false
           type: string
-        - name: burn_in.amount
-          in: query
-          required: false
-          type: string
-        - name: lion_out_min.denom
-          in: query
-          required: false
-          type: string
-        - name: lion_out_min.amount
+        - name: repay_in_max.amount
           in: query
           required: false
           type: string
@@ -31664,7 +33025,9 @@ paths:
     get:
       summary: >-
         BurnBySwap burns Mer stablecoins by swapping out strong-backing assets
-        and Lion coins.
+        and
+
+        Lion coins.
       operationId: MerlionMakerV1BurnBySwap
       responses:
         '200':
@@ -31771,10 +33134,10 @@ paths:
           type: string
       tags:
         - Msg
-  /merlion/maker/v1/tx/buyback:
+  /merlion/maker/v1/tx/buy_backing:
     get:
-      summary: BuyBack buybacks strong-backing assets by spending Lion coins.
-      operationId: MerlionMakerV1BuyBack
+      summary: BuyBacking buys strong-backing assets by spending Lion coins.
+      operationId: MerlionMakerV1BuyBacking
       responses:
         '200':
           description: A successful response.
@@ -31796,7 +33159,7 @@ paths:
                   method
 
                   signatures required by gogoproto.
-            description: MsgBuyBackResponse defines the Msg/BuyBack response type.
+            description: MsgBuyBackingResponse defines the Msg/BuyBacking response type.
         default:
           description: An unexpected error response.
           schema:
@@ -31891,9 +33254,95 @@ paths:
           type: string
       tags:
         - Msg
+  /merlion/maker/v1/tx/liquidate_collateral:
+    get:
+      summary: |-
+        LiquidateCollateral liquidates collateral assets which is
+        undercollateralized.
+      operationId: MerlionMakerV1LiquidateCollateral
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              repay_in:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+              collateral_out:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+            description: >-
+              MsgReCollateralizeResponse defines the Msg/LiquidateCollateral
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: debtor
+          in: query
+          required: false
+          type: string
+        - name: collateral.denom
+          in: query
+          required: false
+          type: string
+        - name: collateral.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
   /merlion/maker/v1/tx/mint_by_collateral:
     get:
-      summary: >-
+      summary: |-
         MintByCollateral mints Mer stablecoins by locking collateral assets and
         spending Lion coins.
       operationId: MerlionMakerV1MintByCollateral
@@ -31963,6 +33412,10 @@ paths:
           in: query
           required: false
           type: string
+        - name: collateral_denom
+          in: query
+          required: false
+          type: string
         - name: mint_out.denom
           in: query
           required: false
@@ -31985,7 +33438,9 @@ paths:
     get:
       summary: >-
         MintBySwap mints Mer stablecoins by swapping in strong-backing assets
-        and Lion coins.
+        and
+
+        Lion coins.
       operationId: MerlionMakerV1MintBySwap
       responses:
         '200':
@@ -32092,81 +33547,6 @@ paths:
           type: string
       tags:
         - Msg
-  /merlion/maker/v1/tx/recollateralize:
-    get:
-      summary: >-
-        ReCollateralize re-collateralizes strong-backing assets by earning Lion
-        coins.
-      operationId: MerlionMakerV1ReCollateralize
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              lion_out:
-                type: object
-                properties:
-                  denom:
-                    type: string
-                  amount:
-                    type: string
-                description: >-
-                  Coin defines a token with a denomination and an amount.
-
-
-                  NOTE: The amount field is an Int which implements the custom
-                  method
-
-                  signatures required by gogoproto.
-            description: >-
-              MsgReCollateralizeResponse defines the Msg/ReCollateralize
-              response type.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      parameters:
-        - name: sender
-          in: query
-          required: false
-          type: string
-        - name: to
-          in: query
-          required: false
-          type: string
-        - name: backing_in.denom
-          in: query
-          required: false
-          type: string
-        - name: backing_in.amount
-          in: query
-          required: false
-          type: string
-        - name: lion_out_min.denom
-          in: query
-          required: false
-          type: string
-        - name: lion_out_min.amount
-          in: query
-          required: false
-          type: string
-      tags:
-        - Msg
   /merlion/maker/v1/tx/redeem_collateral:
     get:
       summary: RedeemCollateral redeems collateral assets.
@@ -32216,6 +33596,79 @@ paths:
           type: string
       tags:
         - Msg
+  /merlion/maker/v1/tx/sell_backing:
+    get:
+      summary: |-
+        SellBacking sells strong-backing assets by earning Lion
+        coins.
+      operationId: MerlionMakerV1SellBacking
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              lion_out:
+                type: object
+                properties:
+                  denom:
+                    type: string
+                  amount:
+                    type: string
+                description: >-
+                  Coin defines a token with a denomination and an amount.
+
+
+                  NOTE: The amount field is an Int which implements the custom
+                  method
+
+                  signatures required by gogoproto.
+            description: MsgSellBackingResponse defines the Msg/SellBacking response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: sender
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+        - name: backing_in.denom
+          in: query
+          required: false
+          type: string
+        - name: backing_in.amount
+          in: query
+          required: false
+          type: string
+        - name: lion_out_min.denom
+          in: query
+          required: false
+          type: string
+        - name: lion_out_min.amount
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
   /merlion/oracle/v1/denoms/actives:
     get:
       summary: Actives returns all active denoms.
@@ -32232,7 +33685,9 @@ paths:
                   type: string
                 description: >-
                   actives defines a list of the denomination which oracle prices
-                  aggreed upon.
+                  aggreed
+
+                  upon.
             description: |-
               QueryActivesResponse is response type for the
               Query/Actives RPC method.
@@ -32286,58 +33741,12 @@ paths:
                     signatures required by gogoproto.
                 description: >-
                   exchange_rates defines a list of the exchange rate for all
-                  whitelisted denoms.
+                  whitelisted
+
+                  denoms.
             description: |-
               QueryExchangeRatesResponse is response type for the
               Query/ExchangeRates RPC method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  /merlion/oracle/v1/denoms/tobin_taxes:
-    get:
-      summary: TobinTaxes returns tobin taxes of all denoms.
-      operationId: MerlionOracleV1TobinTaxes
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              tobin_taxes:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    tobin_tax:
-                      type: string
-                  title: >-
-                    Denom represents an object to hold configurations of each
-                    denom
-                description: >-
-                  tobin_taxes defines a list of the tobin tax of all whitelisted
-                  denoms.
-            description: |-
-              QueryTobinTaxesResponse is response type for the
-              Query/TobinTaxes RPC method.
         default:
           description: An unexpected error response.
           schema:
@@ -32413,8 +33822,10 @@ paths:
               exchange_rate:
                 type: string
                 description: >-
-                  exchange_rate defines the exchange rate of Lion denominated in
-                  various Mer stablecoin.
+                  exchange_rate defines the exchange rate of the denom asset
+                  denominated in
+
+                  uUSD.
             description: |-
               QueryExchangeRateResponse is response type for the
               Query/ExchangeRate RPC method.
@@ -32444,22 +33855,18 @@ paths:
           type: string
       tags:
         - Query
-  '/merlion/oracle/v1/denoms/{denom}/tobin_tax':
+  /merlion/oracle/v1/tx/aggregate_exchange_rate_prevote:
     get:
-      summary: TobinTax returns tobin tax of a denom.
-      operationId: MerlionOracleV1TobinTax
+      summary: AggregateExchangeRatePrevote submits aggregate exchange rate prevote.
+      operationId: MerlionOracleV1AggregateExchangeRatePrevote
       responses:
         '200':
           description: A successful response.
           schema:
             type: object
-            properties:
-              tobin_tax:
-                type: string
-                description: tobin_taxe defines the tobin tax of a denom.
             description: |-
-              QueryTobinTaxResponse is response type for the
-              Query/TobinTax RPC method.
+              MsgAggregateExchangeRatePrevoteResponse defines the
+              MsgAggregateExchangeRatePrevote response type.
         default:
           description: An unexpected error response.
           schema:
@@ -32479,13 +33886,114 @@ paths:
                       type: string
                   additionalProperties: {}
       parameters:
-        - name: denom
-          description: denom defines the denomination to query for.
-          in: path
-          required: true
+        - name: hash
+          in: query
+          required: false
+          type: string
+        - name: feeder
+          in: query
+          required: false
+          type: string
+        - name: validator
+          in: query
+          required: false
           type: string
       tags:
-        - Query
+        - Msg
+  /merlion/oracle/v1/tx/aggregate_exchange_rate_vote:
+    get:
+      summary: AggregateExchangeRateVote submits aggregate exchange rate vote.
+      operationId: MerlionOracleV1AggregateExchangeRateVote
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            description: >-
+              MsgAggregateExchangeRateVoteResponse defines the
+              MsgAggregateExchangeRateVote
+
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: salt
+          in: query
+          required: false
+          type: string
+        - name: exchange_rates
+          in: query
+          required: false
+          type: string
+        - name: feeder
+          in: query
+          required: false
+          type: string
+        - name: validator
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
+  /merlion/oracle/v1/tx/delegate_feed_consent:
+    get:
+      summary: DelegateFeedConsent sets the feeder delegation.
+      operationId: MerlionOracleV1DelegateFeedConsent
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            description: >-
+              MsgDelegateFeedConsentResponse defines the MsgDelegateFeedConsent
+              response
+
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: operator
+          in: query
+          required: false
+          type: string
+        - name: delegate
+          in: query
+          required: false
+          type: string
+      tags:
+        - Msg
   '/merlion/oracle/v1/valdiators/{validator_addr}/aggregate_vote':
     get:
       summary: AggregateVote returns an aggregate vote of a validator.
@@ -32499,7 +34007,9 @@ paths:
               aggregate_vote:
                 description: >-
                   aggregate_vote defines oracle aggregate vote submitted by a
-                  validator in the current vote period.
+                  validator in
+
+                  the current vote period.
                 type: object
                 properties:
                   exchange_rate_tuples:
@@ -32569,16 +34079,20 @@ paths:
                       format: uint64
                   title: >-
                     AggregateExchangeRatePrevote represents the aggregate
-                    prevoting on the ExchangeRateVote.
+                    prevoting on the
 
-                    The purpose of aggregate prevoting is to hide vote exchange
-                    rates with hash
+                    ExchangeRateVote. The purpose of aggregate prevoting is to
+                    hide vote exchange
 
-                    which is formatted as hex string in SHA256("{salt}:{exchange
+                    rates with hash which is formatted as hex string in
+                    SHA256("{salt}:{exchange
+
                     rate}{denom},...,{exchange rate}{denom}:{voter}")
                 description: >-
                   aggregate_prevotes defines all oracle aggregate prevotes
-                  submitted in the current vote period.
+                  submitted in the
+
+                  current vote period.
             description: |-
               QueryAggregatePrevotesResponse is response type for the
               Query/AggregatePrevotes RPC method.
@@ -32631,14 +34145,14 @@ paths:
                           data.
                     voter:
                       type: string
-                  description: >-
+                  description: |-
                     AggregateExchangeRateVote represents the voting on
-
-                    the exchange rates of Lion denominated in various Mer
-                    stablecoin assets.
+                    the exchange rates of various assets denominated in uUSD.
                 description: >-
                   aggregate_votes defines all oracle aggregate votes submitted
-                  in the current vote period.
+                  in the current
+
+                  vote period.
             description: |-
               QueryAggregateVotesResponse is response type for the
               Query/AggregateVotes RPC method.
@@ -32684,16 +34198,20 @@ paths:
                     format: uint64
                 title: >-
                   AggregateExchangeRatePrevote represents the aggregate
-                  prevoting on the ExchangeRateVote.
+                  prevoting on the
 
-                  The purpose of aggregate prevoting is to hide vote exchange
-                  rates with hash
+                  ExchangeRateVote. The purpose of aggregate prevoting is to
+                  hide vote exchange
 
-                  which is formatted as hex string in SHA256("{salt}:{exchange
+                  rates with hash which is formatted as hex string in
+                  SHA256("{salt}:{exchange
+
                   rate}{denom},...,{exchange rate}{denom}:{voter}")
                 description: >-
                   aggregate_prevote defines oracle aggregate prevote submitted
-                  by a validator in the current vote period.
+                  by a validator
+
+                  in the current vote period.
             description: |-
               QueryAggregatePrevoteResponse is response type for the
               Query/AggregatePrevote RPC method.
@@ -32839,8 +34357,6 @@ paths:
                       properties:
                         name:
                           type: string
-                        tobin_tax:
-                          type: string
                       title: >-
                         Denom represents an object to hold configurations of
                         each denom
@@ -32851,6 +34367,42 @@ paths:
                     format: uint64
                   min_valid_per_window:
                     type: string
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /merlionzone/merlion/ve/params:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: MerlionzoneMerlionVeParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -34085,6 +35637,47 @@ definitions:
     description: >-
       QueryParamsResponse defines the response type for querying x/bank
       parameters.
+  cosmos.bank.v1beta1.QuerySpendableBalancesResponse:
+    type: object
+    properties:
+      balances:
+        type: array
+        items:
+          type: object
+          properties:
+            denom:
+              type: string
+            amount:
+              type: string
+          description: |-
+            Coin defines a token with a denomination and an amount.
+
+            NOTE: The amount field is an Int which implements the custom method
+            signatures required by gogoproto.
+        description: balances is the spendable balances of all the coins.
+      pagination:
+        description: pagination defines the pagination in the response.
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+    description: >-
+      QuerySpendableBalancesResponse defines the gRPC response structure for
+      querying
+
+      an account's spendable balances.
   cosmos.bank.v1beta1.QuerySupplyOfResponse:
     type: object
     properties:
@@ -44698,6 +46291,7 @@ definitions:
       - SIGN_MODE_DIRECT
       - SIGN_MODE_TEXTUAL
       - SIGN_MODE_LEGACY_AMINO_JSON
+      - SIGN_MODE_EIP_191
     default: SIGN_MODE_UNSPECIFIED
     description: |-
       SignMode represents a signing mode with its own security guarantees.
@@ -44711,6 +46305,16 @@ definitions:
       from SIGN_MODE_DIRECT
        - SIGN_MODE_LEGACY_AMINO_JSON: SIGN_MODE_LEGACY_AMINO_JSON is a backwards compatibility mode which uses
       Amino JSON and will be removed in the future
+       - SIGN_MODE_EIP_191: SIGN_MODE_EIP_191 specifies the sign mode for EIP 191 signing on the Cosmos
+      SDK. Ref: https://eips.ethereum.org/EIPS/eip-191
+
+      Currently, SIGN_MODE_EIP_191 is registered as a SignMode enum variant,
+      but is not implemented on the SDK by default. To enable EIP-191, you need
+      to pass a custom `TxConfig` that has an implementation of
+      `SignModeHandler` for EIP-191. The SDK may decide to fully support
+      EIP-191 in the future.
+
+      Since: cosmos-sdk 0.45.2
   cosmos.tx.v1beta1.AuthInfo:
     type: object
     properties:
@@ -45207,6 +46811,583 @@ definitions:
       "gasprice",
 
       which must be above some miminum to be accepted into the mempool.
+  cosmos.tx.v1beta1.GetBlockWithTxsResponse:
+    type: object
+    properties:
+      txs:
+        type: array
+        items:
+          $ref: '#/definitions/cosmos.tx.v1beta1.Tx'
+        description: txs are the transactions in the block.
+      block_id:
+        type: object
+        properties:
+          hash:
+            type: string
+            format: byte
+          part_set_header:
+            type: object
+            properties:
+              total:
+                type: integer
+                format: int64
+              hash:
+                type: string
+                format: byte
+            title: PartsetHeader
+        title: BlockID
+      block:
+        type: object
+        properties:
+          header:
+            type: object
+            properties:
+              version:
+                title: basic block info
+                type: object
+                properties:
+                  block:
+                    type: string
+                    format: uint64
+                  app:
+                    type: string
+                    format: uint64
+                description: >-
+                  Consensus captures the consensus rules for processing a block
+                  in the blockchain,
+
+                  including all blockchain data structures and the rules of the
+                  application's
+
+                  state transition machine.
+              chain_id:
+                type: string
+              height:
+                type: string
+                format: int64
+              time:
+                type: string
+                format: date-time
+              last_block_id:
+                type: object
+                properties:
+                  hash:
+                    type: string
+                    format: byte
+                  part_set_header:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        format: int64
+                      hash:
+                        type: string
+                        format: byte
+                    title: PartsetHeader
+                title: BlockID
+              last_commit_hash:
+                type: string
+                format: byte
+                title: hashes of block data
+              data_hash:
+                type: string
+                format: byte
+              validators_hash:
+                type: string
+                format: byte
+                title: hashes from the app output from the prev block
+              next_validators_hash:
+                type: string
+                format: byte
+              consensus_hash:
+                type: string
+                format: byte
+              app_hash:
+                type: string
+                format: byte
+              last_results_hash:
+                type: string
+                format: byte
+              evidence_hash:
+                type: string
+                format: byte
+                title: consensus info
+              proposer_address:
+                type: string
+                format: byte
+            description: Header defines the structure of a Tendermint block header.
+          data:
+            type: object
+            properties:
+              txs:
+                type: array
+                items:
+                  type: string
+                  format: byte
+                description: >-
+                  Txs that will be applied by state @ block.Height+1.
+
+                  NOTE: not all txs here are valid.  We're just agreeing on the
+                  order first.
+
+                  This means that block.AppHash does not include these txs.
+            title: Data contains the set of transactions included in the block
+          evidence:
+            type: object
+            properties:
+              evidence:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    duplicate_vote_evidence:
+                      type: object
+                      properties:
+                        vote_a:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - SIGNED_MSG_TYPE_UNKNOWN
+                                - SIGNED_MSG_TYPE_PREVOTE
+                                - SIGNED_MSG_TYPE_PRECOMMIT
+                                - SIGNED_MSG_TYPE_PROPOSAL
+                              default: SIGNED_MSG_TYPE_UNKNOWN
+                              description: >-
+                                SignedMsgType is a type of signed message in the
+                                consensus.
+
+                                 - SIGNED_MSG_TYPE_PREVOTE: Votes
+                                 - SIGNED_MSG_TYPE_PROPOSAL: Proposals
+                            height:
+                              type: string
+                              format: int64
+                            round:
+                              type: integer
+                              format: int32
+                            block_id:
+                              type: object
+                              properties:
+                                hash:
+                                  type: string
+                                  format: byte
+                                part_set_header:
+                                  type: object
+                                  properties:
+                                    total:
+                                      type: integer
+                                      format: int64
+                                    hash:
+                                      type: string
+                                      format: byte
+                                  title: PartsetHeader
+                              title: BlockID
+                            timestamp:
+                              type: string
+                              format: date-time
+                            validator_address:
+                              type: string
+                              format: byte
+                            validator_index:
+                              type: integer
+                              format: int32
+                            signature:
+                              type: string
+                              format: byte
+                          description: >-
+                            Vote represents a prevote, precommit, or commit vote
+                            from validators for
+
+                            consensus.
+                        vote_b:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - SIGNED_MSG_TYPE_UNKNOWN
+                                - SIGNED_MSG_TYPE_PREVOTE
+                                - SIGNED_MSG_TYPE_PRECOMMIT
+                                - SIGNED_MSG_TYPE_PROPOSAL
+                              default: SIGNED_MSG_TYPE_UNKNOWN
+                              description: >-
+                                SignedMsgType is a type of signed message in the
+                                consensus.
+
+                                 - SIGNED_MSG_TYPE_PREVOTE: Votes
+                                 - SIGNED_MSG_TYPE_PROPOSAL: Proposals
+                            height:
+                              type: string
+                              format: int64
+                            round:
+                              type: integer
+                              format: int32
+                            block_id:
+                              type: object
+                              properties:
+                                hash:
+                                  type: string
+                                  format: byte
+                                part_set_header:
+                                  type: object
+                                  properties:
+                                    total:
+                                      type: integer
+                                      format: int64
+                                    hash:
+                                      type: string
+                                      format: byte
+                                  title: PartsetHeader
+                              title: BlockID
+                            timestamp:
+                              type: string
+                              format: date-time
+                            validator_address:
+                              type: string
+                              format: byte
+                            validator_index:
+                              type: integer
+                              format: int32
+                            signature:
+                              type: string
+                              format: byte
+                          description: >-
+                            Vote represents a prevote, precommit, or commit vote
+                            from validators for
+
+                            consensus.
+                        total_voting_power:
+                          type: string
+                          format: int64
+                        validator_power:
+                          type: string
+                          format: int64
+                        timestamp:
+                          type: string
+                          format: date-time
+                      description: >-
+                        DuplicateVoteEvidence contains evidence of a validator
+                        signed two conflicting votes.
+                    light_client_attack_evidence:
+                      type: object
+                      properties:
+                        conflicting_block:
+                          type: object
+                          properties:
+                            signed_header:
+                              type: object
+                              properties:
+                                header:
+                                  type: object
+                                  properties:
+                                    version:
+                                      title: basic block info
+                                      type: object
+                                      properties:
+                                        block:
+                                          type: string
+                                          format: uint64
+                                        app:
+                                          type: string
+                                          format: uint64
+                                      description: >-
+                                        Consensus captures the consensus rules
+                                        for processing a block in the
+                                        blockchain,
+
+                                        including all blockchain data structures
+                                        and the rules of the application's
+
+                                        state transition machine.
+                                    chain_id:
+                                      type: string
+                                    height:
+                                      type: string
+                                      format: int64
+                                    time:
+                                      type: string
+                                      format: date-time
+                                    last_block_id:
+                                      type: object
+                                      properties:
+                                        hash:
+                                          type: string
+                                          format: byte
+                                        part_set_header:
+                                          type: object
+                                          properties:
+                                            total:
+                                              type: integer
+                                              format: int64
+                                            hash:
+                                              type: string
+                                              format: byte
+                                          title: PartsetHeader
+                                      title: BlockID
+                                    last_commit_hash:
+                                      type: string
+                                      format: byte
+                                      title: hashes of block data
+                                    data_hash:
+                                      type: string
+                                      format: byte
+                                    validators_hash:
+                                      type: string
+                                      format: byte
+                                      title: >-
+                                        hashes from the app output from the prev
+                                        block
+                                    next_validators_hash:
+                                      type: string
+                                      format: byte
+                                    consensus_hash:
+                                      type: string
+                                      format: byte
+                                    app_hash:
+                                      type: string
+                                      format: byte
+                                    last_results_hash:
+                                      type: string
+                                      format: byte
+                                    evidence_hash:
+                                      type: string
+                                      format: byte
+                                      title: consensus info
+                                    proposer_address:
+                                      type: string
+                                      format: byte
+                                  description: >-
+                                    Header defines the structure of a Tendermint
+                                    block header.
+                                commit:
+                                  type: object
+                                  properties:
+                                    height:
+                                      type: string
+                                      format: int64
+                                    round:
+                                      type: integer
+                                      format: int32
+                                    block_id:
+                                      type: object
+                                      properties:
+                                        hash:
+                                          type: string
+                                          format: byte
+                                        part_set_header:
+                                          type: object
+                                          properties:
+                                            total:
+                                              type: integer
+                                              format: int64
+                                            hash:
+                                              type: string
+                                              format: byte
+                                          title: PartsetHeader
+                                      title: BlockID
+                                    signatures:
+                                      type: array
+                                      items:
+                                        type: object
+                                        properties:
+                                          block_id_flag:
+                                            type: string
+                                            enum:
+                                              - BLOCK_ID_FLAG_UNKNOWN
+                                              - BLOCK_ID_FLAG_ABSENT
+                                              - BLOCK_ID_FLAG_COMMIT
+                                              - BLOCK_ID_FLAG_NIL
+                                            default: BLOCK_ID_FLAG_UNKNOWN
+                                            title: >-
+                                              BlockIdFlag indicates which BlcokID the
+                                              signature is for
+                                          validator_address:
+                                            type: string
+                                            format: byte
+                                          timestamp:
+                                            type: string
+                                            format: date-time
+                                          signature:
+                                            type: string
+                                            format: byte
+                                        description: >-
+                                          CommitSig is a part of the Vote included
+                                          in a Commit.
+                                  description: >-
+                                    Commit contains the evidence that a block
+                                    was committed by a set of validators.
+                            validator_set:
+                              type: object
+                              properties:
+                                validators:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      address:
+                                        type: string
+                                        format: byte
+                                      pub_key:
+                                        type: object
+                                        properties:
+                                          ed25519:
+                                            type: string
+                                            format: byte
+                                          secp256k1:
+                                            type: string
+                                            format: byte
+                                        title: >-
+                                          PublicKey defines the keys available for
+                                          use with Tendermint Validators
+                                      voting_power:
+                                        type: string
+                                        format: int64
+                                      proposer_priority:
+                                        type: string
+                                        format: int64
+                                proposer:
+                                  type: object
+                                  properties:
+                                    address:
+                                      type: string
+                                      format: byte
+                                    pub_key:
+                                      type: object
+                                      properties:
+                                        ed25519:
+                                          type: string
+                                          format: byte
+                                        secp256k1:
+                                          type: string
+                                          format: byte
+                                      title: >-
+                                        PublicKey defines the keys available for
+                                        use with Tendermint Validators
+                                    voting_power:
+                                      type: string
+                                      format: int64
+                                    proposer_priority:
+                                      type: string
+                                      format: int64
+                                total_voting_power:
+                                  type: string
+                                  format: int64
+                        common_height:
+                          type: string
+                          format: int64
+                        byzantine_validators:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              address:
+                                type: string
+                                format: byte
+                              pub_key:
+                                type: object
+                                properties:
+                                  ed25519:
+                                    type: string
+                                    format: byte
+                                  secp256k1:
+                                    type: string
+                                    format: byte
+                                title: >-
+                                  PublicKey defines the keys available for use
+                                  with Tendermint Validators
+                              voting_power:
+                                type: string
+                                format: int64
+                              proposer_priority:
+                                type: string
+                                format: int64
+                        total_voting_power:
+                          type: string
+                          format: int64
+                        timestamp:
+                          type: string
+                          format: date-time
+                      description: >-
+                        LightClientAttackEvidence contains evidence of a set of
+                        validators attempting to mislead a light client.
+          last_commit:
+            type: object
+            properties:
+              height:
+                type: string
+                format: int64
+              round:
+                type: integer
+                format: int32
+              block_id:
+                type: object
+                properties:
+                  hash:
+                    type: string
+                    format: byte
+                  part_set_header:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        format: int64
+                      hash:
+                        type: string
+                        format: byte
+                    title: PartsetHeader
+                title: BlockID
+              signatures:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    block_id_flag:
+                      type: string
+                      enum:
+                        - BLOCK_ID_FLAG_UNKNOWN
+                        - BLOCK_ID_FLAG_ABSENT
+                        - BLOCK_ID_FLAG_COMMIT
+                        - BLOCK_ID_FLAG_NIL
+                      default: BLOCK_ID_FLAG_UNKNOWN
+                      title: BlockIdFlag indicates which BlcokID the signature is for
+                    validator_address:
+                      type: string
+                      format: byte
+                    timestamp:
+                      type: string
+                      format: date-time
+                    signature:
+                      type: string
+                      format: byte
+                  description: CommitSig is a part of the Vote included in a Commit.
+            description: >-
+              Commit contains the evidence that a block was committed by a set
+              of validators.
+      pagination:
+        description: pagination defines a pagination for the response.
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+    description: >-
+      GetBlockWithTxsResponse is the response type for the
+      Service.GetBlockWithTxs method.
+
+
+      Since: cosmos-sdk 0.45.2
   cosmos.tx.v1beta1.GetTxResponse:
     type: object
     properties:
@@ -45844,7 +48025,7 @@ definitions:
             tags are stringified and the log is JSON decoded.
         description: tx_responses is the list of queried TxResponses.
       pagination:
-        description: pagination defines an pagination for the response.
+        description: pagination defines a pagination for the response.
         type: object
         properties:
           next_key:
@@ -45879,6 +48060,7 @@ definitions:
               - SIGN_MODE_DIRECT
               - SIGN_MODE_TEXTUAL
               - SIGN_MODE_LEGACY_AMINO_JSON
+              - SIGN_MODE_EIP_191
             default: SIGN_MODE_UNSPECIFIED
             description: >-
               SignMode represents a signing mode with its own security
@@ -45895,6 +48077,24 @@ definitions:
               from SIGN_MODE_DIRECT
                - SIGN_MODE_LEGACY_AMINO_JSON: SIGN_MODE_LEGACY_AMINO_JSON is a backwards compatibility mode which uses
               Amino JSON and will be removed in the future
+               - SIGN_MODE_EIP_191: SIGN_MODE_EIP_191 specifies the sign mode for EIP 191 signing on the Cosmos
+              SDK. Ref: https://eips.ethereum.org/EIPS/eip-191
+
+
+              Currently, SIGN_MODE_EIP_191 is registered as a SignMode enum
+              variant,
+
+              but is not implemented on the SDK by default. To enable EIP-191,
+              you need
+
+              to pass a custom `TxConfig` that has an implementation of
+
+              `SignModeHandler` for EIP-191. The SDK may decide to fully support
+
+              EIP-191 in the future.
+
+
+              Since: cosmos-sdk 0.45.2
       multi:
         $ref: '#/definitions/cosmos.tx.v1beta1.ModeInfo.Multi'
         title: multi represents a nested multisig signer
@@ -45940,6 +48140,7 @@ definitions:
           - SIGN_MODE_DIRECT
           - SIGN_MODE_TEXTUAL
           - SIGN_MODE_LEGACY_AMINO_JSON
+          - SIGN_MODE_EIP_191
         default: SIGN_MODE_UNSPECIFIED
         description: >-
           SignMode represents a signing mode with its own security guarantees.
@@ -45955,6 +48156,23 @@ definitions:
           from SIGN_MODE_DIRECT
            - SIGN_MODE_LEGACY_AMINO_JSON: SIGN_MODE_LEGACY_AMINO_JSON is a backwards compatibility mode which uses
           Amino JSON and will be removed in the future
+           - SIGN_MODE_EIP_191: SIGN_MODE_EIP_191 specifies the sign mode for EIP 191 signing on the Cosmos
+          SDK. Ref: https://eips.ethereum.org/EIPS/eip-191
+
+
+          Currently, SIGN_MODE_EIP_191 is registered as a SignMode enum variant,
+
+          but is not implemented on the SDK by default. To enable EIP-191, you
+          need
+
+          to pass a custom `TxConfig` that has an implementation of
+
+          `SignModeHandler` for EIP-191. The SDK may decide to fully support
+
+          EIP-191 in the future.
+
+
+          Since: cosmos-sdk 0.45.2
     title: |-
       Single is the mode info for a single signer. It is structured as a message
       to allow for additional fields such as locale for SIGN_MODE_TEXTUAL in the
@@ -48679,6 +50897,88 @@ definitions:
         type: boolean
         title: enable return data capture
     description: TraceConfig holds extra parameters to trace functions.
+  ethermint.feemarket.v1.Params:
+    type: object
+    properties:
+      no_base_fee:
+        type: boolean
+        title: >-
+          no base fee forces the EIP-1559 base fee to 0 (needed for 0 price
+          calls)
+      base_fee_change_denominator:
+        type: integer
+        format: int64
+        description: |-
+          base fee change denominator bounds the amount the base fee can change
+          between blocks.
+      elasticity_multiplier:
+        type: integer
+        format: int64
+        description: >-
+          elasticity multiplier bounds the maximum gas limit an EIP-1559 block
+          may
+
+          have.
+      enable_height:
+        type: string
+        format: int64
+        description: height at which the base fee calculation is enabled.
+      base_fee:
+        type: string
+        description: base fee for EIP-1559 blocks.
+    title: Params defines the EVM module parameters
+  ethermint.feemarket.v1.QueryBaseFeeResponse:
+    type: object
+    properties:
+      base_fee:
+        type: string
+    description: BaseFeeResponse returns the EIP1559 base fee.
+  ethermint.feemarket.v1.QueryBlockGasResponse:
+    type: object
+    properties:
+      gas:
+        type: string
+        format: int64
+    description: QueryBlockGasResponse returns block gas used for a given height.
+  ethermint.feemarket.v1.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params define the evm module parameters.
+        type: object
+        properties:
+          no_base_fee:
+            type: boolean
+            title: >-
+              no base fee forces the EIP-1559 base fee to 0 (needed for 0 price
+              calls)
+          base_fee_change_denominator:
+            type: integer
+            format: int64
+            description: >-
+              base fee change denominator bounds the amount the base fee can
+              change
+
+              between blocks.
+          elasticity_multiplier:
+            type: integer
+            format: int64
+            description: >-
+              elasticity multiplier bounds the maximum gas limit an EIP-1559
+              block may
+
+              have.
+          enable_height:
+            type: string
+            format: int64
+            description: height at which the base fee calculation is enabled.
+          base_fee:
+            type: string
+            description: base fee for EIP-1559 blocks.
+        title: Params defines the EVM module parameters
+    description: >-
+      QueryParamsResponse defines the response type for querying x/evm
+      parameters.
   ibc.applications.interchain_accounts.controller.v1.Params:
     type: object
     properties:
@@ -53240,10 +55540,14 @@ definitions:
     description: |-
       TokenPair defines an instance that records pairing consisting of a Cosmos
       native Coin and an ERC20 token address.
-  merlion.maker.v1.MsgBurnByCollateralResponse:
+  merlion.maker.v1.AccountCollateral:
     type: object
     properties:
-      burn_fee:
+      account:
+        type: string
+        title: account who owns collateral
+      collateral:
+        title: existing collateral
         type: object
         properties:
           denom:
@@ -53255,7 +55559,145 @@ definitions:
 
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
-      lion_out:
+      mer_debt:
+        title: >-
+          remaining mer debt, including minted by collateral, mint fee, last
+          interest
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      mer_by_lion:
+        title: minted mer by burning lion
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      lion_burned:
+        title: total burned lion
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      last_interest:
+        title: remaining interest debt after last settlement
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      last_settlement_block:
+        type: string
+        format: int64
+        title: the block of last settlement
+  merlion.maker.v1.BackingRiskParams:
+    type: object
+    properties:
+      backing_denom:
+        type: string
+        title: backing coin denom
+      enabled:
+        type: boolean
+        title: whether enabled
+      max_backing:
+        type: string
+        title: maximum total backing amount
+      max_mer_mint:
+        type: string
+        title: maximum mintable Mer amount
+      mint_fee:
+        type: string
+        title: mint fee rate
+      burn_fee:
+        type: string
+        title: burn fee rate
+      buyback_fee:
+        type: string
+        title: buyback fee rate
+      recollateralize_fee:
+        type: string
+        title: recollateralize fee rate
+    description: BackingRiskParams represents an object of backing coin risk parameters.
+  merlion.maker.v1.CollateralRiskParams:
+    type: object
+    properties:
+      collateral_denom:
+        type: string
+        title: collateral coin denom
+      enabled:
+        type: boolean
+        title: whether enabled
+      max_collateral:
+        type: string
+        title: maximum total collateral amount
+      max_mer_mint:
+        type: string
+        title: maximum total mintable Mer amount
+      liquidation_threshold:
+        type: string
+        title: ratio at which a position is defined as undercollateralized
+      loan_to_value:
+        type: string
+        title: >-
+          maximum ratio of maximum amount of currency that can be borrowed with
+          a
+
+          specific collateral
+      basic_loan_to_value:
+        type: string
+        title: |-
+          basic ratio of maximum amount of currency that can be borrowed with a
+          specific collateral
+      catalytic_lion_ratio:
+        type: string
+        title: >-
+          catalytic ratio of burned Lion to minted stablecoins, to maximize the
+          LTV
+
+          in [basic-LTV, LTV]
+      liquidation_fee:
+        type: string
+        title: |-
+          liquidation fee rate, i.e., the discount a liquidator gets when buying
+          collateral flagged for a liquidation
+      mint_fee:
+        type: string
+        title: 'mint fee rate, i.e., extra fee debt'
+      interest_fee:
+        type: string
+        title: annual interest fee rate (APR)
+    description: CollateralRiskParams represents an object of collateral risk parameters.
+  merlion.maker.v1.MsgBurnByCollateralResponse:
+    type: object
+    properties:
+      repay_in:
         type: object
         properties:
           denom:
@@ -53310,7 +55752,7 @@ definitions:
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
     description: MsgBurnBySwapResponse defines the Msg/BurnBySwap response type.
-  merlion.maker.v1.MsgBuyBackResponse:
+  merlion.maker.v1.MsgBuyBackingResponse:
     type: object
     properties:
       backing_out:
@@ -53325,11 +55767,41 @@ definitions:
 
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
-    description: MsgBuyBackResponse defines the Msg/BuyBack response type.
+    description: MsgBuyBackingResponse defines the Msg/BuyBacking response type.
   merlion.maker.v1.MsgDepositCollateralResponse:
     type: object
     description: >-
       MsgDepositCollateralResponse defines the Msg/DepositCollateral response
+      type.
+  merlion.maker.v1.MsgLiquidateCollateralResponse:
+    type: object
+    properties:
+      repay_in:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      collateral_out:
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+    description: >-
+      MsgReCollateralizeResponse defines the Msg/LiquidateCollateral response
       type.
   merlion.maker.v1.MsgMintByCollateralResponse:
     type: object
@@ -53401,7 +55873,12 @@ definitions:
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
     description: MsgMintBySwapResponse defines the Msg/MintBySwap response type.
-  merlion.maker.v1.MsgReCollateralizeResponse:
+  merlion.maker.v1.MsgRedeemCollateralResponse:
+    type: object
+    description: >-
+      MsgRedeemCollateralResponse defines the Msg/RedeemCollateral response
+      type.
+  merlion.maker.v1.MsgSellBackingResponse:
     type: object
     properties:
       lion_out:
@@ -53416,23 +55893,592 @@ definitions:
 
           NOTE: The amount field is an Int which implements the custom method
           signatures required by gogoproto.
-    description: MsgReCollateralizeResponse defines the Msg/ReCollateralize response type.
-  merlion.maker.v1.MsgRedeemCollateralResponse:
-    type: object
-    description: >-
-      MsgRedeemCollateralResponse defines the Msg/RedeemCollateral response
-      type.
+    description: MsgSellBackingResponse defines the Msg/SellBacking response type.
   merlion.maker.v1.Params:
     type: object
     properties:
       collateral_ratio_step:
         type: string
+        title: adjusting collateral step
       collateral_ratio_price_band:
         type: string
-      collateral_ration_cooldown_period:
+        title: price band for adjusting collateral ratio
+      collateral_ratio_cooldown_period:
         type: string
-        format: uint64
+        format: int64
+        title: cooldown period for adjusting collateral ratio
+      mint_price_bias:
+        type: string
+        title: mint Mer price bias ratio
+      burn_price_bias:
+        type: string
+        title: burn Mer price bias ratio
+      recollateralize_bonus:
+        type: string
+        title: recollateralization bonus ratio
+      liquidation_commission_fee:
+        type: string
+        title: liquidation commission fee ratio
     description: Params defines the parameters for the maker module.
+  merlion.maker.v1.PoolBacking:
+    type: object
+    properties:
+      mer_minted:
+        title: total minted mer
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      backing:
+        title: total backing
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      lion_burned:
+        title: total burned lion
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+  merlion.maker.v1.PoolCollateral:
+    type: object
+    properties:
+      collateral:
+        title: total collateral
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      mer_debt:
+        title: >-
+          total existing mer debt, including minted by collateral, mint fee,
+          last
+
+          interest
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      mer_by_lion:
+        title: total minted merl by burning lion
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      lion_burned:
+        title: total burned lion
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+  merlion.maker.v1.QueryAllBackingPoolsResponse:
+    type: object
+    properties:
+      backing_pools:
+        type: array
+        items:
+          type: object
+          properties:
+            mer_minted:
+              title: total minted mer
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom
+                method
+
+                signatures required by gogoproto.
+            backing:
+              title: total backing
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom
+                method
+
+                signatures required by gogoproto.
+            lion_burned:
+              title: total burned lion
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom
+                method
+
+                signatures required by gogoproto.
+  merlion.maker.v1.QueryAllBackingRiskParamsResponse:
+    type: object
+    properties:
+      risk_params:
+        type: array
+        items:
+          type: object
+          properties:
+            backing_denom:
+              type: string
+              title: backing coin denom
+            enabled:
+              type: boolean
+              title: whether enabled
+            max_backing:
+              type: string
+              title: maximum total backing amount
+            max_mer_mint:
+              type: string
+              title: maximum mintable Mer amount
+            mint_fee:
+              type: string
+              title: mint fee rate
+            burn_fee:
+              type: string
+              title: burn fee rate
+            buyback_fee:
+              type: string
+              title: buyback fee rate
+            recollateralize_fee:
+              type: string
+              title: recollateralize fee rate
+          description: >-
+            BackingRiskParams represents an object of backing coin risk
+            parameters.
+  merlion.maker.v1.QueryAllCollateralPoolsResponse:
+    type: object
+    properties:
+      collateral_pools:
+        type: array
+        items:
+          type: object
+          properties:
+            collateral:
+              title: total collateral
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom
+                method
+
+                signatures required by gogoproto.
+            mer_debt:
+              title: >-
+                total existing mer debt, including minted by collateral, mint
+                fee, last
+
+                interest
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom
+                method
+
+                signatures required by gogoproto.
+            mer_by_lion:
+              title: total minted merl by burning lion
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom
+                method
+
+                signatures required by gogoproto.
+            lion_burned:
+              title: total burned lion
+              type: object
+              properties:
+                denom:
+                  type: string
+                amount:
+                  type: string
+              description: >-
+                Coin defines a token with a denomination and an amount.
+
+
+                NOTE: The amount field is an Int which implements the custom
+                method
+
+                signatures required by gogoproto.
+  merlion.maker.v1.QueryAllCollateralRiskParamsResponse:
+    type: object
+    properties:
+      risk_params:
+        type: array
+        items:
+          type: object
+          properties:
+            collateral_denom:
+              type: string
+              title: collateral coin denom
+            enabled:
+              type: boolean
+              title: whether enabled
+            max_collateral:
+              type: string
+              title: maximum total collateral amount
+            max_mer_mint:
+              type: string
+              title: maximum total mintable Mer amount
+            liquidation_threshold:
+              type: string
+              title: ratio at which a position is defined as undercollateralized
+            loan_to_value:
+              type: string
+              title: >-
+                maximum ratio of maximum amount of currency that can be borrowed
+                with a
+
+                specific collateral
+            basic_loan_to_value:
+              type: string
+              title: >-
+                basic ratio of maximum amount of currency that can be borrowed
+                with a
+
+                specific collateral
+            catalytic_lion_ratio:
+              type: string
+              title: >-
+                catalytic ratio of burned Lion to minted stablecoins, to
+                maximize the LTV
+
+                in [basic-LTV, LTV]
+            liquidation_fee:
+              type: string
+              title: >-
+                liquidation fee rate, i.e., the discount a liquidator gets when
+                buying
+
+                collateral flagged for a liquidation
+            mint_fee:
+              type: string
+              title: 'mint fee rate, i.e., extra fee debt'
+            interest_fee:
+              type: string
+              title: annual interest fee rate (APR)
+          description: >-
+            CollateralRiskParams represents an object of collateral risk
+            parameters.
+  merlion.maker.v1.QueryBackingPoolResponse:
+    type: object
+    properties:
+      backing_pool:
+        type: object
+        properties:
+          mer_minted:
+            title: total minted mer
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          backing:
+            title: total backing
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          lion_burned:
+            title: total burned lion
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+  merlion.maker.v1.QueryCollateralOfAccountResponse:
+    type: object
+    properties:
+      account_collateral:
+        type: object
+        properties:
+          account:
+            type: string
+            title: account who owns collateral
+          collateral:
+            title: existing collateral
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          mer_debt:
+            title: >-
+              remaining mer debt, including minted by collateral, mint fee, last
+              interest
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          mer_by_lion:
+            title: minted mer by burning lion
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          lion_burned:
+            title: total burned lion
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          last_interest:
+            title: remaining interest debt after last settlement
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          last_settlement_block:
+            type: string
+            format: int64
+            title: the block of last settlement
+  merlion.maker.v1.QueryCollateralPoolResponse:
+    type: object
+    properties:
+      collateral_pool:
+        type: object
+        properties:
+          collateral:
+            title: total collateral
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          mer_debt:
+            title: >-
+              total existing mer debt, including minted by collateral, mint fee,
+              last
+
+              interest
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          mer_by_lion:
+            title: total minted merl by burning lion
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          lion_burned:
+            title: total burned lion
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+  merlion.maker.v1.QueryCollateralRatioResponse:
+    type: object
+    properties:
+      collateral_ratio:
+        type: string
+      last_update_block:
+        type: string
+        format: int64
   merlion.maker.v1.QueryParamsResponse:
     type: object
     properties:
@@ -53442,12 +56488,198 @@ definitions:
         properties:
           collateral_ratio_step:
             type: string
+            title: adjusting collateral step
           collateral_ratio_price_band:
             type: string
-          collateral_ration_cooldown_period:
+            title: price band for adjusting collateral ratio
+          collateral_ratio_cooldown_period:
             type: string
-            format: uint64
+            format: int64
+            title: cooldown period for adjusting collateral ratio
+          mint_price_bias:
+            type: string
+            title: mint Mer price bias ratio
+          burn_price_bias:
+            type: string
+            title: burn Mer price bias ratio
+          recollateralize_bonus:
+            type: string
+            title: recollateralization bonus ratio
+          liquidation_commission_fee:
+            type: string
+            title: liquidation commission fee ratio
     description: QueryParamsResponse is response type for the Query/Params RPC method.
+  merlion.maker.v1.QueryTotalBackingResponse:
+    type: object
+    properties:
+      total_backing:
+        type: object
+        properties:
+          mer_minted:
+            title: total minted mer
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          lion_burned:
+            title: total burned lion
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+  merlion.maker.v1.QueryTotalCollateralResponse:
+    type: object
+    properties:
+      total_collateral:
+        type: object
+        properties:
+          mer_debt:
+            title: >-
+              total existing mer debt, including minted by collateral, mint fee,
+              last
+
+              interest
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          mer_by_lion:
+            title: total minted merl by burning lion
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+          lion_burned:
+            title: total burned lion
+            type: object
+            properties:
+              denom:
+                type: string
+              amount:
+                type: string
+            description: >-
+              Coin defines a token with a denomination and an amount.
+
+
+              NOTE: The amount field is an Int which implements the custom
+              method
+
+              signatures required by gogoproto.
+  merlion.maker.v1.TotalBacking:
+    type: object
+    properties:
+      mer_minted:
+        title: total minted mer
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      lion_burned:
+        title: total burned lion
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+  merlion.maker.v1.TotalCollateral:
+    type: object
+    properties:
+      mer_debt:
+        title: >-
+          total existing mer debt, including minted by collateral, mint fee,
+          last
+
+          interest
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      mer_by_lion:
+        title: total minted merl by burning lion
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
+      lion_burned:
+        title: total burned lion
+        type: object
+        properties:
+          denom:
+            type: string
+          amount:
+            type: string
+        description: |-
+          Coin defines a token with a denomination and an amount.
+
+          NOTE: The amount field is an Int which implements the custom method
+          signatures required by gogoproto.
   merlion.oracle.v1.AggregateExchangeRatePrevote:
     type: object
     properties:
@@ -53460,12 +56692,13 @@ definitions:
         format: uint64
     title: >-
       AggregateExchangeRatePrevote represents the aggregate prevoting on the
-      ExchangeRateVote.
 
-      The purpose of aggregate prevoting is to hide vote exchange rates with
-      hash
+      ExchangeRateVote. The purpose of aggregate prevoting is to hide vote
+      exchange
 
-      which is formatted as hex string in SHA256("{salt}:{exchange
+      rates with hash which is formatted as hex string in
+      SHA256("{salt}:{exchange
+
       rate}{denom},...,{exchange rate}{denom}:{voter}")
   merlion.oracle.v1.AggregateExchangeRateVote:
     type: object
@@ -53484,13 +56717,11 @@ definitions:
         type: string
     description: |-
       AggregateExchangeRateVote represents the voting on
-      the exchange rates of Lion denominated in various Mer stablecoin assets.
+      the exchange rates of various assets denominated in uUSD.
   merlion.oracle.v1.Denom:
     type: object
     properties:
       name:
-        type: string
-      tobin_tax:
         type: string
     title: Denom represents an object to hold configurations of each denom
   merlion.oracle.v1.ExchangeRateTuple:
@@ -53503,17 +56734,19 @@ definitions:
     description: ExchangeRateTuple stores interpreted exchange rates data.
   merlion.oracle.v1.MsgAggregateExchangeRatePrevoteResponse:
     type: object
-    description: >-
+    description: |-
       MsgAggregateExchangeRatePrevoteResponse defines the
       MsgAggregateExchangeRatePrevote response type.
   merlion.oracle.v1.MsgAggregateExchangeRateVoteResponse:
     type: object
     description: >-
       MsgAggregateExchangeRateVoteResponse defines the
-      MsgAggregateExchangeRateVote response type.
+      MsgAggregateExchangeRateVote
+
+      response type.
   merlion.oracle.v1.MsgDelegateFeedConsentResponse:
     type: object
-    description: >-
+    description: |-
       MsgDelegateFeedConsentResponse defines the MsgDelegateFeedConsent response
       type.
   merlion.oracle.v1.Params:
@@ -53536,8 +56769,6 @@ definitions:
           properties:
             name:
               type: string
-            tobin_tax:
-              type: string
           title: Denom represents an object to hold configurations of each denom
       slash_fraction:
         type: string
@@ -53554,7 +56785,7 @@ definitions:
         type: array
         items:
           type: string
-        description: >-
+        description: |-
           actives defines a list of the denomination which oracle prices aggreed
           upon.
     description: |-
@@ -53575,16 +56806,19 @@ definitions:
             format: uint64
         title: >-
           AggregateExchangeRatePrevote represents the aggregate prevoting on the
-          ExchangeRateVote.
 
-          The purpose of aggregate prevoting is to hide vote exchange rates with
-          hash
+          ExchangeRateVote. The purpose of aggregate prevoting is to hide vote
+          exchange
 
-          which is formatted as hex string in SHA256("{salt}:{exchange
+          rates with hash which is formatted as hex string in
+          SHA256("{salt}:{exchange
+
           rate}{denom},...,{exchange rate}{denom}:{voter}")
         description: >-
           aggregate_prevote defines oracle aggregate prevote submitted by a
-          validator in the current vote period.
+          validator
+
+          in the current vote period.
     description: |-
       QueryAggregatePrevoteResponse is response type for the
       Query/AggregatePrevote RPC method.
@@ -53605,16 +56839,20 @@ definitions:
               format: uint64
           title: >-
             AggregateExchangeRatePrevote represents the aggregate prevoting on
-            the ExchangeRateVote.
+            the
 
-            The purpose of aggregate prevoting is to hide vote exchange rates
-            with hash
+            ExchangeRateVote. The purpose of aggregate prevoting is to hide vote
+            exchange
 
-            which is formatted as hex string in SHA256("{salt}:{exchange
+            rates with hash which is formatted as hex string in
+            SHA256("{salt}:{exchange
+
             rate}{denom},...,{exchange rate}{denom}:{voter}")
         description: >-
           aggregate_prevotes defines all oracle aggregate prevotes submitted in
-          the current vote period.
+          the
+
+          current vote period.
     description: |-
       QueryAggregatePrevotesResponse is response type for the
       Query/AggregatePrevotes RPC method.
@@ -53624,7 +56862,9 @@ definitions:
       aggregate_vote:
         description: >-
           aggregate_vote defines oracle aggregate vote submitted by a validator
-          in the current vote period.
+          in
+
+          the current vote period.
         type: object
         properties:
           exchange_rate_tuples:
@@ -53662,14 +56902,14 @@ definitions:
                 description: ExchangeRateTuple stores interpreted exchange rates data.
             voter:
               type: string
-          description: >-
+          description: |-
             AggregateExchangeRateVote represents the voting on
-
-            the exchange rates of Lion denominated in various Mer stablecoin
-            assets.
+            the exchange rates of various assets denominated in uUSD.
         description: >-
           aggregate_votes defines all oracle aggregate votes submitted in the
-          current vote period.
+          current
+
+          vote period.
     description: |-
       QueryAggregateVotesResponse is response type for the
       Query/AggregateVotes RPC method.
@@ -53679,8 +56919,10 @@ definitions:
       exchange_rate:
         type: string
         description: >-
-          exchange_rate defines the exchange rate of Lion denominated in various
-          Mer stablecoin.
+          exchange_rate defines the exchange rate of the denom asset denominated
+          in
+
+          uUSD.
     description: |-
       QueryExchangeRateResponse is response type for the
       Query/ExchangeRate RPC method.
@@ -53701,7 +56943,7 @@ definitions:
 
             NOTE: The amount field is an Dec which implements the custom method
             signatures required by gogoproto.
-        description: >-
+        description: |-
           exchange_rates defines a list of the exchange rate for all whitelisted
           denoms.
     description: |-
@@ -53750,8 +56992,6 @@ definitions:
               properties:
                 name:
                   type: string
-                tobin_tax:
-                  type: string
               title: Denom represents an object to hold configurations of each denom
           slash_fraction:
             type: string
@@ -53761,32 +57001,6 @@ definitions:
           min_valid_per_window:
             type: string
     description: QueryParamsResponse is response type for the Query/Params RPC method.
-  merlion.oracle.v1.QueryTobinTaxResponse:
-    type: object
-    properties:
-      tobin_tax:
-        type: string
-        description: tobin_taxe defines the tobin tax of a denom.
-    description: |-
-      QueryTobinTaxResponse is response type for the
-      Query/TobinTax RPC method.
-  merlion.oracle.v1.QueryTobinTaxesResponse:
-    type: object
-    properties:
-      tobin_taxes:
-        type: array
-        items:
-          type: object
-          properties:
-            name:
-              type: string
-            tobin_tax:
-              type: string
-          title: Denom represents an object to hold configurations of each denom
-        description: tobin_taxes defines a list of the tobin tax of all whitelisted denoms.
-    description: |-
-      QueryTobinTaxesResponse is response type for the
-      Query/TobinTaxes RPC method.
   merlion.oracle.v1.QueryVoteTargetsResponse:
     type: object
     properties:
@@ -53800,3 +57014,13 @@ definitions:
     description: |-
       QueryVoteTargetsResponse is response type for the
       Query/VoteTargets RPC method.
+  merlionzone.merlion.ve.Params:
+    type: object
+    description: Params defines the parameters for the module.
+  merlionzone.merlion.ve.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+    description: QueryParamsResponse is response type for the Query/Params RPC method.

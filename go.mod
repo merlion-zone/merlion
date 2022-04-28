@@ -138,8 +138,6 @@ require (
 	github.com/tyler-smith/go-bip39 v1.1.0 // indirect
 	github.com/zondax/hid v0.9.0 // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
 	golang.org/x/net v0.0.0-20220412020605-290c469a71a5 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
@@ -155,8 +153,9 @@ require (
 )
 
 replace (
-	github.com/cosmos/cosmos-sdk => github.com/merlion-zone/cosmos-sdk v0.45.3-merlion
+	github.com/cosmos/cosmos-sdk => github.com/merlion-zone/cosmos-sdk v0.45.4-merlion.4
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 	github.com/keybase/go-keychain => github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4
+	github.com/tendermint/tendermint => github.com/tendermint/tendermint v0.34.19
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
 )

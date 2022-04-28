@@ -56,6 +56,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/mint"
 	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	nfttypes "github.com/cosmos/cosmos-sdk/x/nft"
+	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
+	nft "github.com/cosmos/cosmos-sdk/x/nft/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
@@ -85,6 +88,9 @@ import (
 	custombankclient "github.com/merlion-zone/merlion/x/bank/client"
 	custombankkeeper "github.com/merlion-zone/merlion/x/bank/keeper"
 	custombanktypes "github.com/merlion-zone/merlion/x/bank/types"
+	"github.com/merlion-zone/merlion/x/ve"
+	vekeeper "github.com/merlion-zone/merlion/x/ve/keeper"
+	vetypes "github.com/merlion-zone/merlion/x/ve/types"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -193,6 +199,8 @@ var (
 		erc20.AppModuleBasic{},
 		oracle.AppModuleBasic{},
 		maker.AppModuleBasic{},
+		nft.AppModuleBasic{},
+		ve.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -209,6 +217,8 @@ var (
 		erc20types.ModuleName:          {authtypes.Minter, authtypes.Burner},
 		oracletypes.ModuleName:         nil,
 		makertypes.ModuleName:          {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		nfttypes.ModuleName:            nil,
+		vetypes.ModuleName:             nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
@@ -278,10 +288,14 @@ type MerlionApp struct {
 	EvmKeeper       *evmkeeper.Keeper
 	FeeMarketKeeper feemarketkeeper.Keeper
 
-	Erc20Keeper  erc20keeper.Keeper
-	OracleKeeper oraclekeeper.Keeper
+	Erc20Keeper erc20keeper.Keeper
 
-	MakerKeeper makerkeeper.Keeper
+	OracleKeeper oraclekeeper.Keeper
+	MakerKeeper  makerkeeper.Keeper
+
+	NftKeeper nftkeeper.Keeper
+	VeKeeper  vekeeper.Keeper
+
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -324,6 +338,8 @@ func New(
 		erc20types.StoreKey,
 		oracletypes.StoreKey,
 		makertypes.StoreKey,
+		nfttypes.StoreKey,
+		vetypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey, evmtypes.TransientKey)
@@ -477,6 +493,12 @@ func New(
 	)
 	makerModule := maker.NewAppModule(appCodec, app.MakerKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.NftKeeper = nftkeeper.NewKeeper(keys[nfttypes.StoreKey], appCodec, app.AccountKeeper, app.BankKeeper)
+	nftModule := nft.NewAppModule(appCodec, app.NftKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry)
+
+	app.VeKeeper = *vekeeper.NewKeeper(appCodec, keys[vetypes.StoreKey], keys[vetypes.MemStoreKey], app.GetSubspace(vetypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.NftKeeper)
+	veModule := ve.NewAppModule(appCodec, app.VeKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -520,6 +542,8 @@ func New(
 		erc20Module,
 		oracleModule,
 		makerModule,
+		nftModule,
+		veModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -551,6 +575,8 @@ func New(
 		erc20types.ModuleName,
 		oracletypes.ModuleName,
 		makertypes.ModuleName,
+		nfttypes.ModuleName,
+		vetypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -577,6 +603,8 @@ func New(
 		paramstypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		erc20types.ModuleName,
+		nfttypes.ModuleName,
+		vetypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -607,6 +635,8 @@ func New(
 		upgradetypes.ModuleName,
 		erc20types.ModuleName,
 		makertypes.ModuleName,
+		nfttypes.ModuleName,
+		vetypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -634,6 +664,8 @@ func New(
 		erc20Module,
 		oracleModule,
 		makerModule,
+		nftModule,
+		veModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -864,6 +896,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(erc20types.ModuleName)
 	paramsKeeper.Subspace(oracletypes.ModuleName)
 	paramsKeeper.Subspace(makertypes.ModuleName)
+	paramsKeeper.Subspace(nfttypes.ModuleName)
+	paramsKeeper.Subspace(vetypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

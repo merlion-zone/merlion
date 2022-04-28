@@ -147,6 +147,19 @@
   
     - [Msg](#merlion.oracle.v1.Msg)
   
+- [merlion/ve/v1/genesis.proto](#merlion/ve/v1/genesis.proto)
+    - [GenesisState](#merlion.ve.v1.GenesisState)
+    - [Params](#merlion.ve.v1.Params)
+  
+- [merlion/ve/v1/query.proto](#merlion/ve/v1/query.proto)
+    - [QueryParamsRequest](#merlion.ve.v1.QueryParamsRequest)
+    - [QueryParamsResponse](#merlion.ve.v1.QueryParamsResponse)
+  
+    - [Query](#merlion.ve.v1.Query)
+  
+- [merlion/ve/v1/tx.proto](#merlion/ve/v1/tx.proto)
+    - [Msg](#merlion.ve.v1.Msg)
+  
 - [Scalar Value Types](#scalar-value-types)
 
 
@@ -2069,6 +2082,123 @@ Msg defines the Msg service.
 | `AggregateExchangeRatePrevote` | [MsgAggregateExchangeRatePrevote](#merlion.oracle.v1.MsgAggregateExchangeRatePrevote) | [MsgAggregateExchangeRatePrevoteResponse](#merlion.oracle.v1.MsgAggregateExchangeRatePrevoteResponse) | AggregateExchangeRatePrevote submits aggregate exchange rate prevote. | GET|/merlion/oracle/v1/tx/aggregate_exchange_rate_prevote|
 | `AggregateExchangeRateVote` | [MsgAggregateExchangeRateVote](#merlion.oracle.v1.MsgAggregateExchangeRateVote) | [MsgAggregateExchangeRateVoteResponse](#merlion.oracle.v1.MsgAggregateExchangeRateVoteResponse) | AggregateExchangeRateVote submits aggregate exchange rate vote. | GET|/merlion/oracle/v1/tx/aggregate_exchange_rate_vote|
 | `DelegateFeedConsent` | [MsgDelegateFeedConsent](#merlion.oracle.v1.MsgDelegateFeedConsent) | [MsgDelegateFeedConsentResponse](#merlion.oracle.v1.MsgDelegateFeedConsentResponse) | DelegateFeedConsent sets the feeder delegation. | GET|/merlion/oracle/v1/tx/delegate_feed_consent|
+
+ <!-- end services -->
+
+
+
+<a name="merlion/ve/v1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/ve/v1/genesis.proto
+
+
+
+<a name="merlion.ve.v1.GenesisState"></a>
+
+### GenesisState
+GenesisState defines the ve module's genesis state.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#merlion.ve.v1.Params) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.Params"></a>
+
+### Params
+Params defines the parameters for the module.
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/ve/v1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/ve/v1/query.proto
+
+
+
+<a name="merlion.ve.v1.QueryParamsRequest"></a>
+
+### QueryParamsRequest
+QueryParamsRequest is request type for the Query/Params RPC method.
+
+
+
+
+
+
+<a name="merlion.ve.v1.QueryParamsResponse"></a>
+
+### QueryParamsResponse
+QueryParamsResponse is response type for the Query/Params RPC method.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#merlion.ve.v1.Params) |  | params holds all the parameters of this module. |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="merlion.ve.v1.Query"></a>
+
+### Query
+Query defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Params` | [QueryParamsRequest](#merlion.ve.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.ve.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlionzone/merlion/ve/params|
+
+ <!-- end services -->
+
+
+
+<a name="merlion/ve/v1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/ve/v1/tx.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="merlion.ve.v1.Msg"></a>
+
+### Msg
+Msg defines the Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
 
  <!-- end services -->
 
