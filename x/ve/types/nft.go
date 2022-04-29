@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -18,8 +20,20 @@ var VeNftClass = nft.Class{
 	Uri:         "",
 }
 
-func VeNftID(idNumber int) string {
+func VeID(idNumber uint64) string {
 	return fmt.Sprintf("ve-%d", idNumber)
+}
+
+func Uint64FromVeID(veID string) uint64 {
+	splits := strings.Split(veID, "-")
+	if len(splits) != 2 || splits[0] != "ve" {
+		return EmptyVeID
+	}
+	id, err := strconv.ParseUint(splits[1], 10, 64)
+	if err != nil || id == EmptyVeID {
+		return EmptyVeID
+	}
+	return id
 }
 
 func VeNftUri(nftID string, balance sdk.Int, lockedEnd time.Time, value sdk.Int) string {

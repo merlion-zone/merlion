@@ -9,4 +9,8 @@ option go_package = "github.com/merlion-zone/merlion/x/ve/types";
 message GenesisState { Params params = 1 [ (gogoproto.nullable) = false ]; }
 
 // Params defines the parameters for the module.
-message Params { option (gogoproto.goproto_stringer) = false; }
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  string lock_denom = 1;
+}

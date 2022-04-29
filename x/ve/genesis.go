@@ -2,6 +2,7 @@ package ve
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/ve/keeper"
 	"github.com/merlion-zone/merlion/x/ve/types"
 )
@@ -15,6 +16,16 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if err := k.SaveNftClass(ctx); err != nil {
 		panic(err)
 	}
+
+	k.SetTotalLockedAmount(ctx, merlion.ZeroInt)
+	k.SetNextVeID(ctx, 1)
+	k.SetCurrentEpoch(ctx, 0)
+	k.SetCheckpoint(ctx, 0, types.Checkpoint{
+		Bias:      merlion.ZeroInt,
+		Slope:     merlion.ZeroInt,
+		Timestamp: 0,
+		Block:     0,
+	})
 }
 
 // ExportGenesis returns the capability module's exported genesis.

@@ -1,6 +1,8 @@
 package types
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
 
 const (
 	TypeMsgCreate   = "create"
@@ -29,6 +31,11 @@ func (m *MsgCreate) GetSignBytes() []byte {
 
 // ValidateBasic implements sdk.Msg
 func (m *MsgCreate) ValidateBasic() error {
+	if !m.Amount.IsPositive() {
+	}
+	if m.LockDuration > MaxLockTime {
+		return ErrTooLongLockTime
+	}
 	// TODO implement me
 	panic("implement me")
 }
@@ -75,6 +82,13 @@ func (m *MsgMerge) GetSignBytes() []byte {
 
 // ValidateBasic implements sdk.Msg
 func (m *MsgMerge) ValidateBasic() error {
+	if Uint64FromVeID(m.FromVeId) == EmptyVeID {
+	}
+	if Uint64FromVeID(m.ToVeId) == EmptyVeID {
+	}
+	if m.FromVeId == m.ToVeId {
+	}
+
 	// TODO implement me
 	panic("implement me")
 }

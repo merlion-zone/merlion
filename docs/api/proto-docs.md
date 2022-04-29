@@ -2132,6 +2132,11 @@ GenesisState defines the ve module's genesis state.
 Params defines the parameters for the module.
 
 
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lock_denom` | [string](#string) |  |  |
+
+
 
 
 

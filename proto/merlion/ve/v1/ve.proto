@@ -7,16 +7,22 @@ import "cosmos/base/v1beta1/coin.proto";
 option go_package = "github.com/merlion-zone/merlion/x/ve/types";
 
 message LockedBalance {
-  string amount = 1
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+  string amount = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
   uint64 end = 2;
 }
 
 message Checkpoint {
-  string bias = 1
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
-  string slope = 2
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+  string bias = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  string slope = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
   uint64 timestamp = 3;
   int64 block = 4;
 }
