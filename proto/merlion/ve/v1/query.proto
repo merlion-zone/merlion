@@ -8,12 +8,40 @@ import "merlion/ve/v1/genesis.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/ve/types";
 
-// Query defines the gRPC querier service.
+// Query defines the ve gRPC querier service.
 service Query {
+  // TotalVotingPower queries the total voting power.
+  rpc TotalVotingPower(QueryTotalVotingPowerRequest)
+      returns (QueryTotalVotingPowerRequest) {
+    option (google.api.http).get = "/merlion/ve/v1/total_voting_power";
+  }
+
+  // VotingPower queries the voting power of a veNFT.
+  rpc VotingPower(QueryVotingPowerRequest) returns (QueryVotingPowerRequest) {
+    option (google.api.http).get = "/merlion/ve/v1/voting_power/{ve_id}";
+  }
+
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/merlionzone/merlion/ve/params";
+    option (google.api.http).get = "/merlion/ve/v1/params";
   }
+}
+
+message QueryTotalVotingPowerRequest { uint64 at_time = 1; }
+
+message QueryTotalVotingPowerResponse {
+  string power = 1
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+}
+
+message QueryVotingPowerRequest {
+  string ve_id = 1;
+  uint64 at_time = 2;
+}
+
+message QueryVotingPowerResponse {
+  string power = 1
+      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.

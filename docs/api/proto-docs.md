@@ -154,11 +154,28 @@
 - [merlion/ve/v1/query.proto](#merlion/ve/v1/query.proto)
     - [QueryParamsRequest](#merlion.ve.v1.QueryParamsRequest)
     - [QueryParamsResponse](#merlion.ve.v1.QueryParamsResponse)
+    - [QueryTotalVotingPowerRequest](#merlion.ve.v1.QueryTotalVotingPowerRequest)
+    - [QueryTotalVotingPowerResponse](#merlion.ve.v1.QueryTotalVotingPowerResponse)
+    - [QueryVotingPowerRequest](#merlion.ve.v1.QueryVotingPowerRequest)
+    - [QueryVotingPowerResponse](#merlion.ve.v1.QueryVotingPowerResponse)
   
     - [Query](#merlion.ve.v1.Query)
   
 - [merlion/ve/v1/tx.proto](#merlion/ve/v1/tx.proto)
+    - [MsgCreate](#merlion.ve.v1.MsgCreate)
+    - [MsgCreateResponse](#merlion.ve.v1.MsgCreateResponse)
+    - [MsgDeposit](#merlion.ve.v1.MsgDeposit)
+    - [MsgDepositResponse](#merlion.ve.v1.MsgDepositResponse)
+    - [MsgMerge](#merlion.ve.v1.MsgMerge)
+    - [MsgMergeResponse](#merlion.ve.v1.MsgMergeResponse)
+    - [MsgWithdraw](#merlion.ve.v1.MsgWithdraw)
+    - [MsgWithdrawResponse](#merlion.ve.v1.MsgWithdrawResponse)
+  
     - [Msg](#merlion.ve.v1.Msg)
+  
+- [merlion/ve/v1/ve.proto](#merlion/ve/v1/ve.proto)
+    - [Checkpoint](#merlion.ve.v1.Checkpoint)
+    - [LockedBalance](#merlion.ve.v1.LockedBalance)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -2159,6 +2176,67 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 
 
 
+
+<a name="merlion.ve.v1.QueryTotalVotingPowerRequest"></a>
+
+### QueryTotalVotingPowerRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `at_time` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.QueryTotalVotingPowerResponse"></a>
+
+### QueryTotalVotingPowerResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `power` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.QueryVotingPowerRequest"></a>
+
+### QueryVotingPowerRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `ve_id` | [string](#string) |  |  |
+| `at_time` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.QueryVotingPowerResponse"></a>
+
+### QueryVotingPowerResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `power` | [string](#string) |  |  |
+
+
+
+
+
  <!-- end messages -->
 
  <!-- end enums -->
@@ -2169,11 +2247,13 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 <a name="merlion.ve.v1.Query"></a>
 
 ### Query
-Query defines the gRPC querier service.
+Query defines the ve gRPC querier service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `Params` | [QueryParamsRequest](#merlion.ve.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.ve.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlionzone/merlion/ve/params|
+| `TotalVotingPower` | [QueryTotalVotingPowerRequest](#merlion.ve.v1.QueryTotalVotingPowerRequest) | [QueryTotalVotingPowerRequest](#merlion.ve.v1.QueryTotalVotingPowerRequest) | TotalVotingPower queries the total voting power. | GET|/merlion/ve/v1/total_voting_power|
+| `VotingPower` | [QueryVotingPowerRequest](#merlion.ve.v1.QueryVotingPowerRequest) | [QueryVotingPowerRequest](#merlion.ve.v1.QueryVotingPowerRequest) | VotingPower queries the voting power of a veNFT. | GET|/merlion/ve/v1/voting_power/{ve_id}|
+| `Params` | [QueryParamsRequest](#merlion.ve.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.ve.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/ve/v1/params|
 
  <!-- end services -->
 
@@ -2183,6 +2263,115 @@ Query defines the gRPC querier service.
 <p align="right"><a href="#top">Top</a></p>
 
 ## merlion/ve/v1/tx.proto
+
+
+
+<a name="merlion.ve.v1.MsgCreate"></a>
+
+### MsgCreate
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `to` | [string](#string) |  |  |
+| `amount` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lock_duration` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.MsgCreateResponse"></a>
+
+### MsgCreateResponse
+
+
+
+
+
+
+
+<a name="merlion.ve.v1.MsgDeposit"></a>
+
+### MsgDeposit
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `ve_id` | [string](#string) |  |  |
+| `amount` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lock_duration` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.MsgDepositResponse"></a>
+
+### MsgDepositResponse
+
+
+
+
+
+
+
+<a name="merlion.ve.v1.MsgMerge"></a>
+
+### MsgMerge
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `from_ve_id` | [string](#string) |  |  |
+| `to_ve_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.MsgMergeResponse"></a>
+
+### MsgMergeResponse
+
+
+
+
+
+
+
+<a name="merlion.ve.v1.MsgWithdraw"></a>
+
+### MsgWithdraw
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `ve_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.MsgWithdrawResponse"></a>
+
+### MsgWithdrawResponse
+
+
+
+
 
 
  <!-- end messages -->
@@ -2195,10 +2384,64 @@ Query defines the gRPC querier service.
 <a name="merlion.ve.v1.Msg"></a>
 
 ### Msg
-Msg defines the Msg service.
+Msg defines the ve Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Create` | [MsgCreate](#merlion.ve.v1.MsgCreate) | [MsgCreateResponse](#merlion.ve.v1.MsgCreateResponse) | Create creates a veNFT. | GET|/merlion/ve/v1/tx/create|
+| `Deposit` | [MsgDeposit](#merlion.ve.v1.MsgDeposit) | [MsgDepositResponse](#merlion.ve.v1.MsgDepositResponse) | Deposit deposits some coin amount and/or extends locking duration for a veNFT. | GET|/merlion/ve/v1/tx/deposit|
+| `Merge` | [MsgMerge](#merlion.ve.v1.MsgMerge) | [MsgMergeResponse](#merlion.ve.v1.MsgMergeResponse) | Merge merges a veNFT (burn it) to another veNFT. | GET|/merlion/ve/v1/tx/merge|
+| `Withdraw` | [MsgWithdraw](#merlion.ve.v1.MsgWithdraw) | [MsgWithdrawResponse](#merlion.ve.v1.MsgWithdrawResponse) | Withdraw withdraws all coin amount of a veNFT. | GET|/merlion/ve/v1/tx/withdraw|
+
+ <!-- end services -->
+
+
+
+<a name="merlion/ve/v1/ve.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/ve/v1/ve.proto
+
+
+
+<a name="merlion.ve.v1.Checkpoint"></a>
+
+### Checkpoint
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `bias` | [string](#string) |  |  |
+| `slope` | [string](#string) |  |  |
+| `timestamp` | [uint64](#uint64) |  |  |
+| `block` | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.LockedBalance"></a>
+
+### LockedBalance
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `amount` | [string](#string) |  |  |
+| `end` | [uint64](#uint64) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 

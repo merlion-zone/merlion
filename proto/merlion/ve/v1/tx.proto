@@ -1,7 +1,83 @@
 syntax = "proto3";
 package merlion.ve.v1;
 
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
 option go_package = "github.com/merlion-zone/merlion/x/ve/types";
 
-// Msg defines the Msg service.
-service Msg {}
+// Msg defines the ve Msg service.
+service Msg {
+  // Create creates a veNFT.
+  rpc Create(MsgCreate) returns (MsgCreateResponse) {
+    option (google.api.http).get = "/merlion/ve/v1/tx/create";
+  }
+
+  // Deposit deposits some coin amount and/or extends locking duration for a
+  // veNFT.
+  rpc Deposit(MsgDeposit) returns (MsgDepositResponse) {
+    option (google.api.http).get = "/merlion/ve/v1/tx/deposit";
+  }
+
+  // Merge merges a veNFT (burn it) to another veNFT.
+  rpc Merge(MsgMerge) returns (MsgMergeResponse) {
+    option (google.api.http).get = "/merlion/ve/v1/tx/merge";
+  }
+
+  // Withdraw withdraws all coin amount of a veNFT.
+  rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse) {
+    option (google.api.http).get = "/merlion/ve/v1/tx/withdraw";
+  }
+}
+
+message MsgCreate {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
+  string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
+  cosmos.base.v1beta1.Coin amount = 3 [
+    (gogoproto.moretags) = "yaml:\"amount\"",
+    (gogoproto.nullable) = false
+  ];
+  uint64 lock_duration = 4 [ (gogoproto.moretags) = "yaml:\"lock_duration\"" ];
+}
+
+message MsgCreateResponse {}
+
+message MsgDeposit {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
+  string ve_id = 2 [ (gogoproto.moretags) = "yaml:\"ve_id\"" ];
+  cosmos.base.v1beta1.Coin amount = 3 [
+    (gogoproto.moretags) = "yaml:\"amount\"",
+    (gogoproto.nullable) = false
+  ];
+  uint64 lock_duration = 4 [ (gogoproto.moretags) = "yaml:\"lock_duration\"" ];
+}
+
+message MsgDepositResponse {}
+
+message MsgMerge {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
+  string from_ve_id = 2 [ (gogoproto.moretags) = "yaml:\"from_ve_id\"" ];
+  string to_ve_id = 3 [ (gogoproto.moretags) = "yaml:\"to_ve_id\"" ];
+}
+
+message MsgMergeResponse {}
+
+message MsgWithdraw {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
+  string ve_id = 2 [ (gogoproto.moretags) = "yaml:\"ve_id\"" ];
+}
+
+message MsgWithdrawResponse {}

@@ -6,6 +6,7 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/cosmos/cosmos-sdk/types/query"
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
@@ -30,6 +31,176 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type QueryTotalVotingPowerRequest struct {
+	AtTime uint64 `protobuf:"varint,1,opt,name=at_time,json=atTime,proto3" json:"at_time,omitempty"`
+}
+
+func (m *QueryTotalVotingPowerRequest) Reset()         { *m = QueryTotalVotingPowerRequest{} }
+func (m *QueryTotalVotingPowerRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryTotalVotingPowerRequest) ProtoMessage()    {}
+func (*QueryTotalVotingPowerRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_256fa148a9e7f65f, []int{0}
+}
+func (m *QueryTotalVotingPowerRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryTotalVotingPowerRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryTotalVotingPowerRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryTotalVotingPowerRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryTotalVotingPowerRequest.Merge(m, src)
+}
+func (m *QueryTotalVotingPowerRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryTotalVotingPowerRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryTotalVotingPowerRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryTotalVotingPowerRequest proto.InternalMessageInfo
+
+func (m *QueryTotalVotingPowerRequest) GetAtTime() uint64 {
+	if m != nil {
+		return m.AtTime
+	}
+	return 0
+}
+
+type QueryTotalVotingPowerResponse struct {
+	Power *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=power,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"power,omitempty"`
+}
+
+func (m *QueryTotalVotingPowerResponse) Reset()         { *m = QueryTotalVotingPowerResponse{} }
+func (m *QueryTotalVotingPowerResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryTotalVotingPowerResponse) ProtoMessage()    {}
+func (*QueryTotalVotingPowerResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_256fa148a9e7f65f, []int{1}
+}
+func (m *QueryTotalVotingPowerResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryTotalVotingPowerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryTotalVotingPowerResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryTotalVotingPowerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryTotalVotingPowerResponse.Merge(m, src)
+}
+func (m *QueryTotalVotingPowerResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryTotalVotingPowerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryTotalVotingPowerResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryTotalVotingPowerResponse proto.InternalMessageInfo
+
+type QueryVotingPowerRequest struct {
+	VeId   string `protobuf:"bytes,1,opt,name=ve_id,json=veId,proto3" json:"ve_id,omitempty"`
+	AtTime uint64 `protobuf:"varint,2,opt,name=at_time,json=atTime,proto3" json:"at_time,omitempty"`
+}
+
+func (m *QueryVotingPowerRequest) Reset()         { *m = QueryVotingPowerRequest{} }
+func (m *QueryVotingPowerRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryVotingPowerRequest) ProtoMessage()    {}
+func (*QueryVotingPowerRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_256fa148a9e7f65f, []int{2}
+}
+func (m *QueryVotingPowerRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryVotingPowerRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryVotingPowerRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryVotingPowerRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryVotingPowerRequest.Merge(m, src)
+}
+func (m *QueryVotingPowerRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryVotingPowerRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryVotingPowerRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryVotingPowerRequest proto.InternalMessageInfo
+
+func (m *QueryVotingPowerRequest) GetVeId() string {
+	if m != nil {
+		return m.VeId
+	}
+	return ""
+}
+
+func (m *QueryVotingPowerRequest) GetAtTime() uint64 {
+	if m != nil {
+		return m.AtTime
+	}
+	return 0
+}
+
+type QueryVotingPowerResponse struct {
+	Power *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=power,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"power,omitempty"`
+}
+
+func (m *QueryVotingPowerResponse) Reset()         { *m = QueryVotingPowerResponse{} }
+func (m *QueryVotingPowerResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryVotingPowerResponse) ProtoMessage()    {}
+func (*QueryVotingPowerResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_256fa148a9e7f65f, []int{3}
+}
+func (m *QueryVotingPowerResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryVotingPowerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryVotingPowerResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryVotingPowerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryVotingPowerResponse.Merge(m, src)
+}
+func (m *QueryVotingPowerResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryVotingPowerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryVotingPowerResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryVotingPowerResponse proto.InternalMessageInfo
+
 // QueryParamsRequest is request type for the Query/Params RPC method.
 type QueryParamsRequest struct {
 }
@@ -38,7 +209,7 @@ func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
 func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsRequest) ProtoMessage()    {}
 func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_256fa148a9e7f65f, []int{0}
+	return fileDescriptor_256fa148a9e7f65f, []int{4}
 }
 func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -77,7 +248,7 @@ func (m *QueryParamsResponse) Reset()         { *m = QueryParamsResponse{} }
 func (m *QueryParamsResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsResponse) ProtoMessage()    {}
 func (*QueryParamsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_256fa148a9e7f65f, []int{1}
+	return fileDescriptor_256fa148a9e7f65f, []int{5}
 }
 func (m *QueryParamsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -114,6 +285,10 @@ func (m *QueryParamsResponse) GetParams() Params {
 }
 
 func init() {
+	proto.RegisterType((*QueryTotalVotingPowerRequest)(nil), "merlion.ve.v1.QueryTotalVotingPowerRequest")
+	proto.RegisterType((*QueryTotalVotingPowerResponse)(nil), "merlion.ve.v1.QueryTotalVotingPowerResponse")
+	proto.RegisterType((*QueryVotingPowerRequest)(nil), "merlion.ve.v1.QueryVotingPowerRequest")
+	proto.RegisterType((*QueryVotingPowerResponse)(nil), "merlion.ve.v1.QueryVotingPowerResponse")
 	proto.RegisterType((*QueryParamsRequest)(nil), "merlion.ve.v1.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "merlion.ve.v1.QueryParamsResponse")
 }
@@ -121,27 +296,38 @@ func init() {
 func init() { proto.RegisterFile("merlion/ve/v1/query.proto", fileDescriptor_256fa148a9e7f65f) }
 
 var fileDescriptor_256fa148a9e7f65f = []byte{
-	// 306 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x90, 0x41, 0x4b, 0xc3, 0x30,
-	0x14, 0xc7, 0x5b, 0xd1, 0x1d, 0x2a, 0x5e, 0xea, 0x04, 0x9d, 0x12, 0x67, 0x0f, 0x22, 0x03, 0x13,
-	0xba, 0x7d, 0x83, 0xe1, 0xc9, 0x93, 0xee, 0xe8, 0x2d, 0x1d, 0x8f, 0x18, 0x58, 0xf3, 0xb2, 0x26,
-	0xab, 0xce, 0x93, 0xf8, 0x09, 0x04, 0xbf, 0xd4, 0x8e, 0x03, 0x2f, 0x9e, 0x44, 0x36, 0x3f, 0x88,
-	0xb4, 0x89, 0x60, 0x15, 0xbc, 0x85, 0xf7, 0x7e, 0xff, 0x1f, 0xff, 0x97, 0xe8, 0x20, 0x87, 0x62,
-	0x22, 0x51, 0xb1, 0x12, 0x58, 0x99, 0xb2, 0xe9, 0x0c, 0x8a, 0x39, 0xd5, 0x05, 0x5a, 0x8c, 0x77,
-	0xfc, 0x8a, 0x96, 0x40, 0xcb, 0xb4, 0xd3, 0x16, 0x28, 0xb0, 0xde, 0xb0, 0xea, 0xe5, 0xa0, 0xce,
-	0x91, 0x40, 0x14, 0x13, 0x60, 0x5c, 0x4b, 0xc6, 0x95, 0x42, 0xcb, 0xad, 0x44, 0x65, 0xfc, 0xb6,
-	0x37, 0x46, 0x93, 0xa3, 0x61, 0x19, 0x37, 0xe0, 0xdc, 0xac, 0x4c, 0x33, 0xb0, 0x3c, 0x65, 0x9a,
-	0x0b, 0xa9, 0x6a, 0xd8, 0xb3, 0x87, 0xcd, 0x26, 0x02, 0x14, 0x18, 0xe9, 0x45, 0x49, 0x3b, 0x8a,
-	0xaf, 0xab, 0xf8, 0x15, 0x2f, 0x78, 0x6e, 0x46, 0x30, 0x9d, 0x81, 0xb1, 0xc9, 0x65, 0xb4, 0xdb,
-	0x98, 0x1a, 0x8d, 0xca, 0x40, 0x3c, 0x88, 0x5a, 0xba, 0x9e, 0xec, 0x87, 0xdd, 0xf0, 0x6c, 0xbb,
-	0xbf, 0x47, 0x1b, 0x97, 0x50, 0x87, 0x0f, 0x37, 0x17, 0xef, 0xc7, 0xc1, 0xc8, 0xa3, 0xfd, 0xc7,
-	0x30, 0xda, 0xaa, 0x65, 0xf1, 0x5d, 0xd4, 0x72, 0x44, 0x7c, 0xf2, 0x2b, 0xf8, 0xb7, 0x42, 0x27,
-	0xf9, 0x0f, 0x71, 0x7d, 0x92, 0xd3, 0xa7, 0xd7, 0xcf, 0x97, 0x8d, 0x6e, 0x4c, 0x98, 0x67, 0x1f,
-	0x50, 0x01, 0xfb, 0x71, 0xae, 0xab, 0x30, 0xbc, 0x58, 0xac, 0x48, 0xb8, 0x5c, 0x91, 0xf0, 0x63,
-	0x45, 0xc2, 0xe7, 0x35, 0x09, 0x96, 0x6b, 0x12, 0xbc, 0xad, 0x49, 0x70, 0xd3, 0x13, 0xd2, 0xde,
-	0xce, 0x32, 0x3a, 0xc6, 0xfc, 0x3b, 0x77, 0xde, 0x90, 0xdc, 0x57, 0x1a, 0x3b, 0xd7, 0x60, 0xb2,
-	0x56, 0xfd, 0x63, 0x83, 0xaf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xe4, 0x24, 0x0b, 0xb6, 0xda, 0x01,
-	0x00, 0x00,
+	// 495 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x53, 0x4f, 0x6b, 0x13, 0x41,
+	0x14, 0xcf, 0xd6, 0x24, 0xe2, 0x14, 0x41, 0xa6, 0x2d, 0xa9, 0xb1, 0xdd, 0xda, 0x2d, 0x16, 0x4d,
+	0xe9, 0x0e, 0x69, 0x0f, 0x5e, 0x25, 0x08, 0x52, 0x4f, 0x75, 0x29, 0x1e, 0x44, 0x08, 0x93, 0xe6,
+	0xb1, 0x0e, 0x66, 0xe7, 0x6d, 0x77, 0x26, 0xab, 0x55, 0xbc, 0x78, 0xf4, 0x24, 0x78, 0xf0, 0xe6,
+	0xe7, 0xe9, 0xb1, 0xe0, 0x45, 0x3c, 0x14, 0x49, 0xfc, 0x20, 0xb2, 0x33, 0x83, 0x64, 0x63, 0x0c,
+	0x0a, 0x3d, 0xed, 0xf2, 0xde, 0xef, 0xdf, 0xbe, 0xf7, 0x96, 0xdc, 0x4c, 0x20, 0x1b, 0x08, 0x94,
+	0x2c, 0x07, 0x96, 0xb7, 0xd9, 0xc9, 0x10, 0xb2, 0xd3, 0x30, 0xcd, 0x50, 0x23, 0xbd, 0xee, 0x5a,
+	0x61, 0x0e, 0x61, 0xde, 0x6e, 0x2e, 0xc7, 0x18, 0xa3, 0xe9, 0xb0, 0xe2, 0xcd, 0x82, 0x9a, 0x6b,
+	0x31, 0x62, 0x3c, 0x00, 0xc6, 0x53, 0xc1, 0xb8, 0x94, 0xa8, 0xb9, 0x16, 0x28, 0x95, 0xeb, 0xb6,
+	0x8e, 0x51, 0x25, 0xa8, 0x58, 0x8f, 0x2b, 0xb0, 0xda, 0x2c, 0x6f, 0xf7, 0x40, 0xf3, 0x36, 0x4b,
+	0x79, 0x2c, 0xa4, 0x01, 0x3b, 0xec, 0xad, 0x72, 0x92, 0x18, 0x24, 0x28, 0xe1, 0x84, 0x82, 0xfb,
+	0x64, 0xed, 0x49, 0x41, 0x3f, 0x42, 0xcd, 0x07, 0x4f, 0x51, 0x0b, 0x19, 0x1f, 0xe2, 0x2b, 0xc8,
+	0x22, 0x38, 0x19, 0x82, 0xd2, 0xb4, 0x41, 0xae, 0x72, 0xdd, 0xd5, 0x22, 0x81, 0x55, 0xef, 0xb6,
+	0x77, 0xb7, 0x1a, 0xd5, 0xb9, 0x3e, 0x12, 0x09, 0x04, 0x9c, 0xac, 0xff, 0x85, 0xa8, 0x52, 0x94,
+	0x0a, 0xe8, 0x03, 0x52, 0x4b, 0x8b, 0x82, 0xe1, 0x5d, 0xeb, 0xb4, 0xbe, 0x5f, 0x6c, 0x6c, 0xc7,
+	0x42, 0xbf, 0x18, 0xf6, 0xc2, 0x63, 0x4c, 0x98, 0xfb, 0x00, 0xfb, 0xd8, 0x55, 0xfd, 0x97, 0x4c,
+	0x9f, 0xa6, 0xa0, 0xc2, 0x03, 0xa9, 0x23, 0x4b, 0x0c, 0x1e, 0x91, 0x86, 0xb1, 0x98, 0x11, 0x6b,
+	0x89, 0xd4, 0x72, 0xe8, 0x8a, 0xbe, 0x15, 0x8f, 0xaa, 0x39, 0x1c, 0xf4, 0x27, 0xb3, 0x2e, 0x94,
+	0xb2, 0x3e, 0x27, 0xab, 0x7f, 0x0a, 0x5d, 0x5a, 0xcc, 0x65, 0x42, 0x8d, 0xfa, 0x21, 0xcf, 0x78,
+	0xa2, 0x5c, 0xc2, 0xe0, 0x31, 0x59, 0x2a, 0x55, 0x9d, 0xdd, 0x3e, 0xa9, 0xa7, 0xa6, 0x62, 0xfc,
+	0x16, 0xf7, 0x56, 0xc2, 0xd2, 0x31, 0x84, 0x16, 0xde, 0xa9, 0x9e, 0x5d, 0x6c, 0x54, 0x22, 0x07,
+	0xdd, 0xfb, 0x72, 0x85, 0xd4, 0x8c, 0x18, 0xfd, 0xec, 0x91, 0x1b, 0xd3, 0x13, 0xa7, 0x3b, 0x53,
+	0x1a, 0xf3, 0x16, 0xda, 0xfc, 0x1f, 0x70, 0x70, 0xef, 0xfd, 0xd7, 0x9f, 0x9f, 0x16, 0xb6, 0xe8,
+	0x26, 0x2b, 0xdf, 0x90, 0x2e, 0xf0, 0xdd, 0xdc, 0x10, 0xba, 0x66, 0x0a, 0xf4, 0x83, 0x47, 0x16,
+	0x27, 0x43, 0x6d, 0xcf, 0xf2, 0x99, 0x91, 0xe7, 0x1f, 0x71, 0xc1, 0x8e, 0x89, 0x72, 0x87, 0x6e,
+	0x4d, 0x45, 0x99, 0x0c, 0xc1, 0xde, 0x9a, 0xa3, 0x78, 0x47, 0x25, 0xa9, 0xdb, 0x41, 0xd2, 0xcd,
+	0x59, 0xf2, 0xa5, 0x4d, 0x35, 0x83, 0x79, 0x10, 0xbb, 0xb6, 0x60, 0xdd, 0xb8, 0x37, 0xe8, 0xca,
+	0x94, 0xbb, 0x5d, 0x50, 0xe7, 0xe1, 0xd9, 0xc8, 0xf7, 0xce, 0x47, 0xbe, 0xf7, 0x63, 0xe4, 0x7b,
+	0x1f, 0xc7, 0x7e, 0xe5, 0x7c, 0xec, 0x57, 0xbe, 0x8d, 0xfd, 0xca, 0xb3, 0xd6, 0xc4, 0x2d, 0x39,
+	0xea, 0xee, 0x1b, 0x94, 0xf0, 0x5b, 0xe7, 0x75, 0xa1, 0x64, 0x6e, 0xaa, 0x57, 0x37, 0xbf, 0xe4,
+	0xfe, 0xaf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x65, 0x15, 0x91, 0x2d, 0x3b, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -156,6 +342,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
+	// TotalVotingPower queries the total voting power.
+	TotalVotingPower(ctx context.Context, in *QueryTotalVotingPowerRequest, opts ...grpc.CallOption) (*QueryTotalVotingPowerRequest, error)
+	// VotingPower queries the voting power of a veNFT.
+	VotingPower(ctx context.Context, in *QueryVotingPowerRequest, opts ...grpc.CallOption) (*QueryVotingPowerRequest, error)
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 }
@@ -166,6 +356,24 @@ type queryClient struct {
 
 func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
+}
+
+func (c *queryClient) TotalVotingPower(ctx context.Context, in *QueryTotalVotingPowerRequest, opts ...grpc.CallOption) (*QueryTotalVotingPowerRequest, error) {
+	out := new(QueryTotalVotingPowerRequest)
+	err := c.cc.Invoke(ctx, "/merlion.ve.v1.Query/TotalVotingPower", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) VotingPower(ctx context.Context, in *QueryVotingPowerRequest, opts ...grpc.CallOption) (*QueryVotingPowerRequest, error) {
+	out := new(QueryVotingPowerRequest)
+	err := c.cc.Invoke(ctx, "/merlion.ve.v1.Query/VotingPower", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
@@ -179,6 +387,10 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
+	// TotalVotingPower queries the total voting power.
+	TotalVotingPower(context.Context, *QueryTotalVotingPowerRequest) (*QueryTotalVotingPowerRequest, error)
+	// VotingPower queries the voting power of a veNFT.
+	VotingPower(context.Context, *QueryVotingPowerRequest) (*QueryVotingPowerRequest, error)
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 }
@@ -187,12 +399,54 @@ type QueryServer interface {
 type UnimplementedQueryServer struct {
 }
 
+func (*UnimplementedQueryServer) TotalVotingPower(ctx context.Context, req *QueryTotalVotingPowerRequest) (*QueryTotalVotingPowerRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TotalVotingPower not implemented")
+}
+func (*UnimplementedQueryServer) VotingPower(ctx context.Context, req *QueryVotingPowerRequest) (*QueryVotingPowerRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VotingPower not implemented")
+}
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 	s.RegisterService(&_Query_serviceDesc, srv)
+}
+
+func _Query_TotalVotingPower_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryTotalVotingPowerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).TotalVotingPower(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.ve.v1.Query/TotalVotingPower",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).TotalVotingPower(ctx, req.(*QueryTotalVotingPowerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_VotingPower_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryVotingPowerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).VotingPower(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.ve.v1.Query/VotingPower",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).VotingPower(ctx, req.(*QueryVotingPowerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -218,12 +472,153 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "TotalVotingPower",
+			Handler:    _Query_TotalVotingPower_Handler,
+		},
+		{
+			MethodName: "VotingPower",
+			Handler:    _Query_VotingPower_Handler,
+		},
+		{
 			MethodName: "Params",
 			Handler:    _Query_Params_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "merlion/ve/v1/query.proto",
+}
+
+func (m *QueryTotalVotingPowerRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryTotalVotingPowerRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryTotalVotingPowerRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.AtTime != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.AtTime))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryTotalVotingPowerResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryTotalVotingPowerResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryTotalVotingPowerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Power != nil {
+		{
+			size := m.Power.Size()
+			i -= size
+			if _, err := m.Power.MarshalTo(dAtA[i:]); err != nil {
+				return 0, err
+			}
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryVotingPowerRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryVotingPowerRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryVotingPowerRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.AtTime != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.AtTime))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.VeId) > 0 {
+		i -= len(m.VeId)
+		copy(dAtA[i:], m.VeId)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.VeId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryVotingPowerResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryVotingPowerResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryVotingPowerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Power != nil {
+		{
+			size := m.Power.Size()
+			i -= size
+			if _, err := m.Power.MarshalTo(dAtA[i:]); err != nil {
+				return 0, err
+			}
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
 }
 
 func (m *QueryParamsRequest) Marshal() (dAtA []byte, err error) {
@@ -293,6 +688,60 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *QueryTotalVotingPowerRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.AtTime != 0 {
+		n += 1 + sovQuery(uint64(m.AtTime))
+	}
+	return n
+}
+
+func (m *QueryTotalVotingPowerResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Power != nil {
+		l = m.Power.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryVotingPowerRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.VeId)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	if m.AtTime != 0 {
+		n += 1 + sovQuery(uint64(m.AtTime))
+	}
+	return n
+}
+
+func (m *QueryVotingPowerResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Power != nil {
+		l = m.Power.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
 func (m *QueryParamsRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -318,6 +767,348 @@ func sovQuery(x uint64) (n int) {
 }
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *QueryTotalVotingPowerRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryTotalVotingPowerRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryTotalVotingPowerRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AtTime", wireType)
+			}
+			m.AtTime = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.AtTime |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryTotalVotingPowerResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryTotalVotingPowerResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryTotalVotingPowerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Power", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var v github_com_cosmos_cosmos_sdk_types.Int
+			m.Power = &v
+			if err := m.Power.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryVotingPowerRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryVotingPowerRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryVotingPowerRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VeId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.VeId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AtTime", wireType)
+			}
+			m.AtTime = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.AtTime |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryVotingPowerResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryVotingPowerResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryVotingPowerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Power", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var v github_com_cosmos_cosmos_sdk_types.Int
+			m.Power = &v
+			if err := m.Power.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)

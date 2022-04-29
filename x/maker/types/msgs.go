@@ -30,10 +30,10 @@ var (
 	_ sdk.Msg = &MsgLiquidateCollateral{}
 )
 
-// Route Implements sdk.Msg
+// Route implements sdk.Msg
 func (m *MsgMintBySwap) Route() string { return RouterKey }
 
-// Type Implements sdk.Msg
+// Type implements sdk.Msg
 func (m *MsgMintBySwap) Type() string { return TypeMsgMintBySwap }
 
 // GetSignBytes implements sdk.Msg
@@ -41,7 +41,7 @@ func (m *MsgMintBySwap) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
-// ValidateBasic sdk.Msg
+// ValidateBasic implements sdk.Msg
 func (m *MsgMintBySwap) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -71,7 +71,7 @@ func (m *MsgMintBySwap) ValidateBasic() error {
 	return nil
 }
 
-// GetSigners sdk.Msg
+// GetSigners implements sdk.Msg
 func (m *MsgMintBySwap) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -80,10 +80,10 @@ func (m *MsgMintBySwap) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{sender}
 }
 
-// Route Implements sdk.Msg
+// Route implements sdk.Msg
 func (m *MsgBurnBySwap) Route() string { return RouterKey }
 
-// Type Implements sdk.Msg
+// Type implements sdk.Msg
 func (m *MsgBurnBySwap) Type() string { return TypeMsgBurnBySwap }
 
 // GetSignBytes implements sdk.Msg
@@ -91,7 +91,7 @@ func (m *MsgBurnBySwap) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
-// ValidateBasic sdk.Msg
+// ValidateBasic implements sdk.Msg
 func (m *MsgBurnBySwap) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -121,7 +121,7 @@ func (m *MsgBurnBySwap) ValidateBasic() error {
 	return nil
 }
 
-// GetSigners sdk.Msg
+// GetSigners implements sdk.Msg
 func (m *MsgBurnBySwap) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -130,10 +130,10 @@ func (m *MsgBurnBySwap) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{sender}
 }
 
-// Route Implements sdk.Msg
+// Route implements sdk.Msg
 func (m *MsgBuyBacking) Route() string { return RouterKey }
 
-// Type Implements sdk.Msg
+// Type implements sdk.Msg
 func (m *MsgBuyBacking) Type() string { return TypeMsgBuyBacking }
 
 // GetSignBytes implements sdk.Msg
@@ -141,7 +141,7 @@ func (m *MsgBuyBacking) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
-// ValidateBasic sdk.Msg
+// ValidateBasic implements sdk.Msg
 func (m *MsgBuyBacking) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -165,7 +165,7 @@ func (m *MsgBuyBacking) ValidateBasic() error {
 	return nil
 }
 
-// GetSigners sdk.Msg
+// GetSigners implements sdk.Msg
 func (m *MsgBuyBacking) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -174,10 +174,10 @@ func (m *MsgBuyBacking) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{sender}
 }
 
-// Route Implements sdk.Msg
+// Route implements sdk.Msg
 func (m *MsgSellBacking) Route() string { return RouterKey }
 
-// Type Implements sdk.Msg
+// Type implements sdk.Msg
 func (m *MsgSellBacking) Type() string { return TypeMsgSellBacking }
 
 // GetSignBytes implements sdk.Msg
@@ -185,7 +185,7 @@ func (m *MsgSellBacking) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
-// ValidateBasic sdk.Msg
+// ValidateBasic implements sdk.Msg
 func (m *MsgSellBacking) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -209,7 +209,7 @@ func (m *MsgSellBacking) ValidateBasic() error {
 	return nil
 }
 
-// GetSigners sdk.Msg
+// GetSigners implements sdk.Msg
 func (m *MsgSellBacking) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -218,10 +218,10 @@ func (m *MsgSellBacking) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{sender}
 }
 
-// Route Implements sdk.Msg
+// Route implements sdk.Msg
 func (m *MsgMintByCollateral) Route() string { return RouterKey }
 
-// Type Implements sdk.Msg
+// Type implements sdk.Msg
 func (m *MsgMintByCollateral) Type() string { return TypeMsgMintByCollateral }
 
 // GetSignBytes implements sdk.Msg
@@ -229,7 +229,7 @@ func (m *MsgMintByCollateral) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
-// ValidateBasic sdk.Msg
+// ValidateBasic implements sdk.Msg
 func (m *MsgMintByCollateral) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -256,7 +256,7 @@ func (m *MsgMintByCollateral) ValidateBasic() error {
 	return nil
 }
 
-// GetSigners sdk.Msg
+// GetSigners implements sdk.Msg
 func (m *MsgMintByCollateral) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -265,10 +265,10 @@ func (m *MsgMintByCollateral) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{sender}
 }
 
-// Route Implements sdk.Msg
+// Route implements sdk.Msg
 func (m *MsgBurnByCollateral) Route() string { return RouterKey }
 
-// Type Implements sdk.Msg
+// Type implements sdk.Msg
 func (m *MsgBurnByCollateral) Type() string { return TypeMsgBurnByCollateral }
 
 // GetSignBytes implements sdk.Msg
@@ -276,7 +276,7 @@ func (m *MsgBurnByCollateral) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
-// ValidateBasic sdk.Msg
+// ValidateBasic implements sdk.Msg
 func (m *MsgBurnByCollateral) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -291,7 +291,7 @@ func (m *MsgBurnByCollateral) ValidateBasic() error {
 	return nil
 }
 
-// GetSigners sdk.Msg
+// GetSigners implements sdk.Msg
 func (m *MsgBurnByCollateral) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -300,10 +300,10 @@ func (m *MsgBurnByCollateral) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{sender}
 }
 
-// Route Implements sdk.Msg
+// Route implements sdk.Msg
 func (m *MsgDepositCollateral) Route() string { return RouterKey }
 
-// Type Implements sdk.Msg
+// Type implements sdk.Msg
 func (m *MsgDepositCollateral) Type() string { return TypeMsgDepositCollateral }
 
 // GetSignBytes implements sdk.Msg
@@ -311,7 +311,7 @@ func (m *MsgDepositCollateral) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
-// ValidateBasic sdk.Msg
+// ValidateBasic implements sdk.Msg
 func (m *MsgDepositCollateral) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -329,7 +329,7 @@ func (m *MsgDepositCollateral) ValidateBasic() error {
 	return nil
 }
 
-// GetSigners sdk.Msg
+// GetSigners implements sdk.Msg
 func (m *MsgDepositCollateral) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -338,10 +338,10 @@ func (m *MsgDepositCollateral) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{sender}
 }
 
-// Route Implements sdk.Msg
+// Route implements sdk.Msg
 func (m *MsgRedeemCollateral) Route() string { return RouterKey }
 
-// Type Implements sdk.Msg
+// Type implements sdk.Msg
 func (m *MsgRedeemCollateral) Type() string { return TypeMsgRedeemCollateral }
 
 // GetSignBytes implements sdk.Msg
@@ -349,7 +349,7 @@ func (m *MsgRedeemCollateral) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
-// ValidateBasic sdk.Msg
+// ValidateBasic implements sdk.Msg
 func (m *MsgRedeemCollateral) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -367,7 +367,7 @@ func (m *MsgRedeemCollateral) ValidateBasic() error {
 	return nil
 }
 
-// GetSigners sdk.Msg
+// GetSigners implements sdk.Msg
 func (m *MsgRedeemCollateral) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -376,10 +376,10 @@ func (m *MsgRedeemCollateral) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{sender}
 }
 
-// Route Implements sdk.Msg
+// Route implements sdk.Msg
 func (m *MsgLiquidateCollateral) Route() string { return RouterKey }
 
-// Type Implements sdk.Msg
+// Type implements sdk.Msg
 func (m *MsgLiquidateCollateral) Type() string { return TypeMsgLiquidateCollateral }
 
 // GetSignBytes implements sdk.Msg
@@ -387,6 +387,7 @@ func (m *MsgLiquidateCollateral) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
 }
 
+// ValidateBasic implements sdk.Msg
 func (m *MsgLiquidateCollateral) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
@@ -408,6 +409,7 @@ func (m *MsgLiquidateCollateral) ValidateBasic() error {
 	return nil
 }
 
+// GetSigners implements sdk.Msg
 func (m *MsgLiquidateCollateral) GetSigners() []sdk.AccAddress {
 	sender, err := sdk.AccAddressFromBech32(m.Sender)
 	if err != nil {
