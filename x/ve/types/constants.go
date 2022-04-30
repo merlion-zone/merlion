@@ -13,4 +13,6 @@ const (
 	MaxLockTime = merlion.SecondsPer4Years
 
 	MaxUnixTime = math.MaxInt64
+
+	RegulatedPeriod = merlion.SecondsPerWeek
 )

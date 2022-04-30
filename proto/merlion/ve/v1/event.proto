@@ -1,0 +1,38 @@
+syntax = "proto3";
+package merlion.ve.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/ve/types";
+
+message EventCreate {
+  string sender = 1;
+  string receiver = 2;
+  string ve_id = 3;
+  cosmos.base.v1beta1.Coin amount = 4 [ (gogoproto.nullable) = false ];
+  uint64 unlock_time = 5;
+}
+
+message EventDeposit {
+  string sender = 1;
+  string ve_id = 2;
+  cosmos.base.v1beta1.Coin amount = 3 [ (gogoproto.nullable) = false ];
+}
+
+message EventExtendTime {
+  string sender = 1;
+  string ve_id = 2;
+  uint64 unlock_time = 3;
+}
+
+message EventMerge {
+  string sender = 1;
+  string from_ve_id = 2;
+  string to_ve_id = 3;
+}
+
+message EventWithdraw {
+  string sender = 1;
+  string ve_id = 2;
+}

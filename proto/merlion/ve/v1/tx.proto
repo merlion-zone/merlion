@@ -14,10 +14,14 @@ service Msg {
     option (google.api.http).get = "/merlion/ve/v1/tx/create";
   }
 
-  // Deposit deposits some coin amount and/or extends locking duration for a
-  // veNFT.
+  // Deposit deposits some coin amount for a veNFT.
   rpc Deposit(MsgDeposit) returns (MsgDepositResponse) {
     option (google.api.http).get = "/merlion/ve/v1/tx/deposit";
+  }
+
+  // ExtendTime extends locking duration for a veNFT.
+  rpc ExtendTime(MsgExtendTime) returns (MsgExtendTimeResponse) {
+    option (google.api.http).get = "/merlion/ve/v1/tx/extend_time";
   }
 
   // Merge merges a veNFT (burn it) to another veNFT.
@@ -52,14 +56,26 @@ message MsgDeposit {
 
   string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
   string ve_id = 2 [ (gogoproto.moretags) = "yaml:\"ve_id\"" ];
+  // Amount to deposit, must be greater than 0
   cosmos.base.v1beta1.Coin amount = 3 [
     (gogoproto.moretags) = "yaml:\"amount\"",
     (gogoproto.nullable) = false
   ];
-  uint64 lock_duration = 4 [ (gogoproto.moretags) = "yaml:\"lock_duration\"" ];
 }
 
 message MsgDepositResponse {}
+
+message MsgExtendTime {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
+  string ve_id = 2 [ (gogoproto.moretags) = "yaml:\"ve_id\"" ];
+  // Locking duration, must be greater than current locking duration
+  uint64 lock_duration = 3 [ (gogoproto.moretags) = "yaml:\"lock_duration\"" ];
+}
+
+message MsgExtendTimeResponse {}
 
 message MsgMerge {
   option (gogoproto.equal) = false;

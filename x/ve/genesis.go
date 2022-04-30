@@ -19,7 +19,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 
 	k.SetTotalLockedAmount(ctx, merlion.ZeroInt)
 	k.SetNextVeID(ctx, 1)
-	k.SetCurrentEpoch(ctx, 0)
+	k.SetEpoch(ctx, 0)
 	k.SetCheckpoint(ctx, 0, types.Checkpoint{
 		Bias:      merlion.ZeroInt,
 		Slope:     merlion.ZeroInt,

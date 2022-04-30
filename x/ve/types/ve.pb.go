@@ -25,9 +25,12 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// LockedBalance represents locked amount and unlock time of a ve.
 type LockedBalance struct {
+	// locked amount
 	Amount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
-	End    uint64                                 `protobuf:"varint,2,opt,name=end,proto3" json:"end,omitempty"`
+	// unlocking unix time
+	End uint64 `protobuf:"varint,2,opt,name=end,proto3" json:"end,omitempty"`
 }
 
 func (m *LockedBalance) Reset()         { *m = LockedBalance{} }
@@ -70,11 +73,17 @@ func (m *LockedBalance) GetEnd() uint64 {
 	return 0
 }
 
+// Checkpoint defines a checkpoint of voting power.
 type Checkpoint struct {
-	Bias      github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=bias,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bias"`
-	Slope     github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=slope,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"slope"`
-	Timestamp uint64                                 `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	Block     int64                                  `protobuf:"varint,4,opt,name=block,proto3" json:"block,omitempty"`
+	// voting power at checkpoint
+	Bias github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=bias,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bias"`
+	// weight decay slope
+	// so voting power at time t: bias - slope * (t - timestamp)
+	Slope github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=slope,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"slope"`
+	// unix timestamp at checkpoint
+	Timestamp uint64 `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	// block height at checkpoint
+	Block int64 `protobuf:"varint,4,opt,name=block,proto3" json:"block,omitempty"`
 }
 
 func (m *Checkpoint) Reset()         { *m = Checkpoint{} }

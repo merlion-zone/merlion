@@ -2,7 +2,6 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/ve/types"
 )
 
@@ -33,12 +32,14 @@ func (k Keeper) GetLockedAmountByUser(ctx sdk.Context, veID uint64) types.Locked
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.LockedAmountByUserKey(veID))
 	if bz == nil {
-		return types.LockedBalance{
-			Amount: merlion.ZeroInt,
-			End:    0,
-		}
+		return types.NewLockedBalance()
 	}
 	var amount types.LockedBalance
 	k.cdc.MustUnmarshal(bz, &amount)
 	return amount
+}
+
+func (k Keeper) DeleteLockedAmountByUser(ctx sdk.Context, veID uint64) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.LockedAmountByUserKey(veID))
 }

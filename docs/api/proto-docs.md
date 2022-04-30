@@ -147,6 +147,13 @@
   
     - [Msg](#merlion.oracle.v1.Msg)
   
+- [merlion/ve/v1/event.proto](#merlion/ve/v1/event.proto)
+    - [EventCreate](#merlion.ve.v1.EventCreate)
+    - [EventDeposit](#merlion.ve.v1.EventDeposit)
+    - [EventExtendTime](#merlion.ve.v1.EventExtendTime)
+    - [EventMerge](#merlion.ve.v1.EventMerge)
+    - [EventWithdraw](#merlion.ve.v1.EventWithdraw)
+  
 - [merlion/ve/v1/genesis.proto](#merlion/ve/v1/genesis.proto)
     - [GenesisState](#merlion.ve.v1.GenesisState)
     - [Params](#merlion.ve.v1.Params)
@@ -166,6 +173,8 @@
     - [MsgCreateResponse](#merlion.ve.v1.MsgCreateResponse)
     - [MsgDeposit](#merlion.ve.v1.MsgDeposit)
     - [MsgDepositResponse](#merlion.ve.v1.MsgDepositResponse)
+    - [MsgExtendTime](#merlion.ve.v1.MsgExtendTime)
+    - [MsgExtendTimeResponse](#merlion.ve.v1.MsgExtendTimeResponse)
     - [MsgMerge](#merlion.ve.v1.MsgMerge)
     - [MsgMergeResponse](#merlion.ve.v1.MsgMergeResponse)
     - [MsgWithdraw](#merlion.ve.v1.MsgWithdraw)
@@ -2104,6 +2113,108 @@ Msg defines the Msg service.
 
 
 
+<a name="merlion/ve/v1/event.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/ve/v1/event.proto
+
+
+
+<a name="merlion.ve.v1.EventCreate"></a>
+
+### EventCreate
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `receiver` | [string](#string) |  |  |
+| `ve_id` | [string](#string) |  |  |
+| `amount` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `unlock_time` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.EventDeposit"></a>
+
+### EventDeposit
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `ve_id` | [string](#string) |  |  |
+| `amount` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.EventExtendTime"></a>
+
+### EventExtendTime
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `ve_id` | [string](#string) |  |  |
+| `unlock_time` | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.EventMerge"></a>
+
+### EventMerge
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `from_ve_id` | [string](#string) |  |  |
+| `to_ve_id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.EventWithdraw"></a>
+
+### EventWithdraw
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `ve_id` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="merlion/ve/v1/genesis.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -2309,8 +2420,7 @@ Query defines the ve gRPC querier service.
 | ----- | ---- | ----- | ----------- |
 | `sender` | [string](#string) |  |  |
 | `ve_id` | [string](#string) |  |  |
-| `amount` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `lock_duration` | [uint64](#uint64) |  |  |
+| `amount` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | Amount to deposit, must be greater than 0 |
 
 
 
@@ -2320,6 +2430,33 @@ Query defines the ve gRPC querier service.
 <a name="merlion.ve.v1.MsgDepositResponse"></a>
 
 ### MsgDepositResponse
+
+
+
+
+
+
+
+<a name="merlion.ve.v1.MsgExtendTime"></a>
+
+### MsgExtendTime
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `ve_id` | [string](#string) |  |  |
+| `lock_duration` | [uint64](#uint64) |  | Locking duration, must be greater than current locking duration |
+
+
+
+
+
+
+<a name="merlion.ve.v1.MsgExtendTimeResponse"></a>
+
+### MsgExtendTimeResponse
 
 
 
@@ -2394,7 +2531,8 @@ Msg defines the ve Msg service.
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `Create` | [MsgCreate](#merlion.ve.v1.MsgCreate) | [MsgCreateResponse](#merlion.ve.v1.MsgCreateResponse) | Create creates a veNFT. | GET|/merlion/ve/v1/tx/create|
-| `Deposit` | [MsgDeposit](#merlion.ve.v1.MsgDeposit) | [MsgDepositResponse](#merlion.ve.v1.MsgDepositResponse) | Deposit deposits some coin amount and/or extends locking duration for a veNFT. | GET|/merlion/ve/v1/tx/deposit|
+| `Deposit` | [MsgDeposit](#merlion.ve.v1.MsgDeposit) | [MsgDepositResponse](#merlion.ve.v1.MsgDepositResponse) | Deposit deposits some coin amount for a veNFT. | GET|/merlion/ve/v1/tx/deposit|
+| `ExtendTime` | [MsgExtendTime](#merlion.ve.v1.MsgExtendTime) | [MsgExtendTimeResponse](#merlion.ve.v1.MsgExtendTimeResponse) | ExtendTime extends locking duration for a veNFT. | GET|/merlion/ve/v1/tx/extend_time|
 | `Merge` | [MsgMerge](#merlion.ve.v1.MsgMerge) | [MsgMergeResponse](#merlion.ve.v1.MsgMergeResponse) | Merge merges a veNFT (burn it) to another veNFT. | GET|/merlion/ve/v1/tx/merge|
 | `Withdraw` | [MsgWithdraw](#merlion.ve.v1.MsgWithdraw) | [MsgWithdrawResponse](#merlion.ve.v1.MsgWithdrawResponse) | Withdraw withdraws all coin amount of a veNFT. | GET|/merlion/ve/v1/tx/withdraw|
 
@@ -2412,15 +2550,15 @@ Msg defines the ve Msg service.
 <a name="merlion.ve.v1.Checkpoint"></a>
 
 ### Checkpoint
-
+Checkpoint defines a checkpoint of voting power.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `bias` | [string](#string) |  |  |
-| `slope` | [string](#string) |  |  |
-| `timestamp` | [uint64](#uint64) |  |  |
-| `block` | [int64](#int64) |  |  |
+| `bias` | [string](#string) |  | voting power at checkpoint |
+| `slope` | [string](#string) |  | weight decay slope so voting power at time t: bias - slope * (t - timestamp) |
+| `timestamp` | [uint64](#uint64) |  | unix timestamp at checkpoint |
+| `block` | [int64](#int64) |  | block height at checkpoint |
 
 
 
@@ -2430,13 +2568,13 @@ Msg defines the ve Msg service.
 <a name="merlion.ve.v1.LockedBalance"></a>
 
 ### LockedBalance
-
+LockedBalance represents locked amount and unlock time of a ve.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `amount` | [string](#string) |  |  |
-| `end` | [uint64](#uint64) |  |  |
+| `amount` | [string](#string) |  | locked amount |
+| `end` | [uint64](#uint64) |  | unlocking unix time |
 
 
 

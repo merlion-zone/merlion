@@ -4,11 +4,11 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	merlion "github.com/merlion-zone/merlion/types"
 )
 
 func RegulatedUnixTime(timestamp uint64) uint64 {
-	return timestamp / merlion.SecondsPerWeek * merlion.SecondsPerWeek
+	// divide and round down to align to regulated periods
+	return timestamp / RegulatedPeriod * RegulatedPeriod
 }
 
 func RegulatedUnixTimeFromNow(ctx sdk.Context, seconds uint64) uint64 {
@@ -17,11 +17,11 @@ func RegulatedUnixTimeFromNow(ctx sdk.Context, seconds uint64) uint64 {
 }
 
 func NextRegulatedUnixTime(timestamp uint64) uint64 {
-	if timestamp > MaxUnixTime-merlion.SecondsPerWeek {
+	CheckRegulatedUnixTime(timestamp)
+	if timestamp > MaxUnixTime-RegulatedPeriod {
 		panic("too large unix time")
 	}
-	next := timestamp + merlion.SecondsPerWeek
-	CheckRegulatedUnixTime(next)
+	next := timestamp + RegulatedPeriod
 	return next
 }
 

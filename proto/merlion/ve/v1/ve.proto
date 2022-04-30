@@ -6,23 +6,32 @@ import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/ve/types";
 
+// LockedBalance represents locked amount and unlock time of a ve.
 message LockedBalance {
+  // locked amount
   string amount = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
+  // unlocking unix time
   uint64 end = 2;
 }
 
+// Checkpoint defines a checkpoint of voting power.
 message Checkpoint {
+  // voting power at checkpoint
   string bias = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
+  // weight decay slope
+  // so voting power at time t: bias - slope * (t - timestamp)
   string slope = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
+  // unix timestamp at checkpoint
   uint64 timestamp = 3;
+  // block height at checkpoint
   int64 block = 4;
 }
