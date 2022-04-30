@@ -2302,6 +2302,7 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `at_time` | [uint64](#uint64) |  |  |
+| `at_block` | [int64](#int64) |  |  |
 
 
 
@@ -2333,6 +2334,7 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 | ----- | ---- | ----- | ----------- |
 | `ve_id` | [string](#string) |  |  |
 | `at_time` | [uint64](#uint64) |  |  |
+| `at_block` | [int64](#int64) |  |  |
 
 
 
@@ -2367,8 +2369,8 @@ Query defines the ve gRPC querier service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
-| `TotalVotingPower` | [QueryTotalVotingPowerRequest](#merlion.ve.v1.QueryTotalVotingPowerRequest) | [QueryTotalVotingPowerRequest](#merlion.ve.v1.QueryTotalVotingPowerRequest) | TotalVotingPower queries the total voting power. | GET|/merlion/ve/v1/total_voting_power|
-| `VotingPower` | [QueryVotingPowerRequest](#merlion.ve.v1.QueryVotingPowerRequest) | [QueryVotingPowerRequest](#merlion.ve.v1.QueryVotingPowerRequest) | VotingPower queries the voting power of a veNFT. | GET|/merlion/ve/v1/voting_power/{ve_id}|
+| `TotalVotingPower` | [QueryTotalVotingPowerRequest](#merlion.ve.v1.QueryTotalVotingPowerRequest) | [QueryTotalVotingPowerResponse](#merlion.ve.v1.QueryTotalVotingPowerResponse) | TotalVotingPower queries the total voting power. | GET|/merlion/ve/v1/total_voting_power|
+| `VotingPower` | [QueryVotingPowerRequest](#merlion.ve.v1.QueryVotingPowerRequest) | [QueryVotingPowerResponse](#merlion.ve.v1.QueryVotingPowerResponse) | VotingPower queries the voting power of a veNFT. | GET|/merlion/ve/v1/voting_power/{ve_id}|
 | `Params` | [QueryParamsRequest](#merlion.ve.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.ve.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/ve/v1/params|
 
  <!-- end services -->

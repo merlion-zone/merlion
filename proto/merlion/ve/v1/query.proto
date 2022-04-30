@@ -12,12 +12,12 @@ option go_package = "github.com/merlion-zone/merlion/x/ve/types";
 service Query {
   // TotalVotingPower queries the total voting power.
   rpc TotalVotingPower(QueryTotalVotingPowerRequest)
-      returns (QueryTotalVotingPowerRequest) {
+      returns (QueryTotalVotingPowerResponse) {
     option (google.api.http).get = "/merlion/ve/v1/total_voting_power";
   }
 
   // VotingPower queries the voting power of a veNFT.
-  rpc VotingPower(QueryVotingPowerRequest) returns (QueryVotingPowerRequest) {
+  rpc VotingPower(QueryVotingPowerRequest) returns (QueryVotingPowerResponse) {
     option (google.api.http).get = "/merlion/ve/v1/voting_power/{ve_id}";
   }
 
@@ -27,21 +27,29 @@ service Query {
   }
 }
 
-message QueryTotalVotingPowerRequest { uint64 at_time = 1; }
+message QueryTotalVotingPowerRequest {
+  uint64 at_time = 1;
+  int64 at_block = 2;
+}
 
 message QueryTotalVotingPowerResponse {
-  string power = 1
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+  string power = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 message QueryVotingPowerRequest {
   string ve_id = 1;
   uint64 at_time = 2;
+  int64 at_block = 3;
 }
 
 message QueryVotingPowerResponse {
-  string power = 1
-      [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
+  string power = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
