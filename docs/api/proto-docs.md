@@ -29,6 +29,19 @@
 - [merlion/erc20/v1/tx.proto](#merlion/erc20/v1/tx.proto)
     - [Msg](#merlion.erc20.v1.Msg)
   
+- [merlion/gauge/v1/genesis.proto](#merlion/gauge/v1/genesis.proto)
+    - [GenesisState](#merlion.gauge.v1.GenesisState)
+    - [Params](#merlion.gauge.v1.Params)
+  
+- [merlion/gauge/v1/query.proto](#merlion/gauge/v1/query.proto)
+    - [QueryParamsRequest](#merlion.gauge.v1.QueryParamsRequest)
+    - [QueryParamsResponse](#merlion.gauge.v1.QueryParamsResponse)
+  
+    - [Query](#merlion.gauge.v1.Query)
+  
+- [merlion/gauge/v1/tx.proto](#merlion/gauge/v1/tx.proto)
+    - [Msg](#merlion.gauge.v1.Msg)
+  
 - [merlion/maker/v1/genesis.proto](#merlion/maker/v1/genesis.proto)
     - [GenesisState](#merlion.maker.v1.GenesisState)
     - [Params](#merlion.maker.v1.Params)
@@ -447,6 +460,123 @@ Query defines the gRPC querier service.
 
 ### Msg
 Msg defines the erc20 Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+
+ <!-- end services -->
+
+
+
+<a name="merlion/gauge/v1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/gauge/v1/genesis.proto
+
+
+
+<a name="merlion.gauge.v1.GenesisState"></a>
+
+### GenesisState
+GenesisState defines the gauge module's genesis state.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#merlion.gauge.v1.Params) |  |  |
+
+
+
+
+
+
+<a name="merlion.gauge.v1.Params"></a>
+
+### Params
+Params defines the parameters for the module.
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/gauge/v1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/gauge/v1/query.proto
+
+
+
+<a name="merlion.gauge.v1.QueryParamsRequest"></a>
+
+### QueryParamsRequest
+QueryParamsRequest is request type for the Query/Params RPC method.
+
+
+
+
+
+
+<a name="merlion.gauge.v1.QueryParamsResponse"></a>
+
+### QueryParamsResponse
+QueryParamsResponse is response type for the Query/Params RPC method.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#merlion.gauge.v1.Params) |  | params holds all the parameters of this module. |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="merlion.gauge.v1.Query"></a>
+
+### Query
+Query defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Params` | [QueryParamsRequest](#merlion.gauge.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.gauge.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlionzone/merlion/gauge/params|
+
+ <!-- end services -->
+
+
+
+<a name="merlion/gauge/v1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/gauge/v1/tx.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="merlion.gauge.v1.Msg"></a>
+
+### Msg
+Msg defines the Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
