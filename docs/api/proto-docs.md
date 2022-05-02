@@ -29,6 +29,12 @@
 - [merlion/erc20/v1/tx.proto](#merlion/erc20/v1/tx.proto)
     - [Msg](#merlion.erc20.v1.Msg)
   
+- [merlion/gauge/v1/event.proto](#merlion/gauge/v1/event.proto)
+- [merlion/gauge/v1/gauge.proto](#merlion/gauge/v1/gauge.proto)
+    - [Checkpoint](#merlion.gauge.v1.Checkpoint)
+    - [Reward](#merlion.gauge.v1.Reward)
+    - [UserReward](#merlion.gauge.v1.UserReward)
+  
 - [merlion/gauge/v1/genesis.proto](#merlion/gauge/v1/genesis.proto)
     - [GenesisState](#merlion.gauge.v1.GenesisState)
     - [Params](#merlion.gauge.v1.Params)
@@ -463,6 +469,91 @@ Msg defines the erc20 Msg service.
 
 | Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
+
+ <!-- end services -->
+
+
+
+<a name="merlion/gauge/v1/event.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/gauge/v1/event.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/gauge/v1/gauge.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/gauge/v1/gauge.proto
+
+
+
+<a name="merlion.gauge.v1.Checkpoint"></a>
+
+### Checkpoint
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `timestamp` | [uint64](#uint64) |  | unix timestamp |
+| `amount` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.gauge.v1.Reward"></a>
+
+### Reward
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom` | [string](#string) |  | reward coin denom |
+| `rate` | [string](#string) |  | reward amount per second |
+| `finish_time` | [uint64](#uint64) |  | reward finish unix time |
+| `last_update_time` | [uint64](#uint64) |  | unix time of last reward update |
+| `cumulative_per_ticket` | [string](#string) |  | cumulative reward per voting ticket |
+
+
+
+
+
+
+<a name="merlion.gauge.v1.UserReward"></a>
+
+### UserReward
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom` | [string](#string) |  | reward coin denom |
+| `ve_id` | [uint64](#uint64) |  | ve id |
+| `last_claim_time` | [uint64](#uint64) |  | last claim unix time |
+| `cumulative_per_ticket` | [string](#string) |  | cumulative reward per voting ticket |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 

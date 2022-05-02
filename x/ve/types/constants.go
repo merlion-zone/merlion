@@ -8,6 +8,7 @@ import (
 
 const (
 	EmptyVeID = 0
+	FirstVeID = 1
 	MaxVeID   = math.MaxUint64 - 1
 
 	MaxLockTime = merlion.SecondsPer4Years
@@ -15,4 +16,7 @@ const (
 	MaxUnixTime = math.MaxInt64
 
 	RegulatedPeriod = merlion.SecondsPerWeek
+
+	EmptyEpoch = 0
+	FirstEpoch = 1
 )

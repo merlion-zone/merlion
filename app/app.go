@@ -506,7 +506,7 @@ func New(
 	veModule := ve.NewAppModule(appCodec, app.VeKeeper, app.AccountKeeper, app.BankKeeper)
 
 	app.GaugeKeeper = *gaugekeeper.NewKeeper(appCodec, keys[gaugetypes.StoreKey], keys[gaugetypes.MemStoreKey],
-		app.GetSubspace(gaugetypes.ModuleName), app.AccountKeeper, app.BankKeeper)
+		app.GetSubspace(gaugetypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.NftKeeper, app.VeKeeper)
 	gaugeModule := gauge.NewAppModule(appCodec, app.GaugeKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition

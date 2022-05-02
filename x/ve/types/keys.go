@@ -25,20 +25,20 @@ const (
 	prefixNextVeNftID
 	prefixEpoch
 	prefixPointHistoryByEpoch
-	prefixUserEpochByVeNftID
-	prefixUserPointHistoryByUserEpochByVeNftID
+	prefixUserEpoch
+	prefixUserPointHistoryByUserEpoch
 	prefixSlopeChange
 )
 
 var (
-	KeyPrefixTotalLockedAmount                    = []byte{prefixTotalLockedAmount}
-	KeyPrefixLockedAmountByUser                   = []byte{prefixLockedAmountByUser}
-	KeyPrefixNextVeNftID                          = []byte{prefixNextVeNftID}
-	KeyPrefixEpoch                                = []byte{prefixEpoch}
-	KeyPrefixPointHistoryByEpoch                  = []byte{prefixPointHistoryByEpoch}
-	KeyPrefixUserEpochByVeNftID                   = []byte{prefixUserEpochByVeNftID}
-	KeyPrefixUserPointHistoryByUserEpochByVeNftID = []byte{prefixUserPointHistoryByUserEpochByVeNftID}
-	KeyPrefixSlopeChange                          = []byte{prefixSlopeChange}
+	KeyPrefixTotalLockedAmount           = []byte{prefixTotalLockedAmount}
+	KeyPrefixLockedAmountByUser          = []byte{prefixLockedAmountByUser}
+	KeyPrefixNextVeNftID                 = []byte{prefixNextVeNftID}
+	KeyPrefixEpoch                       = []byte{prefixEpoch}
+	KeyPrefixPointHistoryByEpoch         = []byte{prefixPointHistoryByEpoch}
+	KeyPrefixUserEpoch                   = []byte{prefixUserEpoch}
+	KeyPrefixUserPointHistoryByUserEpoch = []byte{prefixUserPointHistoryByUserEpoch}
+	KeyPrefixSlopeChange                 = []byte{prefixSlopeChange}
 )
 
 func TotalLockedAmountKey() []byte {
@@ -62,11 +62,11 @@ func PointKey(epoch uint64) []byte {
 }
 
 func UserEpochKey(veID uint64) []byte {
-	return append(KeyPrefixUserEpochByVeNftID, sdk.Uint64ToBigEndian(veID)...)
+	return append(KeyPrefixUserEpoch, sdk.Uint64ToBigEndian(veID)...)
 }
 
 func UserPointKey(veID uint64, userEpoch uint64) []byte {
-	return append(append(KeyPrefixUserPointHistoryByUserEpochByVeNftID, sdk.Uint64ToBigEndian(veID)...), sdk.Uint64ToBigEndian(userEpoch)...)
+	return append(append(KeyPrefixUserPointHistoryByUserEpoch, sdk.Uint64ToBigEndian(veID)...), sdk.Uint64ToBigEndian(userEpoch)...)
 }
 
 func SlopeChangeKey(timestamp uint64) []byte {

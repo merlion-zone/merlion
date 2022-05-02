@@ -1,0 +1,49 @@
+syntax = "proto3";
+package merlion.gauge.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/gauge/types";
+
+message Checkpoint {
+  // unix timestamp
+  uint64 timestamp = 1;
+  string amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message Reward {
+  // reward coin denom
+  string denom = 1;
+  // reward amount per second
+  string rate = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  // reward finish unix time
+  uint64 finish_time = 3;
+  // unix time of last reward update
+  uint64 last_update_time = 4;
+  // cumulative reward per voting ticket
+  string cumulative_per_ticket = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message UserReward {
+  // reward coin denom
+  string denom = 1;
+  // ve id
+  uint64 ve_id = 2;
+  // last claim unix time
+  uint64 last_claim_time = 3;
+  // cumulative reward per voting ticket
+  string cumulative_per_ticket = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
