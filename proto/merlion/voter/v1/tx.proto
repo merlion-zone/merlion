@@ -1,0 +1,7 @@
+syntax = "proto3";
+package merlion.voter.v1;
+
+option go_package = "github.com/merlion-zone/merlion/x/voter/types";
+
+// Msg defines the Msg service.
+service Msg {}

@@ -205,6 +205,19 @@
     - [Checkpoint](#merlion.ve.v1.Checkpoint)
     - [LockedBalance](#merlion.ve.v1.LockedBalance)
   
+- [merlion/voter/v1/genesis.proto](#merlion/voter/v1/genesis.proto)
+    - [GenesisState](#merlion.voter.v1.GenesisState)
+    - [Params](#merlion.voter.v1.Params)
+  
+- [merlion/voter/v1/query.proto](#merlion/voter/v1/query.proto)
+    - [QueryParamsRequest](#merlion.voter.v1.QueryParamsRequest)
+    - [QueryParamsResponse](#merlion.voter.v1.QueryParamsResponse)
+  
+    - [Query](#merlion.voter.v1.Query)
+  
+- [merlion/voter/v1/tx.proto](#merlion/voter/v1/tx.proto)
+    - [Msg](#merlion.voter.v1.Msg)
+  
 - [Scalar Value Types](#scalar-value-types)
 
 
@@ -2809,6 +2822,123 @@ LockedBalance represents locked amount and unlock time of a ve.
  <!-- end enums -->
 
  <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/voter/v1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/voter/v1/genesis.proto
+
+
+
+<a name="merlion.voter.v1.GenesisState"></a>
+
+### GenesisState
+GenesisState defines the voter module's genesis state.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#merlion.voter.v1.Params) |  |  |
+
+
+
+
+
+
+<a name="merlion.voter.v1.Params"></a>
+
+### Params
+Params defines the parameters for the module.
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/voter/v1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/voter/v1/query.proto
+
+
+
+<a name="merlion.voter.v1.QueryParamsRequest"></a>
+
+### QueryParamsRequest
+QueryParamsRequest is request type for the Query/Params RPC method.
+
+
+
+
+
+
+<a name="merlion.voter.v1.QueryParamsResponse"></a>
+
+### QueryParamsResponse
+QueryParamsResponse is response type for the Query/Params RPC method.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#merlion.voter.v1.Params) |  | params holds all the parameters of this module. |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="merlion.voter.v1.Query"></a>
+
+### Query
+Query defines the gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Params` | [QueryParamsRequest](#merlion.voter.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.voter.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/voter/v1/params|
+
+ <!-- end services -->
+
+
+
+<a name="merlion/voter/v1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/voter/v1/tx.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="merlion.voter.v1.Msg"></a>
+
+### Msg
+Msg defines the Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
 
  <!-- end services -->
 

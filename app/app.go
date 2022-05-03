@@ -94,6 +94,9 @@ import (
 	"github.com/merlion-zone/merlion/x/ve"
 	vekeeper "github.com/merlion-zone/merlion/x/ve/keeper"
 	vetypes "github.com/merlion-zone/merlion/x/ve/types"
+	"github.com/merlion-zone/merlion/x/voter"
+	voterkeeper "github.com/merlion-zone/merlion/x/voter/keeper"
+	votertypes "github.com/merlion-zone/merlion/x/voter/types"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -205,6 +208,7 @@ var (
 		nft.AppModuleBasic{},
 		ve.AppModuleBasic{},
 		gauge.AppModuleBasic{},
+		voter.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -224,6 +228,7 @@ var (
 		nfttypes.ModuleName:            nil,
 		vetypes.ModuleName:             nil,
 		gaugetypes.ModuleName:          nil,
+		votertypes.ModuleName:          nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
@@ -301,6 +306,7 @@ type MerlionApp struct {
 	NftKeeper   nftkeeper.Keeper
 	VeKeeper    vekeeper.Keeper
 	GaugeKeeper gaugekeeper.Keeper
+	VoterKeeper voterkeeper.Keeper
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
@@ -346,6 +352,8 @@ func New(
 		makertypes.StoreKey,
 		nfttypes.StoreKey,
 		vetypes.StoreKey,
+		gaugetypes.StoreKey,
+		votertypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey, evmtypes.TransientKey)
@@ -509,6 +517,10 @@ func New(
 		app.GetSubspace(gaugetypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.NftKeeper, app.VeKeeper)
 	gaugeModule := gauge.NewAppModule(appCodec, app.GaugeKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.VoterKeeper = *voterkeeper.NewKeeper(appCodec, keys[votertypes.StoreKey], keys[votertypes.MemStoreKey],
+		app.GetSubspace(votertypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.VeKeeper, app.GaugeKeeper)
+	voterModule := voter.NewAppModule(appCodec, app.VoterKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -555,6 +567,7 @@ func New(
 		nftModule,
 		veModule,
 		gaugeModule,
+		voterModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -589,6 +602,7 @@ func New(
 		nfttypes.ModuleName,
 		vetypes.ModuleName,
 		gaugetypes.ModuleName,
+		votertypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -618,6 +632,7 @@ func New(
 		nfttypes.ModuleName,
 		vetypes.ModuleName,
 		gaugetypes.ModuleName,
+		votertypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -651,6 +666,7 @@ func New(
 		nfttypes.ModuleName,
 		vetypes.ModuleName,
 		gaugetypes.ModuleName,
+		votertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -681,6 +697,7 @@ func New(
 		nftModule,
 		veModule,
 		gaugeModule,
+		voterModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -914,6 +931,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(nfttypes.ModuleName)
 	paramsKeeper.Subspace(vetypes.ModuleName)
 	paramsKeeper.Subspace(gaugetypes.ModuleName)
+	paramsKeeper.Subspace(votertypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

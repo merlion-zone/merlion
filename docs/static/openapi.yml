@@ -34491,6 +34491,42 @@ paths:
           type: string
       tags:
         - Query
+  /merlionzone/merlion/gauge/params:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: MerlionGaugeV1Params
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
   /merlion/maker/v1/all_backing_pools:
     get:
       summary: AllBackingPools queries all the backing pools.
@@ -37183,10 +37219,10 @@ paths:
           format: int64
       tags:
         - Query
-  /merlionzone/merlion/gauge/params:
+  /merlionzone/merlion/voter/params:
     get:
       summary: Parameters queries the parameters of the module.
-      operationId: MerlionzoneMerlionGaugeParams
+      operationId: MerlionzoneMerlionVoterParams
       responses:
         '200':
           description: A successful response.
@@ -59546,6 +59582,16 @@ definitions:
     description: |-
       TokenPair defines an instance that records pairing consisting of a Cosmos
       native Coin and an ERC20 token address.
+  merlion.gauge.v1.Params:
+    type: object
+    description: Params defines the parameters for the module.
+  merlion.gauge.v1.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+    description: QueryParamsResponse is response type for the Query/Params RPC method.
   merlion.maker.v1.AccountCollateral:
     type: object
     properties:
@@ -61056,10 +61102,10 @@ definitions:
     properties:
       power:
         type: string
-  merlionzone.merlion.gauge.Params:
+  merlionzone.merlion.voter.Params:
     type: object
     description: Params defines the parameters for the module.
-  merlionzone.merlion.gauge.QueryParamsResponse:
+  merlionzone.merlion.voter.QueryParamsResponse:
     type: object
     properties:
       params:
