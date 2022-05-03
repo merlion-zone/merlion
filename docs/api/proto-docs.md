@@ -526,6 +526,7 @@ Msg defines the erc20 Msg service.
 | `finish_time` | [uint64](#uint64) |  | reward finish unix time |
 | `last_update_time` | [uint64](#uint64) |  | unix time of last reward update |
 | `cumulative_per_ticket` | [string](#string) |  | cumulative reward per voting ticket |
+| `accrued_amount` | [string](#string) |  | accrued reward amount which has not been used for distributing rateably |
 
 
 

@@ -302,8 +302,51 @@ func (b *Base) remainingReward(ctx sdk.Context, rewardDenom string) sdk.Int {
 	return reward.Rate.MulRaw(int64(reward.FinishTime - now))
 }
 
-func (b *Base) claimFees(ctx sdk.Context) {
-	// TODO
+func (b *Base) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom string, amount sdk.Int) error {
+	if rewardDenom == b.depoistDenom {
+		// TODO: error
+	}
+	if !amount.IsPositive() {
+		// TODO: error
+	}
+
+	now := uint64(ctx.BlockTime().Unix())
+
+	reward := b.GetReward(ctx, rewardDenom)
+	if reward.Rate.IsZero() {
+		b.writeRewardPerTicketCheckpoint(ctx, rewardDenom, sdk.ZeroInt(), now)
+	}
+	b.updateRewardPerTicket(ctx, rewardDenom)
+	reward = b.GetReward(ctx, rewardDenom)
+
+	coin := sdk.NewCoin(rewardDenom, amount)
+	err := b.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, b.GetEscrowPool(ctx).GetName(), sdk.NewCoins(coin))
+	if err != nil {
+		return err
+	}
+
+	rewardAmount := amount
+	if reward.FinishTime > now {
+		remaining := reward.Rate.MulRaw(int64(reward.FinishTime - now))
+		if rewardAmount.LTE(remaining) {
+			// TODO: error
+		}
+		rewardAmount = rewardAmount.Add(remaining)
+	}
+	reward.Rate = rewardAmount.QuoRaw(vetypes.RegulatedPeriod)
+	reward.FinishTime = now + vetypes.RegulatedPeriod
+
+	if !reward.Rate.IsPositive() {
+		// TODO: error
+	}
+
+	balance := b.keeper.bankKeeper.GetBalance(ctx, b.GetEscrowPool(ctx).GetAddress(), rewardDenom)
+	if balance.Amount.LT(rewardAmount) {
+		// TODO: error
+	}
+
+	b.SetReward(ctx, rewardDenom, reward)
+	return nil
 }
 
 func (b *Base) writeUserCheckpoint(ctx sdk.Context, veID uint64, amount sdk.Int) {

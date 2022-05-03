@@ -100,6 +100,7 @@ func (b *Base) GetReward(ctx sdk.Context, rewardDenom string) types.Reward {
 			FinishTime:          0,
 			LastUpdateTime:      0,
 			CumulativePerTicket: sdk.ZeroInt(),
+			AccruedAmount:       sdk.ZeroInt(),
 		}
 	}
 	var reward types.Reward

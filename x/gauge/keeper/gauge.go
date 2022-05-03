@@ -6,11 +6,14 @@ import (
 	vetypes "github.com/merlion-zone/merlion/x/ve/types"
 )
 
-func (k Keeper) DepositFees(ctx sdk.Context, stakedDenom string, amount sdk.Coins) {
+type FeeClaimee interface {
+	ClaimFees(ctx sdk.Context, claimer sdk.AccAddress) sdk.Coins
 }
 
 type Gauge struct {
 	Base
+	bribe      Bribe
+	feeClaimee FeeClaimee
 }
 
 func (k Keeper) GetGauge(depoistDenom string) Gauge {
@@ -86,5 +89,39 @@ func (g Gauge) Withdraw(ctx sdk.Context, veID uint64, amount sdk.Int) (err error
 
 	// TODO: voter emit withdraw
 
+	return nil
+}
+
+func (g Gauge) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom string, amount sdk.Int) error {
+	err := g.ClaimFees(ctx)
+	if err != nil {
+		return err
+	}
+
+	return g.Base.depositReward(ctx, sender, rewardDenom, amount)
+}
+
+func (g Gauge) ClaimFees(ctx sdk.Context) (err error) {
+	claimed := g.feeClaimee.ClaimFees(ctx, g.Base.GetEscrowPool(ctx).GetAddress())
+
+	acc := g.Base.GetEscrowPool(ctx).GetAddress()
+	for _, fee := range claimed {
+		reward := g.Base.GetReward(ctx, fee.Denom)
+		feeAmount := reward.AccruedAmount.Add(fee.Amount)
+
+		if feeAmount.GT(g.bribe.remainingReward(ctx, fee.Denom)) && feeAmount.QuoRaw(vetypes.RegulatedPeriod).IsPositive() {
+			err = g.bribe.depositReward(ctx, acc, fee.Denom, feeAmount)
+			if err != nil {
+				return err
+			}
+			// clear accrued undistributed amount
+			reward.AccruedAmount = sdk.ZeroInt()
+		} else {
+			// accrue undistributed amount
+			reward.AccruedAmount = feeAmount
+		}
+
+		g.Base.SetReward(ctx, fee.Denom, reward)
+	}
 	return nil
 }

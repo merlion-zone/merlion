@@ -32,6 +32,11 @@ message Reward {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
+  // accrued reward amount which has not been used for distributing rateably
+  string accrued_amount = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 message UserReward {
