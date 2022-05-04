@@ -227,6 +227,7 @@ var (
 		makertypes.ModuleName:          {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		nfttypes.ModuleName:            nil,
 		vetypes.ModuleName:             nil,
+		vetypes.EmissionPoolName:       nil,
 		gaugetypes.ModuleName:          nil,
 		votertypes.ModuleName:          nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms

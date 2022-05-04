@@ -17,6 +17,8 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_ve"
+
+	EmissionPoolName = "ve_emission_pool"
 )
 
 const (
@@ -28,6 +30,10 @@ const (
 	prefixUserEpoch
 	prefixUserPointHistoryByUserEpoch
 	prefixSlopeChange
+
+	prefixTotalEmission
+	prefixEmissionAtLastPeriod
+	prefixEmissionLastTimestamp
 )
 
 var (
@@ -39,6 +45,10 @@ var (
 	KeyPrefixUserEpoch                   = []byte{prefixUserEpoch}
 	KeyPrefixUserPointHistoryByUserEpoch = []byte{prefixUserPointHistoryByUserEpoch}
 	KeyPrefixSlopeChange                 = []byte{prefixSlopeChange}
+
+	KeyPrefixTotalEmission         = []byte{prefixTotalEmission}
+	KeyPrefixEmissionAtLastPeriod  = []byte{prefixEmissionAtLastPeriod}
+	KeyPrefixEmissionLastTimestamp = []byte{prefixEmissionLastTimestamp}
 )
 
 func TotalLockedAmountKey() []byte {
@@ -71,4 +81,16 @@ func UserPointKey(veID uint64, userEpoch uint64) []byte {
 
 func SlopeChangeKey(timestamp uint64) []byte {
 	return append(KeyPrefixSlopeChange, sdk.Uint64ToBigEndian(timestamp)...)
+}
+
+func TotalEmissionKey() []byte {
+	return KeyPrefixTotalEmission
+}
+
+func EmissionAtLastPeriodKey() []byte {
+	return KeyPrefixEmissionAtLastPeriod
+}
+
+func EmissionLastTimestampKey() []byte {
+	return KeyPrefixEmissionLastTimestamp
 }

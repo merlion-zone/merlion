@@ -2,6 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	vekeeper "github.com/merlion-zone/merlion/x/ve/keeper"
 	vetypes "github.com/merlion-zone/merlion/x/ve/types"
 	"github.com/merlion-zone/merlion/x/voter/types"
 )
@@ -143,9 +144,18 @@ func (k Keeper) DepositReward(ctx sdk.Context, sender sdk.AccAddress, amount sdk
 	k.SetIndex(ctx, index)
 }
 
+func (k Keeper) EmitReward(ctx sdk.Context) {
+	emitter := vekeeper.NewEmitter(k.veKeeper.(vekeeper.Keeper))
+	emission := emitter.Emit(ctx)
+	if emission.IsPositive() {
+		k.DepositReward(ctx, k.accountKeeper.GetModuleAddress(vetypes.EmissionPoolName), emission)
+	}
+}
+
 func (k Keeper) DistributeReward(ctx sdk.Context, poolDenom string) {
 	gauge := k.gaugeKeeper.Gauge(ctx, poolDenom)
-	// TODO: ve mint
+
+	k.EmitReward(ctx)
 
 	k.updateClaimableForGauge(ctx, poolDenom)
 
