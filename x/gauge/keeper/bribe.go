@@ -9,8 +9,11 @@ type Bribe struct {
 	Base
 }
 
-func (k Keeper) GetBribe(depoistDenom string) Gauge {
-	return Gauge{
+func (k Keeper) Bribe(ctx sdk.Context, depoistDenom string) Bribe {
+	if !k.HasGauge(ctx, depoistDenom) {
+		panic("gauge not found")
+	}
+	return Bribe{
 		Base: Base{
 			prefixKey:    types.BribeKey(depoistDenom),
 			depoistDenom: depoistDenom,

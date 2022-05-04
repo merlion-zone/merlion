@@ -11,6 +11,28 @@ const (
 	FirstEpoch = 1
 )
 
+func (k Keeper) SetGauge(ctx sdk.Context, depositDenom string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.GaugeKey(depositDenom), []byte(depositDenom))
+}
+
+func (k Keeper) HasGauge(ctx sdk.Context, depositDenom string) bool {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.GaugeKey(depositDenom))
+	return bz != nil
+}
+
+func (k Keeper) GetGauges(ctx sdk.Context) (denoms []string) {
+	store := ctx.KVStore(k.storeKey)
+	iter := sdk.KVStorePrefixIterator(store, types.KeyPrefixGaugeDenom)
+	defer iter.Close()
+	for ; iter.Valid(); iter.Next() {
+		denom := string(iter.Key()[len(types.KeyPrefixGaugeDenom):])
+		denoms = append(denoms, denom)
+	}
+	return denoms
+}
+
 func (b *Base) SetTotalDepositedAmount(ctx sdk.Context, amount sdk.Int) {
 	store := ctx.KVStore(b.keeper.storeKey)
 	bz := b.keeper.cdc.MustMarshal(&sdk.IntProto{amount})

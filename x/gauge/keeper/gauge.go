@@ -16,7 +16,18 @@ type Gauge struct {
 	feeClaimee FeeClaimee
 }
 
-func (k Keeper) GetGauge(depoistDenom string) Gauge {
+func (k Keeper) CreateGauge(ctx sdk.Context, depoistDenom string) {
+	// TODO: whitelists
+	if k.HasGauge(ctx, depoistDenom) {
+		panic("gauge exists")
+	}
+	k.SetGauge(ctx, depoistDenom)
+}
+
+func (k Keeper) Gauge(ctx sdk.Context, depoistDenom string) Gauge {
+	if !k.HasGauge(ctx, depoistDenom) {
+		panic("gauge not found")
+	}
 	return Gauge{
 		Base: Base{
 			prefixKey:    types.GaugeKey(depoistDenom),
@@ -35,7 +46,7 @@ func (g Gauge) ClaimReward(ctx sdk.Context, veID uint64) (err error) {
 func (g Gauge) Deposit(ctx sdk.Context, veID uint64, amount sdk.Int) (err error) {
 	owner := g.Base.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeID(veID))
 	coin := sdk.NewCoin(g.Base.depoistDenom, amount)
-	err = g.Base.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, g.Base.GetEscrowPool(ctx).GetName(), sdk.NewCoins(coin))
+	err = g.Base.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, g.Base.EscrowPool(ctx).GetName(), sdk.NewCoins(coin))
 	if err != nil {
 		return err
 	}
@@ -80,7 +91,7 @@ func (g Gauge) Withdraw(ctx sdk.Context, veID uint64, amount sdk.Int) (err error
 	}
 
 	coin := sdk.NewCoin(g.Base.depoistDenom, amount)
-	err = g.Base.keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, g.Base.GetEscrowPool(ctx).GetName(), owner, sdk.NewCoins(coin))
+	err = g.Base.keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, g.Base.EscrowPool(ctx).GetName(), owner, sdk.NewCoins(coin))
 	if err != nil {
 		return err
 	}
@@ -92,8 +103,8 @@ func (g Gauge) Withdraw(ctx sdk.Context, veID uint64, amount sdk.Int) (err error
 	return nil
 }
 
-func (g Gauge) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom string, amount sdk.Int) error {
-	err := g.ClaimFees(ctx)
+func (g Gauge) DepositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom string, amount sdk.Int) error {
+	err := g.DepositFees(ctx)
 	if err != nil {
 		return err
 	}
@@ -101,15 +112,15 @@ func (g Gauge) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom
 	return g.Base.depositReward(ctx, sender, rewardDenom, amount)
 }
 
-func (g Gauge) ClaimFees(ctx sdk.Context) (err error) {
-	claimed := g.feeClaimee.ClaimFees(ctx, g.Base.GetEscrowPool(ctx).GetAddress())
+func (g Gauge) DepositFees(ctx sdk.Context) (err error) {
+	claimed := g.feeClaimee.ClaimFees(ctx, g.Base.EscrowPool(ctx).GetAddress())
 
-	acc := g.Base.GetEscrowPool(ctx).GetAddress()
+	acc := g.Base.EscrowPool(ctx).GetAddress()
 	for _, fee := range claimed {
 		reward := g.Base.GetReward(ctx, fee.Denom)
 		feeAmount := reward.AccruedAmount.Add(fee.Amount)
 
-		if feeAmount.GT(g.bribe.remainingReward(ctx, fee.Denom)) && feeAmount.QuoRaw(vetypes.RegulatedPeriod).IsPositive() {
+		if feeAmount.GT(g.bribe.RemainingReward(ctx, fee.Denom)) && feeAmount.QuoRaw(vetypes.RegulatedPeriod).IsPositive() {
 			err = g.bribe.depositReward(ctx, acc, fee.Denom, feeAmount)
 			if err != nil {
 				return err

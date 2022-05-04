@@ -65,12 +65,12 @@ var (
 	KeyPrefixRewardPointHistoryByRewardEpoch = []byte{prefixRewardPointHistoryByRewardEpoch}
 )
 
-func GaugeKey(gaugeDenom string) []byte {
-	return append(KeyPrefixGaugeDenom, gaugeDenom...)
+func GaugeKey(denom string) []byte {
+	return append(KeyPrefixGaugeDenom, denom...)
 }
 
-func BribeKey(bribeDenom string) []byte {
-	return append(KeyPrefixBribeDenom, bribeDenom...)
+func BribeKey(denom string) []byte {
+	return append(KeyPrefixBribeDenom, denom...)
 }
 
 func TotalDepositedAmountKey(gaugeOrBribe []byte) []byte {

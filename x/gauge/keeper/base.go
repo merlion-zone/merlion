@@ -18,7 +18,11 @@ type Base struct {
 	isGauge      bool
 }
 
-func (b *Base) GetPoolName() string {
+func (b *Base) PoolDenom() string {
+	return b.depoistDenom
+}
+
+func (b *Base) PoolName() string {
 	name := types.BribePoolName
 	if b.isGauge {
 		name = types.GaugePoolName
@@ -26,8 +30,8 @@ func (b *Base) GetPoolName() string {
 	return fmt.Sprintf("%s_%s", name, b.depoistDenom)
 }
 
-func (b *Base) GetEscrowPool(ctx sdk.Context) authtypes.ModuleAccountI {
-	poolName := b.GetPoolName()
+func (b *Base) EscrowPool(ctx sdk.Context) authtypes.ModuleAccountI {
+	poolName := b.PoolName()
 	acc := b.keeper.accountKeeper.GetAccount(ctx, authtypes.NewModuleAddress(poolName))
 	if acc != nil {
 		macc, ok := acc.(authtypes.ModuleAccountI)
@@ -250,7 +254,7 @@ func (b *Base) userReward(ctx sdk.Context, rewardDenom string, veID uint64) sdk.
 
 func (b *Base) claimReward(ctx sdk.Context, veID uint64) (err error) {
 	owner := b.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeID(veID))
-	pool := b.GetEscrowPool(ctx)
+	pool := b.EscrowPool(ctx)
 
 	denoms := b.getRewardDenoms(ctx)
 	for _, rewardDenom := range denoms {
@@ -293,7 +297,7 @@ func (b *Base) deriveAmountForUser(ctx sdk.Context, veID uint64) {
 	}
 }
 
-func (b *Base) remainingReward(ctx sdk.Context, rewardDenom string) sdk.Int {
+func (b *Base) RemainingReward(ctx sdk.Context, rewardDenom string) sdk.Int {
 	now := uint64(ctx.BlockTime().Unix())
 	reward := b.GetReward(ctx, rewardDenom)
 	if reward.FinishTime <= now {
@@ -320,7 +324,7 @@ func (b *Base) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom
 	reward = b.GetReward(ctx, rewardDenom)
 
 	coin := sdk.NewCoin(rewardDenom, amount)
-	err := b.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, b.GetEscrowPool(ctx).GetName(), sdk.NewCoins(coin))
+	err := b.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, b.EscrowPool(ctx).GetName(), sdk.NewCoins(coin))
 	if err != nil {
 		return err
 	}
@@ -340,7 +344,7 @@ func (b *Base) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom
 		// TODO: error
 	}
 
-	balance := b.keeper.bankKeeper.GetBalance(ctx, b.GetEscrowPool(ctx).GetAddress(), rewardDenom)
+	balance := b.keeper.bankKeeper.GetBalance(ctx, b.EscrowPool(ctx).GetAddress(), rewardDenom)
 	if balance.Amount.LT(rewardAmount) {
 		// TODO: error
 	}
