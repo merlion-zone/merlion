@@ -228,6 +228,7 @@ var (
 		nfttypes.ModuleName:            nil,
 		vetypes.ModuleName:             nil,
 		vetypes.EmissionPoolName:       nil,
+		vetypes.DistributionPoolName:   nil,
 		gaugetypes.ModuleName:          nil,
 		votertypes.ModuleName:          nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms

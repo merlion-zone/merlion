@@ -2,98 +2,112 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/ve/types"
 )
 
-type Emitter struct {
+type Distributor struct {
 	keeper Keeper
 }
 
-func NewEmitter(keeper Keeper) Emitter {
-	return Emitter{keeper: keeper}
+func NewDistributor(keeper Keeper) Distributor {
+	return Distributor{keeper: keeper}
 }
 
-func (e Emitter) AddTotalEmission(ctx sdk.Context, sender sdk.AccAddress, emission sdk.Int) error {
-	if !emission.IsPositive() {
-		panic("emission must be nonzero")
+func (d Distributor) DistributePerPeriod(ctx sdk.Context) {
+	totalAmount := d.keeper.bankKeeper.GetBalance(ctx, d.keeper.accountKeeper.GetModuleAddress(types.DistributionPoolName), d.keeper.LockDenom(ctx)).Amount
+
+	totalAmountLast := d.keeper.GetDistributionTotalAmount(ctx)
+	d.keeper.SetDistributionTotalAmount(ctx, totalAmount)
+
+	amount := totalAmount.Sub(totalAmountLast)
+
+	now := uint64(ctx.BlockTime().Unix())
+	timeLast := d.keeper.GetDistributionAccruedLastTimestamp(ctx)
+	d.keeper.SetDistributionAccruedLastTimestamp(ctx, now)
+
+	duration := now - timeLast
+
+	epochTime := types.RegulatedUnixTime(timeLast)
+	for {
+		amountExisting := d.keeper.GetDistributionPerPeriod(ctx, epochTime)
+		if duration == 0 || epochTime >= now {
+			d.keeper.SetDistributionPerPeriod(ctx, epochTime, amountExisting.Add(amount))
+			break
+		}
+
+		nextEpochTime := types.NextRegulatedUnixTime(epochTime)
+		endTime := merlion.Min(nextEpochTime, now)
+		amountAdd := amount.MulRaw(int64(endTime - timeLast)).QuoRaw(int64(duration))
+		d.keeper.SetDistributionPerPeriod(ctx, epochTime, amountExisting.Add(amountAdd))
+
+		if nextEpochTime >= now {
+			break
+		}
+		epochTime = nextEpochTime
+	}
+}
+
+func (d Distributor) Claim(ctx sdk.Context, veID uint64) error {
+	d.keeper.RegulateCheckpoint(ctx)
+
+	owner := d.keeper.nftKeeper.GetOwner(ctx, types.VeNftClass.Id, types.VeID(veID))
+
+	now := uint64(ctx.BlockTime().Unix())
+	timeLast := d.keeper.GetDistributionClaimLastTimestampByUser(ctx, veID)
+	if now-timeLast < types.RegulatedPeriod {
+		return nil
+	}
+	d.keeper.SetDistributionClaimLastTimestampByUser(ctx, veID, now)
+
+	amount := sdk.ZeroInt()
+	epochTime := types.RegulatedUnixTime(timeLast)
+	for {
+		epochTime = types.NextRegulatedUnixTime(epochTime)
+		if epochTime > types.RegulatedUnixTime(now) {
+			break
+		}
+
+		amountOfPeriod := d.keeper.GetDistributionPerPeriod(ctx, types.PreviousRegulatedUnixTime(epochTime))
+		votingPower := d.keeper.GetVotingPower(ctx, veID, epochTime, 0)
+		totalVotingPower := d.keeper.GetTotalVotingPower(ctx, epochTime, 0)
+		amount = amount.Add(amountOfPeriod.Mul(votingPower).Quo(totalVotingPower))
 	}
 
-	coin := sdk.NewCoin(e.keeper.LockDenom(ctx), emission)
-	err := e.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.EmissionPoolName, sdk.NewCoins(coin))
+	if !amount.IsPositive() {
+		return nil
+	}
+	coin := sdk.NewCoin(d.keeper.LockDenom(ctx), amount)
+	err := d.keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.DistributionPoolName, owner, sdk.NewCoins(coin))
 	if err != nil {
 		return err
 	}
-
-	total := e.keeper.GetTotalEmission(ctx)
-	e.keeper.SetTotalEmission(ctx, total.Add(emission))
-
-	// for geometric sequence of weeks of every 4 years,
-	// a * (1 - r^n) / (1 - r) = <total emission>
-	emissionInitial := emission.ToDec().Mul(sdk.OneDec().Sub(types.EmissionRatio)).Quo(sdk.OneDec().Sub(types.EmissionRatio.Power(types.MaxLockTimeWeeks))).TruncateInt()
-
-	emissionLast := e.keeper.GetEmissionAtLastPeriod(ctx)
-	e.keeper.SetEmissionAtLastPeriod(ctx, emissionLast.Add(emissionInitial))
-
 	return nil
 }
 
-func (e Emitter) CirculationSupply(ctx sdk.Context) sdk.Int {
-	totalSupply := e.keeper.bankKeeper.GetSupply(ctx, e.keeper.LockDenom(ctx)).Amount
-	// actually voting power is degenerative locked amount by ve
-	veLocked := e.keeper.GetTotalVotingPower(ctx, 0, ctx.BlockHeight())
-	return totalSupply.Sub(veLocked)
+func (k Keeper) SetDistributionAccruedLastTimestamp(ctx sdk.Context, timestamp uint64) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.DistributionAccruedLastTimestampKey(), sdk.Uint64ToBigEndian(timestamp))
 }
 
-func (e Emitter) CirculationRate(ctx sdk.Context) sdk.Dec {
-	totalSupply := e.keeper.bankKeeper.GetSupply(ctx, e.keeper.LockDenom(ctx)).Amount
-	return e.CirculationSupply(ctx).ToDec().QuoInt(totalSupply)
-}
-
-func (e Emitter) Emission(ctx sdk.Context) sdk.Int {
-	emissionLast := e.keeper.GetEmissionAtLastPeriod(ctx)
-	emission := emissionLast.ToDec().Mul(types.EmissionRatio)
-
-	circulationRate := e.CirculationRate(ctx)
-	if circulationRate.LT(types.MinEmissionCirculating) {
-		circulationRate = types.MinEmissionCirculating
+func (k Keeper) GetDistributionAccruedLastTimestamp(ctx sdk.Context) uint64 {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.DistributionAccruedLastTimestampKey())
+	if bz == nil {
+		return 0
 	}
-
-	return emission.Mul(circulationRate).TruncateInt()
+	return sdk.BigEndianToUint64(bz)
 }
 
-func (e Emitter) EmissionCompensation(ctx sdk.Context, emission sdk.Int) sdk.Int {
-	return emission.ToDec().Mul(sdk.OneDec().Sub(e.CirculationRate(ctx))).TruncateInt()
-}
-
-func (e Emitter) Emit(ctx sdk.Context) sdk.Int {
-	timestamp := types.RegulatedUnixTimeFromNow(ctx, 0)
-	timeLast := e.keeper.GetEmissionLastTimestamp(ctx)
-	if timestamp-timeLast < types.RegulatedPeriod {
-		return sdk.ZeroInt()
-	}
-
-	e.keeper.SetEmissionLastTimestamp(ctx, timestamp)
-
-	emission := e.Emission(ctx)
-	e.keeper.SetEmissionAtLastPeriod(ctx, emission)
-
-	compensation := e.EmissionCompensation(ctx, emission)
-	// TODO: send compensation ve dist
-	_ = compensation
-
-	emission = emission.Sub(compensation)
-	return emission
-}
-
-func (k Keeper) SetTotalEmission(ctx sdk.Context, total sdk.Int) {
+func (k Keeper) SetDistributionTotalAmount(ctx sdk.Context, total sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshal(&sdk.IntProto{total})
-	store.Set(types.TotalEmissionKey(), bz)
+	store.Set(types.DistributionTotalAmountKey(), bz)
 }
 
-func (k Keeper) GetTotalEmission(ctx sdk.Context) sdk.Int {
+func (k Keeper) GetDistributionTotalAmount(ctx sdk.Context) sdk.Int {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.TotalEmissionKey())
+	bz := store.Get(types.DistributionTotalAmountKey())
 	if bz == nil {
 		return sdk.ZeroInt()
 	}
@@ -102,31 +116,31 @@ func (k Keeper) GetTotalEmission(ctx sdk.Context) sdk.Int {
 	return total.Int
 }
 
-func (k Keeper) SetEmissionAtLastPeriod(ctx sdk.Context, emission sdk.Int) {
+func (k Keeper) SetDistributionPerPeriod(ctx sdk.Context, timestamp uint64, amount sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{emission})
-	store.Set(types.EmissionAtLastPeriodKey(), bz)
+	bz := k.cdc.MustMarshal(&sdk.IntProto{amount})
+	store.Set(types.DistributionPerPeriodKey(timestamp), bz)
 }
 
-func (k Keeper) GetEmissionAtLastPeriod(ctx sdk.Context) sdk.Int {
+func (k Keeper) GetDistributionPerPeriod(ctx sdk.Context, timestamp uint64) sdk.Int {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.EmissionAtLastPeriodKey())
+	bz := store.Get(types.DistributionPerPeriodKey(timestamp))
 	if bz == nil {
 		return sdk.ZeroInt()
 	}
-	var emission sdk.IntProto
-	k.cdc.MustUnmarshal(bz, &emission)
-	return emission.Int
+	var amount sdk.IntProto
+	k.cdc.MustUnmarshal(bz, &amount)
+	return amount.Int
 }
 
-func (k Keeper) SetEmissionLastTimestamp(ctx sdk.Context, timestamp uint64) {
+func (k Keeper) SetDistributionClaimLastTimestampByUser(ctx sdk.Context, veID uint64, timestamp uint64) {
 	store := ctx.KVStore(k.storeKey)
-	store.Set(types.EmissionLastTimestampKey(), sdk.Uint64ToBigEndian(timestamp))
+	store.Set(types.DistributionClaimLastTimestampByUserKey(veID), sdk.Uint64ToBigEndian(timestamp))
 }
 
-func (k Keeper) GetEmissionLastTimestamp(ctx sdk.Context) uint64 {
+func (k Keeper) GetDistributionClaimLastTimestampByUser(ctx sdk.Context, veID uint64) uint64 {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.EmissionLastTimestampKey())
+	bz := store.Get(types.DistributionClaimLastTimestampByUserKey(veID))
 	if bz == nil {
 		return 0
 	}

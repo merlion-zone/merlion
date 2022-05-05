@@ -18,7 +18,8 @@ const (
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_ve"
 
-	EmissionPoolName = "ve_emission_pool"
+	EmissionPoolName     = "ve_emission_pool"
+	DistributionPoolName = "ve_distribution_pool"
 )
 
 const (
@@ -34,6 +35,11 @@ const (
 	prefixTotalEmission
 	prefixEmissionAtLastPeriod
 	prefixEmissionLastTimestamp
+
+	prefixDistributionAccruedLastTimestamp
+	prefixDistributionTotalAmount
+	prefixDistributionPerPeriod
+	prefixDistributionClaimLastTimestampByUser
 )
 
 var (
@@ -49,6 +55,11 @@ var (
 	KeyPrefixTotalEmission         = []byte{prefixTotalEmission}
 	KeyPrefixEmissionAtLastPeriod  = []byte{prefixEmissionAtLastPeriod}
 	KeyPrefixEmissionLastTimestamp = []byte{prefixEmissionLastTimestamp}
+
+	KeyPrefixDistributionAccruedLastTimestamp     = []byte{prefixDistributionAccruedLastTimestamp}
+	KeyPrefixDistributionTotalAmount              = []byte{prefixDistributionTotalAmount}
+	KeyPrefixDistributionPerPeriod                = []byte{prefixDistributionPerPeriod}
+	KeyPrefixDistributionClaimLastTimestampByUser = []byte{prefixDistributionClaimLastTimestampByUser}
 )
 
 func TotalLockedAmountKey() []byte {
@@ -93,4 +104,20 @@ func EmissionAtLastPeriodKey() []byte {
 
 func EmissionLastTimestampKey() []byte {
 	return KeyPrefixEmissionLastTimestamp
+}
+
+func DistributionAccruedLastTimestampKey() []byte {
+	return KeyPrefixDistributionAccruedLastTimestamp
+}
+
+func DistributionTotalAmountKey() []byte {
+	return KeyPrefixDistributionTotalAmount
+}
+
+func DistributionPerPeriodKey(timestamp uint64) []byte {
+	return append(KeyPrefixDistributionPerPeriod, sdk.Uint64ToBigEndian(timestamp)...)
+}
+
+func DistributionClaimLastTimestampByUserKey(veID uint64) []byte {
+	return append(KeyPrefixDistributionClaimLastTimestampByUser, sdk.Uint64ToBigEndian(veID)...)
 }

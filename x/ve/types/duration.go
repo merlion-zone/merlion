@@ -21,8 +21,15 @@ func NextRegulatedUnixTime(timestamp uint64) uint64 {
 	if timestamp > MaxUnixTime-RegulatedPeriod {
 		panic("too large unix time")
 	}
-	next := timestamp + RegulatedPeriod
-	return next
+	return timestamp + RegulatedPeriod
+}
+
+func PreviousRegulatedUnixTime(timestamp uint64) uint64 {
+	CheckRegulatedUnixTime(timestamp)
+	if timestamp < RegulatedPeriod {
+		panic("too small unix time")
+	}
+	return timestamp - RegulatedPeriod
 }
 
 func CheckRegulatedUnixTime(timestamp uint64) {
