@@ -204,8 +204,6 @@ func (m msgServer) Merge(c context.Context, msg *types.MsgMerge) (*types.MsgMerg
 		return nil, err
 	}
 
-	// TODO: check attachments and voted
-
 	fromOwner := m.Keeper.nftKeeper.GetOwner(ctx, types.VeNftClass.Id, msg.FromVeId)
 	toOwner := m.Keeper.nftKeeper.GetOwner(ctx, types.VeNftClass.Id, msg.ToVeId)
 	if !sender.Equals(fromOwner) {
@@ -217,6 +215,11 @@ func (m msgServer) Merge(c context.Context, msg *types.MsgMerge) (*types.MsgMerg
 
 	fromVeID := types.Uint64FromVeID(msg.FromVeId)
 	toVeID := types.Uint64FromVeID(msg.ToVeId)
+
+	err = m.Keeper.CheckVeAttached(ctx, fromVeID)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "from ve id attached")
+	}
 
 	lockedFrom := m.Keeper.GetLockedAmountByUser(ctx, fromVeID)
 	lockedTo := m.Keeper.GetLockedAmountByUser(ctx, toVeID)
@@ -278,9 +281,12 @@ func (m msgServer) Withdraw(c context.Context, msg *types.MsgWithdraw) (*types.M
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "user %s do not own ve %s", sender, owner)
 	}
 
-	// TODO: check attachments and voted
-
 	veID := types.Uint64FromVeID(msg.VeId)
+
+	err = m.Keeper.CheckVeAttached(ctx, veID)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "ve id attached")
+	}
 
 	locked := m.Keeper.GetLockedAmountByUser(ctx, veID)
 	if locked.End > uint64(ctx.BlockTime().Unix()) {

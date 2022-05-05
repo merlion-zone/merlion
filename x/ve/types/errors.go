@@ -15,4 +15,5 @@ var (
 	ErrLockExpired          = sdkerrors.Register(ModuleName, 8, "lock expired")
 	ErrAmountNotPositive    = sdkerrors.Register(ModuleName, 9, "amount must be positive")
 	ErrSameVeID             = sdkerrors.Register(ModuleName, 10, "from ve id and to ve id must be different")
+	ErrVeAttached           = sdkerrors.Register(ModuleName, 11, "ve owner deposited into gauge or ve voted")
 )

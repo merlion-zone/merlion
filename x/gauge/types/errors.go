@@ -8,5 +8,8 @@ import (
 
 // x/gauge module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrInvalidDepositDenom  = sdkerrors.Register(ModuleName, 2, "pool denom cannot be deposited as reward")
+	ErrInvalidAmount        = sdkerrors.Register(ModuleName, 3, "invalid amount")
+	ErrTooSmallRewardAmount = sdkerrors.Register(ModuleName, 4, "too small reward amount")
+	ErrTooLargeAmount       = sdkerrors.Register(ModuleName, 5, "too large amount")
 )

@@ -9,7 +9,6 @@ import (
 
 func (k Keeper) CreateGauge(ctx sdk.Context, depoistDenom string) {
 	if !k.gaugeKeeper.HasGauge(ctx, depoistDenom) {
-		// TODO: feeClaimee
 		k.gaugeKeeper.CreateGauge(ctx, depoistDenom)
 	}
 
@@ -47,7 +46,7 @@ func (k Keeper) Abstain(ctx sdk.Context, veID uint64) {
 	k.DeleteTotalVotesByUser(ctx, veID)
 	k.SetTotalVotes(ctx, totalVotes)
 
-	// TODO: ve abstain
+	k.veKeeper.SetVeVoted(ctx, veID, false)
 }
 
 func (k Keeper) Vote(ctx sdk.Context, veID uint64, poolWeights map[string]sdk.Dec) {
@@ -96,7 +95,7 @@ func (k Keeper) Vote(ctx sdk.Context, veID uint64, poolWeights map[string]sdk.De
 	k.SetTotalVotesByUser(ctx, veID, totalVotesByUser)
 	k.SetTotalVotes(ctx, totalVotes)
 
-	// TODO: ve voting
+	k.veKeeper.SetVeVoted(ctx, veID, true)
 }
 
 // Poke adjusts votes due to updated voting power of user

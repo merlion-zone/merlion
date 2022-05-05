@@ -30,4 +30,10 @@ type NftKeeper interface {
 type VeKeeper interface {
 	GetTotalVotingPower(ctx sdk.Context, atTime uint64, atBlock int64) sdk.Int
 	GetVotingPower(ctx sdk.Context, veID uint64, atTime uint64, atBlock int64) sdk.Int
+	IncVeAttached(ctx sdk.Context, veID uint64)
+	DecVeAttached(ctx sdk.Context, veID uint64)
+}
+
+type VoterKeeper interface {
+	DistributeReward(ctx sdk.Context, poolDenom string)
 }

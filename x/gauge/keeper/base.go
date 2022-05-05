@@ -308,10 +308,10 @@ func (b *Base) RemainingReward(ctx sdk.Context, rewardDenom string) sdk.Int {
 
 func (b *Base) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom string, amount sdk.Int) error {
 	if rewardDenom == b.depoistDenom {
-		// TODO: error
+		return types.ErrInvalidDepositDenom
 	}
 	if !amount.IsPositive() {
-		// TODO: error
+		return types.ErrInvalidAmount
 	}
 
 	now := uint64(ctx.BlockTime().Unix())
@@ -333,7 +333,7 @@ func (b *Base) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom
 	if reward.FinishTime > now {
 		remaining := reward.Rate.MulRaw(int64(reward.FinishTime - now))
 		if rewardAmount.LTE(remaining) {
-			// TODO: error
+			return types.ErrTooSmallRewardAmount
 		}
 		rewardAmount = rewardAmount.Add(remaining)
 	}
@@ -341,12 +341,12 @@ func (b *Base) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom
 	reward.FinishTime = now + vetypes.RegulatedPeriod
 
 	if !reward.Rate.IsPositive() {
-		// TODO: error
+		return types.ErrTooSmallRewardAmount
 	}
 
 	balance := b.keeper.bankKeeper.GetBalance(ctx, b.EscrowPool(ctx).GetAddress(), rewardDenom)
 	if balance.Amount.LT(rewardAmount) {
-		// TODO: error
+		panic("pool has insufficient balance for reward")
 	}
 
 	b.SetReward(ctx, rewardDenom, reward)

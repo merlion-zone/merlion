@@ -22,6 +22,7 @@ type BankKeeper interface {
 type Vekeeper interface {
 	LockDenom(ctx sdk.Context) string
 	GetVotingPower(ctx sdk.Context, veID uint64, atTime uint64, atBlock int64) sdk.Int
+	SetVeVoted(ctx sdk.Context, veID uint64, voted bool)
 }
 
 type GaugeKeeper interface {

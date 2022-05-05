@@ -7,13 +7,12 @@ import (
 )
 
 type FeeClaimee interface {
-	ClaimFees(ctx sdk.Context, claimer sdk.AccAddress) sdk.Coins
+	ClaimFees(ctx sdk.Context, claimant sdk.AccAddress) sdk.Coins
 }
 
 type Gauge struct {
 	Base
-	bribe      Bribe
-	feeClaimee FeeClaimee
+	bribe Bribe
 }
 
 func (k Keeper) CreateGauge(ctx sdk.Context, depoistDenom string) {
@@ -30,41 +29,42 @@ func (k Keeper) Gauge(ctx sdk.Context, depoistDenom string) Gauge {
 	}
 	return Gauge{
 		Base: Base{
-			prefixKey:    types.GaugeKey(depoistDenom),
-			depoistDenom: depoistDenom,
 			keeper:       k,
+			depoistDenom: depoistDenom,
+			prefixKey:    types.GaugeKey(depoistDenom),
+			isGauge:      true,
 		},
 	}
 }
 
-func (g Gauge) ClaimReward(ctx sdk.Context, veID uint64) (err error) {
-	// TODO: voter distribute for gauge
+func (g Gauge) ClaimReward(ctx sdk.Context, veID uint64, voterKeeper types.VoterKeeper) (err error) {
+	voterKeeper.DistributeReward(ctx, g.PoolDenom())
 
-	return g.Base.claimReward(ctx, veID)
+	return g.claimReward(ctx, veID)
 }
 
 func (g Gauge) Deposit(ctx sdk.Context, veID uint64, amount sdk.Int) (err error) {
-	owner := g.Base.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeID(veID))
-	coin := sdk.NewCoin(g.Base.depoistDenom, amount)
-	err = g.Base.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, g.Base.EscrowPool(ctx).GetName(), sdk.NewCoins(coin))
+	owner := g.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeID(veID))
+	coin := sdk.NewCoin(g.depoistDenom, amount)
+	err = g.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, g.EscrowPool(ctx).GetName(), sdk.NewCoins(coin))
 	if err != nil {
 		return err
 	}
 
-	totalDeposited := g.Base.GetTotalDepositedAmount(ctx)
-	deposited := g.Base.GetDepositedAmountByUser(ctx, veID)
+	totalDeposited := g.GetTotalDepositedAmount(ctx)
+	deposited := g.GetDepositedAmountByUser(ctx, veID)
 	totalDeposited = totalDeposited.Add(amount)
 	deposited = deposited.Add(amount)
-	g.Base.SetTotalDepositedAmount(ctx, totalDeposited)
-	g.Base.SetDepositedAmountByUser(ctx, veID, deposited)
+	g.SetTotalDepositedAmount(ctx, totalDeposited)
+	g.SetDepositedAmountByUser(ctx, veID, deposited)
 
 	// if first-time deposit
-	if g.Base.GetUserVeIDByAddress(ctx, owner) == vetypes.EmptyVeID {
-		g.Base.SetUserVeIDByAddress(ctx, owner, veID)
-		// TODO: voter attach
+	if g.GetUserVeIDByAddress(ctx, owner) == vetypes.EmptyVeID {
+		g.SetUserVeIDByAddress(ctx, owner, veID)
+		g.keeper.veKeeper.IncVeAttached(ctx, veID)
 	}
 
-	g.Base.deriveAmountForUser(ctx, veID)
+	g.deriveAmountForUser(ctx, veID)
 
 	// TODO: voter emit deposit
 
@@ -72,31 +72,31 @@ func (g Gauge) Deposit(ctx sdk.Context, veID uint64, amount sdk.Int) (err error)
 }
 
 func (g Gauge) Withdraw(ctx sdk.Context, veID uint64, amount sdk.Int) (err error) {
-	owner := g.Base.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeID(veID))
+	owner := g.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeID(veID))
 
-	totalDeposited := g.Base.GetTotalDepositedAmount(ctx)
-	deposited := g.Base.GetDepositedAmountByUser(ctx, veID)
+	totalDeposited := g.GetTotalDepositedAmount(ctx)
+	deposited := g.GetDepositedAmountByUser(ctx, veID)
 	if amount.GT(deposited) {
-		// TODO: error
+		return types.ErrTooLargeAmount
 	}
 	totalDeposited = totalDeposited.Sub(amount)
 	deposited = deposited.Sub(amount)
-	g.Base.SetTotalDepositedAmount(ctx, totalDeposited)
+	g.SetTotalDepositedAmount(ctx, totalDeposited)
 	if deposited.IsPositive() {
-		g.Base.SetDepositedAmountByUser(ctx, veID, deposited)
+		g.SetDepositedAmountByUser(ctx, veID, deposited)
 	} else {
-		g.Base.DeleteDepositedAmountByUser(ctx, veID)
-		g.Base.DeleteUserVeIDByAddress(ctx, owner)
-		// TODO: voter detach
+		g.DeleteDepositedAmountByUser(ctx, veID)
+		g.DeleteUserVeIDByAddress(ctx, owner)
+		g.keeper.veKeeper.DecVeAttached(ctx, veID)
 	}
 
-	coin := sdk.NewCoin(g.Base.depoistDenom, amount)
-	err = g.Base.keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, g.Base.EscrowPool(ctx).GetName(), owner, sdk.NewCoins(coin))
+	coin := sdk.NewCoin(g.depoistDenom, amount)
+	err = g.keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, g.EscrowPool(ctx).GetName(), owner, sdk.NewCoins(coin))
 	if err != nil {
 		return err
 	}
 
-	g.Base.deriveAmountForUser(ctx, veID)
+	g.deriveAmountForUser(ctx, veID)
 
 	// TODO: voter emit withdraw
 
@@ -104,20 +104,15 @@ func (g Gauge) Withdraw(ctx sdk.Context, veID uint64, amount sdk.Int) (err error
 }
 
 func (g Gauge) DepositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom string, amount sdk.Int) error {
-	err := g.DepositFees(ctx)
-	if err != nil {
-		return err
-	}
-
-	return g.Base.depositReward(ctx, sender, rewardDenom, amount)
+	return g.depositReward(ctx, sender, rewardDenom, amount)
 }
 
-func (g Gauge) DepositFees(ctx sdk.Context) (err error) {
-	claimed := g.feeClaimee.ClaimFees(ctx, g.Base.EscrowPool(ctx).GetAddress())
+func (g Gauge) DepositFees(ctx sdk.Context, feeClaimee FeeClaimee) (err error) {
+	claimed := feeClaimee.ClaimFees(ctx, g.EscrowPool(ctx).GetAddress())
 
-	acc := g.Base.EscrowPool(ctx).GetAddress()
+	acc := g.EscrowPool(ctx).GetAddress()
 	for _, fee := range claimed {
-		reward := g.Base.GetReward(ctx, fee.Denom)
+		reward := g.GetReward(ctx, fee.Denom)
 		feeAmount := reward.AccruedAmount.Add(fee.Amount)
 
 		if feeAmount.GT(g.bribe.RemainingReward(ctx, fee.Denom)) && feeAmount.QuoRaw(vetypes.RegulatedPeriod).IsPositive() {
@@ -132,7 +127,7 @@ func (g Gauge) DepositFees(ctx sdk.Context) (err error) {
 			reward.AccruedAmount = feeAmount
 		}
 
-		g.Base.SetReward(ctx, fee.Denom, reward)
+		g.SetReward(ctx, fee.Denom, reward)
 	}
 	return nil
 }

@@ -305,7 +305,7 @@ type MerlionApp struct {
 	OracleKeeper oraclekeeper.Keeper
 	MakerKeeper  makerkeeper.Keeper
 
-	NftKeeper   nftkeeper.Keeper
+	NftKeeper   vekeeper.NftKeeper
 	VeKeeper    vekeeper.Keeper
 	GaugeKeeper gaugekeeper.Keeper
 	VoterKeeper voterkeeper.Keeper
@@ -509,10 +509,16 @@ func New(
 	)
 	makerModule := maker.NewAppModule(appCodec, app.MakerKeeper, app.AccountKeeper, app.BankKeeper)
 
-	app.NftKeeper = nftkeeper.NewKeeper(keys[nfttypes.StoreKey], appCodec, app.AccountKeeper, app.BankKeeper)
-	nftModule := nft.NewAppModule(appCodec, app.NftKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry)
+	var veKeeper vekeeper.Keeper
+	getVeKeeper := func() vekeeper.Keeper {
+		return veKeeper
+	}
+	nftKeeper := nftkeeper.NewKeeper(keys[nfttypes.StoreKey], appCodec, app.AccountKeeper, app.BankKeeper)
+	app.NftKeeper = vekeeper.NewNftKeeper(nftKeeper, getVeKeeper)
+	nftModule := vekeeper.NewNftAppModule(nft.NewAppModule(appCodec, nftKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry), app.NftKeeper)
 
 	app.VeKeeper = *vekeeper.NewKeeper(appCodec, keys[vetypes.StoreKey], keys[vetypes.MemStoreKey], app.GetSubspace(vetypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.NftKeeper)
+	veKeeper = app.VeKeeper
 	veModule := ve.NewAppModule(appCodec, app.VeKeeper, app.AccountKeeper, app.BankKeeper)
 
 	app.GaugeKeeper = *gaugekeeper.NewKeeper(appCodec, keys[gaugetypes.StoreKey], keys[gaugetypes.MemStoreKey],

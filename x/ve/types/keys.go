@@ -25,12 +25,15 @@ const (
 const (
 	prefixTotalLockedAmount = iota + 1
 	prefixLockedAmountByUser
-	prefixNextVeNftID
+	prefixNextVeID
 	prefixEpoch
 	prefixPointHistoryByEpoch
 	prefixUserEpoch
 	prefixUserPointHistoryByUserEpoch
 	prefixSlopeChange
+
+	prefixAttached
+	prefixVoted
 
 	prefixTotalEmission
 	prefixEmissionAtLastPeriod
@@ -45,12 +48,15 @@ const (
 var (
 	KeyPrefixTotalLockedAmount           = []byte{prefixTotalLockedAmount}
 	KeyPrefixLockedAmountByUser          = []byte{prefixLockedAmountByUser}
-	KeyPrefixNextVeNftID                 = []byte{prefixNextVeNftID}
+	KeyPrefixNextVeID                    = []byte{prefixNextVeID}
 	KeyPrefixEpoch                       = []byte{prefixEpoch}
 	KeyPrefixPointHistoryByEpoch         = []byte{prefixPointHistoryByEpoch}
 	KeyPrefixUserEpoch                   = []byte{prefixUserEpoch}
 	KeyPrefixUserPointHistoryByUserEpoch = []byte{prefixUserPointHistoryByUserEpoch}
 	KeyPrefixSlopeChange                 = []byte{prefixSlopeChange}
+
+	KeyPrefixAttached = []byte{prefixAttached}
+	KeyPrefixVoted    = []byte{prefixVoted}
 
 	KeyPrefixTotalEmission         = []byte{prefixTotalEmission}
 	KeyPrefixEmissionAtLastPeriod  = []byte{prefixEmissionAtLastPeriod}
@@ -70,8 +76,8 @@ func LockedAmountByUserKey(veID uint64) []byte {
 	return append(KeyPrefixLockedAmountByUser, sdk.Uint64ToBigEndian(veID)...)
 }
 
-func NextVeNftIDKey() []byte {
-	return KeyPrefixNextVeNftID
+func NextVeIDKey() []byte {
+	return KeyPrefixNextVeID
 }
 
 func EpochKey() []byte {
@@ -92,6 +98,14 @@ func UserPointKey(veID uint64, userEpoch uint64) []byte {
 
 func SlopeChangeKey(timestamp uint64) []byte {
 	return append(KeyPrefixSlopeChange, sdk.Uint64ToBigEndian(timestamp)...)
+}
+
+func AttachedKey(veID uint64) []byte {
+	return append(KeyPrefixAttached, sdk.Uint64ToBigEndian(veID)...)
+}
+
+func VotedKey(veID uint64) []byte {
+	return append(KeyPrefixVoted, sdk.Uint64ToBigEndian(veID)...)
 }
 
 func TotalEmissionKey() []byte {

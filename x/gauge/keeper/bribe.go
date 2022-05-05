@@ -15,43 +15,43 @@ func (k Keeper) Bribe(ctx sdk.Context, depoistDenom string) Bribe {
 	}
 	return Bribe{
 		Base: Base{
-			prefixKey:    types.BribeKey(depoistDenom),
-			depoistDenom: depoistDenom,
 			keeper:       k,
+			depoistDenom: depoistDenom,
+			prefixKey:    types.BribeKey(depoistDenom),
 		},
 	}
 }
 
 func (b Bribe) ClaimReward(ctx sdk.Context, veID uint64) (err error) {
-	return b.Base.claimReward(ctx, veID)
+	return b.claimReward(ctx, veID)
 }
 
 func (b Bribe) Deposit(ctx sdk.Context, veID uint64, amount sdk.Int) {
-	totalDeposited := b.Base.GetTotalDepositedAmount(ctx)
-	deposited := b.Base.GetDepositedAmountByUser(ctx, veID)
+	totalDeposited := b.GetTotalDepositedAmount(ctx)
+	deposited := b.GetDepositedAmountByUser(ctx, veID)
 	totalDeposited = totalDeposited.Add(amount)
 	deposited = deposited.Add(amount)
-	b.Base.SetTotalDepositedAmount(ctx, totalDeposited)
-	b.Base.SetDepositedAmountByUser(ctx, veID, deposited)
+	b.SetTotalDepositedAmount(ctx, totalDeposited)
+	b.SetDepositedAmountByUser(ctx, veID, deposited)
 
 	b.writeUserCheckpoint(ctx, veID, deposited)
 	b.writeCheckpoint(ctx)
 }
 
 func (b Bribe) Withdraw(ctx sdk.Context, veID uint64, amount sdk.Int) (err error) {
-	totalDeposited := b.Base.GetTotalDepositedAmount(ctx)
-	deposited := b.Base.GetDepositedAmountByUser(ctx, veID)
+	totalDeposited := b.GetTotalDepositedAmount(ctx)
+	deposited := b.GetDepositedAmountByUser(ctx, veID)
 	if amount.GT(deposited) {
-		// TODO: error
+		return types.ErrTooLargeAmount
 	}
 
 	totalDeposited = totalDeposited.Sub(amount)
 	deposited = deposited.Sub(amount)
-	b.Base.SetTotalDepositedAmount(ctx, totalDeposited)
+	b.SetTotalDepositedAmount(ctx, totalDeposited)
 	if deposited.IsPositive() {
-		b.Base.SetDepositedAmountByUser(ctx, veID, deposited)
+		b.SetDepositedAmountByUser(ctx, veID, deposited)
 	} else {
-		b.Base.DeleteDepositedAmountByUser(ctx, veID)
+		b.DeleteDepositedAmountByUser(ctx, veID)
 	}
 
 	b.writeUserCheckpoint(ctx, veID, deposited)
