@@ -1,6 +1,8 @@
 package app
 
 import (
+	"sync"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	merlion "github.com/merlion-zone/merlion/types"
 	ethermint "github.com/tharsis/ethermint/types"
@@ -42,10 +44,14 @@ func RegisterDenoms() {
 	}
 }
 
+var setup sync.Once
+
 func SetupConfig() {
-	config := sdk.GetConfig()
-	SetBech32Prefixes(config, AccountAddressPrefix)
-	SetBip44CoinType(config)
-	RegisterDenoms()
-	config.Seal()
+	setup.Do(func() {
+		config := sdk.GetConfig()
+		SetBech32Prefixes(config, AccountAddressPrefix)
+		SetBip44CoinType(config)
+		RegisterDenoms()
+		config.Seal()
+	})
 }
