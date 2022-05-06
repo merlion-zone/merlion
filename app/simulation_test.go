@@ -74,7 +74,7 @@ func BenchmarkSimulation(b *testing.B) {
 
 	encoding := encoding.MakeConfig(app.ModuleBasics)
 
-	app := app.New(
+	app := app.NewMerlion(
 		logger,
 		db,
 		nil,

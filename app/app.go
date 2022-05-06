@@ -127,7 +127,6 @@ import (
 	"github.com/merlion-zone/merlion/x/oracle"
 	oraclekeeper "github.com/merlion-zone/merlion/x/oracle/keeper"
 	oracletypes "github.com/merlion-zone/merlion/x/oracle/types"
-	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
 // App represents a Cosmos SDK application that can be run as a server and with an exportable state
@@ -149,11 +148,8 @@ const (
 	Name = "merlion"
 )
 
-// this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
-
 func getGovProposalHandlers() []govclient.ProposalHandler {
 	var govProposalHandlers []govclient.ProposalHandler
-	// this line is used by starport scaffolding # stargate/app/govProposalHandlers
 
 	govProposalHandlers = append(govProposalHandlers,
 		paramsclient.ProposalHandler,
@@ -169,7 +165,6 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		makerclient.SetCollateralProposalHandler,
 		makerclient.BatchSetBackingProposalHandler,
 		makerclient.BatchSetCollateralProposalHandler,
-		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
 	return govProposalHandlers
@@ -209,7 +204,6 @@ var (
 		ve.AppModuleBasic{},
 		gauge.AppModuleBasic{},
 		voter.AppModuleBasic{},
-		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
 	// module account permissions
@@ -231,7 +225,6 @@ var (
 		vetypes.DistributionPoolName:   nil,
 		gaugetypes.ModuleName:          nil,
 		votertypes.ModuleName:          nil,
-		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
 	// module accounts that are allowed to receive tokens
@@ -241,9 +234,9 @@ var (
 )
 
 var (
-	_ App                     = (*MerlionApp)(nil)
-	_ servertypes.Application = (*MerlionApp)(nil)
-	_ simapp.App              = (*MerlionApp)(nil)
+	_ App                     = (*Merlion)(nil)
+	_ servertypes.Application = (*Merlion)(nil)
+	_ simapp.App              = (*Merlion)(nil)
 )
 
 func init() {
@@ -258,10 +251,10 @@ func init() {
 	sdk.DefaultPowerReduction = ethermint.PowerReduction
 }
 
-// MerlionApp extends an ABCI application, but with most of its parameters exported.
+// Merlion extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type MerlionApp struct {
+type Merlion struct {
 	*baseapp.BaseApp
 
 	cdc               *codec.LegacyAmino
@@ -310,8 +303,6 @@ type MerlionApp struct {
 	GaugeKeeper gaugekeeper.Keeper
 	VoterKeeper voterkeeper.Keeper
 
-	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
-
 	// mm is the module manager
 	mm *module.Manager
 
@@ -321,8 +312,8 @@ type MerlionApp struct {
 	tpsCounter *tpsCounter
 }
 
-// New returns a reference to an initialized blockchain app
-func New(
+// NewMerlion returns a reference to an initialized blockchain app
+func NewMerlion(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -356,12 +347,11 @@ func New(
 		vetypes.StoreKey,
 		gaugetypes.StoreKey,
 		votertypes.StoreKey,
-		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey, evmtypes.TransientKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
 
-	app := &MerlionApp{
+	app := &Merlion{
 		BaseApp:           bApp,
 		cdc:               cdc,
 		appCodec:          appCodec,
@@ -383,7 +373,6 @@ func New(
 	// grant capabilities for the ibc and ibc-transfer modules
 	scopedIBCKeeper := app.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
-	// this line is used by starport scaffolding # stargate/app/scopedKeeper
 
 	app.CapabilityKeeper.Seal()
 
@@ -529,12 +518,9 @@ func New(
 		app.GetSubspace(votertypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.VeKeeper, app.GaugeKeeper)
 	voterModule := voter.NewAppModule(appCodec, app.VoterKeeper, app.AccountKeeper, app.BankKeeper)
 
-	// this line is used by starport scaffolding # stargate/app/keeperDefinition
-
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
-	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
 	/****  Module Options ****/
@@ -576,7 +562,6 @@ func New(
 		veModule,
 		gaugeModule,
 		voterModule,
-		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -675,7 +660,6 @@ func New(
 		vetypes.ModuleName,
 		gaugetypes.ModuleName,
 		votertypes.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
 	app.mm.RegisterInvariants(&app.CrisisKeeper)
@@ -706,7 +690,6 @@ func New(
 		veModule,
 		gaugeModule,
 		voterModule,
-		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
 
@@ -749,7 +732,6 @@ func New(
 
 	app.ScopedIBCKeeper = scopedIBCKeeper
 	app.ScopedTransferKeeper = scopedTransferKeeper
-	// this line is used by starport scaffolding # stargate/app/beforeInitReturn
 
 	app.tpsCounter = newTPSCounter(logger)
 	go func() {
@@ -761,23 +743,23 @@ func New(
 	return app
 }
 
-// Name returns the name of the MerlionApp
-func (app *MerlionApp) Name() string { return app.BaseApp.Name() }
+// Name returns the name of the Merlion
+func (app *Merlion) Name() string { return app.BaseApp.Name() }
 
 // GetBaseApp returns the base app of the application
-func (app MerlionApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
+func (app Merlion) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
 
 // BeginBlocker application updates every begin block
-func (app *MerlionApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *Merlion) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *MerlionApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *Merlion) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
-func (app *MerlionApp) DeliverTx(req abci.RequestDeliverTx) (res abci.ResponseDeliverTx) {
+func (app *Merlion) DeliverTx(req abci.RequestDeliverTx) (res abci.ResponseDeliverTx) {
 	defer func() {
 		// TODO: Record the count along with the code and or reason so as to display
 		// in the transactions per second live dashboards.
@@ -792,7 +774,7 @@ func (app *MerlionApp) DeliverTx(req abci.RequestDeliverTx) (res abci.ResponseDe
 }
 
 // InitChainer application update at chain initialization
-func (app *MerlionApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *Merlion) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -802,12 +784,12 @@ func (app *MerlionApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) a
 }
 
 // LoadHeight loads a particular height
-func (app *MerlionApp) LoadHeight(height int64) error {
+func (app *Merlion) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *MerlionApp) ModuleAccountAddrs() map[string]bool {
+func (app *Merlion) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	for acc := range maccPerms {
 		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
@@ -818,7 +800,7 @@ func (app *MerlionApp) ModuleAccountAddrs() map[string]bool {
 
 // BlockedAddrs returns all the app's module account addresses that are not
 // allowed to receive tokens.
-func (app *MerlionApp) BlockedAddrs() map[string]bool {
+func (app *Merlion) BlockedAddrs() map[string]bool {
 	blockedAddrs := make(map[string]bool)
 	for acc := range maccPerms {
 		blockedAddrs[authtypes.NewModuleAddress(acc).String()] = !allowedReceivingModAcc[acc]
@@ -831,7 +813,7 @@ func (app *MerlionApp) BlockedAddrs() map[string]bool {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *MerlionApp) LegacyAmino() *codec.LegacyAmino {
+func (app *Merlion) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }
 
@@ -839,47 +821,47 @@ func (app *MerlionApp) LegacyAmino() *codec.LegacyAmino {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *MerlionApp) AppCodec() codec.Codec {
+func (app *Merlion) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
 // InterfaceRegistry returns an InterfaceRegistry
-func (app *MerlionApp) InterfaceRegistry() types.InterfaceRegistry {
+func (app *Merlion) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
 
 // GetKey returns the KVStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *MerlionApp) GetKey(storeKey string) *sdk.KVStoreKey {
+func (app *Merlion) GetKey(storeKey string) *sdk.KVStoreKey {
 	return app.keys[storeKey]
 }
 
 // GetTKey returns the TransientStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *MerlionApp) GetTKey(storeKey string) *sdk.TransientStoreKey {
+func (app *Merlion) GetTKey(storeKey string) *sdk.TransientStoreKey {
 	return app.tkeys[storeKey]
 }
 
 // GetMemKey returns the MemStoreKey for the provided mem key.
 //
 // NOTE: This is solely used for testing purposes.
-func (app *MerlionApp) GetMemKey(storeKey string) *sdk.MemoryStoreKey {
+func (app *Merlion) GetMemKey(storeKey string) *sdk.MemoryStoreKey {
 	return app.memKeys[storeKey]
 }
 
 // GetSubspace returns a param subspace for a given module name.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *MerlionApp) GetSubspace(moduleName string) paramstypes.Subspace {
+func (app *Merlion) GetSubspace(moduleName string) paramstypes.Subspace {
 	subspace, _ := app.ParamsKeeper.GetSubspace(moduleName)
 	return subspace
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *MerlionApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
+func (app *Merlion) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	rpc.RegisterRoutes(clientCtx, apiSvr.Router)
 	// Register legacy tx routes.
@@ -899,12 +881,12 @@ func (app *MerlionApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.AP
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
-func (app *MerlionApp) RegisterTxService(clientCtx client.Context) {
+func (app *Merlion) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
-func (app *MerlionApp) RegisterTendermintService(clientCtx client.Context) {
+func (app *Merlion) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.interfaceRegistry)
 }
 
@@ -940,12 +922,11 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(vetypes.ModuleName)
 	paramsKeeper.Subspace(gaugetypes.ModuleName)
 	paramsKeeper.Subspace(votertypes.ModuleName)
-	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *MerlionApp) SimulationManager() *module.SimulationManager {
+func (app *Merlion) SimulationManager() *module.SimulationManager {
 	return app.sm
 }

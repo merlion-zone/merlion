@@ -12,7 +12,7 @@ func main() {
 		app.Name,
 		app.DefaultNodeHome,
 		app.ModuleBasics,
-		app.New,
+		app.NewMerlion,
 		// this line is used by starport scaffolding # root/arguments
 	)
 	if err := svrcmd.Execute(rootCmd, app.DefaultNodeHome); err != nil {

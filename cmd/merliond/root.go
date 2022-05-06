@@ -116,7 +116,7 @@ func NewRootCmd(
 ) (*cobra.Command, params.EncodingConfig) {
 	rootOptions := newRootOptions(options...)
 
-	SetupConfig()
+	app.SetupConfig()
 
 	encodingConfig := encoding.MakeConfig(moduleBasics)
 	initClientCtx := client.Context{}.
