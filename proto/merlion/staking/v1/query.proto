@@ -1,0 +1,4 @@
+syntax = "proto3";
+package merlion.staking.v1;
+
+option go_package = "github.com/merlion-zone/merlion/x/staking/types";

@@ -166,6 +166,18 @@
   
     - [Msg](#merlion.oracle.v1.Msg)
   
+- [merlion/staking/v1/query.proto](#merlion/staking/v1/query.proto)
+- [merlion/staking/v1/staking.proto](#merlion/staking/v1/staking.proto)
+    - [VeDelegation](#merlion.staking.v1.VeDelegation)
+    - [VeShares](#merlion.staking.v1.VeShares)
+    - [VeValidator](#merlion.staking.v1.VeValidator)
+  
+- [merlion/staking/v1/tx.proto](#merlion/staking/v1/tx.proto)
+    - [MsgVeDelegate](#merlion.staking.v1.MsgVeDelegate)
+    - [MsgVeDelegateResponse](#merlion.staking.v1.MsgVeDelegateResponse)
+  
+    - [Msg](#merlion.staking.v1.Msg)
+  
 - [merlion/ve/v1/event.proto](#merlion/ve/v1/event.proto)
     - [EventCreate](#merlion.ve.v1.EventCreate)
     - [EventDeposit](#merlion.ve.v1.EventDeposit)
@@ -2343,6 +2355,143 @@ Msg defines the Msg service.
 | `AggregateExchangeRatePrevote` | [MsgAggregateExchangeRatePrevote](#merlion.oracle.v1.MsgAggregateExchangeRatePrevote) | [MsgAggregateExchangeRatePrevoteResponse](#merlion.oracle.v1.MsgAggregateExchangeRatePrevoteResponse) | AggregateExchangeRatePrevote submits aggregate exchange rate prevote. | GET|/merlion/oracle/v1/tx/aggregate_exchange_rate_prevote|
 | `AggregateExchangeRateVote` | [MsgAggregateExchangeRateVote](#merlion.oracle.v1.MsgAggregateExchangeRateVote) | [MsgAggregateExchangeRateVoteResponse](#merlion.oracle.v1.MsgAggregateExchangeRateVoteResponse) | AggregateExchangeRateVote submits aggregate exchange rate vote. | GET|/merlion/oracle/v1/tx/aggregate_exchange_rate_vote|
 | `DelegateFeedConsent` | [MsgDelegateFeedConsent](#merlion.oracle.v1.MsgDelegateFeedConsent) | [MsgDelegateFeedConsentResponse](#merlion.oracle.v1.MsgDelegateFeedConsentResponse) | DelegateFeedConsent sets the feeder delegation. | GET|/merlion/oracle/v1/tx/delegate_feed_consent|
+
+ <!-- end services -->
+
+
+
+<a name="merlion/staking/v1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/staking/v1/query.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/staking/v1/staking.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/staking/v1/staking.proto
+
+
+
+<a name="merlion.staking.v1.VeDelegation"></a>
+
+### VeDelegation
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `delegator_address` | [string](#string) |  |  |
+| `validator_address` | [string](#string) |  |  |
+| `ve_shares` | [VeShares](#merlion.staking.v1.VeShares) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.staking.v1.VeShares"></a>
+
+### VeShares
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `ve_id` | [uint64](#uint64) |  |  |
+| `tokens_may_unsettled` | [string](#string) |  |  |
+| `shares` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.staking.v1.VeValidator"></a>
+
+### VeValidator
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `operator_address` | [string](#string) |  |  |
+| `ve_tokens` | [string](#string) |  |  |
+| `ve_delegator_shares` | [string](#string) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/staking/v1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/staking/v1/tx.proto
+
+
+
+<a name="merlion.staking.v1.MsgVeDelegate"></a>
+
+### MsgVeDelegate
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `delegator_address` | [string](#string) |  |  |
+| `validator_address` | [string](#string) |  |  |
+| `ve_id` | [string](#string) |  |  |
+| `amount` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.staking.v1.MsgVeDelegateResponse"></a>
+
+### MsgVeDelegateResponse
+
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="merlion.staking.v1.Msg"></a>
+
+### Msg
+Msg defines the staking Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `VeDelegate` | [MsgVeDelegate](#merlion.staking.v1.MsgVeDelegate) | [MsgVeDelegateResponse](#merlion.staking.v1.MsgVeDelegateResponse) | VeDelegate defines a method for performing a delegation of ve-locked coins from a delegator to a validator. | GET|/merlion/staking/v1/tx/ve_delegate|
 
  <!-- end services -->
 
