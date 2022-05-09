@@ -1,0 +1,29 @@
+syntax = "proto3";
+package merlion.staking.v1;
+
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/staking/types";
+
+// Msg defines the staking Msg service.
+service Msg {
+  // VeDelegate defines a method for performing a delegation of ve-locked coins
+  // from a delegator to a validator.
+  rpc VeDelegate(MsgVeDelegate) returns (MsgVeDelegateResponse) {
+    option (google.api.http).get = "/merlion/staking/v1/tx/ve_delegate";
+  };
+}
+
+message MsgVeDelegate {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string delegator_address = 1;
+  string validator_address = 2;
+  string ve_id = 3;
+  cosmos.base.v1beta1.Coin amount = 4 [ (gogoproto.nullable) = false ];
+}
+
+message MsgVeDelegateResponse {}
