@@ -27,8 +27,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type VeValidator struct {
 	OperatorAddress   string                                 `protobuf:"bytes,1,opt,name=operator_address,json=operatorAddress,proto3" json:"operator_address,omitempty"`
-	VeTokens          github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=ve_tokens,json=veTokens,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"ve_tokens"`
-	VeDelegatorShares github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,3,opt,name=ve_delegator_shares,json=veDelegatorShares,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"ve_delegator_shares"`
+	VeDelegatorShares github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=ve_delegator_shares,json=veDelegatorShares,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"ve_delegator_shares"`
 }
 
 func (m *VeValidator) Reset()         { *m = VeValidator{} }
@@ -142,51 +141,334 @@ func (m *VeShares) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_VeShares proto.InternalMessageInfo
 
-func (m *VeShares) GetVeId() uint64 {
-	if m != nil {
-		return m.VeId
-	}
-	return 0
+type VeUnbondingDelegation struct {
+	DelegatorAddress string                       `protobuf:"bytes,1,opt,name=delegator_address,json=delegatorAddress,proto3" json:"delegator_address,omitempty"`
+	ValidatorAddress string                       `protobuf:"bytes,2,opt,name=validator_address,json=validatorAddress,proto3" json:"validator_address,omitempty"`
+	Entries          []VeUnbondingDelegationEntry `protobuf:"bytes,3,rep,name=entries,proto3" json:"entries"`
 }
+
+func (m *VeUnbondingDelegation) Reset()         { *m = VeUnbondingDelegation{} }
+func (m *VeUnbondingDelegation) String() string { return proto.CompactTextString(m) }
+func (*VeUnbondingDelegation) ProtoMessage()    {}
+func (*VeUnbondingDelegation) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0ca92d6e009ad29a, []int{3}
+}
+func (m *VeUnbondingDelegation) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VeUnbondingDelegation) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VeUnbondingDelegation.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VeUnbondingDelegation) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VeUnbondingDelegation.Merge(m, src)
+}
+func (m *VeUnbondingDelegation) XXX_Size() int {
+	return m.Size()
+}
+func (m *VeUnbondingDelegation) XXX_DiscardUnknown() {
+	xxx_messageInfo_VeUnbondingDelegation.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VeUnbondingDelegation proto.InternalMessageInfo
+
+type VeUnbondingDelegationEntry struct {
+	VeBalances []VeUnbondingDelegationEntryBalances `protobuf:"bytes,1,rep,name=ve_balances,json=veBalances,proto3" json:"ve_balances"`
+}
+
+func (m *VeUnbondingDelegationEntry) Reset()         { *m = VeUnbondingDelegationEntry{} }
+func (m *VeUnbondingDelegationEntry) String() string { return proto.CompactTextString(m) }
+func (*VeUnbondingDelegationEntry) ProtoMessage()    {}
+func (*VeUnbondingDelegationEntry) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0ca92d6e009ad29a, []int{4}
+}
+func (m *VeUnbondingDelegationEntry) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VeUnbondingDelegationEntry) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VeUnbondingDelegationEntry.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VeUnbondingDelegationEntry) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VeUnbondingDelegationEntry.Merge(m, src)
+}
+func (m *VeUnbondingDelegationEntry) XXX_Size() int {
+	return m.Size()
+}
+func (m *VeUnbondingDelegationEntry) XXX_DiscardUnknown() {
+	xxx_messageInfo_VeUnbondingDelegationEntry.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VeUnbondingDelegationEntry proto.InternalMessageInfo
+
+type VeUnbondingDelegationEntryBalances struct {
+	VeId           uint64                                 `protobuf:"varint,1,opt,name=ve_id,json=veId,proto3" json:"ve_id,omitempty"`
+	InitialBalance github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=initial_balance,json=initialBalance,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"initial_balance"`
+	Balance        github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=balance,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"balance"`
+}
+
+func (m *VeUnbondingDelegationEntryBalances) Reset()         { *m = VeUnbondingDelegationEntryBalances{} }
+func (m *VeUnbondingDelegationEntryBalances) String() string { return proto.CompactTextString(m) }
+func (*VeUnbondingDelegationEntryBalances) ProtoMessage()    {}
+func (*VeUnbondingDelegationEntryBalances) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0ca92d6e009ad29a, []int{5}
+}
+func (m *VeUnbondingDelegationEntryBalances) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VeUnbondingDelegationEntryBalances) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VeUnbondingDelegationEntryBalances.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VeUnbondingDelegationEntryBalances) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VeUnbondingDelegationEntryBalances.Merge(m, src)
+}
+func (m *VeUnbondingDelegationEntryBalances) XXX_Size() int {
+	return m.Size()
+}
+func (m *VeUnbondingDelegationEntryBalances) XXX_DiscardUnknown() {
+	xxx_messageInfo_VeUnbondingDelegationEntryBalances.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VeUnbondingDelegationEntryBalances proto.InternalMessageInfo
+
+type VeRedelegation struct {
+	DelegatorAddress    string                `protobuf:"bytes,1,opt,name=delegator_address,json=delegatorAddress,proto3" json:"delegator_address,omitempty"`
+	ValidatorSrcAddress string                `protobuf:"bytes,2,opt,name=validator_src_address,json=validatorSrcAddress,proto3" json:"validator_src_address,omitempty"`
+	ValidatorDstAddress string                `protobuf:"bytes,3,opt,name=validator_dst_address,json=validatorDstAddress,proto3" json:"validator_dst_address,omitempty"`
+	Entries             []VeRedelegationEntry `protobuf:"bytes,4,rep,name=entries,proto3" json:"entries"`
+}
+
+func (m *VeRedelegation) Reset()         { *m = VeRedelegation{} }
+func (m *VeRedelegation) String() string { return proto.CompactTextString(m) }
+func (*VeRedelegation) ProtoMessage()    {}
+func (*VeRedelegation) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0ca92d6e009ad29a, []int{6}
+}
+func (m *VeRedelegation) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VeRedelegation) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VeRedelegation.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VeRedelegation) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VeRedelegation.Merge(m, src)
+}
+func (m *VeRedelegation) XXX_Size() int {
+	return m.Size()
+}
+func (m *VeRedelegation) XXX_DiscardUnknown() {
+	xxx_messageInfo_VeRedelegation.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VeRedelegation proto.InternalMessageInfo
+
+type VeRedelegationEntry struct {
+	VeShares []VeRedelegationEntryShares `protobuf:"bytes,1,rep,name=ve_shares,json=veShares,proto3" json:"ve_shares"`
+}
+
+func (m *VeRedelegationEntry) Reset()         { *m = VeRedelegationEntry{} }
+func (m *VeRedelegationEntry) String() string { return proto.CompactTextString(m) }
+func (*VeRedelegationEntry) ProtoMessage()    {}
+func (*VeRedelegationEntry) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0ca92d6e009ad29a, []int{7}
+}
+func (m *VeRedelegationEntry) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VeRedelegationEntry) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VeRedelegationEntry.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VeRedelegationEntry) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VeRedelegationEntry.Merge(m, src)
+}
+func (m *VeRedelegationEntry) XXX_Size() int {
+	return m.Size()
+}
+func (m *VeRedelegationEntry) XXX_DiscardUnknown() {
+	xxx_messageInfo_VeRedelegationEntry.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VeRedelegationEntry proto.InternalMessageInfo
+
+type VeRedelegationEntryShares struct {
+	VeId           uint64                                 `protobuf:"varint,1,opt,name=ve_id,json=veId,proto3" json:"ve_id,omitempty"`
+	InitialBalance github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=initial_balance,json=initialBalance,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"initial_balance"`
+	SharesDst      github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,3,opt,name=shares_dst,json=sharesDst,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"shares_dst"`
+}
+
+func (m *VeRedelegationEntryShares) Reset()         { *m = VeRedelegationEntryShares{} }
+func (m *VeRedelegationEntryShares) String() string { return proto.CompactTextString(m) }
+func (*VeRedelegationEntryShares) ProtoMessage()    {}
+func (*VeRedelegationEntryShares) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0ca92d6e009ad29a, []int{8}
+}
+func (m *VeRedelegationEntryShares) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VeRedelegationEntryShares) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VeRedelegationEntryShares.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VeRedelegationEntryShares) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VeRedelegationEntryShares.Merge(m, src)
+}
+func (m *VeRedelegationEntryShares) XXX_Size() int {
+	return m.Size()
+}
+func (m *VeRedelegationEntryShares) XXX_DiscardUnknown() {
+	xxx_messageInfo_VeRedelegationEntryShares.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VeRedelegationEntryShares proto.InternalMessageInfo
+
+type VeTokens struct {
+	VeId   uint64                                 `protobuf:"varint,1,opt,name=ve_id,json=veId,proto3" json:"ve_id,omitempty"`
+	Tokens github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=tokens,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"tokens"`
+}
+
+func (m *VeTokens) Reset()         { *m = VeTokens{} }
+func (m *VeTokens) String() string { return proto.CompactTextString(m) }
+func (*VeTokens) ProtoMessage()    {}
+func (*VeTokens) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0ca92d6e009ad29a, []int{9}
+}
+func (m *VeTokens) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VeTokens) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VeTokens.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VeTokens) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VeTokens.Merge(m, src)
+}
+func (m *VeTokens) XXX_Size() int {
+	return m.Size()
+}
+func (m *VeTokens) XXX_DiscardUnknown() {
+	xxx_messageInfo_VeTokens.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VeTokens proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*VeValidator)(nil), "merlion.staking.v1.VeValidator")
 	proto.RegisterType((*VeDelegation)(nil), "merlion.staking.v1.VeDelegation")
 	proto.RegisterType((*VeShares)(nil), "merlion.staking.v1.VeShares")
+	proto.RegisterType((*VeUnbondingDelegation)(nil), "merlion.staking.v1.VeUnbondingDelegation")
+	proto.RegisterType((*VeUnbondingDelegationEntry)(nil), "merlion.staking.v1.VeUnbondingDelegationEntry")
+	proto.RegisterType((*VeUnbondingDelegationEntryBalances)(nil), "merlion.staking.v1.VeUnbondingDelegationEntryBalances")
+	proto.RegisterType((*VeRedelegation)(nil), "merlion.staking.v1.VeRedelegation")
+	proto.RegisterType((*VeRedelegationEntry)(nil), "merlion.staking.v1.VeRedelegationEntry")
+	proto.RegisterType((*VeRedelegationEntryShares)(nil), "merlion.staking.v1.VeRedelegationEntryShares")
+	proto.RegisterType((*VeTokens)(nil), "merlion.staking.v1.VeTokens")
 }
 
 func init() { proto.RegisterFile("merlion/staking/v1/staking.proto", fileDescriptor_0ca92d6e009ad29a) }
 
 var fileDescriptor_0ca92d6e009ad29a = []byte{
-	// 440 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x53, 0xc1, 0x6e, 0xd3, 0x30,
-	0x18, 0x8e, 0xb7, 0x32, 0x75, 0x1e, 0x12, 0xab, 0xb7, 0x43, 0x35, 0xa1, 0x74, 0xda, 0x01, 0x0d,
-	0x4d, 0x8b, 0x55, 0xb8, 0x71, 0x41, 0x54, 0x13, 0x52, 0x85, 0xb8, 0x14, 0xe8, 0x81, 0x03, 0xc1,
-	0x89, 0x7f, 0x65, 0x51, 0x13, 0xbb, 0x8a, 0x3d, 0x8b, 0xf2, 0x04, 0x1c, 0x79, 0x84, 0xbd, 0x03,
-	0x2f, 0x31, 0x6e, 0x3b, 0x22, 0x0e, 0x13, 0x6a, 0x2f, 0xdc, 0x78, 0x05, 0x14, 0x3b, 0x0e, 0xa0,
-	0x9e, 0x80, 0x53, 0xfe, 0xfc, 0xdf, 0xe7, 0xcf, 0xff, 0xff, 0x7d, 0x09, 0x3e, 0x2c, 0xa1, 0x2a,
-	0x72, 0x29, 0xa8, 0xd2, 0x6c, 0x96, 0x8b, 0x8c, 0x9a, 0xa1, 0x2f, 0xa3, 0x79, 0x25, 0xb5, 0x24,
-	0xa4, 0x61, 0x44, 0xbe, 0x6d, 0x86, 0x07, 0xfb, 0x99, 0xcc, 0xa4, 0x85, 0x69, 0x5d, 0x39, 0xe6,
-	0x41, 0x98, 0x4a, 0x55, 0x4a, 0x45, 0x13, 0xa6, 0x80, 0x9a, 0x61, 0x02, 0x9a, 0x0d, 0x69, 0x2a,
-	0x73, 0xe1, 0xf0, 0xa3, 0x1f, 0x08, 0xef, 0x4c, 0x61, 0xca, 0x8a, 0x9c, 0x33, 0x2d, 0x2b, 0x72,
-	0x1f, 0xef, 0xca, 0x39, 0x54, 0x75, 0x1d, 0x33, 0xce, 0x2b, 0x50, 0xaa, 0x8f, 0x0e, 0xd1, 0xf1,
-	0xf6, 0xe4, 0x8e, 0xef, 0x3f, 0x71, 0x6d, 0xf2, 0x0c, 0x6f, 0x1b, 0x88, 0xb5, 0x9c, 0x81, 0x50,
-	0xfd, 0x8d, 0x9a, 0x33, 0x8a, 0xae, 0x6e, 0x06, 0xc1, 0xd7, 0x9b, 0xc1, 0xbd, 0x2c, 0xd7, 0xe7,
-	0x17, 0x49, 0x94, 0xca, 0x92, 0x36, 0x03, 0xb8, 0xc7, 0xa9, 0xe2, 0x33, 0xaa, 0x17, 0x73, 0x50,
-	0xd1, 0x58, 0xe8, 0x49, 0xd7, 0xc0, 0x4b, 0x7b, 0x9e, 0xbc, 0xc1, 0x7b, 0x06, 0x62, 0x0e, 0x05,
-	0x64, 0xf6, 0x6e, 0x75, 0xce, 0x2a, 0x50, 0xfd, 0xcd, 0xbf, 0x96, 0x3d, 0x83, 0x74, 0xd2, 0x33,
-	0x70, 0xe6, 0x95, 0x5e, 0x58, 0xa1, 0x47, 0xdd, 0x0f, 0x97, 0x83, 0xe0, 0xfb, 0xe5, 0x20, 0x38,
-	0xfa, 0x84, 0xf0, 0xed, 0xa9, 0xc7, 0x73, 0x29, 0xc8, 0x09, 0xee, 0xfd, 0xba, 0xf7, 0xcf, 0x9d,
-	0x77, 0x5b, 0xc0, 0x2f, 0x7d, 0x82, 0x7b, 0xc6, 0x9b, 0xd5, 0x92, 0x37, 0x1c, 0xb9, 0x05, 0x3c,
-	0xf9, 0xb1, 0x75, 0xa8, 0x5d, 0x65, 0xf3, 0x78, 0xe7, 0xc1, 0xdd, 0x68, 0x3d, 0xba, 0x68, 0x0a,
-	0x6e, 0xca, 0x51, 0xa7, 0x5e, 0xb4, 0x76, 0x65, 0x6d, 0xea, 0xcf, 0x08, 0x77, 0x3d, 0x8d, 0xec,
-	0xe1, 0x5b, 0x06, 0xe2, 0x9c, 0xdb, 0x29, 0x3b, 0x93, 0x8e, 0x81, 0x31, 0x27, 0x6f, 0xf1, 0xbe,
-	0xcb, 0x22, 0x2e, 0xd9, 0x22, 0xbe, 0x10, 0x0a, 0xb4, 0x2e, 0x80, 0xff, 0x63, 0x32, 0xc4, 0x69,
-	0x3d, 0x67, 0x8b, 0x57, 0x5e, 0x89, 0x3c, 0xc5, 0x5b, 0xff, 0x15, 0x4b, 0x73, 0x7a, 0x34, 0xbe,
-	0x5a, 0x86, 0xe8, 0x7a, 0x19, 0xa2, 0x6f, 0xcb, 0x10, 0x7d, 0x5c, 0x85, 0xc1, 0xf5, 0x2a, 0x0c,
-	0xbe, 0xac, 0xc2, 0xe0, 0x35, 0xfd, 0x4d, 0xa9, 0xf1, 0xe9, 0xf4, 0xbd, 0x14, 0xe0, 0x5f, 0xe8,
-	0xbb, 0xf6, 0x9f, 0xb0, 0xb2, 0xc9, 0x96, 0xfd, 0x8a, 0x1f, 0xfe, 0x0c, 0x00, 0x00, 0xff, 0xff,
-	0x1a, 0x57, 0x6f, 0x40, 0x33, 0x03, 0x00, 0x00,
+	// 664 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x55, 0x4f, 0x6b, 0x13, 0x41,
+	0x14, 0xcf, 0x34, 0xb1, 0x4d, 0x5f, 0xa5, 0x7f, 0x36, 0x2d, 0xd4, 0x22, 0x9b, 0xd2, 0x83, 0x56,
+	0x4a, 0x77, 0x49, 0x05, 0x0f, 0x5e, 0xc4, 0x12, 0xab, 0x3d, 0x54, 0x24, 0xb5, 0x2b, 0x08, 0x1a,
+	0x37, 0xbb, 0x8f, 0x74, 0x69, 0x32, 0x53, 0x77, 0xa6, 0x83, 0xf1, 0x2e, 0x78, 0xf4, 0x23, 0x14,
+	0xbf, 0x82, 0x5f, 0xa2, 0xe0, 0xa5, 0xe0, 0x45, 0x3c, 0x14, 0x49, 0x41, 0xfc, 0x08, 0x1e, 0x65,
+	0xff, 0xcc, 0x66, 0xdb, 0x6e, 0x89, 0xee, 0xa1, 0xa7, 0x4c, 0xe6, 0xbd, 0xdf, 0xef, 0xfd, 0x7e,
+	0xf3, 0x1e, 0x6f, 0x61, 0xb1, 0x8b, 0x7e, 0xc7, 0x63, 0xd4, 0xe4, 0xc2, 0xde, 0xf3, 0x68, 0xdb,
+	0x94, 0x35, 0x75, 0x34, 0xf6, 0x7d, 0x26, 0x98, 0xa6, 0xc5, 0x19, 0x86, 0xba, 0x96, 0xb5, 0x85,
+	0xd9, 0x36, 0x6b, 0xb3, 0x30, 0x6c, 0x06, 0xa7, 0x28, 0x73, 0x41, 0x77, 0x18, 0xef, 0x32, 0x6e,
+	0xb6, 0x6c, 0x8e, 0xa6, 0xac, 0xb5, 0x50, 0xd8, 0x35, 0xd3, 0x61, 0x1e, 0x8d, 0xe2, 0x4b, 0x9f,
+	0x09, 0x4c, 0x58, 0x68, 0xd9, 0x1d, 0xcf, 0xb5, 0x05, 0xf3, 0xb5, 0x3b, 0x30, 0xcd, 0xf6, 0xd1,
+	0x0f, 0xce, 0x4d, 0xdb, 0x75, 0x7d, 0xe4, 0x7c, 0x9e, 0x2c, 0x92, 0xe5, 0xf1, 0xc6, 0x94, 0xba,
+	0x7f, 0x18, 0x5d, 0x6b, 0xaf, 0xa1, 0x22, 0xb1, 0xe9, 0x62, 0x07, 0xdb, 0x61, 0x3a, 0xdf, 0xb5,
+	0x7d, 0xe4, 0xf3, 0x23, 0x41, 0xf6, 0xba, 0x71, 0x74, 0x52, 0x2d, 0xfc, 0x38, 0xa9, 0xde, 0x6a,
+	0x7b, 0x62, 0xf7, 0xa0, 0x65, 0x38, 0xac, 0x6b, 0xc6, 0x52, 0xa2, 0x9f, 0x55, 0xee, 0xee, 0x99,
+	0xa2, 0xb7, 0x8f, 0xdc, 0xa8, 0xa3, 0xd3, 0x98, 0x91, 0x58, 0x57, 0x4c, 0xdb, 0x21, 0xd1, 0xfd,
+	0xf2, 0xc7, 0xc3, 0x6a, 0xe1, 0xf7, 0x61, 0xb5, 0xb0, 0xf4, 0x85, 0xc0, 0x75, 0x4b, 0xc5, 0x3d,
+	0x46, 0xb5, 0x15, 0x98, 0x19, 0xd4, 0x3d, 0x2b, 0x73, 0x3a, 0x09, 0x28, 0x9d, 0x2b, 0x30, 0x23,
+	0x95, 0xbf, 0x24, 0x79, 0x24, 0x4a, 0x4e, 0x02, 0x2a, 0xf9, 0x01, 0x8c, 0x4b, 0x54, 0x56, 0x8a,
+	0x8b, 0xc5, 0xe5, 0x89, 0xb5, 0x9b, 0xc6, 0xc5, 0xd7, 0x36, 0x2c, 0x8c, 0x54, 0xae, 0x97, 0x02,
+	0xa3, 0x8d, 0xb2, 0xc4, 0x0b, 0xaa, 0xbf, 0x11, 0x28, 0xab, 0x34, 0xad, 0x02, 0xd7, 0x24, 0x36,
+	0x3d, 0x37, 0x54, 0x59, 0x6a, 0x94, 0x24, 0x6e, 0xba, 0xda, 0x1b, 0x98, 0x15, 0x6c, 0x0f, 0x29,
+	0x6f, 0x76, 0xed, 0x5e, 0xf3, 0x80, 0x72, 0x14, 0xa2, 0x83, 0x6e, 0x8e, 0x27, 0xdc, 0xa4, 0xa2,
+	0xa1, 0x45, 0x5c, 0x5b, 0x76, 0x6f, 0x47, 0x31, 0x69, 0x1b, 0x30, 0x9a, 0x78, 0xc9, 0xd3, 0x96,
+	0x18, 0x9d, 0x72, 0xf5, 0x95, 0xc0, 0x9c, 0x85, 0x3b, 0xb4, 0xc5, 0xa8, 0xeb, 0xd1, 0xf6, 0x95,
+	0x34, 0xe5, 0x29, 0x8c, 0x21, 0x15, 0xbe, 0x97, 0xb4, 0xc4, 0xc8, 0x6e, 0x49, 0x86, 0xaa, 0x47,
+	0x54, 0xf8, 0xbd, 0xb8, 0x49, 0x8a, 0x24, 0xe5, 0xe6, 0x03, 0x81, 0x85, 0xcb, 0x71, 0xda, 0x2b,
+	0x98, 0x90, 0xd8, 0x6c, 0xd9, 0x1d, 0x9b, 0x3a, 0x18, 0x98, 0x09, 0x8a, 0xdf, 0xfb, 0xcf, 0xe2,
+	0x31, 0x3a, 0x16, 0x01, 0x12, 0xd5, 0x4d, 0x4a, 0xc7, 0x2f, 0x02, 0x4b, 0xc3, 0x29, 0xb2, 0xa7,
+	0xe8, 0x05, 0x4c, 0x79, 0xd4, 0x13, 0x9e, 0xdd, 0x51, 0x4a, 0x73, 0x0e, 0xd0, 0x64, 0x4c, 0x13,
+	0x97, 0xd3, 0x9e, 0xc0, 0x98, 0x22, 0x2c, 0xe6, 0x22, 0x54, 0xf0, 0x94, 0xd1, 0x3f, 0x04, 0x26,
+	0x2d, 0x6c, 0xa0, 0x9b, 0x73, 0x6e, 0xd6, 0x60, 0x6e, 0x30, 0x37, 0xdc, 0x77, 0xce, 0xcd, 0x4e,
+	0x25, 0x09, 0x6e, 0xfb, 0x4e, 0x26, 0xc6, 0xe5, 0x22, 0xc1, 0x14, 0xcf, 0x61, 0xea, 0x5c, 0x28,
+	0xcc, 0xe3, 0xc1, 0xc8, 0x95, 0xc2, 0xae, 0xdf, 0xce, 0xee, 0x7a, 0xda, 0xc9, 0x90, 0x59, 0x7b,
+	0x0b, 0x95, 0x8c, 0x7c, 0xed, 0x59, 0x7a, 0xe3, 0x44, 0x13, 0xb6, 0xfa, 0x8f, 0xb5, 0x86, 0xae,
+	0xa0, 0x3e, 0x81, 0x1b, 0x97, 0xe2, 0xae, 0x78, 0x9a, 0xb6, 0x00, 0x22, 0x93, 0x41, 0x0b, 0x72,
+	0xae, 0xa3, 0xf1, 0x88, 0xa1, 0xce, 0xc5, 0x99, 0x77, 0x2d, 0x5b, 0xf8, 0x3c, 0xdc, 0x7d, 0xd9,
+	0x96, 0x36, 0x60, 0x34, 0x5a, 0x8d, 0x39, 0x9d, 0xc4, 0xe8, 0x41, 0xc9, 0xf5, 0xcd, 0xa3, 0xbe,
+	0x4e, 0x8e, 0xfb, 0x3a, 0xf9, 0xd9, 0xd7, 0xc9, 0xa7, 0x53, 0xbd, 0x70, 0x7c, 0xaa, 0x17, 0xbe,
+	0x9f, 0xea, 0x85, 0x97, 0x66, 0x8a, 0x33, 0x6e, 0xe2, 0xea, 0x7b, 0x46, 0x51, 0xfd, 0x31, 0xdf,
+	0x25, 0x5f, 0xf5, 0xb0, 0x40, 0x6b, 0x34, 0xfc, 0x0e, 0xdf, 0xfd, 0x1b, 0x00, 0x00, 0xff, 0xff,
+	0x1d, 0x7b, 0xd9, 0xa0, 0xf5, 0x07, 0x00, 0x00,
 }
 
 func (m *VeValidator) Marshal() (dAtA []byte, err error) {
@@ -213,16 +495,6 @@ func (m *VeValidator) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		size := m.VeDelegatorShares.Size()
 		i -= size
 		if _, err := m.VeDelegatorShares.MarshalTo(dAtA[i:]); err != nil {
-			return 0, err
-		}
-		i = encodeVarintStaking(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x1a
-	{
-		size := m.VeTokens.Size()
-		i -= size
-		if _, err := m.VeTokens.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
 		i = encodeVarintStaking(dAtA, i, uint64(size))
@@ -338,6 +610,323 @@ func (m *VeShares) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *VeUnbondingDelegation) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VeUnbondingDelegation) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VeUnbondingDelegation) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Entries) > 0 {
+		for iNdEx := len(m.Entries) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Entries[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintStaking(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if len(m.ValidatorAddress) > 0 {
+		i -= len(m.ValidatorAddress)
+		copy(dAtA[i:], m.ValidatorAddress)
+		i = encodeVarintStaking(dAtA, i, uint64(len(m.ValidatorAddress)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.DelegatorAddress) > 0 {
+		i -= len(m.DelegatorAddress)
+		copy(dAtA[i:], m.DelegatorAddress)
+		i = encodeVarintStaking(dAtA, i, uint64(len(m.DelegatorAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *VeUnbondingDelegationEntry) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VeUnbondingDelegationEntry) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VeUnbondingDelegationEntry) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.VeBalances) > 0 {
+		for iNdEx := len(m.VeBalances) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.VeBalances[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintStaking(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *VeUnbondingDelegationEntryBalances) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VeUnbondingDelegationEntryBalances) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VeUnbondingDelegationEntryBalances) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.Balance.Size()
+		i -= size
+		if _, err := m.Balance.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintStaking(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	{
+		size := m.InitialBalance.Size()
+		i -= size
+		if _, err := m.InitialBalance.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintStaking(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if m.VeId != 0 {
+		i = encodeVarintStaking(dAtA, i, uint64(m.VeId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *VeRedelegation) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VeRedelegation) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VeRedelegation) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Entries) > 0 {
+		for iNdEx := len(m.Entries) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Entries[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintStaking(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x22
+		}
+	}
+	if len(m.ValidatorDstAddress) > 0 {
+		i -= len(m.ValidatorDstAddress)
+		copy(dAtA[i:], m.ValidatorDstAddress)
+		i = encodeVarintStaking(dAtA, i, uint64(len(m.ValidatorDstAddress)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ValidatorSrcAddress) > 0 {
+		i -= len(m.ValidatorSrcAddress)
+		copy(dAtA[i:], m.ValidatorSrcAddress)
+		i = encodeVarintStaking(dAtA, i, uint64(len(m.ValidatorSrcAddress)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.DelegatorAddress) > 0 {
+		i -= len(m.DelegatorAddress)
+		copy(dAtA[i:], m.DelegatorAddress)
+		i = encodeVarintStaking(dAtA, i, uint64(len(m.DelegatorAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *VeRedelegationEntry) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VeRedelegationEntry) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VeRedelegationEntry) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.VeShares) > 0 {
+		for iNdEx := len(m.VeShares) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.VeShares[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintStaking(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *VeRedelegationEntryShares) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VeRedelegationEntryShares) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VeRedelegationEntryShares) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.SharesDst.Size()
+		i -= size
+		if _, err := m.SharesDst.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintStaking(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	{
+		size := m.InitialBalance.Size()
+		i -= size
+		if _, err := m.InitialBalance.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintStaking(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if m.VeId != 0 {
+		i = encodeVarintStaking(dAtA, i, uint64(m.VeId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *VeTokens) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VeTokens) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VeTokens) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.Tokens.Size()
+		i -= size
+		if _, err := m.Tokens.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintStaking(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if m.VeId != 0 {
+		i = encodeVarintStaking(dAtA, i, uint64(m.VeId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintStaking(dAtA []byte, offset int, v uint64) int {
 	offset -= sovStaking(v)
 	base := offset
@@ -359,8 +948,6 @@ func (m *VeValidator) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovStaking(uint64(l))
 	}
-	l = m.VeTokens.Size()
-	n += 1 + l + sovStaking(uint64(l))
 	l = m.VeDelegatorShares.Size()
 	n += 1 + l + sovStaking(uint64(l))
 	return n
@@ -401,6 +988,132 @@ func (m *VeShares) Size() (n int) {
 	l = m.TokensMayUnsettled.Size()
 	n += 1 + l + sovStaking(uint64(l))
 	l = m.Shares.Size()
+	n += 1 + l + sovStaking(uint64(l))
+	return n
+}
+
+func (m *VeUnbondingDelegation) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.DelegatorAddress)
+	if l > 0 {
+		n += 1 + l + sovStaking(uint64(l))
+	}
+	l = len(m.ValidatorAddress)
+	if l > 0 {
+		n += 1 + l + sovStaking(uint64(l))
+	}
+	if len(m.Entries) > 0 {
+		for _, e := range m.Entries {
+			l = e.Size()
+			n += 1 + l + sovStaking(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *VeUnbondingDelegationEntry) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.VeBalances) > 0 {
+		for _, e := range m.VeBalances {
+			l = e.Size()
+			n += 1 + l + sovStaking(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *VeUnbondingDelegationEntryBalances) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.VeId != 0 {
+		n += 1 + sovStaking(uint64(m.VeId))
+	}
+	l = m.InitialBalance.Size()
+	n += 1 + l + sovStaking(uint64(l))
+	l = m.Balance.Size()
+	n += 1 + l + sovStaking(uint64(l))
+	return n
+}
+
+func (m *VeRedelegation) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.DelegatorAddress)
+	if l > 0 {
+		n += 1 + l + sovStaking(uint64(l))
+	}
+	l = len(m.ValidatorSrcAddress)
+	if l > 0 {
+		n += 1 + l + sovStaking(uint64(l))
+	}
+	l = len(m.ValidatorDstAddress)
+	if l > 0 {
+		n += 1 + l + sovStaking(uint64(l))
+	}
+	if len(m.Entries) > 0 {
+		for _, e := range m.Entries {
+			l = e.Size()
+			n += 1 + l + sovStaking(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *VeRedelegationEntry) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.VeShares) > 0 {
+		for _, e := range m.VeShares {
+			l = e.Size()
+			n += 1 + l + sovStaking(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *VeRedelegationEntryShares) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.VeId != 0 {
+		n += 1 + sovStaking(uint64(m.VeId))
+	}
+	l = m.InitialBalance.Size()
+	n += 1 + l + sovStaking(uint64(l))
+	l = m.SharesDst.Size()
+	n += 1 + l + sovStaking(uint64(l))
+	return n
+}
+
+func (m *VeTokens) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.VeId != 0 {
+		n += 1 + sovStaking(uint64(m.VeId))
+	}
+	l = m.Tokens.Size()
 	n += 1 + l + sovStaking(uint64(l))
 	return n
 }
@@ -473,40 +1186,6 @@ func (m *VeValidator) Unmarshal(dAtA []byte) error {
 			m.OperatorAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VeTokens", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowStaking
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthStaking
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthStaking
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.VeTokens.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field VeDelegatorShares", wireType)
 			}
@@ -822,6 +1501,879 @@ func (m *VeShares) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.Shares.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipStaking(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VeUnbondingDelegation) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowStaking
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VeUnbondingDelegation: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VeUnbondingDelegation: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DelegatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DelegatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValidatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Entries", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Entries = append(m.Entries, VeUnbondingDelegationEntry{})
+			if err := m.Entries[len(m.Entries)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipStaking(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VeUnbondingDelegationEntry) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowStaking
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VeUnbondingDelegationEntry: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VeUnbondingDelegationEntry: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VeBalances", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.VeBalances = append(m.VeBalances, VeUnbondingDelegationEntryBalances{})
+			if err := m.VeBalances[len(m.VeBalances)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipStaking(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VeUnbondingDelegationEntryBalances) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowStaking
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VeUnbondingDelegationEntryBalances: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VeUnbondingDelegationEntryBalances: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VeId", wireType)
+			}
+			m.VeId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.VeId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field InitialBalance", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.InitialBalance.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Balance", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Balance.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipStaking(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VeRedelegation) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowStaking
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VeRedelegation: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VeRedelegation: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DelegatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DelegatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorSrcAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValidatorSrcAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorDstAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValidatorDstAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Entries", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Entries = append(m.Entries, VeRedelegationEntry{})
+			if err := m.Entries[len(m.Entries)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipStaking(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VeRedelegationEntry) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowStaking
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VeRedelegationEntry: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VeRedelegationEntry: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VeShares", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.VeShares = append(m.VeShares, VeRedelegationEntryShares{})
+			if err := m.VeShares[len(m.VeShares)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipStaking(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VeRedelegationEntryShares) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowStaking
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VeRedelegationEntryShares: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VeRedelegationEntryShares: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VeId", wireType)
+			}
+			m.VeId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.VeId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field InitialBalance", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.InitialBalance.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SharesDst", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.SharesDst.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipStaking(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VeTokens) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowStaking
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VeTokens: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VeTokens: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VeId", wireType)
+			}
+			m.VeId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.VeId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tokens", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowStaking
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthStaking
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthStaking
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Tokens.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

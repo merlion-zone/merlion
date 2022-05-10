@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"time"
 
 	"github.com/armon/go-metrics"
 	"github.com/cosmos/cosmos-sdk/telemetry"
@@ -62,7 +63,7 @@ func (k MsgServer) VeDelegate(goCtx context.Context, msg *types.MsgVeDelegate) (
 
 	veID := vetypes.Uint64FromVeID(msg.VeId)
 
-	newShares, err := k.Keeper.VeDelegate(ctx, delegatorAddress, veID, msg.Amount.Amount, stakingtypes.Unbonded, validator)
+	newShares, err := k.Keeper.VeDelegate(ctx, delegatorAddress, msg.Amount.Amount, []types.VeTokens{{veID, msg.Amount.Amount}}, stakingtypes.Unbonded, validator, true)
 	if err != nil {
 		return nil, err
 	}
@@ -108,9 +109,129 @@ func (k MsgServer) Delegate(goCtx context.Context, msg *stakingtypes.MsgDelegate
 }
 
 func (k MsgServer) BeginRedelegate(goCtx context.Context, msg *stakingtypes.MsgBeginRedelegate) (*stakingtypes.MsgBeginRedelegateResponse, error) {
-	return k.MsgServer.BeginRedelegate(goCtx, msg)
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	valSrcAddr, err := sdk.ValAddressFromBech32(msg.ValidatorSrcAddress)
+	if err != nil {
+		return nil, err
+	}
+	delegatorAddress, err := sdk.AccAddressFromBech32(msg.DelegatorAddress)
+	if err != nil {
+		return nil, err
+	}
+	shares, err := k.ValidateUnbondAmount(
+		ctx, delegatorAddress, valSrcAddr, msg.Amount.Amount,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	bondDenom := k.BondDenom(ctx)
+	if msg.Amount.Denom != bondDenom {
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest, "invalid coin denomination: got %s, expected %s", msg.Amount.Denom, bondDenom,
+		)
+	}
+
+	valDstAddr, err := sdk.ValAddressFromBech32(msg.ValidatorDstAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	completionTime, err := k.BeginRedelegation(
+		ctx, delegatorAddress, valSrcAddr, valDstAddr, shares,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if msg.Amount.Amount.IsInt64() {
+		defer func() {
+			telemetry.IncrCounter(1, stakingtypes.ModuleName, "redelegate")
+			telemetry.SetGaugeWithLabels(
+				[]string{"tx", "msg", msg.Type()},
+				float32(msg.Amount.Amount.Int64()),
+				[]metrics.Label{telemetry.NewLabel("denom", msg.Amount.Denom)},
+			)
+		}()
+	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			stakingtypes.EventTypeRedelegate,
+			sdk.NewAttribute(stakingtypes.AttributeKeySrcValidator, msg.ValidatorSrcAddress),
+			sdk.NewAttribute(stakingtypes.AttributeKeyDstValidator, msg.ValidatorDstAddress),
+			sdk.NewAttribute(sdk.AttributeKeyAmount, msg.Amount.String()),
+			sdk.NewAttribute(stakingtypes.AttributeKeyCompletionTime, completionTime.Format(time.RFC3339)),
+		),
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, stakingtypes.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.DelegatorAddress),
+		),
+	})
+
+	return &stakingtypes.MsgBeginRedelegateResponse{
+		CompletionTime: completionTime,
+	}, nil
 }
 
 func (k MsgServer) Undelegate(goCtx context.Context, msg *stakingtypes.MsgUndelegate) (*stakingtypes.MsgUndelegateResponse, error) {
-	return k.MsgServer.Undelegate(goCtx, msg)
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	addr, err := sdk.ValAddressFromBech32(msg.ValidatorAddress)
+	if err != nil {
+		return nil, err
+	}
+	delegatorAddress, err := sdk.AccAddressFromBech32(msg.DelegatorAddress)
+	if err != nil {
+		return nil, err
+	}
+	shares, err := k.ValidateUnbondAmount(
+		ctx, delegatorAddress, addr, msg.Amount.Amount,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	bondDenom := k.BondDenom(ctx)
+	if msg.Amount.Denom != bondDenom {
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest, "invalid coin denomination: got %s, expected %s", msg.Amount.Denom, bondDenom,
+		)
+	}
+
+	completionTime, err := k.Keeper.Undelegate(ctx, delegatorAddress, addr, shares)
+	if err != nil {
+		return nil, err
+	}
+
+	if msg.Amount.Amount.IsInt64() {
+		defer func() {
+			telemetry.IncrCounter(1, stakingtypes.ModuleName, "undelegate")
+			telemetry.SetGaugeWithLabels(
+				[]string{"tx", "msg", msg.Type()},
+				float32(msg.Amount.Amount.Int64()),
+				[]metrics.Label{telemetry.NewLabel("denom", msg.Amount.Denom)},
+			)
+		}()
+	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			stakingtypes.EventTypeUnbond,
+			sdk.NewAttribute(stakingtypes.AttributeKeyValidator, msg.ValidatorAddress),
+			sdk.NewAttribute(sdk.AttributeKeyAmount, msg.Amount.String()),
+			sdk.NewAttribute(stakingtypes.AttributeKeyCompletionTime, completionTime.Format(time.RFC3339)),
+		),
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, stakingtypes.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.DelegatorAddress),
+		),
+	})
+
+	return &stakingtypes.MsgUndelegateResponse{
+		CompletionTime: completionTime,
+	}, nil
 }

@@ -220,7 +220,7 @@ var (
 		oracletypes.ModuleName:         nil,
 		makertypes.ModuleName:          {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		nfttypes.ModuleName:            nil,
-		vetypes.ModuleName:             nil,
+		vetypes.ModuleName:             {authtypes.Burner},
 		vetypes.EmissionPoolName:       nil,
 		vetypes.DistributionPoolName:   nil,
 		gaugetypes.ModuleName:          nil,
@@ -387,9 +387,21 @@ func NewMerlion(
 	app.BankKeeper = custombankkeeper.NewKeeper(
 		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.GetSubspace(banktypes.ModuleName), app.BlockedAddrs(), getErc20Keeper,
 	)
+
+	var veKeeper vekeeper.Keeper
+	getVeKeeper := func() vekeeper.Keeper {
+		return veKeeper
+	}
+	nftKeeper := nftkeeper.NewKeeper(keys[nfttypes.StoreKey], appCodec, app.AccountKeeper, app.BankKeeper)
+	app.NftKeeper = vekeeper.NewNftKeeper(nftKeeper, getVeKeeper)
+
+	app.VeKeeper = *vekeeper.NewKeeper(appCodec, keys[vetypes.StoreKey], keys[vetypes.MemStoreKey], app.GetSubspace(vetypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.NftKeeper)
+	veKeeper = app.VeKeeper
+
 	stakingKeeper := customstakingkeeper.NewKeeper(
-		appCodec, keys[stakingtypes.StoreKey], app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName),
+		appCodec, keys[stakingtypes.StoreKey], app.GetSubspace(stakingtypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.NftKeeper, app.VeKeeper,
 	)
+
 	app.MintKeeper = mintkeeper.NewKeeper(
 		appCodec, keys[minttypes.StoreKey], app.GetSubspace(minttypes.ModuleName), &stakingKeeper,
 		app.AccountKeeper, app.BankKeeper, authtypes.FeeCollectorName,
@@ -410,9 +422,9 @@ func NewMerlion(
 
 	// register the staking hooks
 	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
-	// app.StakingKeeper = customstakingkeeper.Keeper{*stakingKeeper.SetHooks(
-	// 	 stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(), app.SlashingKeeper.Hooks()),
-	// )}
+	app.StakingKeeper = *stakingKeeper.SetHooks(
+		stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(), app.SlashingKeeper.Hooks()),
+	)
 
 	// ... other modules keepers
 
@@ -498,16 +510,8 @@ func NewMerlion(
 	)
 	makerModule := maker.NewAppModule(appCodec, app.MakerKeeper, app.AccountKeeper, app.BankKeeper)
 
-	var veKeeper vekeeper.Keeper
-	getVeKeeper := func() vekeeper.Keeper {
-		return veKeeper
-	}
-	nftKeeper := nftkeeper.NewKeeper(keys[nfttypes.StoreKey], appCodec, app.AccountKeeper, app.BankKeeper)
-	app.NftKeeper = vekeeper.NewNftKeeper(nftKeeper, getVeKeeper)
 	nftModule := vekeeper.NewNftAppModule(nft.NewAppModule(appCodec, nftKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry), app.NftKeeper)
 
-	app.VeKeeper = *vekeeper.NewKeeper(appCodec, keys[vetypes.StoreKey], keys[vetypes.MemStoreKey], app.GetSubspace(vetypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.NftKeeper)
-	veKeeper = app.VeKeeper
 	veModule := ve.NewAppModule(appCodec, app.VeKeeper, app.AccountKeeper, app.BankKeeper)
 
 	app.GaugeKeeper = *gaugekeeper.NewKeeper(appCodec, keys[gaugetypes.StoreKey], keys[gaugetypes.MemStoreKey],
@@ -545,8 +549,8 @@ func NewMerlion(
 		crisis.NewAppModule(&app.CrisisKeeper, skipGenesisInvariants),
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper),
-		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper.Keeper),
-		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper.Keeper),
+		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
+		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		customstaking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
 		upgrade.NewAppModule(app.UpgradeKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
@@ -639,6 +643,8 @@ func NewMerlion(
 		vestingtypes.ModuleName,
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
+		nfttypes.ModuleName,
+		vetypes.ModuleName,
 		stakingtypes.ModuleName,
 		slashingtypes.ModuleName,
 		govtypes.ModuleName,
@@ -656,8 +662,6 @@ func NewMerlion(
 		upgradetypes.ModuleName,
 		erc20types.ModuleName,
 		makertypes.ModuleName,
-		nfttypes.ModuleName,
-		vetypes.ModuleName,
 		gaugetypes.ModuleName,
 		votertypes.ModuleName,
 	)
@@ -675,8 +679,8 @@ func NewMerlion(
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper),
 		customstaking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
-		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper.Keeper),
-		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper.Keeper),
+		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
+		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
