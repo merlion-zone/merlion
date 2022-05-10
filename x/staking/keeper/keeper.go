@@ -11,22 +11,45 @@ import (
 
 type Keeper struct {
 	stakingkeeper.Keeper
-	storeKey  sdk.StoreKey
-	cdc       codec.BinaryCodec
-	nftKeeper types.NftKeeper
-	veKeeper  types.VeKeeper
+	storeKey   sdk.StoreKey
+	cdc        codec.BinaryCodec
+	bankKeeper stakingtypes.BankKeeper
+	nftKeeper  types.NftKeeper
+	veKeeper   types.VeKeeper
 }
 
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	key sdk.StoreKey,
+	ps paramtypes.Subspace,
 	ak stakingtypes.AccountKeeper,
 	bk stakingtypes.BankKeeper,
-	ps paramtypes.Subspace,
+	nk types.NftKeeper,
+	vk types.VeKeeper,
 ) Keeper {
-	return Keeper{
-		Keeper:   stakingkeeper.NewKeeper(cdc, key, ak, bk, ps),
-		storeKey: key,
-		cdc:      cdc,
+	keeper := Keeper{
+		Keeper:     stakingkeeper.NewKeeper(cdc, key, ak, bk, ps),
+		storeKey:   key,
+		cdc:        cdc,
+		bankKeeper: bk,
+		nftKeeper:  nk,
+		veKeeper:   vk,
+	}
+
+	keeper.veKeeper.SetGetDelegatedAmountByUser(func(ctx sdk.Context, veID uint64) sdk.Int {
+		return keeper.GetVeDelegatedAmount(ctx, veID)
+	})
+
+	return keeper
+}
+
+func (k *Keeper) SetHooks(sh stakingtypes.StakingHooks) *Keeper {
+	k.Keeper = *k.Keeper.SetHooks(sh)
+	return k
+}
+
+func (k *Keeper) CheckDenom(ctx sdk.Context) {
+	if k.veKeeper.LockDenom(ctx) != k.BondDenom(ctx) {
+		panic("bond denom is different from ve lock denom")
 	}
 }

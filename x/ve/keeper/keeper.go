@@ -21,6 +21,8 @@ type (
 		accountKeeper types.AccountKeeper
 		bankKeeper    types.BankKeeper
 		nftKeeper     types.NftKeeper
+
+		getDelegatedAmount func(ctx sdk.Context, veID uint64) sdk.Int
 	}
 )
 

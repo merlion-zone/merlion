@@ -224,6 +224,13 @@ func (m msgServer) Merge(c context.Context, msg *types.MsgMerge) (*types.MsgMerg
 	lockedFrom := m.Keeper.GetLockedAmountByUser(ctx, fromVeID)
 	lockedTo := m.Keeper.GetLockedAmountByUser(ctx, toVeID)
 
+	if m.Keeper.getDelegatedAmount != nil {
+		delegatedAmt := m.Keeper.getDelegatedAmount(ctx, fromVeID)
+		if delegatedAmt.IsPositive() {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "locked amount of from ve is delegated for staking")
+		}
+	}
+
 	// NOTE: here do not check whether locks are expired
 
 	// take the longest end time
@@ -291,6 +298,13 @@ func (m msgServer) Withdraw(c context.Context, msg *types.MsgWithdraw) (*types.M
 	locked := m.Keeper.GetLockedAmountByUser(ctx, veID)
 	if locked.End > uint64(ctx.BlockTime().Unix()) {
 		return nil, sdkerrors.Wrapf(types.ErrLockNotExpired, "unlocking time %s but now %s", time.Unix(int64(locked.End), 0), ctx.BlockTime())
+	}
+
+	if m.Keeper.getDelegatedAmount != nil {
+		delegatedAmt := m.Keeper.getDelegatedAmount(ctx, veID)
+		if delegatedAmt.IsPositive() {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "locked amount is delegated for staking")
+		}
 	}
 
 	// delete user locked

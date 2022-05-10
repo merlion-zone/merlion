@@ -169,7 +169,14 @@
 - [merlion/staking/v1/query.proto](#merlion/staking/v1/query.proto)
 - [merlion/staking/v1/staking.proto](#merlion/staking/v1/staking.proto)
     - [VeDelegation](#merlion.staking.v1.VeDelegation)
+    - [VeRedelegation](#merlion.staking.v1.VeRedelegation)
+    - [VeRedelegationEntry](#merlion.staking.v1.VeRedelegationEntry)
+    - [VeRedelegationEntryShares](#merlion.staking.v1.VeRedelegationEntryShares)
     - [VeShares](#merlion.staking.v1.VeShares)
+    - [VeTokens](#merlion.staking.v1.VeTokens)
+    - [VeUnbondingDelegation](#merlion.staking.v1.VeUnbondingDelegation)
+    - [VeUnbondingDelegationEntry](#merlion.staking.v1.VeUnbondingDelegationEntry)
+    - [VeUnbondingDelegationEntryBalances](#merlion.staking.v1.VeUnbondingDelegationEntryBalances)
     - [VeValidator](#merlion.staking.v1.VeValidator)
   
 - [merlion/staking/v1/tx.proto](#merlion/staking/v1/tx.proto)
@@ -2400,6 +2407,56 @@ Msg defines the Msg service.
 
 
 
+<a name="merlion.staking.v1.VeRedelegation"></a>
+
+### VeRedelegation
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `delegator_address` | [string](#string) |  |  |
+| `validator_src_address` | [string](#string) |  |  |
+| `validator_dst_address` | [string](#string) |  |  |
+| `entries` | [VeRedelegationEntry](#merlion.staking.v1.VeRedelegationEntry) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.staking.v1.VeRedelegationEntry"></a>
+
+### VeRedelegationEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `ve_shares` | [VeRedelegationEntryShares](#merlion.staking.v1.VeRedelegationEntryShares) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.staking.v1.VeRedelegationEntryShares"></a>
+
+### VeRedelegationEntryShares
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `ve_id` | [uint64](#uint64) |  |  |
+| `initial_balance` | [string](#string) |  |  |
+| `shares_dst` | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="merlion.staking.v1.VeShares"></a>
 
 ### VeShares
@@ -2417,6 +2474,71 @@ Msg defines the Msg service.
 
 
 
+<a name="merlion.staking.v1.VeTokens"></a>
+
+### VeTokens
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `ve_id` | [uint64](#uint64) |  |  |
+| `tokens` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.staking.v1.VeUnbondingDelegation"></a>
+
+### VeUnbondingDelegation
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `delegator_address` | [string](#string) |  |  |
+| `validator_address` | [string](#string) |  |  |
+| `entries` | [VeUnbondingDelegationEntry](#merlion.staking.v1.VeUnbondingDelegationEntry) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.staking.v1.VeUnbondingDelegationEntry"></a>
+
+### VeUnbondingDelegationEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `ve_balances` | [VeUnbondingDelegationEntryBalances](#merlion.staking.v1.VeUnbondingDelegationEntryBalances) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.staking.v1.VeUnbondingDelegationEntryBalances"></a>
+
+### VeUnbondingDelegationEntryBalances
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `ve_id` | [uint64](#uint64) |  |  |
+| `initial_balance` | [string](#string) |  |  |
+| `balance` | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="merlion.staking.v1.VeValidator"></a>
 
 ### VeValidator
@@ -2426,7 +2548,6 @@ Msg defines the Msg service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `operator_address` | [string](#string) |  |  |
-| `ve_tokens` | [string](#string) |  |  |
 | `ve_delegator_shares` | [string](#string) |  |  |
 
 
