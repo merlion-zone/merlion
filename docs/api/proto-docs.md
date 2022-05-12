@@ -87,6 +87,8 @@
     - [QueryCollateralPoolResponse](#merlion.maker.v1.QueryCollateralPoolResponse)
     - [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest)
     - [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse)
+    - [QueryMintBySwapRequirementRequest](#merlion.maker.v1.QueryMintBySwapRequirementRequest)
+    - [QueryMintBySwapRequirementResponse](#merlion.maker.v1.QueryMintBySwapRequirementResponse)
     - [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest)
     - [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse)
     - [QueryTotalBackingRequest](#merlion.maker.v1.QueryTotalBackingRequest)
@@ -1267,6 +1269,40 @@ parameters.
 
 
 
+<a name="merlion.maker.v1.QueryMintBySwapRequirementRequest"></a>
+
+### QueryMintBySwapRequirementRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `mint_target` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `backing_denom` | [string](#string) |  |  |
+| `full_collateral` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryMintBySwapRequirementResponse"></a>
+
+### QueryMintBySwapRequirementResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.QueryParamsRequest"></a>
 
 ### QueryParamsRequest
@@ -1366,6 +1402,7 @@ Query defines the maker gRPC querier service.
 | `TotalCollateral` | [QueryTotalCollateralRequest](#merlion.maker.v1.QueryTotalCollateralRequest) | [QueryTotalCollateralResponse](#merlion.maker.v1.QueryTotalCollateralResponse) | TotalCollateral queries the total collateral. | GET|/merlion/maker/v1/total_collateral|
 | `CollateralRatio` | [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest) | [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse) | CollateralRatio queries the collateral ratio. | GET|/merlion/maker/v1/collateral_ratio|
 | `Params` | [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/maker/v1/params|
+| `MintBySwapRequirement` | [QueryMintBySwapRequirementRequest](#merlion.maker.v1.QueryMintBySwapRequirementRequest) | [QueryMintBySwapRequirementResponse](#merlion.maker.v1.QueryMintBySwapRequirementResponse) | MintBySwapRequirement queries requirement of backing and lion for the mint target. | GET|/merlion/maker/v1/mint_by_swap_requirement|
 
  <!-- end services -->
 

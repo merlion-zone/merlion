@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "merlion/maker/v1/genesis.proto";
 import "merlion/maker/v1/maker.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/maker/types";
 
@@ -73,6 +74,13 @@ service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/merlion/maker/v1/params";
+  }
+
+  // MintBySwapRequirement queries requirement of backing and lion for the mint
+  // target.
+  rpc MintBySwapRequirement(QueryMintBySwapRequirementRequest)
+      returns (QueryMintBySwapRequirementResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/mint_by_swap_requirement";
   }
 }
 
@@ -151,4 +159,16 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryMintBySwapRequirementRequest {
+  cosmos.base.v1beta1.Coin mint_target = 1 [ (gogoproto.nullable) = false ];
+  string backing_denom = 2;
+  bool full_collateral = 3;
+}
+
+message QueryMintBySwapRequirementResponse {
+  cosmos.base.v1beta1.Coin backing_in = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin lion_in = 2 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin mint_fee = 3 [ (gogoproto.nullable) = false ];
 }
