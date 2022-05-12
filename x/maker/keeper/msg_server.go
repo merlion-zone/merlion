@@ -23,93 +23,44 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 var _ types.MsgServer = msgServer{}
 
 func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*types.MsgMintBySwapResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-
-	backingDenom := msg.BackingInMax.Denom
-
 	sender, receiver, err := getSenderReceiver(msg.Sender, msg.To)
 	if err != nil {
 		return nil, err
 	}
 
-	// get prices in usd
-	backingPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, backingDenom)
-	if err != nil {
-		return nil, err
-	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
-	if err != nil {
-		return nil, err
-	}
-	merPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	// check price lower bound
-	merPriceLowerBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Sub(m.Keeper.MintPriceBias(ctx)))
-	if merPrice.LT(merPriceLowerBound) {
-		return nil, sdkerrors.Wrapf(types.ErrMerPriceTooLow, "%s price too low: %s", merlion.MicroUSDDenom, merPrice)
-	}
-
-	collateralRatio := m.Keeper.GetCollateralRatio(ctx)
-
-	backingParams, found := m.Keeper.GetBackingRiskParams(ctx, backingDenom)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
-	}
-	if !backingParams.Enabled {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
-	}
-
-	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, backingDenom)
-	if err != nil {
-		return nil, err
-	}
-
+	ctx := sdk.UnwrapSDKContext(c)
 	mintOut := msg.MintOut
-	mintFee := computeFee(mintOut, backingParams.MintFee)
-	mintTotal := mintOut.AddAmount(mintFee.Amount)
-	mintTotalInUSD := mintTotal.Amount.ToDec().Mul(merlion.MicroUSDTarget)
+	backingInMax := msg.BackingInMax
+	lionInMax := msg.LionInMax
+
+	rqmt, err := m.getMintBySwapRequirement(ctx, mintOut, backingInMax.Denom, lionInMax.IsZero())
+	if err != nil {
+		return nil, err
+	}
+
+	backingIn := rqmt.BackingIn
+	lionIn := rqmt.LionIn
+	mintFee := rqmt.MintFee
+	mintTotal := mintOut.Add(mintFee)
+
+	if backingInMax.IsLT(backingIn) {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinSlippage, "backing coin needed: %s", rqmt.BackingIn)
+	}
+	if lionInMax.IsLT(lionIn) {
+		return nil, sdkerrors.Wrapf(types.ErrLionCoinSlippage, "lion coin needed: %s", rqmt.LionIn)
+	}
+
+	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, msg.BackingInMax.Denom)
+	if err != nil {
+		return nil, err
+	}
 
 	poolBacking.MerMinted = poolBacking.MerMinted.Add(mintTotal)
+	poolBacking.Backing = poolBacking.Backing.Add(rqmt.BackingIn)
+	poolBacking.LionBurned = poolBacking.LionBurned.Add(rqmt.LionIn)
+
 	totalBacking.MerMinted = totalBacking.MerMinted.Add(mintTotal)
-	if backingParams.MaxMerMint != nil {
-		if poolBacking.MerMinted.Amount.GT(*backingParams.MaxMerMint) {
-			return nil, sdkerrors.Wrapf(types.ErrMerCeiling, "mer over ceiling")
-		}
-	}
-
-	backingIn := sdk.NewCoin(backingDenom, sdk.ZeroInt())
-	lionIn := sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
-	if collateralRatio.GTE(sdk.OneDec()) || msg.LionInMax.IsZero() {
-		// full/over collateralized, or user selects full collateralization
-		backingIn.Amount = mintTotalInUSD.QuoRoundUp(backingPrice).RoundInt()
-	} else if collateralRatio.IsZero() {
-		// algorithmic
-		lionIn.Amount = mintTotalInUSD.QuoRoundUp(lionPrice).RoundInt()
-	} else {
-		// fractional
-		backingIn.Amount = mintTotalInUSD.Mul(collateralRatio).QuoRoundUp(backingPrice).RoundInt()
-		lionIn.Amount = mintTotalInUSD.Mul(sdk.OneDec().Sub(collateralRatio)).QuoRoundUp(lionPrice).RoundInt()
-	}
-
-	if msg.BackingInMax.IsLT(backingIn) {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinSlippage, "backing coin needed: %s", backingIn)
-	}
-	if msg.LionInMax.IsLT(lionIn) {
-		return nil, sdkerrors.Wrapf(types.ErrLionCoinSlippage, "lion coin needed: %s", lionIn)
-	}
-
-	poolBacking.Backing = poolBacking.Backing.Add(backingIn)
-	if backingParams.MaxBacking != nil {
-		if poolBacking.Backing.Amount.GT(*backingParams.MaxBacking) {
-			return nil, sdkerrors.Wrapf(types.ErrBackingCeiling, "backing over ceiling")
-		}
-	}
-
-	poolBacking.LionBurned = poolBacking.LionBurned.Add(lionIn)
-	totalBacking.LionBurned = totalBacking.LionBurned.Add(lionIn)
+	totalBacking.LionBurned = totalBacking.LionBurned.Add(rqmt.LionIn)
 
 	m.Keeper.SetPoolBacking(ctx, poolBacking)
 	m.Keeper.SetTotalBacking(ctx, totalBacking)
