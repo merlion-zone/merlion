@@ -82,6 +82,13 @@ service Query {
       returns (QueryMintBySwapRequirementResponse) {
     option (google.api.http).get = "/merlion/maker/v1/mint_by_swap_requirement";
   }
+
+  // MintBySwapCapacity queries how much mer can be minted with provided backing
+  // and lion.
+  rpc MintBySwapCapacity(QueryMintBySwapCapacityRequest)
+      returns (QueryMintBySwapCapacityResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/mint_by_swap_capacity";
+  }
 }
 
 message QueryAllBackingRiskParamsRequest {}
@@ -171,4 +178,16 @@ message QueryMintBySwapRequirementResponse {
   cosmos.base.v1beta1.Coin backing_in = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin lion_in = 2 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_fee = 3 [ (gogoproto.nullable) = false ];
+}
+
+message QueryMintBySwapCapacityRequest {
+  cosmos.base.v1beta1.Coin backing_avail = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin lion_avail = 2 [ (gogoproto.nullable) = false ];
+}
+
+message QueryMintBySwapCapacityResponse {
+  cosmos.base.v1beta1.Coin backing_in = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin lion_in = 2 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin mint_out = 3 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin mint_fee = 4 [ (gogoproto.nullable) = false ];
 }
