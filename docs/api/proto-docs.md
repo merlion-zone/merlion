@@ -87,6 +87,8 @@
     - [QueryCollateralPoolResponse](#merlion.maker.v1.QueryCollateralPoolResponse)
     - [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest)
     - [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse)
+    - [QueryMintBySwapCapacityRequest](#merlion.maker.v1.QueryMintBySwapCapacityRequest)
+    - [QueryMintBySwapCapacityResponse](#merlion.maker.v1.QueryMintBySwapCapacityResponse)
     - [QueryMintBySwapRequirementRequest](#merlion.maker.v1.QueryMintBySwapRequirementRequest)
     - [QueryMintBySwapRequirementResponse](#merlion.maker.v1.QueryMintBySwapRequirementResponse)
     - [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest)
@@ -1288,6 +1290,40 @@ parameters.
 
 
 
+<a name="merlion.maker.v1.QueryMintBySwapCapacityRequest"></a>
+
+### QueryMintBySwapCapacityRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_avail` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_avail` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryMintBySwapCapacityResponse"></a>
+
+### QueryMintBySwapCapacityResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.QueryMintBySwapRequirementRequest"></a>
 
 ### QueryMintBySwapRequirementRequest
@@ -1422,6 +1458,7 @@ Query defines the maker gRPC querier service.
 | `CollateralRatio` | [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest) | [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse) | CollateralRatio queries the collateral ratio. | GET|/merlion/maker/v1/collateral_ratio|
 | `Params` | [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/maker/v1/params|
 | `MintBySwapRequirement` | [QueryMintBySwapRequirementRequest](#merlion.maker.v1.QueryMintBySwapRequirementRequest) | [QueryMintBySwapRequirementResponse](#merlion.maker.v1.QueryMintBySwapRequirementResponse) | MintBySwapRequirement queries requirement of backing and lion for the mint target. | GET|/merlion/maker/v1/mint_by_swap_requirement|
+| `MintBySwapCapacity` | [QueryMintBySwapCapacityRequest](#merlion.maker.v1.QueryMintBySwapCapacityRequest) | [QueryMintBySwapCapacityResponse](#merlion.maker.v1.QueryMintBySwapCapacityResponse) | MintBySwapCapacity queries how much mer can be minted with provided backing and lion. | GET|/merlion/maker/v1/mint_by_swap_capacity|
 
  <!-- end services -->
 

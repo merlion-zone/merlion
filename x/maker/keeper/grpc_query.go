@@ -203,3 +203,101 @@ func (k Keeper) getMintBySwapRequirement(ctx sdk.Context, mintTarget sdk.Coin, b
 		MintFee:   mintFee,
 	}, nil
 }
+
+func (k Keeper) MintBySwapCapacity(c context.Context, req *types.QueryMintBySwapCapacityRequest) (*types.QueryMintBySwapCapacityResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	backingDenom := req.BackingAvail.Denom
+
+	// get prices in usd
+	backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, backingDenom)
+	if err != nil {
+		return nil, err
+	}
+	lionPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
+	if err != nil {
+		return nil, err
+	}
+	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	if err != nil {
+		return nil, err
+	}
+
+	// prevent minting if mer price is below the lower bound
+	merPriceLowerBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Sub(k.MintPriceBias(ctx)))
+	if merPrice.LT(merPriceLowerBound) {
+		return nil, sdkerrors.Wrapf(types.ErrMerPriceTooLow, "%s price too low: %s", merlion.MicroUSDDenom, merPrice)
+	}
+
+	collateralRatio := k.GetCollateralRatio(ctx)
+
+	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
+	}
+	if !backingParams.Enabled {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+	}
+
+	backingAvailInUSD := backingPrice.MulInt(req.BackingAvail.Amount)
+	lionAvailInUSD := lionPrice.MulInt(req.LionAvail.Amount)
+
+	mintTotalInUSD := sdk.ZeroDec()
+	backingIn := sdk.NewCoin(backingDenom, sdk.ZeroInt())
+	lionIn := sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
+
+	if collateralRatio.GTE(sdk.OneDec()) || req.LionAvail.IsZero() {
+		// full/over collateralized, or user selects full collateralization
+		mintTotalInUSD = backingAvailInUSD
+		backingIn.Amount = req.BackingAvail.Amount
+	} else if collateralRatio.IsZero() {
+		// algorithmic
+		mintTotalInUSD = lionAvailInUSD
+		lionIn.Amount = req.LionAvail.Amount
+	} else {
+		// fractional
+		mintTotalWithBackingInUSD := backingAvailInUSD.Quo(collateralRatio)
+		mintTotalWithLionInUSD := lionAvailInUSD.Quo(sdk.OneDec().Sub(collateralRatio))
+		if mintTotalWithBackingInUSD.LT(mintTotalWithLionInUSD) {
+			mintTotalInUSD = mintTotalWithBackingInUSD
+			backingIn.Amount = req.BackingAvail.Amount
+			lionIn.Amount = mintTotalInUSD.Mul(sdk.OneDec().Sub(collateralRatio)).Quo(lionPrice).RoundInt()
+		} else {
+			mintTotalInUSD = mintTotalWithLionInUSD
+			lionIn.Amount = req.LionAvail.Amount
+			backingIn.Amount = mintTotalInUSD.Mul(collateralRatio).Quo(backingPrice).RoundInt()
+		}
+	}
+
+	_, poolBacking, err := k.getBacking(ctx, backingDenom)
+	if err != nil {
+		return nil, err
+	}
+	poolBacking.Backing = poolBacking.Backing.Add(backingIn)
+	if backingParams.MaxBacking != nil && poolBacking.Backing.Amount.GT(*backingParams.MaxBacking) {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCeiling, "backing over ceiling")
+	}
+
+	mintTotalAmount := mintTotalInUSD.Quo(merPrice)
+	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(mintTotalAmount.RoundInt())
+	if backingParams.MaxMerMint != nil && poolBacking.MerMinted.Amount.GT(*backingParams.MaxMerMint) {
+		return nil, sdkerrors.Wrapf(types.ErrMerCeiling, "mer over ceiling")
+	}
+
+	mintFeeRate := sdk.ZeroDec()
+	if backingParams.MintFee != nil {
+		mintFeeRate = *backingParams.MintFee
+	}
+	mintOutAmount := mintTotalAmount.Quo(sdk.OneDec().Add(mintFeeRate))
+	mintFeeAmount := mintOutAmount.Mul(mintFeeRate)
+
+	mintOut := sdk.NewCoin(merlion.MicroUSDDenom, mintOutAmount.RoundInt())
+	mintFee := sdk.NewCoin(merlion.MicroUSDDenom, mintFeeAmount.RoundInt())
+
+	return &types.QueryMintBySwapCapacityResponse{
+		BackingIn: backingIn,
+		LionIn:    lionIn,
+		MintOut:   mintOut,
+		MintFee:   mintFee,
+	}, nil
+}
