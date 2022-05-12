@@ -54,11 +54,11 @@ fractional-backing-algorithmic and over-collateralized-catalytic.
 
 The **fractional-backing-algorithmic**, or **FBA**, is with parts of its backing assets and parts of the algorithmic
 supply. The ratio of backing and algorithmic depends on the market's pricing of the Mer stablecoin. We named the
-ratio **CR (Collateral Ratio)**. If MerUSD is trading at above $1, the system decreases the ratio. If Mer is trading at
-under $1, the system increases the ratio. At any point in time, CR is determined. If users want to mint Mer, they
+ratio **BR (Backing Ratio)**. If MerUSD is trading at above $1, the system decreases the ratio. If Mer is trading at
+under $1, the system increases the ratio. At any point in time, BR is determined. If users want to mint Mer, they
 must **spend** a certain amount of backing assets and a certain amount of Lion coins, which will enter the unified swap
 pool. Conversely, when a user wants to acquire backing assets and Lion coins in the swap pool, he must spend a certain
-amount of Mer coins in exchange, and can only get the proportional coins that follow the CR ratio at the market price.
+amount of Mer coins in exchange, and can only get the proportional coins that follow the BR ratio at the market price.
 
 The **over-collateralized-catalytic**, or **OCC**, is over collateralized for interest-bearing lending, and
 loan-to-value maximized by catalytic Lion. Each kind of supported over-collateralized asset forms a separate pool. Users
@@ -92,9 +92,9 @@ providing possible liquidation channels.
 
 When possible market fluctuations or black swan events cause Mer prices to decouple, the arbitrage behavior of
 arbitrageurs helps Mer return to their target prices. For FBA-style mintage, when MerUSD is lower than $1, the system
-target CR value automatically increases accordingly. At this time, the system shows that there is a lack of backing
+target BR value automatically increases accordingly. At this time, the system shows that there is a lack of backing
 assets, and a surplus of Lion coins. Arbitrageurs can use a certain amount of backing assets to buy Lion coins from the
-system at a discounted price, so that the actual CR value tends to the target CR value. An increase in the reserve of
+system at a discounted price, so that the actual BR value tends to the target BR value. An increase in the reserve of
 backing assets will increase people's confidence and bring MerUSD back to the price of $1. For OCC-style mintage, when
 MerUSD is below $1, users tend to buy low-priced MerUSD from the market and repay the system with MerUSD's nominal value
 of $1 to unlock the collateralized assets. This will reduce the circulation of MerUSD in the market, and will also bring
@@ -220,8 +220,4 @@ identified by its unique proposalID. Types of proposals include, but are not lim
 Merlion will issue a total supply of **1 billion (1,000,000,000) $LION** at genesis, and there are no inflation after
 mainnet launch. Tokens will be released to the following distribution:
 
-- Airdrop around launch: 5%, fully distributed
-- Staking, ve(3,3) locked and liquidity incentives: 25%, vested 4 years
-- Community pool: 20%, locked on chain
-- Strategic reserve: 30%, locked on chain
-- Core dev team: 20%, vested 4 years
+- TBD
