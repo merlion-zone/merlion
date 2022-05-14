@@ -44,7 +44,7 @@ func (g Gauge) ClaimReward(ctx sdk.Context, veID uint64, voterKeeper types.Voter
 }
 
 func (g Gauge) Deposit(ctx sdk.Context, veID uint64, amount sdk.Int) (err error) {
-	owner := g.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeID(veID))
+	owner := g.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeIDFromUint64(veID))
 	coin := sdk.NewCoin(g.depoistDenom, amount)
 	err = g.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, g.EscrowPool(ctx).GetName(), sdk.NewCoins(coin))
 	if err != nil {
@@ -72,7 +72,7 @@ func (g Gauge) Deposit(ctx sdk.Context, veID uint64, amount sdk.Int) (err error)
 }
 
 func (g Gauge) Withdraw(ctx sdk.Context, veID uint64, amount sdk.Int) (err error) {
-	owner := g.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeID(veID))
+	owner := g.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeIDFromUint64(veID))
 
 	totalDeposited := g.GetTotalDepositedAmount(ctx)
 	deposited := g.GetDepositedAmountByUser(ctx, veID)

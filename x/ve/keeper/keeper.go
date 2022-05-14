@@ -11,21 +11,21 @@ import (
 	"github.com/merlion-zone/merlion/x/ve/types"
 )
 
-type (
-	Keeper struct {
-		cdc        codec.BinaryCodec
-		storeKey   sdk.StoreKey
-		memKey     sdk.StoreKey
-		paramstore paramtypes.Subspace
+// Keeper defines the ve module interface
+type Keeper struct {
+	cdc        codec.BinaryCodec
+	storeKey   sdk.StoreKey
+	memKey     sdk.StoreKey
+	paramstore paramtypes.Subspace
 
-		accountKeeper types.AccountKeeper
-		bankKeeper    types.BankKeeper
-		nftKeeper     types.NftKeeper
+	accountKeeper types.AccountKeeper
+	bankKeeper    types.BankKeeper
+	nftKeeper     types.NftKeeper
 
-		getDelegatedAmount func(ctx sdk.Context, veID uint64) sdk.Int
-	}
-)
+	getDelegatedAmount func(ctx sdk.Context, veID uint64) sdk.Int
+}
 
+// NewKeeper creates a new ve Keeper instance
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey,
@@ -38,6 +38,11 @@ func NewKeeper(
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
+	}
+
+	// ensure ve module account is set
+	if addr := accountKeeper.GetModuleAddress(types.ModuleName); addr == nil {
+		panic("the ve module account has not been set")
 	}
 
 	return &Keeper{

@@ -253,7 +253,7 @@ func (b *Base) userReward(ctx sdk.Context, rewardDenom string, veID uint64) sdk.
 }
 
 func (b *Base) claimReward(ctx sdk.Context, veID uint64) (err error) {
-	owner := b.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeID(veID))
+	owner := b.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeIDFromUint64(veID))
 	pool := b.EscrowPool(ctx)
 
 	denoms := b.getRewardDenoms(ctx)

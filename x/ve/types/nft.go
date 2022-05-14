@@ -12,6 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/nft"
 )
 
+// VeNftClass represents the NFT class of ve
 var VeNftClass = nft.Class{
 	Id:          "veNFT",
 	Name:        "veNFT",
@@ -20,10 +21,12 @@ var VeNftClass = nft.Class{
 	Uri:         "",
 }
 
-func VeID(idNumber uint64) string {
+// VeIDFromUint64 converts ve id from integer to string
+func VeIDFromUint64(idNumber uint64) string {
 	return fmt.Sprintf("ve-%d", idNumber)
 }
 
+// Uint64FromVeID converts ve id from string to integer
 func Uint64FromVeID(veID string) uint64 {
 	splits := strings.Split(veID, "-")
 	if len(splits) != 2 || splits[0] != "ve" {

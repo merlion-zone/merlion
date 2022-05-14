@@ -25,6 +25,12 @@ type AppModuleBasic struct {
 	staking.AppModuleBasic
 }
 
+// DefaultGenesis returns default genesis state as raw bytes for the staking
+// module.
+func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
+	return cdc.MustMarshalJSON(types.DefaultGenesis())
+}
+
 // RegisterLegacyAminoCodec registers the staking module's types on the given LegacyAmino codec.
 func (b AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	b.AppModuleBasic.RegisterLegacyAminoCodec(cdc)

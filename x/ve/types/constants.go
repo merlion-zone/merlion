@@ -18,6 +18,7 @@ const (
 
 	MaxUnixTime = math.MaxInt64
 
+	// Regulated period for ve locking time
 	RegulatedPeriod = merlion.SecondsPerWeek
 
 	EmptyEpoch = 0

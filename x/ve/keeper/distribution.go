@@ -51,7 +51,7 @@ func (d Distributor) DistributePerPeriod(ctx sdk.Context) {
 func (d Distributor) Claim(ctx sdk.Context, veID uint64) error {
 	d.keeper.RegulateCheckpoint(ctx)
 
-	owner := d.keeper.nftKeeper.GetOwner(ctx, types.VeNftClass.Id, types.VeID(veID))
+	owner := d.keeper.nftKeeper.GetOwner(ctx, types.VeNftClass.Id, types.VeIDFromUint64(veID))
 
 	now := uint64(ctx.BlockTime().Unix())
 	timeLast := d.keeper.GetDistributionClaimLastTimestampByUser(ctx, veID)

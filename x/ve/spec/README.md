@@ -37,3 +37,10 @@ VotingPower = LockedAmount * RemainingLockingTime / <209 Weeks>
 
 That is, if a user locks 100 $LION for 209 weeks, he will gain a voting power of 100. If he only locks for 1 week, the
 voting power will be `100 / 209 = 0.478469`.
+
+As time elapse, the voting power will decay continuously. For the above example, if the locking time is 209 weeks and
+1/4 of it has elapsed, the voting power will decay to `100 * (3 / 4) = 75`.
+
+The essence of voting power owned by ve holders is to measure not only the amount of the locked tokens, but also the **value of time**.
+
+### Reward Emission and Compensation

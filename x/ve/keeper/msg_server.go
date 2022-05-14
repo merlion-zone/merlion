@@ -53,7 +53,7 @@ func (m msgServer) Create(c context.Context, msg *types.MsgCreate) (*types.MsgCr
 	// mint nft for ve id
 	err = m.Keeper.nftKeeper.Mint(ctx, nfttypes.NFT{
 		ClassId: types.VeNftClass.Id,
-		Id:      types.VeID(veID),
+		Id:      types.VeIDFromUint64(veID),
 		Uri:     "", // TODO: implement Uri as method not field
 	}, receiver)
 	if err != nil {
@@ -69,7 +69,7 @@ func (m msgServer) Create(c context.Context, msg *types.MsgCreate) (*types.MsgCr
 	err = ctx.EventManager().EmitTypedEvent(&types.EventCreate{
 		Sender:     sender.String(),
 		Receiver:   receiver.String(),
-		VeId:       types.VeID(veID),
+		VeId:       types.VeIDFromUint64(veID),
 		Amount:     msg.Amount,
 		UnlockTime: unlockTime,
 	})
@@ -121,7 +121,7 @@ func (m msgServer) Deposit(c context.Context, msg *types.MsgDeposit) (*types.Msg
 
 	err = ctx.EventManager().EmitTypedEvent(&types.EventDeposit{
 		Sender: sender.String(),
-		VeId:   types.VeID(veID),
+		VeId:   types.VeIDFromUint64(veID),
 		Amount: msg.Amount,
 	})
 	if err != nil {
@@ -180,7 +180,7 @@ func (m msgServer) ExtendTime(c context.Context, msg *types.MsgExtendTime) (*typ
 
 	err = ctx.EventManager().EmitTypedEvent(&types.EventExtendTime{
 		Sender:     sender.String(),
-		VeId:       types.VeID(veID),
+		VeId:       types.VeIDFromUint64(veID),
 		UnlockTime: unlockTime,
 	})
 	if err != nil {
