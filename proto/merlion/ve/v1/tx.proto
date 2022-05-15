@@ -48,7 +48,10 @@ message MsgCreate {
   uint64 lock_duration = 4 [ (gogoproto.moretags) = "yaml:\"lock_duration\"" ];
 }
 
-message MsgCreateResponse {}
+message MsgCreateResponse {
+  string ve_id = 1;
+  uint64 unlock_time = 2;
+}
 
 message MsgDeposit {
   option (gogoproto.equal) = false;

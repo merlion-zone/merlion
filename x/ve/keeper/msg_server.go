@@ -83,7 +83,10 @@ func (m msgServer) Create(c context.Context, msg *types.MsgCreate) (*types.MsgCr
 		),
 	)
 
-	return &types.MsgCreateResponse{}, nil
+	return &types.MsgCreateResponse{
+		VeId:       types.VeIDFromUint64(veID),
+		UnlockTime: unlockTime,
+	}, nil
 }
 
 func (m msgServer) Deposit(c context.Context, msg *types.MsgDeposit) (*types.MsgDepositResponse, error) {

@@ -2987,6 +2987,12 @@ Query defines the ve gRPC querier service.
 
 
 
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `ve_id` | [string](#string) |  |  |
+| `unlock_time` | [uint64](#uint64) |  |  |
+
+
 
 
 
