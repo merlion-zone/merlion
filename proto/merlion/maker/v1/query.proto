@@ -96,6 +96,12 @@ service Query {
       returns (QueryBurnBySwapResponse) {
     option (google.api.http).get = "/merlion/maker/v1/query_burn_by_swap";
   }
+
+  // QueryBuyBacking queries how much backing can be bought with provided lion.
+  rpc QueryBuyBacking(QueryBuyBackingRequest)
+      returns (QueryBuyBackingResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/query_buy_backing";
+  }
 }
 
 message QueryAllBackingRiskParamsRequest {}
@@ -208,4 +214,14 @@ message QueryBurnBySwapResponse {
   cosmos.base.v1beta1.Coin backing_out = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin lion_out = 2 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin burn_fee = 3 [ (gogoproto.nullable) = false ];
+}
+
+message QueryBuyBackingRequest {
+  cosmos.base.v1beta1.Coin lion_in = 1 [ (gogoproto.nullable) = false ];
+  string backing_denom = 2;
+}
+
+message QueryBuyBackingResponse {
+  cosmos.base.v1beta1.Coin backing_out = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin buyback_fee = 2 [ (gogoproto.nullable) = false ];
 }

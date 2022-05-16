@@ -83,6 +83,8 @@
     - [QueryBackingPoolResponse](#merlion.maker.v1.QueryBackingPoolResponse)
     - [QueryBurnBySwapRequest](#merlion.maker.v1.QueryBurnBySwapRequest)
     - [QueryBurnBySwapResponse](#merlion.maker.v1.QueryBurnBySwapResponse)
+    - [QueryBuyBackingRequest](#merlion.maker.v1.QueryBuyBackingRequest)
+    - [QueryBuyBackingResponse](#merlion.maker.v1.QueryBuyBackingResponse)
     - [QueryCollateralOfAccountRequest](#merlion.maker.v1.QueryCollateralOfAccountRequest)
     - [QueryCollateralOfAccountResponse](#merlion.maker.v1.QueryCollateralOfAccountResponse)
     - [QueryCollateralPoolRequest](#merlion.maker.v1.QueryCollateralPoolRequest)
@@ -1238,6 +1240,38 @@ parameters.
 
 
 
+<a name="merlion.maker.v1.QueryBuyBackingRequest"></a>
+
+### QueryBuyBackingRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `backing_denom` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryBuyBackingResponse"></a>
+
+### QueryBuyBackingResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `buyback_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.QueryCollateralOfAccountRequest"></a>
 
 ### QueryCollateralOfAccountRequest
@@ -1495,6 +1529,7 @@ Query defines the maker gRPC querier service.
 | `MintBySwapRequirement` | [QueryMintBySwapRequirementRequest](#merlion.maker.v1.QueryMintBySwapRequirementRequest) | [QueryMintBySwapRequirementResponse](#merlion.maker.v1.QueryMintBySwapRequirementResponse) | MintBySwapRequirement queries requirement of backing and lion for the mint target. | GET|/merlion/maker/v1/mint_by_swap_requirement|
 | `MintBySwapCapacity` | [QueryMintBySwapCapacityRequest](#merlion.maker.v1.QueryMintBySwapCapacityRequest) | [QueryMintBySwapCapacityResponse](#merlion.maker.v1.QueryMintBySwapCapacityResponse) | MintBySwapCapacity queries how much mer can be minted with provided backing and lion. | GET|/merlion/maker/v1/mint_by_swap_capacity|
 | `QueryBurnBySwap` | [QueryBurnBySwapRequest](#merlion.maker.v1.QueryBurnBySwapRequest) | [QueryBurnBySwapResponse](#merlion.maker.v1.QueryBurnBySwapResponse) | QueryBurnBySwap queries how much backing and lion will be returned when mer is burned. | GET|/merlion/maker/v1/query_burn_by_swap|
+| `QueryBuyBacking` | [QueryBuyBackingRequest](#merlion.maker.v1.QueryBuyBackingRequest) | [QueryBuyBackingResponse](#merlion.maker.v1.QueryBuyBackingResponse) | QueryBuyBacking queries how much backing can be bought with provided lion. | GET|/merlion/maker/v1/query_buy_backing|
 
  <!-- end services -->
 
