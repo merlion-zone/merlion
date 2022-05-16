@@ -301,3 +301,80 @@ func (k Keeper) MintBySwapCapacity(c context.Context, req *types.QueryMintBySwap
 		MintFee:   mintFee,
 	}, nil
 }
+
+func (k Keeper) QueryBurnBySwap(c context.Context, req *types.QueryBurnBySwapRequest) (*types.QueryBurnBySwapResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	backingOut, lionOut, burnFee, err := k.queryBurnBySwap(ctx, req.BurnTarget, req.BackingDenom)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryBurnBySwapResponse{
+		BackingOut: backingOut,
+		LionOut:    lionOut,
+		BurnFee:    burnFee,
+	}, nil
+}
+
+func (k Keeper) queryBurnBySwap(ctx sdk.Context, burnTarget sdk.Coin, backingDenom string) (backingOut sdk.Coin, lionOut sdk.Coin, burnFee sdk.Coin, err error) {
+	backingOut = sdk.NewCoin(backingDenom, sdk.ZeroInt())
+	lionOut = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
+	burnFee = sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
+
+	// get prices in usd
+	backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, backingDenom)
+	if err != nil {
+		return
+	}
+	lionPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
+	if err != nil {
+		return
+	}
+	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	if err != nil {
+		return
+	}
+
+	// check price upper bound
+	merPriceUpperBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Add(k.BurnPriceBias(ctx)))
+	if merPrice.GT(merPriceUpperBound) {
+		err = sdkerrors.Wrapf(types.ErrMerPriceTooHigh, "%s price too high: %s", merlion.MicroUSDDenom, merPrice)
+		return
+	}
+
+	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
+	if !found {
+		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
+		return
+	}
+	if !backingParams.Enabled {
+		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+		return
+	}
+
+	burnIn := burnTarget
+	burnFee = computeFee(burnIn, backingParams.BurnFee)
+	burnActual := burnIn.SubAmount(burnFee.Amount)
+	burnActualInUSD := burnActual.Amount.ToDec().Mul(merlion.MicroUSDTarget)
+
+	collateralRatio := k.GetCollateralRatio(ctx)
+	if collateralRatio.GTE(sdk.OneDec()) {
+		// full/over collateralized
+		backingOut.Amount = burnActualInUSD.QuoRoundUp(backingPrice).RoundInt()
+	} else if collateralRatio.IsZero() {
+		// algorithmic
+		lionOut.Amount = burnActualInUSD.QuoRoundUp(lionPrice).RoundInt()
+	} else {
+		// fractional
+		backingOut.Amount = burnActualInUSD.Mul(collateralRatio).QuoRoundUp(backingPrice).RoundInt()
+		lionOut.Amount = burnActualInUSD.Mul(sdk.OneDec().Sub(collateralRatio)).QuoRoundUp(lionPrice).RoundInt()
+	}
+
+	moduleOwnedBacking := k.bankKeeper.GetBalance(ctx, k.accountKeeper.GetModuleAddress(types.ModuleName), backingDenom)
+	if moduleOwnedBacking.IsLT(backingOut) {
+		err = sdkerrors.Wrapf(types.ErrBackingCoinInsufficient, "backing coin out(%s) < balance(%s)", backingOut, moduleOwnedBacking)
+		return
+	}
+
+	return
+}

@@ -89,6 +89,13 @@ service Query {
       returns (QueryMintBySwapCapacityResponse) {
     option (google.api.http).get = "/merlion/maker/v1/mint_by_swap_capacity";
   }
+
+  // QueryBurnBySwap queries how much backing and lion will be returned when mer
+  // is burned.
+  rpc QueryBurnBySwap(QueryBurnBySwapRequest)
+      returns (QueryBurnBySwapResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/query_burn_by_swap";
+  }
 }
 
 message QueryAllBackingRiskParamsRequest {}
@@ -190,4 +197,15 @@ message QueryMintBySwapCapacityResponse {
   cosmos.base.v1beta1.Coin lion_in = 2 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_out = 3 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_fee = 4 [ (gogoproto.nullable) = false ];
+}
+
+message QueryBurnBySwapRequest {
+  cosmos.base.v1beta1.Coin burn_target = 1 [ (gogoproto.nullable) = false ];
+  string backing_denom = 2;
+}
+
+message QueryBurnBySwapResponse {
+  cosmos.base.v1beta1.Coin backing_out = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin lion_out = 2 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin burn_fee = 3 [ (gogoproto.nullable) = false ];
 }
