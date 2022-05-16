@@ -23,31 +23,24 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 var _ types.MsgServer = msgServer{}
 
 func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*types.MsgMintBySwapResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
 	sender, receiver, err := getSenderReceiver(msg.Sender, msg.To)
 	if err != nil {
 		return nil, err
 	}
 
-	ctx := sdk.UnwrapSDKContext(c)
-	mintOut := msg.MintOut
-	backingInMax := msg.BackingInMax
-	lionInMax := msg.LionInMax
-
-	rqmt, err := m.getMintBySwapRequirement(ctx, mintOut, backingInMax.Denom, lionInMax.IsZero())
+	backingIn, lionIn, mintFee, err := m.mintBySwapRequirement(ctx, msg.MintOut, msg.BackingInMax.Denom, msg.LionInMax.IsZero())
 	if err != nil {
 		return nil, err
 	}
 
-	backingIn := rqmt.BackingIn
-	lionIn := rqmt.LionIn
-	mintFee := rqmt.MintFee
-	mintTotal := mintOut.Add(mintFee)
+	mintTotal := msg.MintOut.Add(mintFee)
 
-	if backingInMax.IsLT(backingIn) {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinSlippage, "backing coin needed: %s", rqmt.BackingIn)
+	if msg.BackingInMax.IsLT(backingIn) {
+		return nil, sdkerrors.Wrapf(types.ErrBackingCoinSlippage, "backing coin needed: %s", backingIn)
 	}
-	if lionInMax.IsLT(lionIn) {
-		return nil, sdkerrors.Wrapf(types.ErrLionCoinSlippage, "lion coin needed: %s", rqmt.LionIn)
+	if msg.LionInMax.IsLT(lionIn) {
+		return nil, sdkerrors.Wrapf(types.ErrLionCoinSlippage, "lion coin needed: %s", lionIn)
 	}
 
 	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, msg.BackingInMax.Denom)
@@ -56,11 +49,11 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 	}
 
 	poolBacking.MerMinted = poolBacking.MerMinted.Add(mintTotal)
-	poolBacking.Backing = poolBacking.Backing.Add(rqmt.BackingIn)
-	poolBacking.LionBurned = poolBacking.LionBurned.Add(rqmt.LionIn)
+	poolBacking.Backing = poolBacking.Backing.Add(backingIn)
+	poolBacking.LionBurned = poolBacking.LionBurned.Add(lionIn)
 
 	totalBacking.MerMinted = totalBacking.MerMinted.Add(mintTotal)
-	totalBacking.LionBurned = totalBacking.LionBurned.Add(rqmt.LionIn)
+	totalBacking.LionBurned = totalBacking.LionBurned.Add(lionIn)
 
 	m.Keeper.SetPoolBacking(ctx, poolBacking)
 	m.Keeper.SetTotalBacking(ctx, totalBacking)
@@ -84,7 +77,7 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 		return nil, err
 	}
 	// send mer to receiver
-	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(mintOut))
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(msg.MintOut))
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +92,7 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(types.EventTypeMintBySwap,
 			sdk.NewAttribute(types.AttributeKeyCoinIn, sdk.NewCoins(backingIn, lionIn).String()),
-			sdk.NewAttribute(types.AttributeKeyCoinOut, mintOut.String()),
+			sdk.NewAttribute(types.AttributeKeyCoinOut, msg.MintOut.String()),
 			sdk.NewAttribute(types.AttributeKeyFee, mintFee.String()),
 		),
 		sdk.NewEvent(
@@ -116,15 +109,13 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 }
 
 func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*types.MsgBurnBySwapResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
 	sender, receiver, err := getSenderReceiver(msg.Sender, msg.To)
 	if err != nil {
 		return nil, err
 	}
 
-	ctx := sdk.UnwrapSDKContext(c)
-	backingDenom := msg.BackingOutMin.Denom
-
-	backingOut, lionOut, burnFee, err := m.Keeper.queryBurnBySwap(ctx, msg.BurnIn, backingDenom)
+	backingOut, lionOut, burnFee, err := m.Keeper.queryBurnBySwap(ctx, msg.BurnIn, msg.BackingOutMin.Denom)
 	if err != nil {
 		return nil, err
 	}
@@ -138,7 +129,7 @@ func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*typ
 		return nil, sdkerrors.Wrapf(types.ErrLionCoinSlippage, "lion coin out: %s", lionOut)
 	}
 
-	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, backingDenom)
+	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, msg.BackingOutMin.Denom)
 	if err != nil {
 		return nil, err
 	}
