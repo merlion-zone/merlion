@@ -194,72 +194,26 @@ func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*typ
 
 func (m msgServer) BuyBacking(c context.Context, msg *types.MsgBuyBacking) (*types.MsgBuyBackingResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-
-	backingDenom := msg.BackingOutMin.Denom
-
 	sender, receiver, err := getSenderReceiver(msg.Sender, msg.To)
 	if err != nil {
 		return nil, err
 	}
 
-	// get prices in usd
-	backingPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, backingDenom)
+	backingOut, buybackFee, err := m.Keeper.queryBuyBacking(ctx, msg.LionIn, msg.BackingOutMin.Denom)
 	if err != nil {
 		return nil, err
 	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	collateralRatio := m.Keeper.GetCollateralRatio(ctx)
-
-	backingParams, found := m.Keeper.GetBackingRiskParams(ctx, backingDenom)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
-	}
-	if !backingParams.Enabled {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
-	}
-
-	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, backingDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	totalBackingValue, err := m.Keeper.totalBackingInUSD(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	if !totalBacking.MerMinted.IsPositive() {
-		return nil, sdkerrors.Wrap(types.ErrBackingCoinInsufficient, "insufficient available backing coin")
-	}
-	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(collateralRatio).TruncateInt()
-
-	availableExcessBackingValue := sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
-	if requiredBackingValue.LT(totalBackingValue.Amount) {
-		availableExcessBackingValue.Amount = totalBackingValue.Amount.Sub(requiredBackingValue)
-	}
-
-	lionInValue := msg.LionIn.Amount.ToDec().Mul(lionPrice)
-	if lionInValue.TruncateInt().GT(availableExcessBackingValue.Amount) {
-		return nil, sdkerrors.Wrap(types.ErrBackingCoinInsufficient, "insufficient available backing coin")
-	}
-
-	backingOut := sdk.NewCoin(backingDenom, lionInValue.Quo(backingPrice).TruncateInt())
-	if poolBacking.Backing.IsLT(backingOut) {
-		return nil, sdkerrors.Wrap(types.ErrBackingCoinInsufficient, "insufficient available backing coin")
-	}
-	poolBacking.Backing = poolBacking.Backing.Sub(backingOut)
-
-	fee := computeFee(backingOut, backingParams.BuybackFee)
-	backingOut = backingOut.Sub(fee)
 
 	if backingOut.IsLT(msg.BackingOutMin) {
 		return nil, sdkerrors.Wrap(types.ErrBackingCoinSlippage, "backing coin over slippage")
 	}
 
+	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, msg.BackingOutMin.Denom)
+	if err != nil {
+		return nil, err
+	}
+
+	poolBacking.Backing = poolBacking.Backing.Sub(backingOut)
 	poolBacking.LionBurned = poolBacking.LionBurned.Add(msg.LionIn)
 	totalBacking.LionBurned = totalBacking.LionBurned.Add(msg.LionIn)
 
@@ -283,7 +237,7 @@ func (m msgServer) BuyBacking(c context.Context, msg *types.MsgBuyBacking) (*typ
 		return nil, err
 	}
 	// send fee to oracle
-	err = m.Keeper.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, oracletypes.ModuleName, sdk.NewCoins(fee))
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, oracletypes.ModuleName, sdk.NewCoins(buybackFee))
 	if err != nil {
 		return nil, err
 	}
@@ -292,7 +246,7 @@ func (m msgServer) BuyBacking(c context.Context, msg *types.MsgBuyBacking) (*typ
 		sdk.NewEvent(types.EventTypeBuyBacking,
 			sdk.NewAttribute(types.AttributeKeyCoinIn, msg.LionIn.String()),
 			sdk.NewAttribute(types.AttributeKeyCoinOut, backingOut.String()),
-			sdk.NewAttribute(types.AttributeKeyFee, fee.String()),
+			sdk.NewAttribute(types.AttributeKeyFee, buybackFee.String()),
 		),
 		sdk.NewEvent(
 			sdk.EventTypeMessage,

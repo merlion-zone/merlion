@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	merlion "github.com/merlion-zone/merlion/types"
@@ -286,8 +285,8 @@ func (k Keeper) MintBySwapCapacity(c context.Context, req *types.QueryMintBySwap
 		return nil, sdkerrors.Wrapf(types.ErrBackingCeiling, "backing over ceiling")
 	}
 
-	mintTotalAmount := mintTotalInUSD.QuoRoundUp(merPrice)
-	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(mintTotalAmount.RoundInt())
+	mintTotalValue := mintTotalInUSD.QuoRoundUp(merPrice)
+	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(mintTotalValue.RoundInt())
 	if backingParams.MaxMerMint != nil && poolBacking.MerMinted.Amount.GT(*backingParams.MaxMerMint) {
 		return nil, sdkerrors.Wrapf(types.ErrMerCeiling, "mer over ceiling")
 	}
@@ -296,11 +295,11 @@ func (k Keeper) MintBySwapCapacity(c context.Context, req *types.QueryMintBySwap
 	if backingParams.MintFee != nil {
 		mintFeeRate = *backingParams.MintFee
 	}
-	mintOutAmount := mintTotalAmount.QuoRoundUp(sdk.OneDec().Add(mintFeeRate))
-	mintFeeAmount := mintOutAmount.Mul(mintFeeRate)
+	mintOutValue := mintTotalValue.QuoRoundUp(sdk.OneDec().Add(mintFeeRate))
+	mintFeeValue := mintOutValue.Mul(mintFeeRate)
 
-	mintOut := sdk.NewCoin(merlion.MicroUSDDenom, mintOutAmount.RoundInt())
-	mintFee := sdk.NewCoin(merlion.MicroUSDDenom, mintFeeAmount.RoundInt())
+	mintOut := sdk.NewCoin(merlion.MicroUSDDenom, mintOutValue.RoundInt())
+	mintFee := sdk.NewCoin(merlion.MicroUSDDenom, mintFeeValue.RoundInt())
 
 	return &types.QueryMintBySwapCapacityResponse{
 		BackingIn: backingIn,
@@ -382,6 +381,80 @@ func (k Keeper) queryBurnBySwap(ctx sdk.Context, burnTarget sdk.Coin, backingDen
 		err = sdkerrors.Wrapf(types.ErrBackingCoinInsufficient, "backing coin out(%s) < balance(%s)", backingOut, moduleOwnedBacking)
 		return
 	}
+
+	return
+}
+
+func (k Keeper) QueryBuyBacking(c context.Context, req *types.QueryBuyBackingRequest) (*types.QueryBuyBackingResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	backingOut, buybackFee, err := k.queryBuyBacking(ctx, req.LionIn, req.BackingDenom)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryBuyBackingResponse{
+		BackingOut: backingOut,
+		BuybackFee: buybackFee,
+	}, nil
+}
+
+func (k Keeper) queryBuyBacking(ctx sdk.Context, lionIn sdk.Coin, backingDenom string) (backingOut sdk.Coin, buybackFee sdk.Coin, err error) {
+	// get prices in usd
+	backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, backingDenom)
+	if err != nil {
+		return
+	}
+	lionPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
+	if err != nil {
+		return
+	}
+
+	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
+	if !found {
+		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
+		return
+	}
+	if !backingParams.Enabled {
+		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+		return
+	}
+
+	totalBacking, poolBacking, err := k.getBacking(ctx, backingDenom)
+	if err != nil {
+		return
+	}
+	if !totalBacking.MerMinted.IsPositive() {
+		err = sdkerrors.Wrap(types.ErrBackingCoinInsufficient, "insufficient available backing coin")
+		return
+	}
+
+	collateralRatio := k.GetCollateralRatio(ctx)
+	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(collateralRatio).TruncateInt()
+
+	totalBackingValue, err := k.totalBackingInUSD(ctx)
+	if err != nil {
+		return
+	}
+
+	availableExcessBackingValue := sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
+	if requiredBackingValue.LT(totalBackingValue.Amount) {
+		availableExcessBackingValue.Amount = totalBackingValue.Amount.Sub(requiredBackingValue)
+	}
+
+	lionInValue := lionIn.Amount.ToDec().Mul(lionPrice)
+	if lionInValue.TruncateInt().GT(availableExcessBackingValue.Amount) {
+		err = sdkerrors.Wrap(types.ErrBackingCoinInsufficient, "insufficient available backing coin")
+		return
+	}
+
+	backingOut = sdk.NewCoin(backingDenom, lionInValue.Quo(backingPrice).TruncateInt())
+	if poolBacking.Backing.IsLT(backingOut) {
+		err = sdkerrors.Wrap(types.ErrBackingCoinInsufficient, "insufficient available backing coin")
+		return
+	}
+
+	buybackFee = computeFee(backingOut, backingParams.BuybackFee)
+	backingOut = backingOut.Sub(buybackFee)
 
 	return
 }
