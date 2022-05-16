@@ -116,68 +116,20 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 }
 
 func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*types.MsgBurnBySwapResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-
-	backingDenom := msg.BackingOutMin.Denom
-
 	sender, receiver, err := getSenderReceiver(msg.Sender, msg.To)
 	if err != nil {
 		return nil, err
 	}
 
-	// get prices in usd
-	backingPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, backingDenom)
-	if err != nil {
-		return nil, err
-	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
-	if err != nil {
-		return nil, err
-	}
-	merPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	ctx := sdk.UnwrapSDKContext(c)
+	backingDenom := msg.BackingOutMin.Denom
+
+	backingOut, lionOut, burnFee, err := m.Keeper.queryBurnBySwap(ctx, msg.BurnIn, backingDenom)
 	if err != nil {
 		return nil, err
 	}
 
-	// check price upper bound
-	merPriceUpperBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Add(m.Keeper.BurnPriceBias(ctx)))
-	if merPrice.GT(merPriceUpperBound) {
-		return nil, sdkerrors.Wrapf(types.ErrMerPriceTooHigh, "%s price too high: %s", merlion.MicroUSDDenom, merPrice)
-	}
-
-	collateralRatio := m.Keeper.GetCollateralRatio(ctx)
-
-	backingParams, found := m.Keeper.GetBackingRiskParams(ctx, backingDenom)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
-	}
-	if !backingParams.Enabled {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
-	}
-
-	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, backingDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	burnIn := msg.BurnIn
-	burnFee := computeFee(burnIn, backingParams.BurnFee)
-	burn := burnIn.SubAmount(burnFee.Amount)
-	burnInUSD := burn.Amount.ToDec().Mul(merlion.MicroUSDTarget)
-
-	backingOut := sdk.NewCoin(backingDenom, sdk.ZeroInt())
-	lionOut := sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
-	if collateralRatio.GTE(sdk.OneDec()) {
-		// full/over collateralized
-		backingOut.Amount = burnInUSD.QuoRoundUp(backingPrice).RoundInt()
-	} else if collateralRatio.IsZero() {
-		// algorithmic
-		lionOut.Amount = burnInUSD.QuoRoundUp(lionPrice).RoundInt()
-	} else {
-		// fractional
-		backingOut.Amount = burnInUSD.Mul(collateralRatio).QuoRoundUp(backingPrice).RoundInt()
-		lionOut.Amount = burnInUSD.Mul(sdk.OneDec().Sub(collateralRatio)).QuoRoundUp(lionPrice).RoundInt()
-	}
+	burnActual := msg.BurnIn.Sub(burnFee)
 
 	if backingOut.IsLT(msg.BackingOutMin) {
 		return nil, sdkerrors.Wrapf(types.ErrBackingCoinSlippage, "backing coin out: %s", backingOut)
@@ -186,9 +138,9 @@ func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*typ
 		return nil, sdkerrors.Wrapf(types.ErrLionCoinSlippage, "lion coin out: %s", lionOut)
 	}
 
-	moduleOwnedBacking := m.Keeper.bankKeeper.GetBalance(ctx, m.Keeper.accountKeeper.GetModuleAddress(types.ModuleName), backingDenom)
-	if moduleOwnedBacking.IsLT(backingOut) {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinInsufficient, "backing coin out(%s) < balance(%s)", backingOut, moduleOwnedBacking)
+	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, backingDenom)
+	if err != nil {
+		return nil, err
 	}
 
 	poolBacking.Backing = poolBacking.Backing.Sub(backingOut)
@@ -197,19 +149,19 @@ func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*typ
 	poolBacking.LionBurned = poolBacking.LionBurned.AddAmount(lionOut.Amount.Neg())
 	totalBacking.LionBurned = totalBacking.LionBurned.AddAmount(lionOut.Amount.Neg())
 	// allow MerMinted to be negative
-	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(burn.Amount.Neg())
-	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(burn.Amount.Neg())
+	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(burnActual.Amount.Neg())
+	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(burnActual.Amount.Neg())
 
 	m.Keeper.SetPoolBacking(ctx, poolBacking)
 	m.Keeper.SetTotalBacking(ctx, totalBacking)
 
 	// take mer stablecoin
-	err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(burnIn))
+	err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(msg.BurnIn))
 	if err != nil {
 		return nil, err
 	}
 	// burn mer
-	err = m.Keeper.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(burn))
+	err = m.Keeper.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(burnActual))
 	if err != nil {
 		return nil, err
 	}
@@ -232,7 +184,7 @@ func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*typ
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(types.EventTypeBurnBySwap,
-			sdk.NewAttribute(types.AttributeKeyCoinIn, burn.String()),
+			sdk.NewAttribute(types.AttributeKeyCoinIn, burnActual.String()),
 			sdk.NewAttribute(types.AttributeKeyCoinOut, sdk.NewCoins(backingOut, lionOut).String()),
 			sdk.NewAttribute(types.AttributeKeyFee, burnFee.String()),
 		),
