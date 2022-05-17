@@ -97,6 +97,8 @@
     - [QueryMintBySwapRequirementResponse](#merlion.maker.v1.QueryMintBySwapRequirementResponse)
     - [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest)
     - [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse)
+    - [QuerySellBackingRequest](#merlion.maker.v1.QuerySellBackingRequest)
+    - [QuerySellBackingResponse](#merlion.maker.v1.QuerySellBackingResponse)
     - [QueryTotalBackingRequest](#merlion.maker.v1.QueryTotalBackingRequest)
     - [QueryTotalBackingResponse](#merlion.maker.v1.QueryTotalBackingResponse)
     - [QueryTotalCollateralRequest](#merlion.maker.v1.QueryTotalCollateralRequest)
@@ -1452,6 +1454,37 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 
 
 
+<a name="merlion.maker.v1.QuerySellBackingRequest"></a>
+
+### QuerySellBackingRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QuerySellBackingResponse"></a>
+
+### QuerySellBackingResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `sellback_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.QueryTotalBackingRequest"></a>
 
 ### QueryTotalBackingRequest
@@ -1530,6 +1563,7 @@ Query defines the maker gRPC querier service.
 | `MintBySwapCapacity` | [QueryMintBySwapCapacityRequest](#merlion.maker.v1.QueryMintBySwapCapacityRequest) | [QueryMintBySwapCapacityResponse](#merlion.maker.v1.QueryMintBySwapCapacityResponse) | MintBySwapCapacity queries how much mer can be minted with provided backing and lion. | GET|/merlion/maker/v1/mint_by_swap_capacity|
 | `QueryBurnBySwap` | [QueryBurnBySwapRequest](#merlion.maker.v1.QueryBurnBySwapRequest) | [QueryBurnBySwapResponse](#merlion.maker.v1.QueryBurnBySwapResponse) | QueryBurnBySwap queries how much backing and lion will be returned when mer is burned. | GET|/merlion/maker/v1/query_burn_by_swap|
 | `QueryBuyBacking` | [QueryBuyBackingRequest](#merlion.maker.v1.QueryBuyBackingRequest) | [QueryBuyBackingResponse](#merlion.maker.v1.QueryBuyBackingResponse) | QueryBuyBacking queries how much backing can be bought with provided lion. | GET|/merlion/maker/v1/query_buy_backing|
+| `QuerySellBacking` | [QuerySellBackingRequest](#merlion.maker.v1.QuerySellBackingRequest) | [QuerySellBackingResponse](#merlion.maker.v1.QuerySellBackingResponse) | QuerySellBacking queries how much lion can be exchanged for provided backing. | GET|/merlion/maker/v1/query_sell_backing|
 
  <!-- end services -->
 
