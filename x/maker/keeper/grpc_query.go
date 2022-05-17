@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	merlion "github.com/merlion-zone/merlion/types"
@@ -399,6 +400,9 @@ func (k Keeper) QueryBuyBacking(c context.Context, req *types.QueryBuyBackingReq
 }
 
 func (k Keeper) queryBuyBacking(ctx sdk.Context, lionIn sdk.Coin, backingDenom string) (backingOut sdk.Coin, buybackFee sdk.Coin, err error) {
+	backingOut = sdk.NewCoin(backingDenom, sdk.ZeroInt())
+	buybackFee = sdk.NewCoin(backingDenom, sdk.ZeroInt())
+
 	// get prices in usd
 	backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, backingDenom)
 	if err != nil {
@@ -456,5 +460,84 @@ func (k Keeper) queryBuyBacking(ctx sdk.Context, lionIn sdk.Coin, backingDenom s
 	buybackFee = computeFee(backingOut, backingParams.BuybackFee)
 	backingOut = backingOut.Sub(buybackFee)
 
+	return
+}
+
+func (k Keeper) QuerySellBacking(c context.Context, req *types.QuerySellBackingRequest) (*types.QuerySellBackingResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	lionOut, sellbackFee, err := k.querySellBacking(ctx, req.BackingIn)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QuerySellBackingResponse{
+		LionOut:     lionOut,
+		SellbackFee: sellbackFee,
+	}, nil
+}
+
+func (k Keeper) querySellBacking(ctx sdk.Context, backingIn sdk.Coin) (lionOut sdk.Coin, sellbackFee sdk.Coin, err error) {
+	lionOut = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
+	sellbackFee = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
+
+	backingDenom := backingIn.Denom
+
+	// get prices in usd
+	backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, backingDenom)
+	if err != nil {
+		return
+	}
+	lionPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
+	if err != nil {
+		return
+	}
+
+	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
+	if !found {
+		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
+		return
+	}
+	if !backingParams.Enabled {
+		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+		return
+	}
+
+	totalBacking, poolBacking, err := k.getBacking(ctx, backingDenom)
+	if err != nil {
+		return
+	}
+
+	poolBacking.Backing = poolBacking.Backing.Add(backingIn)
+	if backingParams.MaxBacking != nil && poolBacking.Backing.Amount.GT(*backingParams.MaxBacking) {
+		err = sdkerrors.Wrap(types.ErrBackingCeiling, "over ceiling")
+		return
+	}
+
+	collateralRatio := k.GetCollateralRatio(ctx)
+	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(collateralRatio).TruncateInt()
+
+	totalBackingValue, err := k.totalBackingInUSD(ctx)
+	if err != nil {
+		return
+	}
+
+	availableMissingBackingValue := sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
+	if requiredBackingValue.GT(totalBackingValue.Amount) {
+		availableMissingBackingValue.Amount = requiredBackingValue.Sub(totalBackingValue.Amount)
+	}
+	availableLionOut := availableMissingBackingValue.Amount.ToDec().Quo(lionPrice)
+
+	bonusRatio := k.RecollateralizeBonus(ctx)
+	lionMint := sdk.NewCoin(merlion.AttoLionDenom, backingIn.Amount.ToDec().Mul(backingPrice).Quo(lionPrice).TruncateInt())
+	bonus := computeFee(lionMint, &bonusRatio)
+	sellbackFee = computeFee(lionMint, backingParams.RecollateralizeFee)
+
+	lionMint = lionMint.Add(bonus)
+	if lionMint.Amount.ToDec().GT(availableLionOut) {
+		err = sdkerrors.Wrap(types.ErrLionCoinInsufficient, "insufficient available lion coin")
+		return
+	}
+
+	lionOut = lionMint.Sub(sellbackFee)
 	return
 }

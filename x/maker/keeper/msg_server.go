@@ -33,7 +33,6 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 	if err != nil {
 		return nil, err
 	}
-
 	mintTotal := msg.MintOut.Add(mintFee)
 
 	if msg.BackingInMax.IsLT(backingIn) {
@@ -119,7 +118,6 @@ func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*typ
 	if err != nil {
 		return nil, err
 	}
-
 	burnActual := msg.BurnIn.Sub(burnFee)
 
 	if backingOut.IsLT(msg.BackingOutMin) {
@@ -261,73 +259,27 @@ func (m msgServer) BuyBacking(c context.Context, msg *types.MsgBuyBacking) (*typ
 
 func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*types.MsgSellBackingResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-
-	backingDenom := msg.BackingIn.Denom
-
 	sender, receiver, err := getSenderReceiver(msg.Sender, msg.To)
 	if err != nil {
 		return nil, err
 	}
 
-	// get prices in usd
-	backingPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, backingDenom)
+	lionOut, sellbackFee, err := m.Keeper.querySellBacking(ctx, msg.BackingIn)
 	if err != nil {
 		return nil, err
 	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	collateralRatio := m.Keeper.GetCollateralRatio(ctx)
-
-	backingParams, found := m.Keeper.GetBackingRiskParams(ctx, backingDenom)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
-	}
-	if !backingParams.Enabled {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
-	}
-
-	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, backingDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	totalBackingValue, err := m.Keeper.totalBackingInUSD(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(collateralRatio).TruncateInt()
-
-	availableMissingBackingValue := sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
-	if requiredBackingValue.GT(totalBackingValue.Amount) {
-		availableMissingBackingValue.Amount = requiredBackingValue.Sub(totalBackingValue.Amount)
-	}
-	availableLionOut := availableMissingBackingValue.Amount.ToDec().Quo(lionPrice)
-
-	bonusRatio := m.Keeper.RecollateralizeBonus(ctx)
-	lionMint := sdk.NewCoin(merlion.AttoLionDenom, msg.BackingIn.Amount.ToDec().Mul(backingPrice).Quo(lionPrice).TruncateInt())
-	bonus := computeFee(lionMint, &bonusRatio)
-	fee := computeFee(lionMint, backingParams.RecollateralizeFee)
-
-	lionMint = lionMint.Add(bonus)
-	if lionMint.Amount.ToDec().GT(availableLionOut) {
-		return nil, sdkerrors.Wrap(types.ErrLionCoinInsufficient, "insufficient available lion coin")
-	}
-	lionOut := lionMint.Sub(fee)
+	lionMint := lionOut.Add(sellbackFee)
 
 	if lionOut.IsLT(msg.LionOutMin) {
 		return nil, sdkerrors.Wrap(types.ErrLionCoinSlippage, "lion coin over slippage")
 	}
 
-	poolBacking.Backing = poolBacking.Backing.Add(msg.BackingIn)
-	if backingParams.MaxBacking != nil {
-		if poolBacking.Backing.Amount.GT(*backingParams.MaxBacking) {
-			return nil, sdkerrors.Wrap(types.ErrBackingCeiling, "over ceiling")
-		}
+	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, msg.BackingIn.Denom)
+	if err != nil {
+		return nil, err
 	}
+
+	poolBacking.Backing = poolBacking.Backing.Add(msg.BackingIn)
 
 	// allow LionBurned to be negative
 	// here use AddAmount(Neg()) to bypass Sub negativeness check
@@ -354,7 +306,7 @@ func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*t
 		return nil, err
 	}
 	// send fee to oracle
-	err = m.Keeper.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, oracletypes.ModuleName, sdk.NewCoins(fee))
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, oracletypes.ModuleName, sdk.NewCoins(sellbackFee))
 	if err != nil {
 		return nil, err
 	}
@@ -363,7 +315,7 @@ func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*t
 		sdk.NewEvent(types.EventTypeSellBacking,
 			sdk.NewAttribute(types.AttributeKeyCoinIn, msg.BackingIn.String()),
 			sdk.NewAttribute(types.AttributeKeyCoinOut, lionOut.String()),
-			sdk.NewAttribute(types.AttributeKeyFee, fee.String()),
+			sdk.NewAttribute(types.AttributeKeyFee, sellbackFee.String()),
 		),
 		sdk.NewEvent(
 			sdk.EventTypeMessage,
