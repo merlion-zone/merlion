@@ -1,0 +1,60 @@
+syntax = "proto3";
+package merlion.vesting.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "merlion/vesting/v1/genesis.proto";
+import "merlion/vesting/v1/vesting.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/vesting/types";
+
+// Query defines the vesting gRPC querier service.
+service Query {
+  // Airdrops queries airdrop targets.
+  rpc Airdrops(QueryAirdropsRequest) returns (QueryAirdropsResponse) {
+    option (google.api.http).get = "/merlion/vesting/v1/airdrops";
+  }
+
+  // Airdrops queries airdrop target for given address.
+  rpc Airdrop(QueryAirdropRequest) returns (QueryAirdropResponse) {
+    option (google.api.http).get = "/merlion/vesting/v1/airdrops/{target_addr}";
+  }
+
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/merlion/vesting/v1/params";
+  }
+}
+
+message QueryAirdropsRequest {
+  // pagination defines an optional pagination for the request.
+  bool completed = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAirdropsResponse {
+  // airdrops contains all the queried airdrops.
+  repeated Airdrop airdrops = 1 [ (gogoproto.nullable) = false ];
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAirdropRequest {
+  string target_addr = 1;
+  bool completed = 2;
+}
+
+message QueryAirdropResponse {
+  Airdrop airdrop = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}

@@ -1,0 +1,68 @@
+syntax = "proto3";
+package merlion.vesting.v1;
+
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "merlion/vesting/v1/vesting.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/vesting/types";
+
+// Msg defines the vesting Msg service.
+service Msg {
+  // AddAirdrops adds airdrop targets.
+  // Should only be called by core team multisig.
+  rpc AddAirdrops(MsgAddAirdrops) returns (MsgAddAirdropsResponse) {
+    option (google.api.http).get = "/merlion/vesting/v1/tx/add_airdrops";
+  }
+
+  // ExecuteAirdrops performs airdrops.
+  // Should only be called by core team multisig.
+  rpc ExecuteAirdrops(MsgExecuteAirdrops) returns (MsgExecuteAirdropsResponse) {
+    option (google.api.http).get = "/merlion/vesting/v1/tx/exec_airdrops";
+  }
+
+  // SetAllocationAddress sets allocation address of team vesting or
+  // strategic_reserve_custodian.
+  rpc SetAllocationAddress(MsgSetAllocationAddress)
+      returns (MsgSetAllocationAddressResponse) {
+    option (google.api.http).get =
+        "/merlion/vesting/v1/tx/set_allocation_address";
+  }
+}
+
+// MsgAddAirdrops represents a message to add airdrop targets.
+message MsgAddAirdrops {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender = 1;
+  repeated Airdrop airdrops = 2 [ (gogoproto.nullable) = false ];
+}
+
+// MsgMintBySwapResponse defines the Msg/AddAirdrops response type.
+message MsgAddAirdropsResponse {}
+
+message MsgExecuteAirdrops {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender = 1;
+  // max count of airdrops performed this time
+  uint64 max_count = 2;
+}
+
+message MsgExecuteAirdropsResponse {}
+
+// MsgSetAllocationAddress represents a message to set allocation address.
+message MsgSetAllocationAddress {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string sender = 1;
+  string team_vesting_addr = 2;
+  string strategic_reserve_custodian_addr = 3;
+}
+
+// MsgSetAllocationAddressResponse defines the Msg/SetAllocationAddress response
+// type.
+message MsgSetAllocationAddressResponse {}

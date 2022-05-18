@@ -221,7 +221,7 @@ var (
 		makertypes.ModuleName:          {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		nfttypes.ModuleName:            nil,
 		vetypes.ModuleName:             {authtypes.Burner},
-		vetypes.EmissionPoolName:       nil,
+		vetypes.EmissionPoolName:       {authtypes.Minter},
 		vetypes.DistributionPoolName:   nil,
 		gaugetypes.ModuleName:          nil,
 		votertypes.ModuleName:          nil,

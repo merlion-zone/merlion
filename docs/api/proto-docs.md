@@ -234,6 +234,35 @@
     - [Checkpoint](#merlion.ve.v1.Checkpoint)
     - [LockedBalance](#merlion.ve.v1.LockedBalance)
   
+- [merlion/vesting/v1/genesis.proto](#merlion/vesting/v1/genesis.proto)
+    - [AllocationAddresses](#merlion.vesting.v1.AllocationAddresses)
+    - [AllocationAmounts](#merlion.vesting.v1.AllocationAmounts)
+    - [GenesisState](#merlion.vesting.v1.GenesisState)
+    - [Params](#merlion.vesting.v1.Params)
+  
+- [merlion/vesting/v1/vesting.proto](#merlion/vesting/v1/vesting.proto)
+    - [Airdrop](#merlion.vesting.v1.Airdrop)
+  
+- [merlion/vesting/v1/query.proto](#merlion/vesting/v1/query.proto)
+    - [QueryAirdropRequest](#merlion.vesting.v1.QueryAirdropRequest)
+    - [QueryAirdropResponse](#merlion.vesting.v1.QueryAirdropResponse)
+    - [QueryAirdropsRequest](#merlion.vesting.v1.QueryAirdropsRequest)
+    - [QueryAirdropsResponse](#merlion.vesting.v1.QueryAirdropsResponse)
+    - [QueryParamsRequest](#merlion.vesting.v1.QueryParamsRequest)
+    - [QueryParamsResponse](#merlion.vesting.v1.QueryParamsResponse)
+  
+    - [Query](#merlion.vesting.v1.Query)
+  
+- [merlion/vesting/v1/tx.proto](#merlion/vesting/v1/tx.proto)
+    - [MsgAddAirdrops](#merlion.vesting.v1.MsgAddAirdrops)
+    - [MsgAddAirdropsResponse](#merlion.vesting.v1.MsgAddAirdropsResponse)
+    - [MsgExecuteAirdrops](#merlion.vesting.v1.MsgExecuteAirdrops)
+    - [MsgExecuteAirdropsResponse](#merlion.vesting.v1.MsgExecuteAirdropsResponse)
+    - [MsgSetAllocationAddress](#merlion.vesting.v1.MsgSetAllocationAddress)
+    - [MsgSetAllocationAddressResponse](#merlion.vesting.v1.MsgSetAllocationAddressResponse)
+  
+    - [Msg](#merlion.vesting.v1.Msg)
+  
 - [merlion/voter/v1/genesis.proto](#merlion/voter/v1/genesis.proto)
     - [GenesisState](#merlion.voter.v1.GenesisState)
     - [Params](#merlion.voter.v1.Params)
@@ -3277,6 +3306,346 @@ LockedBalance represents locked amount and unlock time of a ve.
  <!-- end enums -->
 
  <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/vesting/v1/genesis.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/vesting/v1/genesis.proto
+
+
+
+<a name="merlion.vesting.v1.AllocationAddresses"></a>
+
+### AllocationAddresses
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `team_vesting_addr` | [string](#string) |  |  |
+| `strategic_reserve_custodian_addr` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.AllocationAmounts"></a>
+
+### AllocationAmounts
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `total_amount` | [string](#string) |  |  |
+| `airdrop_amount` | [string](#string) |  |  |
+| `ve_vesting_amount` | [string](#string) |  |  |
+| `staking_reward_amount` | [string](#string) |  |  |
+| `community_pool_amount` | [string](#string) |  |  |
+| `strategic_reserve_amount` | [string](#string) |  |  |
+| `team_vesting_amount` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.GenesisState"></a>
+
+### GenesisState
+GenesisState defines the vesting module's genesis state.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#merlion.vesting.v1.Params) |  |  |
+| `allocation_addresses` | [AllocationAddresses](#merlion.vesting.v1.AllocationAddresses) |  |  |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.Params"></a>
+
+### Params
+Params defines the parameters for the module.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `allocation` | [AllocationAmounts](#merlion.vesting.v1.AllocationAmounts) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/vesting/v1/vesting.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/vesting/v1/vesting.proto
+
+
+
+<a name="merlion.vesting.v1.Airdrop"></a>
+
+### Airdrop
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `target_addr` | [string](#string) |  |  |
+| `amount` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="merlion/vesting/v1/query.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/vesting/v1/query.proto
+
+
+
+<a name="merlion.vesting.v1.QueryAirdropRequest"></a>
+
+### QueryAirdropRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `target_addr` | [string](#string) |  |  |
+| `completed` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.QueryAirdropResponse"></a>
+
+### QueryAirdropResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `airdrop` | [Airdrop](#merlion.vesting.v1.Airdrop) |  |  |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.QueryAirdropsRequest"></a>
+
+### QueryAirdropsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `completed` | [bool](#bool) |  | pagination defines an optional pagination for the request. |
+| `pagination` | [cosmos.base.query.v1beta1.PageRequest](#cosmos.base.query.v1beta1.PageRequest) |  |  |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.QueryAirdropsResponse"></a>
+
+### QueryAirdropsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `airdrops` | [Airdrop](#merlion.vesting.v1.Airdrop) | repeated | airdrops contains all the queried airdrops. |
+| `pagination` | [cosmos.base.query.v1beta1.PageResponse](#cosmos.base.query.v1beta1.PageResponse) |  | pagination defines the pagination in the response. |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.QueryParamsRequest"></a>
+
+### QueryParamsRequest
+QueryParamsRequest is request type for the Query/Params RPC method.
+
+
+
+
+
+
+<a name="merlion.vesting.v1.QueryParamsResponse"></a>
+
+### QueryParamsResponse
+QueryParamsResponse is response type for the Query/Params RPC method.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `params` | [Params](#merlion.vesting.v1.Params) |  | params holds all the parameters of this module. |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="merlion.vesting.v1.Query"></a>
+
+### Query
+Query defines the vesting gRPC querier service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `Airdrops` | [QueryAirdropsRequest](#merlion.vesting.v1.QueryAirdropsRequest) | [QueryAirdropsResponse](#merlion.vesting.v1.QueryAirdropsResponse) | Airdrops queries airdrop targets. | GET|/merlion/vesting/v1/airdrops|
+| `Airdrop` | [QueryAirdropRequest](#merlion.vesting.v1.QueryAirdropRequest) | [QueryAirdropResponse](#merlion.vesting.v1.QueryAirdropResponse) | Airdrops queries airdrop target for given address. | GET|/merlion/vesting/v1/airdrops/{target_addr}|
+| `Params` | [QueryParamsRequest](#merlion.vesting.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.vesting.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/vesting/v1/params|
+
+ <!-- end services -->
+
+
+
+<a name="merlion/vesting/v1/tx.proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## merlion/vesting/v1/tx.proto
+
+
+
+<a name="merlion.vesting.v1.MsgAddAirdrops"></a>
+
+### MsgAddAirdrops
+MsgAddAirdrops represents a message to add airdrop targets.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `airdrops` | [Airdrop](#merlion.vesting.v1.Airdrop) | repeated |  |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.MsgAddAirdropsResponse"></a>
+
+### MsgAddAirdropsResponse
+MsgMintBySwapResponse defines the Msg/AddAirdrops response type.
+
+
+
+
+
+
+<a name="merlion.vesting.v1.MsgExecuteAirdrops"></a>
+
+### MsgExecuteAirdrops
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `max_count` | [uint64](#uint64) |  | max count of airdrops performed this time |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.MsgExecuteAirdropsResponse"></a>
+
+### MsgExecuteAirdropsResponse
+
+
+
+
+
+
+
+<a name="merlion.vesting.v1.MsgSetAllocationAddress"></a>
+
+### MsgSetAllocationAddress
+MsgSetAllocationAddress represents a message to set allocation address.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `sender` | [string](#string) |  |  |
+| `team_vesting_addr` | [string](#string) |  |  |
+| `strategic_reserve_custodian_addr` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.vesting.v1.MsgSetAllocationAddressResponse"></a>
+
+### MsgSetAllocationAddressResponse
+MsgSetAllocationAddressResponse defines the Msg/SetAllocationAddress response
+type.
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="merlion.vesting.v1.Msg"></a>
+
+### Msg
+Msg defines the vesting Msg service.
+
+| Method Name | Request Type | Response Type | Description | HTTP Verb | Endpoint |
+| ----------- | ------------ | ------------- | ------------| ------- | -------- |
+| `AddAirdrops` | [MsgAddAirdrops](#merlion.vesting.v1.MsgAddAirdrops) | [MsgAddAirdropsResponse](#merlion.vesting.v1.MsgAddAirdropsResponse) | AddAirdrops adds airdrop targets. Should only be called by core team multisig. | GET|/merlion/vesting/v1/tx/add_airdrops|
+| `ExecuteAirdrops` | [MsgExecuteAirdrops](#merlion.vesting.v1.MsgExecuteAirdrops) | [MsgExecuteAirdropsResponse](#merlion.vesting.v1.MsgExecuteAirdropsResponse) | ExecuteAirdrops performs airdrops. Should only be called by core team multisig. | GET|/merlion/vesting/v1/tx/exec_airdrops|
+| `SetAllocationAddress` | [MsgSetAllocationAddress](#merlion.vesting.v1.MsgSetAllocationAddress) | [MsgSetAllocationAddressResponse](#merlion.vesting.v1.MsgSetAllocationAddressResponse) | SetAllocationAddress sets allocation address of team vesting or strategic_reserve_custodian. | GET|/merlion/vesting/v1/tx/set_allocation_address|
 
  <!-- end services -->
 

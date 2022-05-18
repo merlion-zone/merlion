@@ -13,15 +13,9 @@ func NewEmitter(keeper Keeper) Emitter {
 	return Emitter{keeper: keeper}
 }
 
-func (e Emitter) AddTotalEmission(ctx sdk.Context, sender sdk.AccAddress, emission sdk.Int) error {
+func (e Emitter) AddTotalEmission(ctx sdk.Context, emission sdk.Int) error {
 	if !emission.IsPositive() {
 		panic("emission must be nonzero")
-	}
-
-	coin := sdk.NewCoin(e.keeper.LockDenom(ctx), emission)
-	err := e.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.EmissionPoolName, sdk.NewCoins(coin))
-	if err != nil {
-		return err
 	}
 
 	total := e.keeper.GetTotalEmission(ctx)
@@ -65,25 +59,39 @@ func (e Emitter) EmissionCompensation(ctx sdk.Context, emission sdk.Int) sdk.Int
 	return emission.ToDec().Mul(sdk.OneDec().Sub(e.CirculationRate(ctx))).TruncateInt()
 }
 
+// Emit emits coin rewards of every period, on the basis of predefined emission policy.
+// The part of compensation for ve holders will be sent into the distribution pool.
+// The remaining will be deposited as rewards by the voter module.
 func (e Emitter) Emit(ctx sdk.Context) sdk.Int {
 	timestamp := types.RegulatedUnixTimeFromNow(ctx, 0)
 	timeLast := e.keeper.GetEmissionLastTimestamp(ctx)
+	// only allow one emission per period
 	if timestamp-timeLast < types.RegulatedPeriod {
 		return sdk.ZeroInt()
 	}
 
-	e.keeper.SetEmissionLastTimestamp(ctx, timestamp)
-
 	emission := e.Emission(ctx)
+
+	// mint emission amount
+	emissionAmt := sdk.NewCoin(e.keeper.LockDenom(ctx), emission)
+	err := e.keeper.bankKeeper.MintCoins(ctx, types.EmissionPoolName, sdk.NewCoins(emissionAmt))
+	if err != nil {
+		panic(err)
+	}
+
+	e.keeper.SetEmissionLastTimestamp(ctx, timestamp)
 	e.keeper.SetEmissionAtLastPeriod(ctx, emission)
 
+	// calculate compensation for ve holders due to inflation loss
 	compensation := e.EmissionCompensation(ctx, emission)
-	coin := sdk.NewCoin(e.keeper.LockDenom(ctx), compensation)
-	err := e.keeper.bankKeeper.SendCoinsFromModuleToModule(ctx, types.EmissionPoolName, types.DistributionPoolName, sdk.NewCoins(coin))
+	compensationAmt := sdk.NewCoin(e.keeper.LockDenom(ctx), compensation)
+	// send compensation into distribution pool
+	err = e.keeper.bankKeeper.SendCoinsFromModuleToModule(ctx, types.EmissionPoolName, types.DistributionPoolName, sdk.NewCoins(compensationAmt))
 	if err != nil {
 		panic(err)
 	}
 	NewDistributor(e.keeper).DistributePerPeriod(ctx)
+
 	e.keeper.RegulateCheckpoint(ctx)
 
 	emission = emission.Sub(compensation)

@@ -1,0 +1,57 @@
+syntax = "proto3";
+package merlion.vesting.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/merlion-zone/merlion/x/vesting/types";
+
+// GenesisState defines the vesting module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  AllocationAddresses allocation_addresses = 2 [ (gogoproto.nullable) = false ];
+}
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  AllocationAmounts allocation = 1 [ (gogoproto.nullable) = false ];
+}
+
+message AllocationAmounts {
+  string total_amount = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  string airdrop_amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  string ve_vesting_amount = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  string staking_reward_amount = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  string community_pool_amount = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  string strategic_reserve_amount = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  string team_vesting_amount = 7 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message AllocationAddresses {
+  option (gogoproto.goproto_getters) = false;
+
+  string team_vesting_addr = 1;
+  string strategic_reserve_custodian_addr = 2;
+}
