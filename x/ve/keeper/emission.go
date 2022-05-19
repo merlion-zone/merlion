@@ -13,7 +13,7 @@ func NewEmitter(keeper Keeper) Emitter {
 	return Emitter{keeper: keeper}
 }
 
-func (e Emitter) AddTotalEmission(ctx sdk.Context, emission sdk.Int) error {
+func (e Emitter) AddTotalEmission(ctx sdk.Context, emission sdk.Int) {
 	if !emission.IsPositive() {
 		panic("emission must be nonzero")
 	}
@@ -27,8 +27,6 @@ func (e Emitter) AddTotalEmission(ctx sdk.Context, emission sdk.Int) error {
 
 	emissionLast := e.keeper.GetEmissionAtLastPeriod(ctx)
 	e.keeper.SetEmissionAtLastPeriod(ctx, emissionLast.Add(emissionInitial))
-
-	return nil
 }
 
 func (e Emitter) CirculationSupply(ctx sdk.Context) sdk.Int {
@@ -96,6 +94,10 @@ func (e Emitter) Emit(ctx sdk.Context) sdk.Int {
 
 	emission = emission.Sub(compensation)
 	return emission
+}
+
+func (k Keeper) AddTotalEmission(ctx sdk.Context, emission sdk.Int) {
+	NewEmitter(k).AddTotalEmission(ctx, emission)
 }
 
 func (k Keeper) SetTotalEmission(ctx sdk.Context, total sdk.Int) {

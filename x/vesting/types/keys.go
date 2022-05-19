@@ -10,7 +10,8 @@ const (
 	ModuleName = "vesting"
 
 	// StoreKey defines the primary module store key
-	StoreKey = ModuleName
+	// Here use "vs" to avoid potential key collision with the ve module
+	StoreKey = "vs"
 
 	// RouterKey is the message route for slashing
 	RouterKey = ModuleName

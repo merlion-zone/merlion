@@ -139,6 +139,9 @@ func (k Keeper) DepositReward(ctx sdk.Context, sender sdk.AccAddress, amount sdk
 
 	index := k.GetIndex(ctx)
 	totalVotes := k.GetTotalVotes(ctx)
+	if totalVotes.IsZero() {
+		return
+	}
 	index = index.Add(amount.Quo(totalVotes))
 	k.SetIndex(ctx, index)
 }

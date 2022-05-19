@@ -2,10 +2,82 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/vesting/types"
 )
 
-func (k Keeper) AllocateAtGenesis(ctx sdk.Context) {
+func (k Keeper) AllocateAtGenesis(ctx sdk.Context, genState types.GenesisState) {
+	startTime := ctx.BlockTime().Unix()
+	alloc := genState.Params.Allocation
+
+	k.createContinuousVestingAccount(ctx, types.StakingRewardVestingName, alloc.StakingRewardAmount, startTime, types.StakingRewardVestingTime)
+	k.createContinuousVestingAccount(ctx, types.CommunityPoolVestingName, alloc.CommunityPoolAmount, startTime, types.CommunityPoolVestingTime)
+	k.createContinuousVestingAccount(ctx, types.TeamVestingName, alloc.TeamVestingAmount, startTime, types.TeamVestingTime)
+
+	k.veKeeper.AddTotalEmission(ctx, alloc.VeVestingAmount)
+
+	srAmount := sdk.NewCoin(merlion.BaseDenom, alloc.StrategicReserveAmount)
+	err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(srAmount))
+	if err != nil {
+		panic(err)
+	}
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, genState.AllocationAddresses.GetStrategicReserveCustodianAddr(), sdk.NewCoins(srAmount))
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (k Keeper) ClaimVested(ctx sdk.Context) {
+	vestedClaim := []struct {
+		vestingName     string
+		destinationName string
+		destinationAddr sdk.AccAddress
+	}{
+		{types.StakingRewardVestingName, k.feeCollectorName, sdk.AccAddress{}},
+		{types.CommunityPoolVestingName, "", sdk.AccAddress{}},
+		{types.TeamVestingName, "", k.GetAllocationAddresses(ctx).GetTeamVestingAddr()},
+	}
+
+	for _, claim := range vestedClaim {
+		vestingAddr := k.getVestingAddress(claim.vestingName)
+		spendable := k.bankKeeper.SpendableCoins(ctx, vestingAddr)
+
+		if len(claim.destinationName) != 0 {
+			err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, vestingAddr, claim.destinationName, spendable)
+			if err != nil {
+				panic(err)
+			}
+		} else if !claim.destinationAddr.Empty() {
+			err := k.bankKeeper.SendCoins(ctx, vestingAddr, claim.destinationAddr, spendable)
+			if err != nil {
+				panic(err)
+			}
+		} else {
+			k.distrKeeper.FundCommunityPool(ctx, spendable, vestingAddr)
+		}
+	}
+}
+
+func (k Keeper) createContinuousVestingAccount(ctx sdk.Context, vestingName string, amount sdk.Int, startTime int64, duration int64) {
+	baseAccount := k.accountKeeper.NewAccountWithAddress(ctx, k.getVestingAddress(vestingName))
+	amt := sdk.NewCoin(merlion.BaseDenom, amount)
+	vestingAccount := vestingtypes.NewContinuousVestingAccount(baseAccount.(*authtypes.BaseAccount), sdk.NewCoins(amt), startTime, startTime+duration)
+	k.accountKeeper.SetAccount(ctx, vestingAccount)
+
+	err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(amt))
+	if err != nil {
+		panic(err)
+	}
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, k.getVestingAddress(vestingName), sdk.NewCoins(amt))
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (k Keeper) getVestingAddress(vestingName string) sdk.AccAddress {
+	return authtypes.NewModuleAddress(vestingName)
 }
 
 // SetAllocationAddresses sets allocation target addresses

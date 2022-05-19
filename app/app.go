@@ -27,7 +27,6 @@ import (
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -53,9 +52,6 @@ import (
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/cosmos/cosmos-sdk/x/mint"
-	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	nfttypes "github.com/cosmos/cosmos-sdk/x/nft"
 	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
 	nft "github.com/cosmos/cosmos-sdk/x/nft/module"
@@ -98,6 +94,7 @@ import (
 	voterkeeper "github.com/merlion-zone/merlion/x/voter/keeper"
 	votertypes "github.com/merlion-zone/merlion/x/voter/types"
 	"github.com/spf13/cast"
+	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
@@ -112,9 +109,6 @@ import (
 	feemarketkeeper "github.com/tharsis/ethermint/x/feemarket/keeper"
 	feemarkettypes "github.com/tharsis/ethermint/x/feemarket/types"
 	"github.com/tharsis/evmos/v3/app/ante"
-	vestingtypes "github.com/tharsis/evmos/v3/x/vesting/types"
-
-	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 
 	"github.com/merlion-zone/merlion/docs"
 	"github.com/merlion-zone/merlion/x/erc20"
@@ -127,6 +121,9 @@ import (
 	"github.com/merlion-zone/merlion/x/oracle"
 	oraclekeeper "github.com/merlion-zone/merlion/x/oracle/keeper"
 	oracletypes "github.com/merlion-zone/merlion/x/oracle/types"
+	customvesting "github.com/merlion-zone/merlion/x/vesting"
+	customvestingkeeper "github.com/merlion-zone/merlion/x/vesting/keeper"
+	customvestingtypes "github.com/merlion-zone/merlion/x/vesting/types"
 )
 
 // App represents a Cosmos SDK application that can be run as a server and with an exportable state
@@ -183,7 +180,6 @@ var (
 		bank.AppModuleBasic{},
 		capability.AppModuleBasic{},
 		customstaking.AppModuleBasic{},
-		mint.AppModuleBasic{},
 		distr.AppModuleBasic{},
 		gov.NewAppModuleBasic(getGovProposalHandlers()...),
 		params.AppModuleBasic{},
@@ -194,7 +190,6 @@ var (
 		upgrade.AppModuleBasic{},
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
-		vesting.AppModuleBasic{},
 		evm.AppModuleBasic{},
 		feemarket.AppModuleBasic{},
 		erc20.AppModuleBasic{},
@@ -204,13 +199,13 @@ var (
 		ve.AppModuleBasic{},
 		gauge.AppModuleBasic{},
 		voter.AppModuleBasic{},
+		customvesting.AppModuleBasic{},
 	)
 
 	// module account permissions
 	maccPerms = map[string][]string{
 		authtypes.FeeCollectorName:     nil,
 		distrtypes.ModuleName:          nil,
-		minttypes.ModuleName:           {authtypes.Minter},
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
@@ -225,6 +220,7 @@ var (
 		vetypes.DistributionPoolName:   nil,
 		gaugetypes.ModuleName:          nil,
 		votertypes.ModuleName:          nil,
+		customvestingtypes.ModuleName:  {authtypes.Minter},
 	}
 
 	// module accounts that are allowed to receive tokens
@@ -274,7 +270,6 @@ type Merlion struct {
 	CapabilityKeeper *capabilitykeeper.Keeper
 	StakingKeeper    customstakingkeeper.Keeper
 	SlashingKeeper   slashingkeeper.Keeper
-	MintKeeper       mintkeeper.Keeper
 	DistrKeeper      distrkeeper.Keeper
 	GovKeeper        govkeeper.Keeper
 	CrisisKeeper     crisiskeeper.Keeper
@@ -302,6 +297,8 @@ type Merlion struct {
 	VeKeeper    vekeeper.Keeper
 	GaugeKeeper gaugekeeper.Keeper
 	VoterKeeper voterkeeper.Keeper
+
+	VestingKeeper customvestingkeeper.Keeper
 
 	// mm is the module manager
 	mm *module.Manager
@@ -336,7 +333,7 @@ func NewMerlion(
 
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey,
-		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
+		distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		evmtypes.StoreKey, feemarkettypes.StoreKey,
@@ -347,6 +344,7 @@ func NewMerlion(
 		vetypes.StoreKey,
 		gaugetypes.StoreKey,
 		votertypes.StoreKey,
+		customvestingtypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey, evmtypes.TransientKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -402,10 +400,6 @@ func NewMerlion(
 		appCodec, keys[stakingtypes.StoreKey], app.GetSubspace(stakingtypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.NftKeeper, app.VeKeeper,
 	)
 
-	app.MintKeeper = mintkeeper.NewKeeper(
-		appCodec, keys[minttypes.StoreKey], app.GetSubspace(minttypes.ModuleName), &stakingKeeper,
-		app.AccountKeeper, app.BankKeeper, authtypes.FeeCollectorName,
-	)
 	app.DistrKeeper = distrkeeper.NewKeeper(
 		appCodec, keys[distrtypes.StoreKey], app.GetSubspace(distrtypes.ModuleName), app.AccountKeeper, app.BankKeeper,
 		&stakingKeeper, authtypes.FeeCollectorName, app.BlockedAddrs(),
@@ -522,6 +516,9 @@ func NewMerlion(
 		app.GetSubspace(votertypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.VeKeeper, app.GaugeKeeper)
 	voterModule := voter.NewAppModule(appCodec, app.VoterKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.VestingKeeper = *customvestingkeeper.NewKeeper(appCodec, keys[customvestingtypes.StoreKey], app.GetSubspace(customvestingtypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.VeKeeper, authtypes.FeeCollectorName)
+	vestingModule := customvesting.NewAppModule(appCodec, app.VestingKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
@@ -542,13 +539,11 @@ func NewMerlion(
 			encodingConfig.TxConfig,
 		),
 		auth.NewAppModule(appCodec, app.AccountKeeper, nil),
-		vesting.NewAppModule(app.AccountKeeper, app.BankKeeper),
 		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper),
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
 		crisis.NewAppModule(&app.CrisisKeeper, skipGenesisInvariants),
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
-		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		customstaking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
@@ -566,6 +561,7 @@ func NewMerlion(
 		veModule,
 		gaugeModule,
 		voterModule,
+		vestingModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -577,7 +573,6 @@ func NewMerlion(
 		capabilitytypes.ModuleName,
 		feemarkettypes.ModuleName,
 		evmtypes.ModuleName,
-		minttypes.ModuleName,
 		distrtypes.ModuleName,
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
@@ -586,7 +581,6 @@ func NewMerlion(
 		// no-op modules
 		genutiltypes.ModuleName,
 		authtypes.ModuleName,
-		vestingtypes.ModuleName,
 		banktypes.ModuleName,
 		feegrant.ModuleName,
 		crisistypes.ModuleName,
@@ -600,6 +594,7 @@ func NewMerlion(
 		vetypes.ModuleName,
 		gaugetypes.ModuleName,
 		votertypes.ModuleName,
+		customvestingtypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -613,11 +608,9 @@ func NewMerlion(
 		// no-op modules
 		genutiltypes.ModuleName,
 		authtypes.ModuleName,
-		vestingtypes.ModuleName,
 		banktypes.ModuleName,
 		capabilitytypes.ModuleName,
 		feegrant.ModuleName,
-		minttypes.ModuleName,
 		slashingtypes.ModuleName,
 		distrtypes.ModuleName,
 		upgradetypes.ModuleName,
@@ -630,6 +623,7 @@ func NewMerlion(
 		vetypes.ModuleName,
 		gaugetypes.ModuleName,
 		votertypes.ModuleName,
+		customvestingtypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -640,7 +634,6 @@ func NewMerlion(
 	app.mm.SetOrderInitGenesis(
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
-		vestingtypes.ModuleName,
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
 		nfttypes.ModuleName,
@@ -648,7 +641,6 @@ func NewMerlion(
 		stakingtypes.ModuleName,
 		slashingtypes.ModuleName,
 		govtypes.ModuleName,
-		minttypes.ModuleName,
 		crisistypes.ModuleName,
 		ibchost.ModuleName,
 		genutiltypes.ModuleName,
@@ -664,6 +656,7 @@ func NewMerlion(
 		makertypes.ModuleName,
 		gaugetypes.ModuleName,
 		votertypes.ModuleName,
+		customvestingtypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(&app.CrisisKeeper)
@@ -677,7 +670,6 @@ func NewMerlion(
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
-		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper),
 		customstaking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
@@ -694,6 +686,7 @@ func NewMerlion(
 		veModule,
 		gaugeModule,
 		voterModule,
+		vestingModule,
 	)
 	app.sm.RegisterStoreDecoders()
 
@@ -910,7 +903,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(authtypes.ModuleName)
 	paramsKeeper.Subspace(banktypes.ModuleName)
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
-	paramsKeeper.Subspace(minttypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
 	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govtypes.ParamKeyTable())
@@ -926,6 +918,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(vetypes.ModuleName)
 	paramsKeeper.Subspace(gaugetypes.ModuleName)
 	paramsKeeper.Subspace(votertypes.ModuleName)
+	paramsKeeper.Subspace(customvestingtypes.ModuleName)
 
 	return paramsKeeper
 }

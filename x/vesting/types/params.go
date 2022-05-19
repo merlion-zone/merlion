@@ -16,13 +16,13 @@ var (
 
 // Default parameter values
 var (
-	DefaultTotalAmount                = sdk.NewInt(1000_000_000).Mul(ethermint.PowerReduction)
-	DefaultAirdropAmountRate          = sdk.NewDecWithPrec(5, 2)  // 5%
-	DefaultVeVestingAmountRate        = sdk.NewDecWithPrec(45, 2) // 45%
-	DefaultStakingRewardAmountRate    = sdk.NewDecWithPrec(5, 2)  // 5%
-	DefaultCommunityPoolAmountRate    = sdk.NewDecWithPrec(5, 2)  // 5%
-	DefaultStrategicReserveAmountRate = sdk.NewDecWithPrec(20, 2) // 20%
-	DefaultTeamVestingAmountRate      = sdk.NewDecWithPrec(20, 2) // 20%
+	DefaultTotalAmount                = sdk.NewInt(1000_000_000).Mul(ethermint.PowerReduction) // one billion
+	DefaultAirdropAmountRate          = sdk.NewDecWithPrec(5, 2)                               // 5%
+	DefaultVeVestingAmountRate        = sdk.NewDecWithPrec(45, 2)                              // 45%
+	DefaultStakingRewardAmountRate    = sdk.NewDecWithPrec(5, 2)                               // 5%
+	DefaultCommunityPoolAmountRate    = sdk.NewDecWithPrec(5, 2)                               // 5%
+	DefaultStrategicReserveAmountRate = sdk.NewDecWithPrec(20, 2)                              // 20%
+	DefaultTeamVestingAmountRate      = sdk.NewDecWithPrec(20, 2)                              // 20%
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)

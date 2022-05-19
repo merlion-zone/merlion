@@ -29,7 +29,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	k.SetAllocationAddresses(ctx, addr)
 
 	if ctx.BlockHeight() <= 1 {
-		k.AllocateAtGenesis(ctx)
+		k.AllocateAtGenesis(ctx, genState)
 	}
 }
 

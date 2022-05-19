@@ -12,7 +12,6 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/go-bip39"
 	"github.com/gogo/protobuf/proto"
@@ -182,11 +181,6 @@ func overwriteDefaultGenState(cdc codec.JSONCodec, appState map[string]json.RawM
 	cdc.MustUnmarshalJSON(appState[evmtypes.ModuleName], &evmGenState)
 	evmGenState.Params.EvmDenom = merlion.AttoLionDenom
 	appState[evmtypes.ModuleName] = cdc.MustMarshalJSON(&evmGenState)
-
-	var mintGenState minttypes.GenesisState
-	cdc.MustUnmarshalJSON(appState[minttypes.ModuleName], &mintGenState)
-	mintGenState.Params.MintDenom = merlion.AttoLionDenom
-	appState[minttypes.ModuleName] = cdc.MustMarshalJSON(&mintGenState)
 
 	return json.MarshalIndent(appState, "", " ")
 }

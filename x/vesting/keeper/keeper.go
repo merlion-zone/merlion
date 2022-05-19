@@ -14,6 +14,10 @@ type Keeper struct {
 
 	accountKeeper types.AccountKeeper
 	bankKeeper    types.BankKeeper
+	distrKeeper   types.DistributionKeeper
+	veKeeper      types.VeKeeper
+
+	feeCollectorName string
 }
 
 // NewKeeper creates a new vesting Keeper instance
@@ -23,6 +27,8 @@ func NewKeeper(
 	ps paramtypes.Subspace,
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
+	veKeeper types.VeKeeper,
+	feeCollectorName string,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -30,10 +36,12 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:           cdc,
-		storeKey:      storeKey,
-		paramstore:    ps,
-		accountKeeper: accountKeeper,
-		bankKeeper:    bankKeeper,
+		cdc:              cdc,
+		storeKey:         storeKey,
+		paramstore:       ps,
+		accountKeeper:    accountKeeper,
+		bankKeeper:       bankKeeper,
+		veKeeper:         veKeeper,
+		feeCollectorName: feeCollectorName,
 	}
 }
