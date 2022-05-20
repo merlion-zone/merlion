@@ -16,7 +16,7 @@ SIMAPP = ./app
 HTTPS_GIT := https://github.com/merlion-zone/merlion.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf
-NAMESPACE := merlion
+NAMESPACE := merlionzone
 PROJECT := merlion
 DOCKER_IMAGE := $(NAMESPACE)/$(PROJECT)
 COMMIT_HASH := $(shell git rev-parse --short=7 HEAD)
@@ -347,18 +347,13 @@ else
 	go test -mod=readonly $(ARGS)  $(EXTRA_ARGS) $(TEST_PACKAGES)
 endif
 
-test-import:
-	@go test ./tests/importer -v --vet=off --run=TestImportBlocks --datadir tmp \
-	--blockchain blockchain
-	rm -rf tests/importer/tmp
-
 test-rpc:
 	./scripts/integration-test-all.sh -t "rpc" -q 1 -z 1 -s 2 -m "rpc" -r "true"
 
 test-rpc-pending:
 	./scripts/integration-test-all.sh -t "pending" -q 1 -z 1 -s 2 -m "pending" -r "true"
 
-.PHONY: run-tests test test-all test-import test-rpc $(TEST_TARGETS)
+.PHONY: run-tests test test-all test-rpc $(TEST_TARGETS)
 
 test-sim-nondeterminism:
 	@echo "Running non-determinism test..."
@@ -518,23 +513,14 @@ proto-update-deps:
 
 # Build image for a local testnet
 localnet-build:
-	@$(MAKE) -C networks/local
+	$(MAKE) -C contrib/localnet
 
-# Start a 4-node testnet locally
-localnet-start: localnet-stop
-ifeq ($(OS),Windows_NT)
-	mkdir localnet-setup &
-	@$(MAKE) localnet-build
-
-	IF not exist "build/node0/$(MERLION_BINARY)/config/genesis.json" docker run --rm -v $(CURDIR)/build\merlion\Z merliond/node "./merliond testnet --v 4 -o /merlion --keyring-backend=test --ip-addresses merliondnode0,merliondnode1,merliondnode2,merliondnode3"
+# Start a multi-node testnet locally
+localnet-start: localnet-stop build-linux localnet-build
+	@if ! [ -f $(BUILDDIR)/node0/merliond/config/genesis.json ]; \
+	then docker run --rm -v $(BUILDDIR):/merlion:Z merlionzone/localnetnode testnet init-files -v 4 -o /merlion --starting-ip-address 192.168.10.2 --keyring-backend=test; \
+	fi
 	docker-compose up -d
-else
-	mkdir -p localnet-setup
-	@$(MAKE) localnet-build
-
-	if ! [ -f localnet-setup/node0/$(MERLION_BINARY)/config/genesis.json ]; then docker run --rm -v $(CURDIR)/localnet-setup:/merlion:Z merliond/node "./merliond testnet --v 4 -o /merlion --keyring-backend=test --ip-addresses merliondnode0,merliondnode1,merliondnode2,merliondnode3"; fi
-	docker-compose up -d
-endif
 
 # Stop testnet
 localnet-stop:
@@ -543,7 +529,7 @@ localnet-stop:
 # Clean testnet
 localnet-clean:
 	docker-compose down
-	sudo rm -rf localnet-setup
+	sudo rm -rf $(BUILDDIR)
 
  # Reset testnet
 localnet-unsafe-reset:
