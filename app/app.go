@@ -516,7 +516,7 @@ func NewMerlion(
 		app.GetSubspace(votertypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.VeKeeper, app.GaugeKeeper)
 	voterModule := voter.NewAppModule(appCodec, app.VoterKeeper, app.AccountKeeper, app.BankKeeper)
 
-	app.VestingKeeper = *customvestingkeeper.NewKeeper(appCodec, keys[customvestingtypes.StoreKey], app.GetSubspace(customvestingtypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.VeKeeper, authtypes.FeeCollectorName)
+	app.VestingKeeper = *customvestingkeeper.NewKeeper(appCodec, keys[customvestingtypes.StoreKey], app.GetSubspace(customvestingtypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.DistrKeeper, app.VeKeeper, authtypes.FeeCollectorName)
 	vestingModule := customvesting.NewAppModule(appCodec, app.VestingKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it

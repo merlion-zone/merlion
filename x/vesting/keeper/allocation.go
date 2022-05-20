@@ -43,19 +43,20 @@ func (k Keeper) ClaimVested(ctx sdk.Context) {
 	for _, claim := range vestedClaim {
 		vestingAddr := k.getVestingAddress(claim.vestingName)
 		spendable := k.bankKeeper.SpendableCoins(ctx, vestingAddr)
+		if !spendable.IsAllPositive() {
+			continue
+		}
 
+		var err error
 		if len(claim.destinationName) != 0 {
-			err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, vestingAddr, claim.destinationName, spendable)
-			if err != nil {
-				panic(err)
-			}
+			err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, vestingAddr, claim.destinationName, spendable)
 		} else if !claim.destinationAddr.Empty() {
-			err := k.bankKeeper.SendCoins(ctx, vestingAddr, claim.destinationAddr, spendable)
-			if err != nil {
-				panic(err)
-			}
+			err = k.bankKeeper.SendCoins(ctx, vestingAddr, claim.destinationAddr, spendable)
 		} else {
-			k.distrKeeper.FundCommunityPool(ctx, spendable, vestingAddr)
+			err = k.distrKeeper.FundCommunityPool(ctx, spendable, vestingAddr)
+		}
+		if err != nil {
+			panic(err)
 		}
 	}
 }

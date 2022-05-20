@@ -67,6 +67,10 @@ func (e Emitter) Emit(ctx sdk.Context) sdk.Int {
 	if timestamp-timeLast < types.RegulatedPeriod {
 		return sdk.ZeroInt()
 	}
+	// TODO: add initialization
+	if true {
+		return sdk.ZeroInt()
+	}
 
 	emission := e.Emission(ctx)
 

@@ -25,7 +25,7 @@ type BankKeeper interface {
 
 // DistributionKeeper defines the expected distribution keeper.
 type DistributionKeeper interface {
-	FundCommunityPool(ctx sdk.Context, amount sdk.Coins, sender sdk.AccAddress)
+	FundCommunityPool(ctx sdk.Context, amount sdk.Coins, sender sdk.AccAddress) error
 }
 
 // VeKeeper defines the expected ve keeper.
