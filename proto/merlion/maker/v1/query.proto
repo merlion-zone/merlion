@@ -109,6 +109,13 @@ service Query {
       returns (QuerySellBackingResponse) {
     option (google.api.http).get = "/merlion/maker/v1/query_sell_backing";
   }
+
+  // MintByCollateralRequirement queries the requirement of when minting by
+  // collateral.
+  rpc MintByCollateralRequirement(QueryMintByCollateralRequirementRequest)
+      returns (QueryMintByCollateralRequirementResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/query_mint_by_collateral";
+  }
 }
 
 message QueryAllBackingRiskParamsRequest {}
@@ -240,4 +247,22 @@ message QuerySellBackingRequest {
 message QuerySellBackingResponse {
   cosmos.base.v1beta1.Coin lion_out = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin sellback_fee = 2 [ (gogoproto.nullable) = false ];
+}
+
+message QueryMintByCollateralRequirementRequest {
+  string address = 1;
+  cosmos.base.v1beta1.Coin mint_target = 2 [ (gogoproto.nullable) = false ];
+  string collateral_denom = 3;
+  cosmos.base.v1beta1.Coin lion_in_max = 4 [ (gogoproto.nullable) = false ];
+}
+
+message QueryMintByCollateralRequirementResponse {
+  cosmos.base.v1beta1.Coin lion_in = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin mint_fee = 2 [ (gogoproto.nullable) = false ];
+  merlion.maker.v1.TotalCollateral total_coll = 3
+      [ (gogoproto.nullable) = false ];
+  merlion.maker.v1.PoolCollateral pool_coll = 4
+      [ (gogoproto.nullable) = false ];
+  merlion.maker.v1.AccountCollateral acc_coll = 5
+      [ (gogoproto.nullable) = false ];
 }

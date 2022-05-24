@@ -330,100 +330,17 @@ func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*t
 
 func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByCollateral) (*types.MsgMintByCollateralResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-
-	collateralDenom := msg.CollateralDenom
-
 	sender, receiver, err := getSenderReceiver(msg.Sender, msg.To)
 	if err != nil {
 		return nil, err
 	}
 
-	// get prices in usd
-	collateralPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, collateralDenom)
+	lionIn, mintFee, totalColl, poolColl, accColl, err := m.Keeper.mintByCollateralRequirement(ctx, sender, msg.MintOut, msg.CollateralDenom, msg.LionInMax)
 	if err != nil {
 		return nil, err
 	}
-	lionPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
-	if err != nil {
-		return nil, err
-	}
-	merPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	// check price lower bound
-	merPriceLowerBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Sub(m.Keeper.MintPriceBias(ctx)))
-	if merPrice.LT(merPriceLowerBound) {
-		return nil, sdkerrors.Wrapf(types.ErrMerPriceTooLow, "%s price too low: %s", merlion.MicroUSDDenom, merPrice)
-	}
-
-	collateralParams, found := m.Keeper.GetCollateralRiskParams(ctx, collateralDenom)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
-	}
-	if !collateralParams.Enabled {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
-	}
-
-	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, sender, collateralDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	// settle interestFee fee
-	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
-
-	// compute mint amount
-	mintFee := computeFee(msg.MintOut, collateralParams.MintFee)
 	mint := msg.MintOut.Add(mintFee)
 
-	// update debt
-	accColl.MerDebt = accColl.MerDebt.Add(mint)
-	poolColl.MerDebt = poolColl.MerDebt.Add(mint)
-	totalColl.MerDebt = totalColl.MerDebt.Add(mint)
-
-	if collateralParams.MaxMerMint != nil {
-		if poolColl.MerDebt.Amount.GT(*collateralParams.MaxMerMint) {
-			return nil, sdkerrors.Wrapf(types.ErrMerCeiling, "mer over ceiling")
-		}
-	}
-
-	// compute actual catalytic lion
-	merDue := accColl.MerDebt.Add(accColl.MerByLion)
-	bestCatalyticLionInUSD := merDue.Amount.ToDec().Mul(*collateralParams.CatalyticLionRatio)
-	lionInMaxInUSD := msg.LionInMax.Amount.ToDec().Mul(lionPrice).TruncateInt()
-	catalyticLionInUSD := sdk.MinDec(bestCatalyticLionInUSD, accColl.MerByLion.Amount.Add(lionInMaxInUSD).ToDec()).TruncateInt()
-
-	// compute actual lion-in
-	lionInInUSD := catalyticLionInUSD.Sub(accColl.MerByLion.Amount)
-	if !lionInInUSD.IsPositive() {
-		lionInInUSD = sdk.ZeroInt()
-	} else {
-		accColl.MerByLion = accColl.MerByLion.AddAmount(lionInInUSD)
-		poolColl.MerByLion = poolColl.MerByLion.AddAmount(lionInInUSD)
-		totalColl.MerByLion = totalColl.MerByLion.AddAmount(lionInInUSD)
-		accColl.MerDebt = accColl.MerDebt.SubAmount(lionInInUSD)
-		poolColl.MerDebt = poolColl.MerDebt.SubAmount(lionInInUSD)
-		totalColl.MerDebt = totalColl.MerDebt.SubAmount(lionInInUSD)
-	}
-	lionIn := sdk.NewCoin(merlion.AttoLionDenom, lionInInUSD.ToDec().Quo(lionPrice).TruncateInt())
-
-	accColl.LionBurned = accColl.LionBurned.Add(lionIn)
-	poolColl.LionBurned = poolColl.LionBurned.Add(lionIn)
-	totalColl.LionBurned = totalColl.LionBurned.Add(lionIn)
-
-	// compute actual catalytic ratio and max loan-to-value
-	maxLoanToValue := maxLoanToValueForAccount(&accColl, &collateralParams)
-
-	// check max mintable mer
-	collateralInUSD := accColl.Collateral.Amount.ToDec().Mul(collateralPrice)
-	maxMerMintable := collateralInUSD.Mul(maxLoanToValue)
-	if maxMerMintable.LT(accColl.MerDebt.Amount.ToDec()) {
-		return nil, sdkerrors.Wrapf(types.ErrAccountInsufficientCollateral, "account has insufficient collateral: %s", collateralDenom)
-	}
-
-	// eventually update collateral
 	m.Keeper.SetAccountCollateral(ctx, sender, accColl)
 	m.Keeper.SetPoolCollateral(ctx, poolColl)
 	m.Keeper.SetTotalCollateral(ctx, totalColl)

@@ -91,6 +91,8 @@
     - [QueryCollateralPoolResponse](#merlion.maker.v1.QueryCollateralPoolResponse)
     - [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest)
     - [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse)
+    - [QueryMintByCollateralRequirementRequest](#merlion.maker.v1.QueryMintByCollateralRequirementRequest)
+    - [QueryMintByCollateralRequirementResponse](#merlion.maker.v1.QueryMintByCollateralRequirementResponse)
     - [QueryMintBySwapCapacityRequest](#merlion.maker.v1.QueryMintBySwapCapacityRequest)
     - [QueryMintBySwapCapacityResponse](#merlion.maker.v1.QueryMintBySwapCapacityResponse)
     - [QueryMintBySwapRequirementRequest](#merlion.maker.v1.QueryMintBySwapRequirementRequest)
@@ -1390,6 +1392,43 @@ parameters.
 
 
 
+<a name="merlion.maker.v1.QueryMintByCollateralRequirementRequest"></a>
+
+### QueryMintByCollateralRequirementRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+| `mint_target` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `collateral_denom` | [string](#string) |  |  |
+| `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryMintByCollateralRequirementResponse"></a>
+
+### QueryMintByCollateralRequirementResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `total_coll` | [TotalCollateral](#merlion.maker.v1.TotalCollateral) |  |  |
+| `pool_coll` | [PoolCollateral](#merlion.maker.v1.PoolCollateral) |  |  |
+| `acc_coll` | [AccountCollateral](#merlion.maker.v1.AccountCollateral) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.QueryMintBySwapCapacityRequest"></a>
 
 ### QueryMintBySwapCapacityRequest
@@ -1593,6 +1632,7 @@ Query defines the maker gRPC querier service.
 | `QueryBurnBySwap` | [QueryBurnBySwapRequest](#merlion.maker.v1.QueryBurnBySwapRequest) | [QueryBurnBySwapResponse](#merlion.maker.v1.QueryBurnBySwapResponse) | QueryBurnBySwap queries how much backing and lion will be returned when mer is burned. | GET|/merlion/maker/v1/query_burn_by_swap|
 | `QueryBuyBacking` | [QueryBuyBackingRequest](#merlion.maker.v1.QueryBuyBackingRequest) | [QueryBuyBackingResponse](#merlion.maker.v1.QueryBuyBackingResponse) | QueryBuyBacking queries how much backing can be bought with provided lion. | GET|/merlion/maker/v1/query_buy_backing|
 | `QuerySellBacking` | [QuerySellBackingRequest](#merlion.maker.v1.QuerySellBackingRequest) | [QuerySellBackingResponse](#merlion.maker.v1.QuerySellBackingResponse) | QuerySellBacking queries how much lion can be exchanged for provided backing. | GET|/merlion/maker/v1/query_sell_backing|
+| `MintByCollateralRequirement` | [QueryMintByCollateralRequirementRequest](#merlion.maker.v1.QueryMintByCollateralRequirementRequest) | [QueryMintByCollateralRequirementResponse](#merlion.maker.v1.QueryMintByCollateralRequirementResponse) | MintByCollateralRequirement queries the requirement of when minting by collateral. | GET|/merlion/maker/v1/query_mint_by_collateral|
 
  <!-- end services -->
 
