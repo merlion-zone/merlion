@@ -541,3 +541,115 @@ func (k Keeper) querySellBacking(ctx sdk.Context, backingIn sdk.Coin) (lionOut s
 	lionOut = lionMint.Sub(sellbackFee)
 	return
 }
+
+func (k Keeper) MintByCollateralRequirement(c context.Context, req *types.QueryMintByCollateralRequirementRequest) (*types.QueryMintByCollateralRequirementResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	addr, err := sdk.AccAddressFromBech32(req.Address)
+	if err != nil {
+		return nil, err
+	}
+	lionIn, mintFee, totalColl, poolColl, accColl, err := k.mintByCollateralRequirement(ctx, addr, req.MintTarget, req.CollateralDenom, req.LionInMax)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryMintByCollateralRequirementResponse{
+		LionIn:    lionIn,
+		MintFee:   mintFee,
+		TotalColl: totalColl,
+		PoolColl:  poolColl,
+		AccColl:   accColl,
+	}, nil
+}
+
+func (k Keeper) mintByCollateralRequirement(ctx sdk.Context, addr sdk.AccAddress, mintTarget sdk.Coin, collateralDenom string, lionInMax sdk.Coin) (lionIn sdk.Coin, mintFee sdk.Coin, totalColl types.TotalCollateral, poolColl types.PoolCollateral, accColl types.AccountCollateral, err error) {
+	// get prices in usd
+	collateralPrice, err := k.oracleKeeper.GetExchangeRate(ctx, collateralDenom)
+	if err != nil {
+		return
+	}
+	lionPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
+	if err != nil {
+		return
+	}
+	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	if err != nil {
+		return
+	}
+
+	// check price lower bound
+	merPriceLowerBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Sub(k.MintPriceBias(ctx)))
+	if merPrice.LT(merPriceLowerBound) {
+		err = sdkerrors.Wrapf(types.ErrMerPriceTooLow, "%s price too low: %s", merlion.MicroUSDDenom, merPrice)
+		return
+	}
+
+	collateralParams, found := k.GetCollateralRiskParams(ctx, collateralDenom)
+	if !found {
+		err = sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
+		return
+	}
+	if !collateralParams.Enabled {
+		err = sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
+		return
+	}
+
+	totalColl, poolColl, accColl, err = k.getCollateral(ctx, addr, collateralDenom)
+	if err != nil {
+		return
+	}
+
+	// settle interestFee fee
+	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
+
+	// compute mint amount
+	mintFee = computeFee(mintTarget, collateralParams.MintFee)
+	mint := mintTarget.Add(mintFee)
+
+	// update debt
+	accColl.MerDebt = accColl.MerDebt.Add(mint)
+	poolColl.MerDebt = poolColl.MerDebt.Add(mint)
+	totalColl.MerDebt = totalColl.MerDebt.Add(mint)
+
+	if collateralParams.MaxMerMint != nil && poolColl.MerDebt.Amount.GT(*collateralParams.MaxMerMint) {
+		err = sdkerrors.Wrapf(types.ErrMerCeiling, "mer over ceiling")
+		return
+	}
+
+	// compute actual catalytic lion
+	merDue := accColl.MerDebt.Add(accColl.MerByLion)
+	bestCatalyticLionInUSD := merDue.Amount.ToDec().Mul(*collateralParams.CatalyticLionRatio)
+	lionInMaxInUSD := lionInMax.Amount.ToDec().Mul(lionPrice).TruncateInt()
+	catalyticLionInUSD := sdk.MinDec(bestCatalyticLionInUSD, accColl.MerByLion.Amount.Add(lionInMaxInUSD).ToDec()).TruncateInt()
+
+	// compute actual lion-in
+	lionInInUSD := catalyticLionInUSD.Sub(accColl.MerByLion.Amount)
+	if !lionInInUSD.IsPositive() {
+		lionInInUSD = sdk.ZeroInt()
+	} else {
+		accColl.MerByLion = accColl.MerByLion.AddAmount(lionInInUSD)
+		poolColl.MerByLion = poolColl.MerByLion.AddAmount(lionInInUSD)
+		totalColl.MerByLion = totalColl.MerByLion.AddAmount(lionInInUSD)
+		accColl.MerDebt = accColl.MerDebt.SubAmount(lionInInUSD)
+		poolColl.MerDebt = poolColl.MerDebt.SubAmount(lionInInUSD)
+		totalColl.MerDebt = totalColl.MerDebt.SubAmount(lionInInUSD)
+	}
+	lionIn = sdk.NewCoin(merlion.AttoLionDenom, lionInInUSD.ToDec().Quo(lionPrice).TruncateInt())
+
+	accColl.LionBurned = accColl.LionBurned.Add(lionIn)
+	poolColl.LionBurned = poolColl.LionBurned.Add(lionIn)
+	totalColl.LionBurned = totalColl.LionBurned.Add(lionIn)
+
+	// compute actual catalytic ratio and max loan-to-value
+	maxLoanToValue := maxLoanToValueForAccount(&accColl, &collateralParams)
+
+	// check max mintable mer
+	collateralInUSD := accColl.Collateral.Amount.ToDec().Mul(collateralPrice)
+	maxMerMintable := collateralInUSD.Mul(maxLoanToValue)
+	if maxMerMintable.LT(accColl.MerDebt.Amount.ToDec()) {
+		err = sdkerrors.Wrapf(types.ErrAccountInsufficientCollateral, "account has insufficient collateral: %s", collateralDenom)
+		return
+	}
+
+	return
+}
