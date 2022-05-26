@@ -947,24 +947,24 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-type QueryMintBySwapRequirementRequest struct {
-	MintTarget     types.Coin `protobuf:"bytes,1,opt,name=mint_target,json=mintTarget,proto3" json:"mint_target"`
-	BackingDenom   string     `protobuf:"bytes,2,opt,name=backing_denom,json=backingDenom,proto3" json:"backing_denom,omitempty"`
-	FullCollateral bool       `protobuf:"varint,3,opt,name=full_collateral,json=fullCollateral,proto3" json:"full_collateral,omitempty"`
+type EstimateMintBySwapInRequest struct {
+	MintOut      types.Coin `protobuf:"bytes,1,opt,name=mint_out,json=mintOut,proto3" json:"mint_out"`
+	BackingDenom string     `protobuf:"bytes,2,opt,name=backing_denom,json=backingDenom,proto3" json:"backing_denom,omitempty"`
+	FullBacking  bool       `protobuf:"varint,3,opt,name=full_backing,json=fullBacking,proto3" json:"full_backing,omitempty"`
 }
 
-func (m *QueryMintBySwapRequirementRequest) Reset()         { *m = QueryMintBySwapRequirementRequest{} }
-func (m *QueryMintBySwapRequirementRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryMintBySwapRequirementRequest) ProtoMessage()    {}
-func (*QueryMintBySwapRequirementRequest) Descriptor() ([]byte, []int) {
+func (m *EstimateMintBySwapInRequest) Reset()         { *m = EstimateMintBySwapInRequest{} }
+func (m *EstimateMintBySwapInRequest) String() string { return proto.CompactTextString(m) }
+func (*EstimateMintBySwapInRequest) ProtoMessage()    {}
+func (*EstimateMintBySwapInRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0c6c4552b535aace, []int{22}
 }
-func (m *QueryMintBySwapRequirementRequest) XXX_Unmarshal(b []byte) error {
+func (m *EstimateMintBySwapInRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryMintBySwapRequirementRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EstimateMintBySwapInRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryMintBySwapRequirementRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EstimateMintBySwapInRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -974,451 +974,57 @@ func (m *QueryMintBySwapRequirementRequest) XXX_Marshal(b []byte, deterministic 
 		return b[:n], nil
 	}
 }
-func (m *QueryMintBySwapRequirementRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryMintBySwapRequirementRequest.Merge(m, src)
+func (m *EstimateMintBySwapInRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateMintBySwapInRequest.Merge(m, src)
 }
-func (m *QueryMintBySwapRequirementRequest) XXX_Size() int {
+func (m *EstimateMintBySwapInRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryMintBySwapRequirementRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryMintBySwapRequirementRequest.DiscardUnknown(m)
+func (m *EstimateMintBySwapInRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateMintBySwapInRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryMintBySwapRequirementRequest proto.InternalMessageInfo
+var xxx_messageInfo_EstimateMintBySwapInRequest proto.InternalMessageInfo
 
-func (m *QueryMintBySwapRequirementRequest) GetMintTarget() types.Coin {
-	if m != nil {
-		return m.MintTarget
-	}
-	return types.Coin{}
-}
-
-func (m *QueryMintBySwapRequirementRequest) GetBackingDenom() string {
-	if m != nil {
-		return m.BackingDenom
-	}
-	return ""
-}
-
-func (m *QueryMintBySwapRequirementRequest) GetFullCollateral() bool {
-	if m != nil {
-		return m.FullCollateral
-	}
-	return false
-}
-
-type QueryMintBySwapRequirementResponse struct {
-	BackingIn types.Coin `protobuf:"bytes,1,opt,name=backing_in,json=backingIn,proto3" json:"backing_in"`
-	LionIn    types.Coin `protobuf:"bytes,2,opt,name=lion_in,json=lionIn,proto3" json:"lion_in"`
-	MintFee   types.Coin `protobuf:"bytes,3,opt,name=mint_fee,json=mintFee,proto3" json:"mint_fee"`
-}
-
-func (m *QueryMintBySwapRequirementResponse) Reset()         { *m = QueryMintBySwapRequirementResponse{} }
-func (m *QueryMintBySwapRequirementResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryMintBySwapRequirementResponse) ProtoMessage()    {}
-func (*QueryMintBySwapRequirementResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{23}
-}
-func (m *QueryMintBySwapRequirementResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryMintBySwapRequirementResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryMintBySwapRequirementResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryMintBySwapRequirementResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryMintBySwapRequirementResponse.Merge(m, src)
-}
-func (m *QueryMintBySwapRequirementResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryMintBySwapRequirementResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryMintBySwapRequirementResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryMintBySwapRequirementResponse proto.InternalMessageInfo
-
-func (m *QueryMintBySwapRequirementResponse) GetBackingIn() types.Coin {
-	if m != nil {
-		return m.BackingIn
-	}
-	return types.Coin{}
-}
-
-func (m *QueryMintBySwapRequirementResponse) GetLionIn() types.Coin {
-	if m != nil {
-		return m.LionIn
-	}
-	return types.Coin{}
-}
-
-func (m *QueryMintBySwapRequirementResponse) GetMintFee() types.Coin {
-	if m != nil {
-		return m.MintFee
-	}
-	return types.Coin{}
-}
-
-type QueryMintBySwapCapacityRequest struct {
-	BackingAvail types.Coin `protobuf:"bytes,1,opt,name=backing_avail,json=backingAvail,proto3" json:"backing_avail"`
-	LionAvail    types.Coin `protobuf:"bytes,2,opt,name=lion_avail,json=lionAvail,proto3" json:"lion_avail"`
-}
-
-func (m *QueryMintBySwapCapacityRequest) Reset()         { *m = QueryMintBySwapCapacityRequest{} }
-func (m *QueryMintBySwapCapacityRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryMintBySwapCapacityRequest) ProtoMessage()    {}
-func (*QueryMintBySwapCapacityRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{24}
-}
-func (m *QueryMintBySwapCapacityRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryMintBySwapCapacityRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryMintBySwapCapacityRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryMintBySwapCapacityRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryMintBySwapCapacityRequest.Merge(m, src)
-}
-func (m *QueryMintBySwapCapacityRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryMintBySwapCapacityRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryMintBySwapCapacityRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryMintBySwapCapacityRequest proto.InternalMessageInfo
-
-func (m *QueryMintBySwapCapacityRequest) GetBackingAvail() types.Coin {
-	if m != nil {
-		return m.BackingAvail
-	}
-	return types.Coin{}
-}
-
-func (m *QueryMintBySwapCapacityRequest) GetLionAvail() types.Coin {
-	if m != nil {
-		return m.LionAvail
-	}
-	return types.Coin{}
-}
-
-type QueryMintBySwapCapacityResponse struct {
-	BackingIn types.Coin `protobuf:"bytes,1,opt,name=backing_in,json=backingIn,proto3" json:"backing_in"`
-	LionIn    types.Coin `protobuf:"bytes,2,opt,name=lion_in,json=lionIn,proto3" json:"lion_in"`
-	MintOut   types.Coin `protobuf:"bytes,3,opt,name=mint_out,json=mintOut,proto3" json:"mint_out"`
-	MintFee   types.Coin `protobuf:"bytes,4,opt,name=mint_fee,json=mintFee,proto3" json:"mint_fee"`
-}
-
-func (m *QueryMintBySwapCapacityResponse) Reset()         { *m = QueryMintBySwapCapacityResponse{} }
-func (m *QueryMintBySwapCapacityResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryMintBySwapCapacityResponse) ProtoMessage()    {}
-func (*QueryMintBySwapCapacityResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{25}
-}
-func (m *QueryMintBySwapCapacityResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryMintBySwapCapacityResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryMintBySwapCapacityResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryMintBySwapCapacityResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryMintBySwapCapacityResponse.Merge(m, src)
-}
-func (m *QueryMintBySwapCapacityResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryMintBySwapCapacityResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryMintBySwapCapacityResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryMintBySwapCapacityResponse proto.InternalMessageInfo
-
-func (m *QueryMintBySwapCapacityResponse) GetBackingIn() types.Coin {
-	if m != nil {
-		return m.BackingIn
-	}
-	return types.Coin{}
-}
-
-func (m *QueryMintBySwapCapacityResponse) GetLionIn() types.Coin {
-	if m != nil {
-		return m.LionIn
-	}
-	return types.Coin{}
-}
-
-func (m *QueryMintBySwapCapacityResponse) GetMintOut() types.Coin {
+func (m *EstimateMintBySwapInRequest) GetMintOut() types.Coin {
 	if m != nil {
 		return m.MintOut
 	}
 	return types.Coin{}
 }
 
-func (m *QueryMintBySwapCapacityResponse) GetMintFee() types.Coin {
-	if m != nil {
-		return m.MintFee
-	}
-	return types.Coin{}
-}
-
-type QueryBurnBySwapRequest struct {
-	BurnTarget   types.Coin `protobuf:"bytes,1,opt,name=burn_target,json=burnTarget,proto3" json:"burn_target"`
-	BackingDenom string     `protobuf:"bytes,2,opt,name=backing_denom,json=backingDenom,proto3" json:"backing_denom,omitempty"`
-}
-
-func (m *QueryBurnBySwapRequest) Reset()         { *m = QueryBurnBySwapRequest{} }
-func (m *QueryBurnBySwapRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryBurnBySwapRequest) ProtoMessage()    {}
-func (*QueryBurnBySwapRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{26}
-}
-func (m *QueryBurnBySwapRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryBurnBySwapRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryBurnBySwapRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryBurnBySwapRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBurnBySwapRequest.Merge(m, src)
-}
-func (m *QueryBurnBySwapRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryBurnBySwapRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBurnBySwapRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryBurnBySwapRequest proto.InternalMessageInfo
-
-func (m *QueryBurnBySwapRequest) GetBurnTarget() types.Coin {
-	if m != nil {
-		return m.BurnTarget
-	}
-	return types.Coin{}
-}
-
-func (m *QueryBurnBySwapRequest) GetBackingDenom() string {
+func (m *EstimateMintBySwapInRequest) GetBackingDenom() string {
 	if m != nil {
 		return m.BackingDenom
 	}
 	return ""
 }
 
-type QueryBurnBySwapResponse struct {
-	BackingOut types.Coin `protobuf:"bytes,1,opt,name=backing_out,json=backingOut,proto3" json:"backing_out"`
-	LionOut    types.Coin `protobuf:"bytes,2,opt,name=lion_out,json=lionOut,proto3" json:"lion_out"`
-	BurnFee    types.Coin `protobuf:"bytes,3,opt,name=burn_fee,json=burnFee,proto3" json:"burn_fee"`
-}
-
-func (m *QueryBurnBySwapResponse) Reset()         { *m = QueryBurnBySwapResponse{} }
-func (m *QueryBurnBySwapResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryBurnBySwapResponse) ProtoMessage()    {}
-func (*QueryBurnBySwapResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{27}
-}
-func (m *QueryBurnBySwapResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryBurnBySwapResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryBurnBySwapResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryBurnBySwapResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBurnBySwapResponse.Merge(m, src)
-}
-func (m *QueryBurnBySwapResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryBurnBySwapResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBurnBySwapResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryBurnBySwapResponse proto.InternalMessageInfo
-
-func (m *QueryBurnBySwapResponse) GetBackingOut() types.Coin {
+func (m *EstimateMintBySwapInRequest) GetFullBacking() bool {
 	if m != nil {
-		return m.BackingOut
+		return m.FullBacking
 	}
-	return types.Coin{}
+	return false
 }
 
-func (m *QueryBurnBySwapResponse) GetLionOut() types.Coin {
-	if m != nil {
-		return m.LionOut
-	}
-	return types.Coin{}
-}
-
-func (m *QueryBurnBySwapResponse) GetBurnFee() types.Coin {
-	if m != nil {
-		return m.BurnFee
-	}
-	return types.Coin{}
-}
-
-type QueryBuyBackingRequest struct {
-	LionIn       types.Coin `protobuf:"bytes,1,opt,name=lion_in,json=lionIn,proto3" json:"lion_in"`
-	BackingDenom string     `protobuf:"bytes,2,opt,name=backing_denom,json=backingDenom,proto3" json:"backing_denom,omitempty"`
-}
-
-func (m *QueryBuyBackingRequest) Reset()         { *m = QueryBuyBackingRequest{} }
-func (m *QueryBuyBackingRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryBuyBackingRequest) ProtoMessage()    {}
-func (*QueryBuyBackingRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{28}
-}
-func (m *QueryBuyBackingRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryBuyBackingRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryBuyBackingRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryBuyBackingRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBuyBackingRequest.Merge(m, src)
-}
-func (m *QueryBuyBackingRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryBuyBackingRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBuyBackingRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryBuyBackingRequest proto.InternalMessageInfo
-
-func (m *QueryBuyBackingRequest) GetLionIn() types.Coin {
-	if m != nil {
-		return m.LionIn
-	}
-	return types.Coin{}
-}
-
-func (m *QueryBuyBackingRequest) GetBackingDenom() string {
-	if m != nil {
-		return m.BackingDenom
-	}
-	return ""
-}
-
-type QueryBuyBackingResponse struct {
-	BackingOut types.Coin `protobuf:"bytes,1,opt,name=backing_out,json=backingOut,proto3" json:"backing_out"`
-	BuybackFee types.Coin `protobuf:"bytes,2,opt,name=buyback_fee,json=buybackFee,proto3" json:"buyback_fee"`
-}
-
-func (m *QueryBuyBackingResponse) Reset()         { *m = QueryBuyBackingResponse{} }
-func (m *QueryBuyBackingResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryBuyBackingResponse) ProtoMessage()    {}
-func (*QueryBuyBackingResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{29}
-}
-func (m *QueryBuyBackingResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryBuyBackingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryBuyBackingResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryBuyBackingResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBuyBackingResponse.Merge(m, src)
-}
-func (m *QueryBuyBackingResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryBuyBackingResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBuyBackingResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryBuyBackingResponse proto.InternalMessageInfo
-
-func (m *QueryBuyBackingResponse) GetBackingOut() types.Coin {
-	if m != nil {
-		return m.BackingOut
-	}
-	return types.Coin{}
-}
-
-func (m *QueryBuyBackingResponse) GetBuybackFee() types.Coin {
-	if m != nil {
-		return m.BuybackFee
-	}
-	return types.Coin{}
-}
-
-type QuerySellBackingRequest struct {
+type EstimateMintBySwapInResponse struct {
 	BackingIn types.Coin `protobuf:"bytes,1,opt,name=backing_in,json=backingIn,proto3" json:"backing_in"`
+	LionIn    types.Coin `protobuf:"bytes,2,opt,name=lion_in,json=lionIn,proto3" json:"lion_in"`
+	MintFee   types.Coin `protobuf:"bytes,3,opt,name=mint_fee,json=mintFee,proto3" json:"mint_fee"`
 }
 
-func (m *QuerySellBackingRequest) Reset()         { *m = QuerySellBackingRequest{} }
-func (m *QuerySellBackingRequest) String() string { return proto.CompactTextString(m) }
-func (*QuerySellBackingRequest) ProtoMessage()    {}
-func (*QuerySellBackingRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{30}
+func (m *EstimateMintBySwapInResponse) Reset()         { *m = EstimateMintBySwapInResponse{} }
+func (m *EstimateMintBySwapInResponse) String() string { return proto.CompactTextString(m) }
+func (*EstimateMintBySwapInResponse) ProtoMessage()    {}
+func (*EstimateMintBySwapInResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{23}
 }
-func (m *QuerySellBackingRequest) XXX_Unmarshal(b []byte) error {
+func (m *EstimateMintBySwapInResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QuerySellBackingRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EstimateMintBySwapInResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QuerySellBackingRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EstimateMintBySwapInResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1428,42 +1034,56 @@ func (m *QuerySellBackingRequest) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *QuerySellBackingRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QuerySellBackingRequest.Merge(m, src)
+func (m *EstimateMintBySwapInResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateMintBySwapInResponse.Merge(m, src)
 }
-func (m *QuerySellBackingRequest) XXX_Size() int {
+func (m *EstimateMintBySwapInResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QuerySellBackingRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QuerySellBackingRequest.DiscardUnknown(m)
+func (m *EstimateMintBySwapInResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateMintBySwapInResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QuerySellBackingRequest proto.InternalMessageInfo
+var xxx_messageInfo_EstimateMintBySwapInResponse proto.InternalMessageInfo
 
-func (m *QuerySellBackingRequest) GetBackingIn() types.Coin {
+func (m *EstimateMintBySwapInResponse) GetBackingIn() types.Coin {
 	if m != nil {
 		return m.BackingIn
 	}
 	return types.Coin{}
 }
 
-type QuerySellBackingResponse struct {
-	LionOut     types.Coin `protobuf:"bytes,1,opt,name=lion_out,json=lionOut,proto3" json:"lion_out"`
-	SellbackFee types.Coin `protobuf:"bytes,2,opt,name=sellback_fee,json=sellbackFee,proto3" json:"sellback_fee"`
+func (m *EstimateMintBySwapInResponse) GetLionIn() types.Coin {
+	if m != nil {
+		return m.LionIn
+	}
+	return types.Coin{}
 }
 
-func (m *QuerySellBackingResponse) Reset()         { *m = QuerySellBackingResponse{} }
-func (m *QuerySellBackingResponse) String() string { return proto.CompactTextString(m) }
-func (*QuerySellBackingResponse) ProtoMessage()    {}
-func (*QuerySellBackingResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{31}
+func (m *EstimateMintBySwapInResponse) GetMintFee() types.Coin {
+	if m != nil {
+		return m.MintFee
+	}
+	return types.Coin{}
 }
-func (m *QuerySellBackingResponse) XXX_Unmarshal(b []byte) error {
+
+type EstimateMintBySwapOutRequest struct {
+	BackingInMax types.Coin `protobuf:"bytes,1,opt,name=backing_in_max,json=backingInMax,proto3" json:"backing_in_max"`
+	LionInMax    types.Coin `protobuf:"bytes,2,opt,name=lion_in_max,json=lionInMax,proto3" json:"lion_in_max"`
+}
+
+func (m *EstimateMintBySwapOutRequest) Reset()         { *m = EstimateMintBySwapOutRequest{} }
+func (m *EstimateMintBySwapOutRequest) String() string { return proto.CompactTextString(m) }
+func (*EstimateMintBySwapOutRequest) ProtoMessage()    {}
+func (*EstimateMintBySwapOutRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{24}
+}
+func (m *EstimateMintBySwapOutRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QuerySellBackingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EstimateMintBySwapOutRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QuerySellBackingResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EstimateMintBySwapOutRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1473,103 +1093,481 @@ func (m *QuerySellBackingResponse) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *QuerySellBackingResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QuerySellBackingResponse.Merge(m, src)
+func (m *EstimateMintBySwapOutRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateMintBySwapOutRequest.Merge(m, src)
 }
-func (m *QuerySellBackingResponse) XXX_Size() int {
+func (m *EstimateMintBySwapOutRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QuerySellBackingResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QuerySellBackingResponse.DiscardUnknown(m)
+func (m *EstimateMintBySwapOutRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateMintBySwapOutRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QuerySellBackingResponse proto.InternalMessageInfo
+var xxx_messageInfo_EstimateMintBySwapOutRequest proto.InternalMessageInfo
 
-func (m *QuerySellBackingResponse) GetLionOut() types.Coin {
+func (m *EstimateMintBySwapOutRequest) GetBackingInMax() types.Coin {
 	if m != nil {
-		return m.LionOut
+		return m.BackingInMax
 	}
 	return types.Coin{}
 }
 
-func (m *QuerySellBackingResponse) GetSellbackFee() types.Coin {
-	if m != nil {
-		return m.SellbackFee
-	}
-	return types.Coin{}
-}
-
-type QueryMintByCollateralRequirementRequest struct {
-	Address         string     `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	MintTarget      types.Coin `protobuf:"bytes,2,opt,name=mint_target,json=mintTarget,proto3" json:"mint_target"`
-	CollateralDenom string     `protobuf:"bytes,3,opt,name=collateral_denom,json=collateralDenom,proto3" json:"collateral_denom,omitempty"`
-	LionInMax       types.Coin `protobuf:"bytes,4,opt,name=lion_in_max,json=lionInMax,proto3" json:"lion_in_max"`
-}
-
-func (m *QueryMintByCollateralRequirementRequest) Reset() {
-	*m = QueryMintByCollateralRequirementRequest{}
-}
-func (m *QueryMintByCollateralRequirementRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryMintByCollateralRequirementRequest) ProtoMessage()    {}
-func (*QueryMintByCollateralRequirementRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_0c6c4552b535aace, []int{32}
-}
-func (m *QueryMintByCollateralRequirementRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryMintByCollateralRequirementRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryMintByCollateralRequirementRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryMintByCollateralRequirementRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryMintByCollateralRequirementRequest.Merge(m, src)
-}
-func (m *QueryMintByCollateralRequirementRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryMintByCollateralRequirementRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryMintByCollateralRequirementRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryMintByCollateralRequirementRequest proto.InternalMessageInfo
-
-func (m *QueryMintByCollateralRequirementRequest) GetAddress() string {
-	if m != nil {
-		return m.Address
-	}
-	return ""
-}
-
-func (m *QueryMintByCollateralRequirementRequest) GetMintTarget() types.Coin {
-	if m != nil {
-		return m.MintTarget
-	}
-	return types.Coin{}
-}
-
-func (m *QueryMintByCollateralRequirementRequest) GetCollateralDenom() string {
-	if m != nil {
-		return m.CollateralDenom
-	}
-	return ""
-}
-
-func (m *QueryMintByCollateralRequirementRequest) GetLionInMax() types.Coin {
+func (m *EstimateMintBySwapOutRequest) GetLionInMax() types.Coin {
 	if m != nil {
 		return m.LionInMax
 	}
 	return types.Coin{}
 }
 
-type QueryMintByCollateralRequirementResponse struct {
+type EstimateMintBySwapOutResponse struct {
+	BackingIn types.Coin `protobuf:"bytes,1,opt,name=backing_in,json=backingIn,proto3" json:"backing_in"`
+	LionIn    types.Coin `protobuf:"bytes,2,opt,name=lion_in,json=lionIn,proto3" json:"lion_in"`
+	MintOut   types.Coin `protobuf:"bytes,3,opt,name=mint_out,json=mintOut,proto3" json:"mint_out"`
+	MintFee   types.Coin `protobuf:"bytes,4,opt,name=mint_fee,json=mintFee,proto3" json:"mint_fee"`
+}
+
+func (m *EstimateMintBySwapOutResponse) Reset()         { *m = EstimateMintBySwapOutResponse{} }
+func (m *EstimateMintBySwapOutResponse) String() string { return proto.CompactTextString(m) }
+func (*EstimateMintBySwapOutResponse) ProtoMessage()    {}
+func (*EstimateMintBySwapOutResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{25}
+}
+func (m *EstimateMintBySwapOutResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EstimateMintBySwapOutResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EstimateMintBySwapOutResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EstimateMintBySwapOutResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateMintBySwapOutResponse.Merge(m, src)
+}
+func (m *EstimateMintBySwapOutResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *EstimateMintBySwapOutResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateMintBySwapOutResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EstimateMintBySwapOutResponse proto.InternalMessageInfo
+
+func (m *EstimateMintBySwapOutResponse) GetBackingIn() types.Coin {
+	if m != nil {
+		return m.BackingIn
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateMintBySwapOutResponse) GetLionIn() types.Coin {
+	if m != nil {
+		return m.LionIn
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateMintBySwapOutResponse) GetMintOut() types.Coin {
+	if m != nil {
+		return m.MintOut
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateMintBySwapOutResponse) GetMintFee() types.Coin {
+	if m != nil {
+		return m.MintFee
+	}
+	return types.Coin{}
+}
+
+type EstimateBurnBySwapOutRequest struct {
+	BurnIn       types.Coin `protobuf:"bytes,1,opt,name=burn_in,json=burnIn,proto3" json:"burn_in"`
+	BackingDenom string     `protobuf:"bytes,2,opt,name=backing_denom,json=backingDenom,proto3" json:"backing_denom,omitempty"`
+}
+
+func (m *EstimateBurnBySwapOutRequest) Reset()         { *m = EstimateBurnBySwapOutRequest{} }
+func (m *EstimateBurnBySwapOutRequest) String() string { return proto.CompactTextString(m) }
+func (*EstimateBurnBySwapOutRequest) ProtoMessage()    {}
+func (*EstimateBurnBySwapOutRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{26}
+}
+func (m *EstimateBurnBySwapOutRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EstimateBurnBySwapOutRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EstimateBurnBySwapOutRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EstimateBurnBySwapOutRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateBurnBySwapOutRequest.Merge(m, src)
+}
+func (m *EstimateBurnBySwapOutRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *EstimateBurnBySwapOutRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateBurnBySwapOutRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EstimateBurnBySwapOutRequest proto.InternalMessageInfo
+
+func (m *EstimateBurnBySwapOutRequest) GetBurnIn() types.Coin {
+	if m != nil {
+		return m.BurnIn
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateBurnBySwapOutRequest) GetBackingDenom() string {
+	if m != nil {
+		return m.BackingDenom
+	}
+	return ""
+}
+
+type EstimateBurnBySwapOutResponse struct {
+	BackingOut types.Coin `protobuf:"bytes,1,opt,name=backing_out,json=backingOut,proto3" json:"backing_out"`
+	LionOut    types.Coin `protobuf:"bytes,2,opt,name=lion_out,json=lionOut,proto3" json:"lion_out"`
+	BurnFee    types.Coin `protobuf:"bytes,3,opt,name=burn_fee,json=burnFee,proto3" json:"burn_fee"`
+}
+
+func (m *EstimateBurnBySwapOutResponse) Reset()         { *m = EstimateBurnBySwapOutResponse{} }
+func (m *EstimateBurnBySwapOutResponse) String() string { return proto.CompactTextString(m) }
+func (*EstimateBurnBySwapOutResponse) ProtoMessage()    {}
+func (*EstimateBurnBySwapOutResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{27}
+}
+func (m *EstimateBurnBySwapOutResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EstimateBurnBySwapOutResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EstimateBurnBySwapOutResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EstimateBurnBySwapOutResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateBurnBySwapOutResponse.Merge(m, src)
+}
+func (m *EstimateBurnBySwapOutResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *EstimateBurnBySwapOutResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateBurnBySwapOutResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EstimateBurnBySwapOutResponse proto.InternalMessageInfo
+
+func (m *EstimateBurnBySwapOutResponse) GetBackingOut() types.Coin {
+	if m != nil {
+		return m.BackingOut
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateBurnBySwapOutResponse) GetLionOut() types.Coin {
+	if m != nil {
+		return m.LionOut
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateBurnBySwapOutResponse) GetBurnFee() types.Coin {
+	if m != nil {
+		return m.BurnFee
+	}
+	return types.Coin{}
+}
+
+type EstimateBuyBackingOutRequest struct {
+	LionIn       types.Coin `protobuf:"bytes,1,opt,name=lion_in,json=lionIn,proto3" json:"lion_in"`
+	BackingDenom string     `protobuf:"bytes,2,opt,name=backing_denom,json=backingDenom,proto3" json:"backing_denom,omitempty"`
+}
+
+func (m *EstimateBuyBackingOutRequest) Reset()         { *m = EstimateBuyBackingOutRequest{} }
+func (m *EstimateBuyBackingOutRequest) String() string { return proto.CompactTextString(m) }
+func (*EstimateBuyBackingOutRequest) ProtoMessage()    {}
+func (*EstimateBuyBackingOutRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{28}
+}
+func (m *EstimateBuyBackingOutRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EstimateBuyBackingOutRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EstimateBuyBackingOutRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EstimateBuyBackingOutRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateBuyBackingOutRequest.Merge(m, src)
+}
+func (m *EstimateBuyBackingOutRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *EstimateBuyBackingOutRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateBuyBackingOutRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EstimateBuyBackingOutRequest proto.InternalMessageInfo
+
+func (m *EstimateBuyBackingOutRequest) GetLionIn() types.Coin {
+	if m != nil {
+		return m.LionIn
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateBuyBackingOutRequest) GetBackingDenom() string {
+	if m != nil {
+		return m.BackingDenom
+	}
+	return ""
+}
+
+type EstimateBuyBackingOutResponse struct {
+	BackingOut types.Coin `protobuf:"bytes,1,opt,name=backing_out,json=backingOut,proto3" json:"backing_out"`
+	BuybackFee types.Coin `protobuf:"bytes,2,opt,name=buyback_fee,json=buybackFee,proto3" json:"buyback_fee"`
+}
+
+func (m *EstimateBuyBackingOutResponse) Reset()         { *m = EstimateBuyBackingOutResponse{} }
+func (m *EstimateBuyBackingOutResponse) String() string { return proto.CompactTextString(m) }
+func (*EstimateBuyBackingOutResponse) ProtoMessage()    {}
+func (*EstimateBuyBackingOutResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{29}
+}
+func (m *EstimateBuyBackingOutResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EstimateBuyBackingOutResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EstimateBuyBackingOutResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EstimateBuyBackingOutResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateBuyBackingOutResponse.Merge(m, src)
+}
+func (m *EstimateBuyBackingOutResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *EstimateBuyBackingOutResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateBuyBackingOutResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EstimateBuyBackingOutResponse proto.InternalMessageInfo
+
+func (m *EstimateBuyBackingOutResponse) GetBackingOut() types.Coin {
+	if m != nil {
+		return m.BackingOut
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateBuyBackingOutResponse) GetBuybackFee() types.Coin {
+	if m != nil {
+		return m.BuybackFee
+	}
+	return types.Coin{}
+}
+
+type EstimateSellBackingOutRequest struct {
+	BackingIn types.Coin `protobuf:"bytes,1,opt,name=backing_in,json=backingIn,proto3" json:"backing_in"`
+}
+
+func (m *EstimateSellBackingOutRequest) Reset()         { *m = EstimateSellBackingOutRequest{} }
+func (m *EstimateSellBackingOutRequest) String() string { return proto.CompactTextString(m) }
+func (*EstimateSellBackingOutRequest) ProtoMessage()    {}
+func (*EstimateSellBackingOutRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{30}
+}
+func (m *EstimateSellBackingOutRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EstimateSellBackingOutRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EstimateSellBackingOutRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EstimateSellBackingOutRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateSellBackingOutRequest.Merge(m, src)
+}
+func (m *EstimateSellBackingOutRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *EstimateSellBackingOutRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateSellBackingOutRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EstimateSellBackingOutRequest proto.InternalMessageInfo
+
+func (m *EstimateSellBackingOutRequest) GetBackingIn() types.Coin {
+	if m != nil {
+		return m.BackingIn
+	}
+	return types.Coin{}
+}
+
+type EstimateSellBackingOutResponse struct {
+	LionOut     types.Coin `protobuf:"bytes,1,opt,name=lion_out,json=lionOut,proto3" json:"lion_out"`
+	SellbackFee types.Coin `protobuf:"bytes,2,opt,name=sellback_fee,json=sellbackFee,proto3" json:"sellback_fee"`
+}
+
+func (m *EstimateSellBackingOutResponse) Reset()         { *m = EstimateSellBackingOutResponse{} }
+func (m *EstimateSellBackingOutResponse) String() string { return proto.CompactTextString(m) }
+func (*EstimateSellBackingOutResponse) ProtoMessage()    {}
+func (*EstimateSellBackingOutResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{31}
+}
+func (m *EstimateSellBackingOutResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EstimateSellBackingOutResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EstimateSellBackingOutResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EstimateSellBackingOutResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateSellBackingOutResponse.Merge(m, src)
+}
+func (m *EstimateSellBackingOutResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *EstimateSellBackingOutResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateSellBackingOutResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EstimateSellBackingOutResponse proto.InternalMessageInfo
+
+func (m *EstimateSellBackingOutResponse) GetLionOut() types.Coin {
+	if m != nil {
+		return m.LionOut
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateSellBackingOutResponse) GetSellbackFee() types.Coin {
+	if m != nil {
+		return m.SellbackFee
+	}
+	return types.Coin{}
+}
+
+type EstimateMintByCollateralInRequest struct {
+	Address         string     `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	MintOut         types.Coin `protobuf:"bytes,2,opt,name=mint_out,json=mintOut,proto3" json:"mint_out"`
+	CollateralDenom string     `protobuf:"bytes,3,opt,name=collateral_denom,json=collateralDenom,proto3" json:"collateral_denom,omitempty"`
+	LionInMax       types.Coin `protobuf:"bytes,4,opt,name=lion_in_max,json=lionInMax,proto3" json:"lion_in_max"`
+}
+
+func (m *EstimateMintByCollateralInRequest) Reset()         { *m = EstimateMintByCollateralInRequest{} }
+func (m *EstimateMintByCollateralInRequest) String() string { return proto.CompactTextString(m) }
+func (*EstimateMintByCollateralInRequest) ProtoMessage()    {}
+func (*EstimateMintByCollateralInRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0c6c4552b535aace, []int{32}
+}
+func (m *EstimateMintByCollateralInRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EstimateMintByCollateralInRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EstimateMintByCollateralInRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EstimateMintByCollateralInRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateMintByCollateralInRequest.Merge(m, src)
+}
+func (m *EstimateMintByCollateralInRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *EstimateMintByCollateralInRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateMintByCollateralInRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EstimateMintByCollateralInRequest proto.InternalMessageInfo
+
+func (m *EstimateMintByCollateralInRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+func (m *EstimateMintByCollateralInRequest) GetMintOut() types.Coin {
+	if m != nil {
+		return m.MintOut
+	}
+	return types.Coin{}
+}
+
+func (m *EstimateMintByCollateralInRequest) GetCollateralDenom() string {
+	if m != nil {
+		return m.CollateralDenom
+	}
+	return ""
+}
+
+func (m *EstimateMintByCollateralInRequest) GetLionInMax() types.Coin {
+	if m != nil {
+		return m.LionInMax
+	}
+	return types.Coin{}
+}
+
+type EstimateMintByCollateralInResponse struct {
 	LionIn    types.Coin        `protobuf:"bytes,1,opt,name=lion_in,json=lionIn,proto3" json:"lion_in"`
 	MintFee   types.Coin        `protobuf:"bytes,2,opt,name=mint_fee,json=mintFee,proto3" json:"mint_fee"`
 	TotalColl TotalCollateral   `protobuf:"bytes,3,opt,name=total_coll,json=totalColl,proto3" json:"total_coll"`
@@ -1577,20 +1575,18 @@ type QueryMintByCollateralRequirementResponse struct {
 	AccColl   AccountCollateral `protobuf:"bytes,5,opt,name=acc_coll,json=accColl,proto3" json:"acc_coll"`
 }
 
-func (m *QueryMintByCollateralRequirementResponse) Reset() {
-	*m = QueryMintByCollateralRequirementResponse{}
-}
-func (m *QueryMintByCollateralRequirementResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryMintByCollateralRequirementResponse) ProtoMessage()    {}
-func (*QueryMintByCollateralRequirementResponse) Descriptor() ([]byte, []int) {
+func (m *EstimateMintByCollateralInResponse) Reset()         { *m = EstimateMintByCollateralInResponse{} }
+func (m *EstimateMintByCollateralInResponse) String() string { return proto.CompactTextString(m) }
+func (*EstimateMintByCollateralInResponse) ProtoMessage()    {}
+func (*EstimateMintByCollateralInResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0c6c4552b535aace, []int{33}
 }
-func (m *QueryMintByCollateralRequirementResponse) XXX_Unmarshal(b []byte) error {
+func (m *EstimateMintByCollateralInResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryMintByCollateralRequirementResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EstimateMintByCollateralInResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryMintByCollateralRequirementResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EstimateMintByCollateralInResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1600,47 +1596,47 @@ func (m *QueryMintByCollateralRequirementResponse) XXX_Marshal(b []byte, determi
 		return b[:n], nil
 	}
 }
-func (m *QueryMintByCollateralRequirementResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryMintByCollateralRequirementResponse.Merge(m, src)
+func (m *EstimateMintByCollateralInResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EstimateMintByCollateralInResponse.Merge(m, src)
 }
-func (m *QueryMintByCollateralRequirementResponse) XXX_Size() int {
+func (m *EstimateMintByCollateralInResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryMintByCollateralRequirementResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryMintByCollateralRequirementResponse.DiscardUnknown(m)
+func (m *EstimateMintByCollateralInResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_EstimateMintByCollateralInResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryMintByCollateralRequirementResponse proto.InternalMessageInfo
+var xxx_messageInfo_EstimateMintByCollateralInResponse proto.InternalMessageInfo
 
-func (m *QueryMintByCollateralRequirementResponse) GetLionIn() types.Coin {
+func (m *EstimateMintByCollateralInResponse) GetLionIn() types.Coin {
 	if m != nil {
 		return m.LionIn
 	}
 	return types.Coin{}
 }
 
-func (m *QueryMintByCollateralRequirementResponse) GetMintFee() types.Coin {
+func (m *EstimateMintByCollateralInResponse) GetMintFee() types.Coin {
 	if m != nil {
 		return m.MintFee
 	}
 	return types.Coin{}
 }
 
-func (m *QueryMintByCollateralRequirementResponse) GetTotalColl() TotalCollateral {
+func (m *EstimateMintByCollateralInResponse) GetTotalColl() TotalCollateral {
 	if m != nil {
 		return m.TotalColl
 	}
 	return TotalCollateral{}
 }
 
-func (m *QueryMintByCollateralRequirementResponse) GetPoolColl() PoolCollateral {
+func (m *EstimateMintByCollateralInResponse) GetPoolColl() PoolCollateral {
 	if m != nil {
 		return m.PoolColl
 	}
 	return PoolCollateral{}
 }
 
-func (m *QueryMintByCollateralRequirementResponse) GetAccColl() AccountCollateral {
+func (m *EstimateMintByCollateralInResponse) GetAccColl() AccountCollateral {
 	if m != nil {
 		return m.AccColl
 	}
@@ -1670,131 +1666,129 @@ func init() {
 	proto.RegisterType((*QueryCollateralRatioResponse)(nil), "merlion.maker.v1.QueryCollateralRatioResponse")
 	proto.RegisterType((*QueryParamsRequest)(nil), "merlion.maker.v1.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "merlion.maker.v1.QueryParamsResponse")
-	proto.RegisterType((*QueryMintBySwapRequirementRequest)(nil), "merlion.maker.v1.QueryMintBySwapRequirementRequest")
-	proto.RegisterType((*QueryMintBySwapRequirementResponse)(nil), "merlion.maker.v1.QueryMintBySwapRequirementResponse")
-	proto.RegisterType((*QueryMintBySwapCapacityRequest)(nil), "merlion.maker.v1.QueryMintBySwapCapacityRequest")
-	proto.RegisterType((*QueryMintBySwapCapacityResponse)(nil), "merlion.maker.v1.QueryMintBySwapCapacityResponse")
-	proto.RegisterType((*QueryBurnBySwapRequest)(nil), "merlion.maker.v1.QueryBurnBySwapRequest")
-	proto.RegisterType((*QueryBurnBySwapResponse)(nil), "merlion.maker.v1.QueryBurnBySwapResponse")
-	proto.RegisterType((*QueryBuyBackingRequest)(nil), "merlion.maker.v1.QueryBuyBackingRequest")
-	proto.RegisterType((*QueryBuyBackingResponse)(nil), "merlion.maker.v1.QueryBuyBackingResponse")
-	proto.RegisterType((*QuerySellBackingRequest)(nil), "merlion.maker.v1.QuerySellBackingRequest")
-	proto.RegisterType((*QuerySellBackingResponse)(nil), "merlion.maker.v1.QuerySellBackingResponse")
-	proto.RegisterType((*QueryMintByCollateralRequirementRequest)(nil), "merlion.maker.v1.QueryMintByCollateralRequirementRequest")
-	proto.RegisterType((*QueryMintByCollateralRequirementResponse)(nil), "merlion.maker.v1.QueryMintByCollateralRequirementResponse")
+	proto.RegisterType((*EstimateMintBySwapInRequest)(nil), "merlion.maker.v1.EstimateMintBySwapInRequest")
+	proto.RegisterType((*EstimateMintBySwapInResponse)(nil), "merlion.maker.v1.EstimateMintBySwapInResponse")
+	proto.RegisterType((*EstimateMintBySwapOutRequest)(nil), "merlion.maker.v1.EstimateMintBySwapOutRequest")
+	proto.RegisterType((*EstimateMintBySwapOutResponse)(nil), "merlion.maker.v1.EstimateMintBySwapOutResponse")
+	proto.RegisterType((*EstimateBurnBySwapOutRequest)(nil), "merlion.maker.v1.EstimateBurnBySwapOutRequest")
+	proto.RegisterType((*EstimateBurnBySwapOutResponse)(nil), "merlion.maker.v1.EstimateBurnBySwapOutResponse")
+	proto.RegisterType((*EstimateBuyBackingOutRequest)(nil), "merlion.maker.v1.EstimateBuyBackingOutRequest")
+	proto.RegisterType((*EstimateBuyBackingOutResponse)(nil), "merlion.maker.v1.EstimateBuyBackingOutResponse")
+	proto.RegisterType((*EstimateSellBackingOutRequest)(nil), "merlion.maker.v1.EstimateSellBackingOutRequest")
+	proto.RegisterType((*EstimateSellBackingOutResponse)(nil), "merlion.maker.v1.EstimateSellBackingOutResponse")
+	proto.RegisterType((*EstimateMintByCollateralInRequest)(nil), "merlion.maker.v1.EstimateMintByCollateralInRequest")
+	proto.RegisterType((*EstimateMintByCollateralInResponse)(nil), "merlion.maker.v1.EstimateMintByCollateralInResponse")
 }
 
 func init() { proto.RegisterFile("merlion/maker/v1/query.proto", fileDescriptor_0c6c4552b535aace) }
 
 var fileDescriptor_0c6c4552b535aace = []byte{
-	// 1704 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x99, 0x4f, 0x6f, 0xd4, 0x46,
-	0x14, 0xc0, 0x33, 0x1b, 0x08, 0xc9, 0x4b, 0x20, 0x61, 0x80, 0x12, 0x0c, 0x6c, 0x36, 0x4e, 0xc8,
-	0x3f, 0x12, 0x6f, 0x13, 0x28, 0x6a, 0x39, 0xd0, 0x92, 0x44, 0x50, 0x2a, 0x45, 0x40, 0xa0, 0x52,
-	0xe9, 0x65, 0xe5, 0xdd, 0x38, 0x8b, 0x15, 0xaf, 0xbd, 0xd8, 0xde, 0x84, 0xad, 0x2a, 0x55, 0xea,
-	0xb9, 0x07, 0x24, 0x2a, 0xb5, 0xaa, 0xca, 0xb1, 0x95, 0xca, 0xb1, 0x95, 0x7a, 0xec, 0x99, 0x23,
-	0x12, 0x97, 0x8a, 0x03, 0xaa, 0x42, 0xbf, 0x40, 0xd5, 0x2f, 0x50, 0xcd, 0xf8, 0xd9, 0x3b, 0xfe,
-	0xb7, 0x6b, 0xc3, 0xa5, 0xa7, 0x64, 0x67, 0xe6, 0xcd, 0xfc, 0xde, 0x9b, 0x37, 0x6f, 0xe6, 0x3d,
-	0xc3, 0x99, 0x86, 0x66, 0x1b, 0xba, 0x65, 0x96, 0x1b, 0xea, 0x8e, 0x66, 0x97, 0x77, 0x97, 0xcb,
-	0x0f, 0x5a, 0x9a, 0xdd, 0x56, 0x9a, 0xb6, 0xe5, 0x5a, 0x74, 0x0c, 0x7b, 0x15, 0xde, 0xab, 0xec,
-	0x2e, 0x4b, 0xc7, 0xeb, 0x56, 0xdd, 0xe2, 0x9d, 0x65, 0xf6, 0x9f, 0x37, 0x4e, 0x3a, 0x53, 0xb7,
-	0xac, 0xba, 0xa1, 0x95, 0xd5, 0xa6, 0x5e, 0x56, 0x4d, 0xd3, 0x72, 0x55, 0x57, 0xb7, 0x4c, 0x07,
-	0x7b, 0x8b, 0xb1, 0x35, 0xea, 0x9a, 0xa9, 0x39, 0xba, 0xdf, 0x1f, 0x67, 0xf0, 0x96, 0x43, 0xe9,
-	0x9a, 0xe5, 0x34, 0x2c, 0xa7, 0x5c, 0x55, 0x1d, 0xad, 0xbc, 0xbb, 0x5c, 0xd5, 0x5c, 0x75, 0xb9,
-	0x5c, 0xb3, 0x74, 0xd3, 0xeb, 0x97, 0x65, 0x28, 0xdd, 0x66, 0xc8, 0x57, 0x0d, 0x63, 0x55, 0xad,
-	0xed, 0xe8, 0x66, 0x7d, 0x53, 0x77, 0x76, 0x6e, 0xa9, 0xb6, 0xda, 0x70, 0x36, 0xb5, 0x07, 0x2d,
-	0xcd, 0x71, 0x65, 0x0b, 0x26, 0xbb, 0x8c, 0x71, 0x9a, 0x96, 0xe9, 0x68, 0xf4, 0x13, 0x18, 0xb6,
-	0x75, 0x67, 0xa7, 0xd2, 0xe4, 0xcd, 0xe3, 0xa4, 0xd4, 0x3f, 0x37, 0xbc, 0x32, 0xa5, 0x44, 0x4d,
-	0xa0, 0xc4, 0x66, 0x58, 0x3d, 0xf0, 0xec, 0xd5, 0x44, 0xdf, 0x26, 0xd8, 0x41, 0x8b, 0x7c, 0x0e,
-	0xa6, 0xfc, 0x05, 0xd7, 0x2c, 0xc3, 0x50, 0x5d, 0xcd, 0x56, 0x8d, 0x38, 0x57, 0x0b, 0xa6, 0xbb,
-	0x0f, 0x43, 0xb4, 0x8d, 0x24, 0xb4, 0x99, 0x38, 0x5a, 0xd2, 0x24, 0x09, 0x74, 0x67, 0xe1, 0x74,
-	0xc4, 0x1c, 0xb7, 0x2c, 0xcb, 0x08, 0xa8, 0xee, 0xc3, 0x99, 0xe4, 0x6e, 0xa4, 0xf9, 0x18, 0x0e,
-	0x57, 0xbd, 0xf6, 0x4a, 0x93, 0x75, 0x20, 0xcf, 0xd9, 0x38, 0x0f, 0x93, 0xc3, 0x29, 0x10, 0x63,
-	0xa4, 0x2a, 0xcc, 0x28, 0x97, 0xa0, 0x18, 0xd7, 0x3f, 0xc4, 0xe2, 0xc2, 0x44, 0xea, 0x08, 0xc4,
-	0xb9, 0x0d, 0x63, 0xb5, 0xa0, 0x2b, 0x44, 0x54, 0x4a, 0x26, 0xea, 0x4c, 0x84, 0x50, 0xa3, 0xb5,
-	0xf0, 0xd4, 0xf2, 0x15, 0x38, 0xc9, 0x57, 0x15, 0xd4, 0x47, 0x20, 0x3a, 0xd5, 0x51, 0x7e, 0x4b,
-	0x33, 0xad, 0xc6, 0x38, 0x29, 0x91, 0xb9, 0xa1, 0x40, 0xaf, 0x75, 0xd6, 0x26, 0x57, 0x61, 0x3c,
-	0x2e, 0x8f, 0xb8, 0xd7, 0x60, 0x44, 0xb4, 0x1e, 0x97, 0xcf, 0x68, 0xbc, 0x61, 0xc1, 0x78, 0xf2,
-	0x75, 0x90, 0xf8, 0x1a, 0x61, 0xb3, 0xf8, 0x98, 0xf3, 0x21, 0xa3, 0x88, 0xa4, 0x82, 0xb2, 0x1e,
-	0xac, 0x89, 0xde, 0x10, 0x9d, 0x08, 0x79, 0x6f, 0xc2, 0x68, 0xc4, 0xbc, 0x88, 0x9c, 0xd5, 0xba,
-	0x47, 0xc2, 0xd6, 0x95, 0xb7, 0x71, 0x4b, 0x3b, 0x03, 0x6f, 0x6e, 0x5f, 0xad, 0xd5, 0xac, 0x96,
-	0xe9, 0xfa, 0xf4, 0xe3, 0x70, 0x48, 0xf5, 0x5a, 0x10, 0xda, 0xff, 0x99, 0xa8, 0x57, 0x21, 0x59,
-	0xaf, 0x2f, 0x31, 0x30, 0x24, 0xae, 0x83, 0xca, 0x7d, 0x06, 0x14, 0x67, 0xae, 0x74, 0xc4, 0x51,
-	0xbf, 0x84, 0xa3, 0x8f, 0xe2, 0x31, 0x15, 0x8f, 0xaa, 0xd1, 0x0e, 0x59, 0x42, 0x17, 0xb8, 0x6b,
-	0xb9, 0x6a, 0x10, 0x74, 0xd0, 0xa9, 0xb7, 0xe1, 0x54, 0x42, 0x1f, 0x22, 0xdd, 0x80, 0xc3, 0x2e,
-	0x6b, 0xaf, 0xe0, 0x66, 0x23, 0x4d, 0x31, 0x4e, 0x23, 0x8a, 0xfb, 0xc7, 0xcb, 0x15, 0xda, 0x82,
-	0x73, 0xce, 0x07, 0x0a, 0xb1, 0x01, 0x31, 0x6c, 0x3c, 0xe7, 0xb1, 0x6e, 0x24, 0xd9, 0x84, 0x31,
-	0x8f, 0x24, 0x66, 0x9a, 0xc9, 0x14, 0x98, 0xf8, 0xc9, 0x72, 0xc3, 0xcd, 0x01, 0x92, 0xb0, 0x1c,
-	0xbb, 0x2b, 0x7c, 0xa4, 0x9f, 0x08, 0x32, 0xc5, 0xfa, 0x91, 0xe9, 0x5e, 0x68, 0xff, 0x6d, 0xd6,
-	0xe7, 0xb9, 0xc8, 0xaa, 0xc2, 0x16, 0x7c, 0xf9, 0x6a, 0x62, 0xa6, 0xae, 0xbb, 0xf7, 0x5b, 0x55,
-	0xa5, 0x66, 0x35, 0xca, 0x78, 0x75, 0x78, 0x7f, 0x96, 0x9c, 0xad, 0x9d, 0xb2, 0xdb, 0x6e, 0x6a,
-	0x8e, 0xb2, 0xae, 0xd5, 0x44, 0x7f, 0xe1, 0x4b, 0xd0, 0x05, 0x38, 0x6a, 0xa8, 0x8e, 0x5b, 0x69,
-	0x35, 0xb7, 0x54, 0x57, 0xab, 0x54, 0x0d, 0xab, 0xb6, 0xc3, 0x7d, 0xab, 0x7f, 0x73, 0x94, 0x75,
-	0x7c, 0xca, 0xdb, 0x57, 0x59, 0xb3, 0x7c, 0x1c, 0x28, 0xc7, 0x0c, 0x87, 0xf3, 0x0d, 0x38, 0x16,
-	0x6a, 0x45, 0xe6, 0x4b, 0x30, 0x10, 0x04, 0x6e, 0x66, 0xbd, 0xf1, 0x84, 0x83, 0x23, 0x86, 0x6a,
-	0x1c, 0x2d, 0xff, 0x46, 0xf0, 0xda, 0xda, 0xd0, 0x4d, 0x77, 0xb5, 0x7d, 0x67, 0x4f, 0x6d, 0xb2,
-	0x95, 0x74, 0x5b, 0x6b, 0x68, 0x9d, 0xb3, 0xf2, 0x11, 0x0c, 0x37, 0x74, 0xd3, 0xad, 0xb8, 0xaa,
-	0x5d, 0xd7, 0x5c, 0x5c, 0xe2, 0x94, 0xe2, 0xe9, 0xac, 0xb0, 0x5b, 0x53, 0xc1, 0x5b, 0x53, 0x59,
-	0xb3, 0x74, 0xd3, 0xbf, 0x0e, 0x98, 0xcc, 0x5d, 0x2e, 0x12, 0x0f, 0x69, 0x85, 0x78, 0x48, 0xa3,
-	0xb3, 0x30, 0xba, 0xdd, 0x32, 0x42, 0xbe, 0xd0, 0x5f, 0x22, 0x73, 0x83, 0x9b, 0x47, 0x58, 0xb3,
-	0xb0, 0xc3, 0x2f, 0x09, 0xc8, 0xdd, 0xa8, 0xd1, 0x28, 0x57, 0x00, 0xfc, 0x45, 0x75, 0x33, 0x2b,
-	0xf5, 0x10, 0x8a, 0xdc, 0x30, 0xe9, 0xfb, 0x70, 0x88, 0x99, 0x90, 0x09, 0x17, 0xb2, 0x09, 0x0f,
-	0xb0, 0xf1, 0x37, 0x4c, 0x7a, 0x19, 0x06, 0xb9, 0xc1, 0xb6, 0x35, 0x8d, 0xab, 0x90, 0x41, 0xf4,
-	0x10, 0x13, 0xb8, 0xa6, 0x69, 0xf2, 0xcf, 0x04, 0x6f, 0xac, 0x8e, 0x72, 0x6b, 0x6a, 0x53, 0xad,
-	0xe9, 0x6e, 0xdb, 0xdf, 0x8f, 0xf5, 0x8e, 0x35, 0xd5, 0x5d, 0x55, 0x37, 0xb2, 0xea, 0xe6, 0x9b,
-	0xfb, 0x2a, 0x13, 0x62, 0xe6, 0xe1, 0xea, 0x79, 0x53, 0x64, 0xd4, 0x70, 0x88, 0x89, 0x70, 0x79,
-	0xf9, 0x71, 0x01, 0xa3, 0x6c, 0x12, 0xe8, 0xff, 0x66, 0x0b, 0xac, 0x96, 0x9b, 0x6b, 0x0b, 0x6e,
-	0xb6, 0xdc, 0xd0, 0xf6, 0x1d, 0xc8, 0xb9, 0x7d, 0x5f, 0xc1, 0x3b, 0xde, 0xbd, 0xdc, 0xb2, 0xcd,
-	0x8e, 0x6b, 0xe2, 0x29, 0xaa, 0xb6, 0x6c, 0x33, 0xef, 0x29, 0x62, 0x32, 0x39, 0x4e, 0x91, 0xfc,
-	0x82, 0xf8, 0x2f, 0x0b, 0x81, 0x00, 0xb7, 0x83, 0x21, 0xe0, 0x04, 0xcc, 0x2e, 0x99, 0x11, 0x3c,
-	0x19, 0x34, 0x0d, 0xdf, 0x10, 0x26, 0x9e, 0x71, 0x47, 0xf8, 0x0e, 0xa2, 0x2c, 0x37, 0x40, 0x9e,
-	0x53, 0xc1, 0x04, 0x98, 0x59, 0xf7, 0x02, 0xb3, 0xb6, 0xc3, 0x37, 0x9d, 0xe8, 0x22, 0x24, 0x9f,
-	0x8b, 0x64, 0x32, 0xe7, 0x93, 0x8e, 0x39, 0xdb, 0xd1, 0x7b, 0xf4, 0xed, 0xcd, 0xc9, 0x7d, 0xa2,
-	0xcd, 0x1a, 0xb8, 0x55, 0x0a, 0x99, 0x7d, 0x82, 0xcb, 0x30, 0xc3, 0xdc, 0x43, 0xbc, 0x3b, 0x9a,
-	0x11, 0x79, 0x03, 0xbc, 0xed, 0xe1, 0x93, 0x7f, 0x20, 0xf8, 0xc0, 0x08, 0xcd, 0x8d, 0xba, 0x8b,
-	0x8e, 0x40, 0x72, 0x3a, 0xc2, 0x2a, 0x8c, 0x38, 0x9a, 0x61, 0xe4, 0x55, 0x7b, 0xd8, 0x17, 0x62,
-	0x7a, 0xff, 0x43, 0x60, 0x56, 0x88, 0x3e, 0xe1, 0xa7, 0x47, 0xe4, 0xfe, 0x62, 0x6f, 0xbd, 0xad,
-	0x2d, 0x5b, 0x73, 0x9c, 0xe0, 0xad, 0xe7, 0xfd, 0x8c, 0xde, 0x6c, 0x85, 0xfc, 0x37, 0x5b, 0xd2,
-	0x6b, 0xb1, 0x3f, 0xf1, 0xb5, 0x48, 0x3f, 0x84, 0x61, 0xf4, 0xd4, 0x4a, 0x43, 0x7d, 0x98, 0x35,
-	0xb2, 0x0c, 0x79, 0xde, 0xba, 0xa1, 0x3e, 0x94, 0xff, 0x2d, 0xc0, 0x5c, 0x6f, 0x9d, 0x71, 0x83,
-	0xde, 0xfc, 0x5c, 0x88, 0xe1, 0xaf, 0x90, 0x2f, 0xfc, 0xd1, 0x6b, 0x00, 0x9d, 0x07, 0x1d, 0x9e,
-	0xf2, 0xcc, 0x4f, 0xb9, 0xa1, 0xe0, 0x29, 0x47, 0xd7, 0x60, 0x88, 0xe5, 0x01, 0xde, 0x34, 0x07,
-	0x72, 0x25, 0x03, 0x83, 0x4d, 0x6c, 0xa5, 0xeb, 0x30, 0xa8, 0xd6, 0x6a, 0xde, 0x1c, 0x07, 0xf3,
-	0x3e, 0xb8, 0x59, 0x3e, 0xc0, 0x1a, 0x57, 0xf6, 0x4f, 0xc0, 0x41, 0x6e, 0x75, 0xfa, 0x2b, 0x81,
-	0xe3, 0x49, 0xf9, 0x3d, 0x5d, 0x89, 0x4f, 0xdb, 0xab, 0x60, 0x20, 0x5d, 0xc8, 0x25, 0xe3, 0x6d,
-	0xaa, 0xbc, 0xfc, 0xf5, 0x8b, 0xbf, 0x1f, 0x17, 0xce, 0xd3, 0xf9, 0x72, 0xac, 0xa0, 0xa1, 0x1a,
-	0xc1, 0x7b, 0xbe, 0x22, 0x64, 0xf2, 0xf4, 0x0f, 0x02, 0x27, 0x53, 0x92, 0x7f, 0xfa, 0x5e, 0x3a,
-	0x43, 0x97, 0x9a, 0x82, 0x74, 0x29, 0xaf, 0x18, 0xd2, 0x5f, 0xe4, 0xf4, 0x0a, 0x5d, 0x4c, 0xa6,
-	0x17, 0x5f, 0xdd, 0x82, 0x02, 0x4f, 0x08, 0x8c, 0x46, 0xea, 0x04, 0x74, 0xa9, 0xa7, 0xf1, 0xc4,
-	0x14, 0x5f, 0x52, 0xb2, 0x0e, 0x47, 0xd0, 0xf3, 0x1c, 0xf4, 0x1c, 0x9d, 0xea, 0x6e, 0x66, 0x5e,
-	0x08, 0xa0, 0xbf, 0x10, 0xa0, 0xf1, 0xda, 0x01, 0x7d, 0x37, 0x8b, 0x91, 0x42, 0x94, 0xcb, 0x39,
-	0x24, 0x10, 0x54, 0xe1, 0xa0, 0x73, 0x74, 0xa6, 0xa7, 0x45, 0x3d, 0xd6, 0x6f, 0x08, 0x0c, 0x0b,
-	0x1a, 0xd3, 0xf9, 0x94, 0x25, 0xe3, 0x55, 0x09, 0x69, 0x21, 0xcb, 0x50, 0xc4, 0x9a, 0xe1, 0x58,
-	0x25, 0x5a, 0x8c, 0x63, 0x89, 0xb6, 0xa3, 0xdf, 0x13, 0x38, 0x12, 0x56, 0x8d, 0x2e, 0xa6, 0x2c,
-	0x93, 0x58, 0x83, 0x90, 0x96, 0x32, 0x8e, 0x46, 0xae, 0x79, 0xce, 0x35, 0x45, 0x27, 0xe3, 0x5c,
-	0x11, 0x53, 0xd1, 0xa7, 0x04, 0x8e, 0x25, 0xa4, 0xf5, 0x74, 0xb9, 0xe7, 0x8a, 0xd1, 0x52, 0x83,
-	0xb4, 0x92, 0x47, 0x04, 0x49, 0x17, 0x39, 0xe9, 0x0c, 0x9d, 0xee, 0x4a, 0xea, 0x97, 0x2c, 0x1e,
-	0x11, 0x18, 0x11, 0x53, 0x75, 0x9a, 0xb6, 0x59, 0x09, 0xa5, 0x02, 0xe9, 0x7c, 0xa6, 0xb1, 0xc8,
-	0x35, 0xcb, 0xb9, 0x26, 0xe9, 0x44, 0x9c, 0x2b, 0x54, 0x52, 0xa0, 0x3f, 0x12, 0x18, 0x8d, 0x44,
-	0xf9, 0xd4, 0x53, 0x9b, 0x5c, 0x3c, 0x48, 0x3d, 0xb5, 0x29, 0xc5, 0x04, 0x79, 0x81, 0xb3, 0x4d,
-	0x53, 0x39, 0x8d, 0xad, 0x63, 0x39, 0x8e, 0x17, 0x29, 0x00, 0xd0, 0xde, 0xce, 0x24, 0x16, 0x12,
-	0x52, 0xf1, 0x52, 0xea, 0x0a, 0xdd, 0xf0, 0xa2, 0xf5, 0x06, 0xba, 0x07, 0x03, 0x18, 0xa2, 0xa7,
-	0x53, 0x56, 0x09, 0x47, 0xe4, 0x73, 0x3d, 0x46, 0x21, 0x42, 0x89, 0x23, 0x48, 0x74, 0x3c, 0x8e,
-	0x80, 0xc1, 0xf6, 0x77, 0x02, 0x27, 0x12, 0xb3, 0x6a, 0x9a, 0x76, 0x5f, 0x75, 0xab, 0x1c, 0x48,
-	0x17, 0xf3, 0x09, 0x21, 0xe6, 0x0a, 0xc7, 0x5c, 0xa4, 0x0b, 0x71, 0x4c, 0xfe, 0x30, 0xa9, 0xb6,
-	0x2b, 0xce, 0x9e, 0xda, 0xac, 0xd8, 0x02, 0xde, 0x53, 0x02, 0x34, 0x9e, 0x88, 0xa6, 0x46, 0xe1,
-	0xd4, 0xe4, 0x3a, 0x35, 0x0a, 0xa7, 0x67, 0xb9, 0x72, 0x99, 0xf3, 0xce, 0xd3, 0xd9, 0x1e, 0xbc,
-	0x35, 0x9f, 0xea, 0x5b, 0x02, 0xa3, 0x91, 0x1c, 0x8d, 0xce, 0xa5, 0xc5, 0xd7, 0x68, 0x22, 0x29,
-	0xcd, 0x67, 0x18, 0xd9, 0x3b, 0x8c, 0xf0, 0x8f, 0x30, 0x15, 0x9e, 0x90, 0x21, 0x1f, 0x7d, 0xdc,
-	0xc1, 0xf2, 0xc3, 0x7a, 0x17, 0xac, 0x48, 0x22, 0xd6, 0x05, 0x2b, 0x9a, 0x38, 0x75, 0xbb, 0x5f,
-	0x7d, 0xac, 0x76, 0x10, 0x49, 0xbe, 0x23, 0x30, 0x16, 0x4d, 0x43, 0x52, 0x2f, 0xae, 0x78, 0x1a,
-	0x94, 0x7a, 0x71, 0x25, 0x64, 0x35, 0xbd, 0xed, 0xc5, 0x52, 0x90, 0x80, 0xec, 0x19, 0x81, 0xd3,
-	0x5d, 0x9e, 0xe2, 0xf4, 0x83, 0xae, 0xae, 0xd4, 0x2d, 0x65, 0x91, 0x2e, 0xbf, 0x89, 0x68, 0xef,
-	0xe3, 0xe3, 0x29, 0xe1, 0x3b, 0x65, 0x27, 0xec, 0xac, 0x5e, 0x7f, 0xb6, 0x5f, 0x24, 0xcf, 0xf7,
-	0x8b, 0xe4, 0xaf, 0xfd, 0x22, 0x79, 0xf4, 0xba, 0xd8, 0xf7, 0xfc, 0x75, 0xb1, 0xef, 0xcf, 0xd7,
-	0xc5, 0xbe, 0xcf, 0x97, 0x84, 0x62, 0x27, 0xce, 0xb7, 0xf4, 0x85, 0x65, 0x6a, 0xc1, 0xe4, 0x0f,
-	0x71, 0x7a, 0x5e, 0xf7, 0xac, 0x0e, 0xf0, 0x4f, 0x66, 0x17, 0xfe, 0x0b, 0x00, 0x00, 0xff, 0xff,
-	0xbd, 0xe4, 0x4f, 0x7b, 0xf6, 0x1b, 0x00, 0x00,
+	// 1679 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x99, 0xcf, 0x6f, 0xdc, 0x44,
+	0x14, 0xc7, 0xe3, 0x4d, 0x9a, 0x1f, 0x2f, 0x69, 0xd3, 0x4e, 0x43, 0x9b, 0xba, 0xe9, 0x66, 0xe3,
+	0xa4, 0x21, 0x3f, 0xbd, 0x4d, 0x52, 0xaa, 0x8a, 0x43, 0xa1, 0xdb, 0x5f, 0x04, 0x29, 0x4a, 0x9b,
+	0x82, 0x04, 0x5c, 0x56, 0xde, 0x8d, 0x93, 0x5a, 0xd9, 0xb5, 0xb7, 0x6b, 0xbb, 0x4d, 0x10, 0x5c,
+	0x38, 0x73, 0x28, 0xe2, 0xc2, 0xa1, 0x48, 0x20, 0x04, 0x52, 0x11, 0x48, 0x88, 0x3f, 0x00, 0x89,
+	0x5b, 0x8f, 0x95, 0xe0, 0x00, 0x1c, 0x2a, 0xd4, 0xc2, 0x91, 0xff, 0x01, 0xcd, 0xf8, 0xd9, 0x1e,
+	0xaf, 0xc7, 0x5e, 0x1b, 0x38, 0x70, 0x6a, 0x77, 0x66, 0xde, 0xbc, 0xcf, 0xfb, 0xce, 0xcc, 0xf3,
+	0xbc, 0x09, 0x4c, 0x34, 0xf5, 0x76, 0xc3, 0xb0, 0xcc, 0x72, 0x53, 0xdb, 0xd3, 0xdb, 0xe5, 0x7b,
+	0x2b, 0xe5, 0xbb, 0xae, 0xde, 0x3e, 0x50, 0x5b, 0x6d, 0xcb, 0xb1, 0xc8, 0x51, 0xec, 0x55, 0x59,
+	0xaf, 0x7a, 0x6f, 0x45, 0x1e, 0xdb, 0xb5, 0x76, 0x2d, 0xd6, 0x59, 0xa6, 0xff, 0xf3, 0xc6, 0xc9,
+	0x13, 0xbb, 0x96, 0xb5, 0xdb, 0xd0, 0xcb, 0x5a, 0xcb, 0x28, 0x6b, 0xa6, 0x69, 0x39, 0x9a, 0x63,
+	0x58, 0xa6, 0x8d, 0xbd, 0xc5, 0x98, 0x8f, 0x5d, 0xdd, 0xd4, 0x6d, 0xc3, 0xef, 0x8f, 0x33, 0x78,
+	0xee, 0xd0, 0xba, 0x6e, 0xd9, 0x4d, 0xcb, 0x2e, 0xd7, 0x34, 0x5b, 0x2f, 0xdf, 0x5b, 0xa9, 0xe9,
+	0x8e, 0xb6, 0x52, 0xae, 0x5b, 0x86, 0xe9, 0xf5, 0x2b, 0x0a, 0x94, 0x6e, 0x51, 0xe4, 0xcb, 0x8d,
+	0x46, 0x45, 0xab, 0xef, 0x19, 0xe6, 0xee, 0x96, 0x61, 0xef, 0xdd, 0xd4, 0xda, 0x5a, 0xd3, 0xde,
+	0xd2, 0xef, 0xba, 0xba, 0xed, 0x28, 0x16, 0x4c, 0xa5, 0x8c, 0xb1, 0x5b, 0x96, 0x69, 0xeb, 0xe4,
+	0x75, 0x18, 0x6e, 0x1b, 0xf6, 0x5e, 0xb5, 0xc5, 0x9a, 0xc7, 0xa5, 0x52, 0xef, 0xdc, 0xf0, 0xea,
+	0xb4, 0xda, 0x29, 0x81, 0x1a, 0x9b, 0xa1, 0xd2, 0xf7, 0xf8, 0xe9, 0x64, 0xcf, 0x16, 0xb4, 0x83,
+	0x16, 0xe5, 0x2c, 0x4c, 0xfb, 0x0e, 0xaf, 0x58, 0x8d, 0x86, 0xe6, 0xe8, 0x6d, 0xad, 0x11, 0xe7,
+	0x72, 0x61, 0x26, 0x7d, 0x18, 0xa2, 0x6d, 0x88, 0xd0, 0x66, 0xe3, 0x68, 0xa2, 0x49, 0x04, 0x74,
+	0x67, 0xe0, 0x74, 0x87, 0x1c, 0x37, 0x2d, 0xab, 0x11, 0x50, 0xdd, 0x81, 0x09, 0x71, 0x37, 0xd2,
+	0xbc, 0x06, 0x87, 0x6b, 0x5e, 0x7b, 0xb5, 0x45, 0x3b, 0x90, 0xe7, 0x4c, 0x9c, 0x87, 0xda, 0xe1,
+	0x14, 0x88, 0x31, 0x52, 0xe3, 0x66, 0x54, 0x4a, 0x50, 0x8c, 0xc7, 0x1f, 0x61, 0x71, 0x60, 0x32,
+	0x71, 0x04, 0xe2, 0xdc, 0x82, 0xa3, 0xf5, 0xa0, 0x2b, 0x42, 0x54, 0x12, 0x13, 0x85, 0x13, 0x21,
+	0xd4, 0x68, 0x3d, 0x3a, 0xb5, 0x72, 0x09, 0x4e, 0x32, 0xaf, 0x5c, 0xf8, 0x08, 0x44, 0xa6, 0xc3,
+	0xe0, 0xb7, 0x75, 0xd3, 0x6a, 0x8e, 0x4b, 0x25, 0x69, 0x6e, 0x28, 0x88, 0xeb, 0x2a, 0x6d, 0x53,
+	0x6a, 0x30, 0x1e, 0xb7, 0x47, 0xdc, 0xeb, 0x30, 0xc2, 0xab, 0xc7, 0xec, 0x33, 0x8a, 0x37, 0xcc,
+	0x89, 0xa7, 0xdc, 0x00, 0x99, 0xf9, 0x88, 0xca, 0xe2, 0x63, 0xce, 0x47, 0x44, 0xe1, 0x49, 0xb9,
+	0x60, 0x3d, 0x58, 0x13, 0x77, 0x43, 0xe7, 0x44, 0xc8, 0xbb, 0x09, 0xa3, 0x1d, 0xf2, 0x22, 0x72,
+	0x56, 0x75, 0x8f, 0x44, 0xd5, 0x55, 0x76, 0x70, 0x49, 0xc3, 0x81, 0x9b, 0x3b, 0x97, 0xeb, 0x75,
+	0xcb, 0x35, 0x1d, 0x9f, 0x7e, 0x1c, 0x06, 0x34, 0xaf, 0x05, 0xa1, 0xfd, 0x9f, 0xc2, 0xb8, 0x0a,
+	0xe2, 0xb8, 0xde, 0xc3, 0xc4, 0x20, 0xf4, 0x83, 0xc1, 0xbd, 0x05, 0x04, 0x67, 0xae, 0x86, 0xe6,
+	0x18, 0x9f, 0xe0, 0xe8, 0xa3, 0x79, 0x2c, 0xc4, 0x63, 0x5a, 0x67, 0x87, 0x22, 0xe3, 0x16, 0x78,
+	0xc3, 0x72, 0xb4, 0x20, 0xe9, 0xe0, 0xa6, 0xde, 0x81, 0x53, 0x82, 0x3e, 0x44, 0x5a, 0x87, 0xc3,
+	0x0e, 0x6d, 0xaf, 0xe2, 0x62, 0x23, 0x4d, 0x31, 0x4e, 0xc3, 0x9b, 0xfb, 0xc7, 0xcb, 0xe1, 0xda,
+	0x82, 0x73, 0xce, 0x06, 0x72, 0xb9, 0x01, 0x31, 0xda, 0x78, 0xce, 0x63, 0xdd, 0x48, 0xb2, 0x05,
+	0x47, 0x3d, 0x92, 0x98, 0x34, 0x53, 0x09, 0x30, 0xf1, 0x93, 0xe5, 0x44, 0x9b, 0x03, 0x24, 0xce,
+	0x1d, 0xfd, 0x56, 0xf8, 0x48, 0x5f, 0x4a, 0xc8, 0x14, 0xeb, 0x47, 0xa6, 0xb7, 0x23, 0xeb, 0xdf,
+	0xa6, 0x7d, 0xde, 0x16, 0xa9, 0xa8, 0xd4, 0xe1, 0x6f, 0x4f, 0x27, 0x67, 0x77, 0x0d, 0xe7, 0x8e,
+	0x5b, 0x53, 0xeb, 0x56, 0xb3, 0x8c, 0x9f, 0x0e, 0xef, 0x9f, 0x65, 0x7b, 0x7b, 0xaf, 0xec, 0x1c,
+	0xb4, 0x74, 0x5b, 0xbd, 0xaa, 0xd7, 0xf9, 0xfd, 0xc2, 0x5c, 0x90, 0x05, 0x38, 0xd6, 0xd0, 0x6c,
+	0xa7, 0xea, 0xb6, 0xb6, 0x35, 0x47, 0xaf, 0xd6, 0x1a, 0x56, 0x7d, 0x8f, 0xed, 0xad, 0xde, 0xad,
+	0x51, 0xda, 0xf1, 0x26, 0x6b, 0xaf, 0xd0, 0x66, 0x65, 0x0c, 0x08, 0xc3, 0x8c, 0xa6, 0xf3, 0x0d,
+	0x38, 0x1e, 0x69, 0x45, 0xe6, 0x0b, 0xd0, 0x1f, 0x24, 0x6e, 0xaa, 0xde, 0xb8, 0xe0, 0xe0, 0xf0,
+	0xa9, 0x1a, 0x47, 0x2b, 0x9f, 0x4b, 0x70, 0xfa, 0x9a, 0xed, 0x18, 0x4d, 0xcd, 0xd1, 0x37, 0x0c,
+	0xd3, 0xa9, 0x1c, 0xdc, 0xbe, 0xaf, 0xb5, 0xd6, 0x4d, 0xff, 0x94, 0xbc, 0x0c, 0x83, 0x4d, 0xc3,
+	0x74, 0xaa, 0x96, 0xeb, 0xe0, 0xcc, 0xa7, 0x54, 0x2f, 0x54, 0x95, 0x7e, 0x2c, 0x55, 0xfc, 0x58,
+	0xaa, 0x57, 0x2c, 0xc3, 0xc4, 0xa9, 0x07, 0xa8, 0xc1, 0xa6, 0x2b, 0x48, 0x63, 0x85, 0x78, 0x1a,
+	0x23, 0x53, 0x30, 0xb2, 0xe3, 0x36, 0xc2, 0x9d, 0xd8, 0x5b, 0x92, 0xe6, 0x06, 0xb7, 0x86, 0x69,
+	0x9b, 0xbf, 0xc5, 0x7e, 0x96, 0x60, 0x42, 0xcc, 0x88, 0xc1, 0x5f, 0x02, 0xf0, 0x1d, 0x19, 0x66,
+	0x56, 0xcc, 0x21, 0x34, 0x59, 0x37, 0xc9, 0x45, 0x18, 0xa0, 0x52, 0x51, 0xe3, 0x42, 0x36, 0xe3,
+	0x7e, 0x3a, 0x7e, 0xdd, 0x0c, 0xe4, 0xd9, 0xd1, 0x75, 0x46, 0x9e, 0x55, 0x9e, 0xeb, 0xba, 0xae,
+	0x7c, 0x25, 0x0c, 0x6b, 0xd3, 0x0d, 0x32, 0xd4, 0x35, 0x38, 0x12, 0x86, 0x55, 0x6d, 0x6a, 0xfb,
+	0x59, 0x43, 0x1b, 0x09, 0x42, 0xdb, 0xd0, 0xf6, 0xc9, 0x2b, 0x30, 0x8c, 0xd1, 0xb1, 0x39, 0x32,
+	0x46, 0x38, 0xe4, 0x45, 0xb8, 0xa1, 0xed, 0x2b, 0x1f, 0x15, 0xe0, 0x4c, 0x02, 0xe8, 0xff, 0x66,
+	0x01, 0xe8, 0xfe, 0xec, 0xcd, 0xb9, 0x3f, 0xf9, 0xc5, 0xeb, 0xcb, 0xb9, 0x78, 0xef, 0x87, 0x6b,
+	0x57, 0x71, 0xdb, 0x66, 0x6c, 0xed, 0x2e, 0xc2, 0x40, 0xcd, 0x6d, 0x9b, 0x39, 0xe4, 0xe8, 0xa7,
+	0xe3, 0xd7, 0xcd, 0x4c, 0xa7, 0x46, 0xf9, 0x55, 0x0a, 0x97, 0xa4, 0xc3, 0x3f, 0x2e, 0xc9, 0xab,
+	0xe0, 0x7f, 0xc9, 0xf3, 0x9c, 0x5d, 0x7f, 0x19, 0x51, 0x1e, 0xb6, 0x28, 0xd4, 0x3c, 0xe3, 0xaa,
+	0xb0, 0x55, 0x44, 0x5b, 0x16, 0x7e, 0x9e, 0x73, 0x41, 0x0d, 0x62, 0xd2, 0xfa, 0xd7, 0x9b, 0xa8,
+	0xb4, 0xfe, 0x66, 0x91, 0xf2, 0x6d, 0x96, 0x4c, 0xd2, 0x7e, 0x11, 0x91, 0x36, 0xe2, 0xff, 0x3f,
+	0x93, 0x96, 0xce, 0xe0, 0x1e, 0xd0, 0x06, 0xa6, 0x50, 0x21, 0xeb, 0x0c, 0x9e, 0x0d, 0x15, 0xa9,
+	0x1a, 0x42, 0xde, 0xd6, 0x83, 0x54, 0xc9, 0xa9, 0xf4, 0x2f, 0x8f, 0xa4, 0xf2, 0x99, 0x04, 0xc5,
+	0x24, 0x0f, 0xa8, 0x03, 0xbf, 0x41, 0xa4, 0x9c, 0x1b, 0xa4, 0x02, 0x23, 0xb6, 0xde, 0x68, 0xe4,
+	0x95, 0x60, 0xd8, 0x37, 0xa2, 0x1a, 0xfc, 0x29, 0xc1, 0x54, 0x34, 0x2f, 0x85, 0x5f, 0xf4, 0xf0,
+	0x0b, 0x46, 0xef, 0x79, 0xdb, 0xdb, 0x6d, 0xdd, 0xb6, 0x83, 0x7b, 0x9e, 0xf7, 0x33, 0x92, 0x3b,
+	0x0a, 0x39, 0x73, 0x87, 0xe8, 0x8e, 0xd8, 0x2b, 0xbc, 0x23, 0x76, 0xe6, 0xdf, 0xbe, 0xdc, 0xf9,
+	0xf7, 0xaf, 0x02, 0x28, 0x69, 0x71, 0xe2, 0x72, 0xfc, 0xf3, 0x73, 0xc1, 0x27, 0xc2, 0x42, 0xbe,
+	0x44, 0x48, 0xae, 0x03, 0x84, 0x17, 0x38, 0x3c, 0xeb, 0x99, 0xaf, 0x6e, 0x43, 0xc1, 0xd5, 0x8d,
+	0x5c, 0x81, 0x21, 0x7a, 0xef, 0xf7, 0xa6, 0xe9, 0xcb, 0x75, 0xf9, 0x1f, 0x6c, 0x61, 0x2b, 0xb9,
+	0x0a, 0x83, 0x5a, 0xbd, 0xee, 0xcd, 0x71, 0x28, 0xef, 0x05, 0x9b, 0xde, 0xff, 0x69, 0xe3, 0xea,
+	0xc3, 0x13, 0x70, 0x88, 0xdd, 0xb1, 0xc8, 0xf7, 0x12, 0x8c, 0x89, 0xea, 0x79, 0xb2, 0x1a, 0x9f,
+	0xb6, 0xdb, 0x03, 0x81, 0xbc, 0x96, 0xcb, 0xc6, 0x5b, 0x54, 0x65, 0xe5, 0x83, 0x9f, 0xfe, 0xf8,
+	0xb8, 0xb0, 0x48, 0xe6, 0xcb, 0xb1, 0x07, 0x0c, 0x2d, 0xbc, 0x35, 0x55, 0xb9, 0xca, 0x9d, 0xfc,
+	0x20, 0xc1, 0xc9, 0x84, 0x62, 0x9f, 0xbc, 0x94, 0xcc, 0x90, 0xf2, 0x86, 0x20, 0x5f, 0xc8, 0x6b,
+	0x86, 0xf4, 0xe7, 0x19, 0xbd, 0x4a, 0x96, 0xc4, 0xf4, 0xfc, 0x2d, 0x9b, 0x0b, 0xe0, 0x53, 0x09,
+	0x46, 0x3b, 0xde, 0x05, 0xc8, 0x72, 0x57, 0xf1, 0xf8, 0x92, 0x5e, 0x56, 0xb3, 0x0e, 0x47, 0xd0,
+	0x45, 0x06, 0x7a, 0x96, 0x4c, 0xa7, 0xcb, 0xcc, 0x0a, 0x7f, 0xf2, 0x48, 0x02, 0x12, 0x7f, 0x2b,
+	0x20, 0xe7, 0xb2, 0x88, 0x14, 0xa1, 0x5c, 0xc9, 0x61, 0x81, 0xa0, 0x2a, 0x03, 0x9d, 0x23, 0xb3,
+	0x5d, 0x15, 0xf5, 0x58, 0x3f, 0x94, 0x60, 0x98, 0x8b, 0x98, 0xcc, 0x27, 0xb8, 0x8c, 0xbf, 0x42,
+	0xc8, 0x0b, 0x59, 0x86, 0x22, 0xd6, 0x2c, 0xc3, 0x2a, 0x91, 0x62, 0x1c, 0x8b, 0xd7, 0x8e, 0x7c,
+	0x22, 0xc1, 0x91, 0x68, 0x68, 0x64, 0x29, 0xc1, 0x8d, 0xf0, 0xcd, 0x41, 0x5e, 0xce, 0x38, 0x1a,
+	0xb9, 0xe6, 0x19, 0xd7, 0x34, 0x99, 0x8a, 0x73, 0x75, 0x48, 0x45, 0xbe, 0x96, 0xe0, 0xb8, 0xa0,
+	0x8c, 0x27, 0x2b, 0x5d, 0x3d, 0x76, 0x3e, 0x2d, 0xc8, 0xab, 0x79, 0x4c, 0x90, 0x74, 0x89, 0x91,
+	0xce, 0x92, 0x99, 0x54, 0x52, 0xff, 0x89, 0xe2, 0x81, 0x04, 0x23, 0x7c, 0x69, 0x4e, 0x92, 0x16,
+	0x4b, 0xf0, 0x34, 0x20, 0x2f, 0x66, 0x1a, 0x8b, 0x5c, 0x2f, 0x32, 0xae, 0x29, 0x32, 0x19, 0xe7,
+	0x8a, 0x3c, 0x21, 0x90, 0x87, 0x12, 0x8c, 0x76, 0x64, 0xf9, 0xc4, 0x53, 0x2b, 0x7e, 0x2c, 0x48,
+	0x3c, 0xb5, 0x09, 0x8f, 0x07, 0xca, 0x02, 0x63, 0x9b, 0x21, 0x4a, 0x12, 0x5b, 0xa8, 0x1c, 0xc3,
+	0xeb, 0x28, 0xf8, 0x49, 0xf7, 0xcd, 0xc4, 0x3f, 0x1c, 0x24, 0xe2, 0x25, 0xbc, 0x23, 0xa4, 0xe1,
+	0x75, 0xbe, 0x2f, 0x90, 0xfb, 0xd0, 0x8f, 0x29, 0x7a, 0x26, 0xc1, 0x4b, 0x34, 0x23, 0x9f, 0xed,
+	0x32, 0x0a, 0x11, 0x4a, 0x0c, 0x41, 0x26, 0xe3, 0x71, 0x04, 0x4c, 0xb6, 0x8f, 0x24, 0x18, 0x13,
+	0x15, 0xd7, 0x22, 0x71, 0x52, 0x1e, 0x0a, 0x44, 0xe2, 0xa4, 0xd5, 0xec, 0xca, 0x2a, 0x23, 0x5b,
+	0x22, 0x0b, 0x71, 0x32, 0x1d, 0xed, 0xaa, 0xec, 0x52, 0x52, 0x3b, 0xa8, 0xda, 0xf7, 0xb5, 0x56,
+	0xd5, 0x30, 0xc9, 0xb7, 0x12, 0xbc, 0x20, 0x2c, 0x44, 0x49, 0x26, 0xef, 0xe1, 0xed, 0x58, 0x2e,
+	0x67, 0x1e, 0x8f, 0xb8, 0x6b, 0x0c, 0x77, 0x99, 0x2c, 0x66, 0xc5, 0xb5, 0x5c, 0x27, 0xc2, 0x1b,
+	0xa9, 0xd2, 0xd2, 0x78, 0x45, 0xe5, 0x64, 0x1a, 0xaf, 0xb0, 0xfc, 0xcb, 0xc4, 0xcb, 0x2a, 0x34,
+	0x9e, 0xf7, 0x9b, 0x08, 0x2f, 0x57, 0xfa, 0xa4, 0xf3, 0xc6, 0x6b, 0xb4, 0x74, 0x5e, 0x41, 0x4d,
+	0x95, 0x69, 0x3b, 0xd4, 0xdc, 0x83, 0x2a, 0x57, 0x78, 0x91, 0xef, 0x24, 0x38, 0x21, 0x2e, 0x51,
+	0x48, 0x8a, 0x7f, 0x61, 0xb9, 0x24, 0x9f, 0xcb, 0x6e, 0x90, 0x43, 0x61, 0x5a, 0xad, 0x44, 0x90,
+	0x7f, 0x94, 0x40, 0x4e, 0xbe, 0xca, 0x93, 0xb5, 0x6e, 0xdb, 0x52, 0x50, 0xe0, 0xc8, 0xe7, 0xf3,
+	0x19, 0x21, 0xfe, 0x45, 0x86, 0xbf, 0x4a, 0xce, 0x65, 0xd8, 0xd0, 0x5c, 0xb6, 0x32, 0xcc, 0xca,
+	0x8d, 0xc7, 0xcf, 0x8a, 0xd2, 0x93, 0x67, 0x45, 0xe9, 0xf7, 0x67, 0x45, 0xe9, 0xc1, 0xf3, 0x62,
+	0xcf, 0x93, 0xe7, 0xc5, 0x9e, 0x5f, 0x9e, 0x17, 0x7b, 0xde, 0x59, 0xe6, 0x9e, 0x45, 0x71, 0xd6,
+	0xe5, 0x77, 0x2d, 0x53, 0x0f, 0x5c, 0xec, 0xa3, 0x13, 0xf6, 0x42, 0x5a, 0xeb, 0x67, 0x7f, 0x5c,
+	0x5b, 0xfb, 0x3b, 0x00, 0x00, 0xff, 0xff, 0x6e, 0xcd, 0xa3, 0x09, 0x20, 0x1c, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1831,23 +1825,18 @@ type QueryClient interface {
 	CollateralRatio(ctx context.Context, in *QueryCollateralRatioRequest, opts ...grpc.CallOption) (*QueryCollateralRatioResponse, error)
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
-	// MintBySwapRequirement queries requirement of backing and lion for the mint
-	// target.
-	MintBySwapRequirement(ctx context.Context, in *QueryMintBySwapRequirementRequest, opts ...grpc.CallOption) (*QueryMintBySwapRequirementResponse, error)
-	// MintBySwapCapacity queries how much mer can be minted with provided backing
-	// and lion.
-	MintBySwapCapacity(ctx context.Context, in *QueryMintBySwapCapacityRequest, opts ...grpc.CallOption) (*QueryMintBySwapCapacityResponse, error)
-	// QueryBurnBySwap queries how much backing and lion will be returned when mer
-	// is burned.
-	QueryBurnBySwap(ctx context.Context, in *QueryBurnBySwapRequest, opts ...grpc.CallOption) (*QueryBurnBySwapResponse, error)
-	// QueryBuyBacking queries how much backing can be bought with provided lion.
-	QueryBuyBacking(ctx context.Context, in *QueryBuyBackingRequest, opts ...grpc.CallOption) (*QueryBuyBackingResponse, error)
-	// QuerySellBacking queries how much lion can be exchanged for provided
-	// backing.
-	QuerySellBacking(ctx context.Context, in *QuerySellBackingRequest, opts ...grpc.CallOption) (*QuerySellBackingResponse, error)
-	// MintByCollateralRequirement queries the requirement of when minting by
-	// collateral.
-	MintByCollateralRequirement(ctx context.Context, in *QueryMintByCollateralRequirementRequest, opts ...grpc.CallOption) (*QueryMintByCollateralRequirementResponse, error)
+	// EstimateMintBySwapIn estimates input of minting by swap.
+	EstimateMintBySwapIn(ctx context.Context, in *EstimateMintBySwapInRequest, opts ...grpc.CallOption) (*EstimateMintBySwapInResponse, error)
+	// EstimateMintBySwapOut estimates output of minting by swap.
+	EstimateMintBySwapOut(ctx context.Context, in *EstimateMintBySwapOutRequest, opts ...grpc.CallOption) (*EstimateMintBySwapOutResponse, error)
+	// EstimateBurnBySwapOut estimates output of burning by swap.
+	EstimateBurnBySwapOut(ctx context.Context, in *EstimateBurnBySwapOutRequest, opts ...grpc.CallOption) (*EstimateBurnBySwapOutResponse, error)
+	// EstimateBuyBackingOut estimates output of buying backing assets.
+	EstimateBuyBackingOut(ctx context.Context, in *EstimateBuyBackingOutRequest, opts ...grpc.CallOption) (*EstimateBuyBackingOutResponse, error)
+	// EstimateSellBackingOut estimates output of selling backing assets.
+	EstimateSellBackingOut(ctx context.Context, in *EstimateSellBackingOutRequest, opts ...grpc.CallOption) (*EstimateSellBackingOutResponse, error)
+	// EstimateMintByCollateralIn estimates input of minting by collateral.
+	EstimateMintByCollateralIn(ctx context.Context, in *EstimateMintByCollateralInRequest, opts ...grpc.CallOption) (*EstimateMintByCollateralInResponse, error)
 }
 
 type queryClient struct {
@@ -1957,54 +1946,54 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 	return out, nil
 }
 
-func (c *queryClient) MintBySwapRequirement(ctx context.Context, in *QueryMintBySwapRequirementRequest, opts ...grpc.CallOption) (*QueryMintBySwapRequirementResponse, error) {
-	out := new(QueryMintBySwapRequirementResponse)
-	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/MintBySwapRequirement", in, out, opts...)
+func (c *queryClient) EstimateMintBySwapIn(ctx context.Context, in *EstimateMintBySwapInRequest, opts ...grpc.CallOption) (*EstimateMintBySwapInResponse, error) {
+	out := new(EstimateMintBySwapInResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/EstimateMintBySwapIn", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) MintBySwapCapacity(ctx context.Context, in *QueryMintBySwapCapacityRequest, opts ...grpc.CallOption) (*QueryMintBySwapCapacityResponse, error) {
-	out := new(QueryMintBySwapCapacityResponse)
-	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/MintBySwapCapacity", in, out, opts...)
+func (c *queryClient) EstimateMintBySwapOut(ctx context.Context, in *EstimateMintBySwapOutRequest, opts ...grpc.CallOption) (*EstimateMintBySwapOutResponse, error) {
+	out := new(EstimateMintBySwapOutResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/EstimateMintBySwapOut", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) QueryBurnBySwap(ctx context.Context, in *QueryBurnBySwapRequest, opts ...grpc.CallOption) (*QueryBurnBySwapResponse, error) {
-	out := new(QueryBurnBySwapResponse)
-	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/QueryBurnBySwap", in, out, opts...)
+func (c *queryClient) EstimateBurnBySwapOut(ctx context.Context, in *EstimateBurnBySwapOutRequest, opts ...grpc.CallOption) (*EstimateBurnBySwapOutResponse, error) {
+	out := new(EstimateBurnBySwapOutResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/EstimateBurnBySwapOut", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) QueryBuyBacking(ctx context.Context, in *QueryBuyBackingRequest, opts ...grpc.CallOption) (*QueryBuyBackingResponse, error) {
-	out := new(QueryBuyBackingResponse)
-	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/QueryBuyBacking", in, out, opts...)
+func (c *queryClient) EstimateBuyBackingOut(ctx context.Context, in *EstimateBuyBackingOutRequest, opts ...grpc.CallOption) (*EstimateBuyBackingOutResponse, error) {
+	out := new(EstimateBuyBackingOutResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/EstimateBuyBackingOut", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) QuerySellBacking(ctx context.Context, in *QuerySellBackingRequest, opts ...grpc.CallOption) (*QuerySellBackingResponse, error) {
-	out := new(QuerySellBackingResponse)
-	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/QuerySellBacking", in, out, opts...)
+func (c *queryClient) EstimateSellBackingOut(ctx context.Context, in *EstimateSellBackingOutRequest, opts ...grpc.CallOption) (*EstimateSellBackingOutResponse, error) {
+	out := new(EstimateSellBackingOutResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/EstimateSellBackingOut", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) MintByCollateralRequirement(ctx context.Context, in *QueryMintByCollateralRequirementRequest, opts ...grpc.CallOption) (*QueryMintByCollateralRequirementResponse, error) {
-	out := new(QueryMintByCollateralRequirementResponse)
-	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/MintByCollateralRequirement", in, out, opts...)
+func (c *queryClient) EstimateMintByCollateralIn(ctx context.Context, in *EstimateMintByCollateralInRequest, opts ...grpc.CallOption) (*EstimateMintByCollateralInResponse, error) {
+	out := new(EstimateMintByCollateralInResponse)
+	err := c.cc.Invoke(ctx, "/merlion.maker.v1.Query/EstimateMintByCollateralIn", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2035,23 +2024,18 @@ type QueryServer interface {
 	CollateralRatio(context.Context, *QueryCollateralRatioRequest) (*QueryCollateralRatioResponse, error)
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
-	// MintBySwapRequirement queries requirement of backing and lion for the mint
-	// target.
-	MintBySwapRequirement(context.Context, *QueryMintBySwapRequirementRequest) (*QueryMintBySwapRequirementResponse, error)
-	// MintBySwapCapacity queries how much mer can be minted with provided backing
-	// and lion.
-	MintBySwapCapacity(context.Context, *QueryMintBySwapCapacityRequest) (*QueryMintBySwapCapacityResponse, error)
-	// QueryBurnBySwap queries how much backing and lion will be returned when mer
-	// is burned.
-	QueryBurnBySwap(context.Context, *QueryBurnBySwapRequest) (*QueryBurnBySwapResponse, error)
-	// QueryBuyBacking queries how much backing can be bought with provided lion.
-	QueryBuyBacking(context.Context, *QueryBuyBackingRequest) (*QueryBuyBackingResponse, error)
-	// QuerySellBacking queries how much lion can be exchanged for provided
-	// backing.
-	QuerySellBacking(context.Context, *QuerySellBackingRequest) (*QuerySellBackingResponse, error)
-	// MintByCollateralRequirement queries the requirement of when minting by
-	// collateral.
-	MintByCollateralRequirement(context.Context, *QueryMintByCollateralRequirementRequest) (*QueryMintByCollateralRequirementResponse, error)
+	// EstimateMintBySwapIn estimates input of minting by swap.
+	EstimateMintBySwapIn(context.Context, *EstimateMintBySwapInRequest) (*EstimateMintBySwapInResponse, error)
+	// EstimateMintBySwapOut estimates output of minting by swap.
+	EstimateMintBySwapOut(context.Context, *EstimateMintBySwapOutRequest) (*EstimateMintBySwapOutResponse, error)
+	// EstimateBurnBySwapOut estimates output of burning by swap.
+	EstimateBurnBySwapOut(context.Context, *EstimateBurnBySwapOutRequest) (*EstimateBurnBySwapOutResponse, error)
+	// EstimateBuyBackingOut estimates output of buying backing assets.
+	EstimateBuyBackingOut(context.Context, *EstimateBuyBackingOutRequest) (*EstimateBuyBackingOutResponse, error)
+	// EstimateSellBackingOut estimates output of selling backing assets.
+	EstimateSellBackingOut(context.Context, *EstimateSellBackingOutRequest) (*EstimateSellBackingOutResponse, error)
+	// EstimateMintByCollateralIn estimates input of minting by collateral.
+	EstimateMintByCollateralIn(context.Context, *EstimateMintByCollateralInRequest) (*EstimateMintByCollateralInResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -2091,23 +2075,23 @@ func (*UnimplementedQueryServer) CollateralRatio(ctx context.Context, req *Query
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
-func (*UnimplementedQueryServer) MintBySwapRequirement(ctx context.Context, req *QueryMintBySwapRequirementRequest) (*QueryMintBySwapRequirementResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MintBySwapRequirement not implemented")
+func (*UnimplementedQueryServer) EstimateMintBySwapIn(ctx context.Context, req *EstimateMintBySwapInRequest) (*EstimateMintBySwapInResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EstimateMintBySwapIn not implemented")
 }
-func (*UnimplementedQueryServer) MintBySwapCapacity(ctx context.Context, req *QueryMintBySwapCapacityRequest) (*QueryMintBySwapCapacityResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MintBySwapCapacity not implemented")
+func (*UnimplementedQueryServer) EstimateMintBySwapOut(ctx context.Context, req *EstimateMintBySwapOutRequest) (*EstimateMintBySwapOutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EstimateMintBySwapOut not implemented")
 }
-func (*UnimplementedQueryServer) QueryBurnBySwap(ctx context.Context, req *QueryBurnBySwapRequest) (*QueryBurnBySwapResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QueryBurnBySwap not implemented")
+func (*UnimplementedQueryServer) EstimateBurnBySwapOut(ctx context.Context, req *EstimateBurnBySwapOutRequest) (*EstimateBurnBySwapOutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EstimateBurnBySwapOut not implemented")
 }
-func (*UnimplementedQueryServer) QueryBuyBacking(ctx context.Context, req *QueryBuyBackingRequest) (*QueryBuyBackingResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QueryBuyBacking not implemented")
+func (*UnimplementedQueryServer) EstimateBuyBackingOut(ctx context.Context, req *EstimateBuyBackingOutRequest) (*EstimateBuyBackingOutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EstimateBuyBackingOut not implemented")
 }
-func (*UnimplementedQueryServer) QuerySellBacking(ctx context.Context, req *QuerySellBackingRequest) (*QuerySellBackingResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QuerySellBacking not implemented")
+func (*UnimplementedQueryServer) EstimateSellBackingOut(ctx context.Context, req *EstimateSellBackingOutRequest) (*EstimateSellBackingOutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EstimateSellBackingOut not implemented")
 }
-func (*UnimplementedQueryServer) MintByCollateralRequirement(ctx context.Context, req *QueryMintByCollateralRequirementRequest) (*QueryMintByCollateralRequirementResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method MintByCollateralRequirement not implemented")
+func (*UnimplementedQueryServer) EstimateMintByCollateralIn(ctx context.Context, req *EstimateMintByCollateralInRequest) (*EstimateMintByCollateralInResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EstimateMintByCollateralIn not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -2312,110 +2296,110 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_MintBySwapRequirement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryMintBySwapRequirementRequest)
+func _Query_EstimateMintBySwapIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EstimateMintBySwapInRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).MintBySwapRequirement(ctx, in)
+		return srv.(QueryServer).EstimateMintBySwapIn(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/merlion.maker.v1.Query/MintBySwapRequirement",
+		FullMethod: "/merlion.maker.v1.Query/EstimateMintBySwapIn",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).MintBySwapRequirement(ctx, req.(*QueryMintBySwapRequirementRequest))
+		return srv.(QueryServer).EstimateMintBySwapIn(ctx, req.(*EstimateMintBySwapInRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_MintBySwapCapacity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryMintBySwapCapacityRequest)
+func _Query_EstimateMintBySwapOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EstimateMintBySwapOutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).MintBySwapCapacity(ctx, in)
+		return srv.(QueryServer).EstimateMintBySwapOut(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/merlion.maker.v1.Query/MintBySwapCapacity",
+		FullMethod: "/merlion.maker.v1.Query/EstimateMintBySwapOut",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).MintBySwapCapacity(ctx, req.(*QueryMintBySwapCapacityRequest))
+		return srv.(QueryServer).EstimateMintBySwapOut(ctx, req.(*EstimateMintBySwapOutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_QueryBurnBySwap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryBurnBySwapRequest)
+func _Query_EstimateBurnBySwapOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EstimateBurnBySwapOutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).QueryBurnBySwap(ctx, in)
+		return srv.(QueryServer).EstimateBurnBySwapOut(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/merlion.maker.v1.Query/QueryBurnBySwap",
+		FullMethod: "/merlion.maker.v1.Query/EstimateBurnBySwapOut",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).QueryBurnBySwap(ctx, req.(*QueryBurnBySwapRequest))
+		return srv.(QueryServer).EstimateBurnBySwapOut(ctx, req.(*EstimateBurnBySwapOutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_QueryBuyBacking_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryBuyBackingRequest)
+func _Query_EstimateBuyBackingOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EstimateBuyBackingOutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).QueryBuyBacking(ctx, in)
+		return srv.(QueryServer).EstimateBuyBackingOut(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/merlion.maker.v1.Query/QueryBuyBacking",
+		FullMethod: "/merlion.maker.v1.Query/EstimateBuyBackingOut",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).QueryBuyBacking(ctx, req.(*QueryBuyBackingRequest))
+		return srv.(QueryServer).EstimateBuyBackingOut(ctx, req.(*EstimateBuyBackingOutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_QuerySellBacking_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QuerySellBackingRequest)
+func _Query_EstimateSellBackingOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EstimateSellBackingOutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).QuerySellBacking(ctx, in)
+		return srv.(QueryServer).EstimateSellBackingOut(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/merlion.maker.v1.Query/QuerySellBacking",
+		FullMethod: "/merlion.maker.v1.Query/EstimateSellBackingOut",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).QuerySellBacking(ctx, req.(*QuerySellBackingRequest))
+		return srv.(QueryServer).EstimateSellBackingOut(ctx, req.(*EstimateSellBackingOutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_MintByCollateralRequirement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryMintByCollateralRequirementRequest)
+func _Query_EstimateMintByCollateralIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EstimateMintByCollateralInRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).MintByCollateralRequirement(ctx, in)
+		return srv.(QueryServer).EstimateMintByCollateralIn(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/merlion.maker.v1.Query/MintByCollateralRequirement",
+		FullMethod: "/merlion.maker.v1.Query/EstimateMintByCollateralIn",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).MintByCollateralRequirement(ctx, req.(*QueryMintByCollateralRequirementRequest))
+		return srv.(QueryServer).EstimateMintByCollateralIn(ctx, req.(*EstimateMintByCollateralInRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2469,28 +2453,28 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_Params_Handler,
 		},
 		{
-			MethodName: "MintBySwapRequirement",
-			Handler:    _Query_MintBySwapRequirement_Handler,
+			MethodName: "EstimateMintBySwapIn",
+			Handler:    _Query_EstimateMintBySwapIn_Handler,
 		},
 		{
-			MethodName: "MintBySwapCapacity",
-			Handler:    _Query_MintBySwapCapacity_Handler,
+			MethodName: "EstimateMintBySwapOut",
+			Handler:    _Query_EstimateMintBySwapOut_Handler,
 		},
 		{
-			MethodName: "QueryBurnBySwap",
-			Handler:    _Query_QueryBurnBySwap_Handler,
+			MethodName: "EstimateBurnBySwapOut",
+			Handler:    _Query_EstimateBurnBySwapOut_Handler,
 		},
 		{
-			MethodName: "QueryBuyBacking",
-			Handler:    _Query_QueryBuyBacking_Handler,
+			MethodName: "EstimateBuyBackingOut",
+			Handler:    _Query_EstimateBuyBackingOut_Handler,
 		},
 		{
-			MethodName: "QuerySellBacking",
-			Handler:    _Query_QuerySellBacking_Handler,
+			MethodName: "EstimateSellBackingOut",
+			Handler:    _Query_EstimateSellBackingOut_Handler,
 		},
 		{
-			MethodName: "MintByCollateralRequirement",
-			Handler:    _Query_MintByCollateralRequirement_Handler,
+			MethodName: "EstimateMintByCollateralIn",
+			Handler:    _Query_EstimateMintByCollateralIn_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -3162,7 +3146,7 @@ func (m *QueryParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryMintBySwapRequirementRequest) Marshal() (dAtA []byte, err error) {
+func (m *EstimateMintBySwapInRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3172,19 +3156,19 @@ func (m *QueryMintBySwapRequirementRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryMintBySwapRequirementRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateMintBySwapInRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryMintBySwapRequirementRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateMintBySwapInRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.FullCollateral {
+	if m.FullBacking {
 		i--
-		if m.FullCollateral {
+		if m.FullBacking {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -3200,7 +3184,7 @@ func (m *QueryMintBySwapRequirementRequest) MarshalToSizedBuffer(dAtA []byte) (i
 		dAtA[i] = 0x12
 	}
 	{
-		size, err := m.MintTarget.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.MintOut.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -3212,7 +3196,7 @@ func (m *QueryMintBySwapRequirementRequest) MarshalToSizedBuffer(dAtA []byte) (i
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryMintBySwapRequirementResponse) Marshal() (dAtA []byte, err error) {
+func (m *EstimateMintBySwapInResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3222,12 +3206,12 @@ func (m *QueryMintBySwapRequirementResponse) Marshal() (dAtA []byte, err error) 
 	return dAtA[:n], nil
 }
 
-func (m *QueryMintBySwapRequirementResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateMintBySwapInResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryMintBySwapRequirementResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateMintBySwapInResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3265,7 +3249,7 @@ func (m *QueryMintBySwapRequirementResponse) MarshalToSizedBuffer(dAtA []byte) (
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryMintBySwapCapacityRequest) Marshal() (dAtA []byte, err error) {
+func (m *EstimateMintBySwapOutRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3275,18 +3259,18 @@ func (m *QueryMintBySwapCapacityRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryMintBySwapCapacityRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateMintBySwapOutRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryMintBySwapCapacityRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateMintBySwapOutRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	{
-		size, err := m.LionAvail.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.LionInMax.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -3296,7 +3280,7 @@ func (m *QueryMintBySwapCapacityRequest) MarshalToSizedBuffer(dAtA []byte) (int,
 	i--
 	dAtA[i] = 0x12
 	{
-		size, err := m.BackingAvail.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.BackingInMax.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -3308,7 +3292,7 @@ func (m *QueryMintBySwapCapacityRequest) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryMintBySwapCapacityResponse) Marshal() (dAtA []byte, err error) {
+func (m *EstimateMintBySwapOutResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3318,12 +3302,12 @@ func (m *QueryMintBySwapCapacityResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryMintBySwapCapacityResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateMintBySwapOutResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryMintBySwapCapacityResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateMintBySwapOutResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3371,7 +3355,7 @@ func (m *QueryMintBySwapCapacityResponse) MarshalToSizedBuffer(dAtA []byte) (int
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBurnBySwapRequest) Marshal() (dAtA []byte, err error) {
+func (m *EstimateBurnBySwapOutRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3381,12 +3365,12 @@ func (m *QueryBurnBySwapRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBurnBySwapRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateBurnBySwapOutRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBurnBySwapRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateBurnBySwapOutRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3399,7 +3383,7 @@ func (m *QueryBurnBySwapRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 		dAtA[i] = 0x12
 	}
 	{
-		size, err := m.BurnTarget.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.BurnIn.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -3411,7 +3395,7 @@ func (m *QueryBurnBySwapRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBurnBySwapResponse) Marshal() (dAtA []byte, err error) {
+func (m *EstimateBurnBySwapOutResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3421,12 +3405,12 @@ func (m *QueryBurnBySwapResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBurnBySwapResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateBurnBySwapOutResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBurnBySwapResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateBurnBySwapOutResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3464,7 +3448,7 @@ func (m *QueryBurnBySwapResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBuyBackingRequest) Marshal() (dAtA []byte, err error) {
+func (m *EstimateBuyBackingOutRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3474,12 +3458,12 @@ func (m *QueryBuyBackingRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBuyBackingRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateBuyBackingOutRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBuyBackingRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateBuyBackingOutRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3504,7 +3488,7 @@ func (m *QueryBuyBackingRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBuyBackingResponse) Marshal() (dAtA []byte, err error) {
+func (m *EstimateBuyBackingOutResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3514,12 +3498,12 @@ func (m *QueryBuyBackingResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBuyBackingResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateBuyBackingOutResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBuyBackingResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateBuyBackingOutResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3547,7 +3531,7 @@ func (m *QueryBuyBackingResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *QuerySellBackingRequest) Marshal() (dAtA []byte, err error) {
+func (m *EstimateSellBackingOutRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3557,12 +3541,12 @@ func (m *QuerySellBackingRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QuerySellBackingRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateSellBackingOutRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QuerySellBackingRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateSellBackingOutRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3580,7 +3564,7 @@ func (m *QuerySellBackingRequest) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *QuerySellBackingResponse) Marshal() (dAtA []byte, err error) {
+func (m *EstimateSellBackingOutResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3590,12 +3574,12 @@ func (m *QuerySellBackingResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QuerySellBackingResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateSellBackingOutResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QuerySellBackingResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateSellBackingOutResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3623,7 +3607,7 @@ func (m *QuerySellBackingResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryMintByCollateralRequirementRequest) Marshal() (dAtA []byte, err error) {
+func (m *EstimateMintByCollateralInRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3633,12 +3617,12 @@ func (m *QueryMintByCollateralRequirementRequest) Marshal() (dAtA []byte, err er
 	return dAtA[:n], nil
 }
 
-func (m *QueryMintByCollateralRequirementRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateMintByCollateralInRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryMintByCollateralRequirementRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateMintByCollateralInRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -3661,7 +3645,7 @@ func (m *QueryMintByCollateralRequirementRequest) MarshalToSizedBuffer(dAtA []by
 		dAtA[i] = 0x1a
 	}
 	{
-		size, err := m.MintTarget.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.MintOut.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -3680,7 +3664,7 @@ func (m *QueryMintByCollateralRequirementRequest) MarshalToSizedBuffer(dAtA []by
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryMintByCollateralRequirementResponse) Marshal() (dAtA []byte, err error) {
+func (m *EstimateMintByCollateralInResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -3690,12 +3674,12 @@ func (m *QueryMintByCollateralRequirementResponse) Marshal() (dAtA []byte, err e
 	return dAtA[:n], nil
 }
 
-func (m *QueryMintByCollateralRequirementResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *EstimateMintByCollateralInResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryMintByCollateralRequirementResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EstimateMintByCollateralInResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -4019,25 +4003,25 @@ func (m *QueryParamsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryMintBySwapRequirementRequest) Size() (n int) {
+func (m *EstimateMintBySwapInRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.MintTarget.Size()
+	l = m.MintOut.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	l = len(m.BackingDenom)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	if m.FullCollateral {
+	if m.FullBacking {
 		n += 2
 	}
 	return n
 }
 
-func (m *QueryMintBySwapRequirementResponse) Size() (n int) {
+func (m *EstimateMintBySwapInResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4052,20 +4036,20 @@ func (m *QueryMintBySwapRequirementResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryMintBySwapCapacityRequest) Size() (n int) {
+func (m *EstimateMintBySwapOutRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.BackingAvail.Size()
+	l = m.BackingInMax.Size()
 	n += 1 + l + sovQuery(uint64(l))
-	l = m.LionAvail.Size()
+	l = m.LionInMax.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
 
-func (m *QueryMintBySwapCapacityResponse) Size() (n int) {
+func (m *EstimateMintBySwapOutResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4082,13 +4066,13 @@ func (m *QueryMintBySwapCapacityResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryBurnBySwapRequest) Size() (n int) {
+func (m *EstimateBurnBySwapOutRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.BurnTarget.Size()
+	l = m.BurnIn.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	l = len(m.BackingDenom)
 	if l > 0 {
@@ -4097,7 +4081,7 @@ func (m *QueryBurnBySwapRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryBurnBySwapResponse) Size() (n int) {
+func (m *EstimateBurnBySwapOutResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4112,7 +4096,7 @@ func (m *QueryBurnBySwapResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryBuyBackingRequest) Size() (n int) {
+func (m *EstimateBuyBackingOutRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4127,7 +4111,7 @@ func (m *QueryBuyBackingRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryBuyBackingResponse) Size() (n int) {
+func (m *EstimateBuyBackingOutResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4140,7 +4124,7 @@ func (m *QueryBuyBackingResponse) Size() (n int) {
 	return n
 }
 
-func (m *QuerySellBackingRequest) Size() (n int) {
+func (m *EstimateSellBackingOutRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4151,7 +4135,7 @@ func (m *QuerySellBackingRequest) Size() (n int) {
 	return n
 }
 
-func (m *QuerySellBackingResponse) Size() (n int) {
+func (m *EstimateSellBackingOutResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4164,7 +4148,7 @@ func (m *QuerySellBackingResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryMintByCollateralRequirementRequest) Size() (n int) {
+func (m *EstimateMintByCollateralInRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -4174,7 +4158,7 @@ func (m *QueryMintByCollateralRequirementRequest) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	l = m.MintTarget.Size()
+	l = m.MintOut.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	l = len(m.CollateralDenom)
 	if l > 0 {
@@ -4185,7 +4169,7 @@ func (m *QueryMintByCollateralRequirementRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryMintByCollateralRequirementResponse) Size() (n int) {
+func (m *EstimateMintByCollateralInResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -5825,7 +5809,7 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryMintBySwapRequirementRequest) Unmarshal(dAtA []byte) error {
+func (m *EstimateMintBySwapInRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5848,15 +5832,15 @@ func (m *QueryMintBySwapRequirementRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryMintBySwapRequirementRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateMintBySwapInRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryMintBySwapRequirementRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateMintBySwapInRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MintTarget", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MintOut", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -5883,7 +5867,7 @@ func (m *QueryMintBySwapRequirementRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.MintTarget.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.MintOut.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -5921,7 +5905,7 @@ func (m *QueryMintBySwapRequirementRequest) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field FullCollateral", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field FullBacking", wireType)
 			}
 			var v int
 			for shift := uint(0); ; shift += 7 {
@@ -5938,7 +5922,7 @@ func (m *QueryMintBySwapRequirementRequest) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			m.FullCollateral = bool(v != 0)
+			m.FullBacking = bool(v != 0)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])
@@ -5960,7 +5944,7 @@ func (m *QueryMintBySwapRequirementRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryMintBySwapRequirementResponse) Unmarshal(dAtA []byte) error {
+func (m *EstimateMintBySwapInResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5983,10 +5967,10 @@ func (m *QueryMintBySwapRequirementResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryMintBySwapRequirementResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateMintBySwapInResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryMintBySwapRequirementResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateMintBySwapInResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -6109,7 +6093,7 @@ func (m *QueryMintBySwapRequirementResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryMintBySwapCapacityRequest) Unmarshal(dAtA []byte) error {
+func (m *EstimateMintBySwapOutRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -6132,15 +6116,15 @@ func (m *QueryMintBySwapCapacityRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryMintBySwapCapacityRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateMintBySwapOutRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryMintBySwapCapacityRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateMintBySwapOutRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BackingAvail", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BackingInMax", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -6167,13 +6151,13 @@ func (m *QueryMintBySwapCapacityRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.BackingAvail.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.BackingInMax.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LionAvail", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field LionInMax", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -6200,7 +6184,7 @@ func (m *QueryMintBySwapCapacityRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.LionAvail.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.LionInMax.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -6225,7 +6209,7 @@ func (m *QueryMintBySwapCapacityRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryMintBySwapCapacityResponse) Unmarshal(dAtA []byte) error {
+func (m *EstimateMintBySwapOutResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -6248,10 +6232,10 @@ func (m *QueryMintBySwapCapacityResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryMintBySwapCapacityResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateMintBySwapOutResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryMintBySwapCapacityResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateMintBySwapOutResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -6407,7 +6391,7 @@ func (m *QueryMintBySwapCapacityResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBurnBySwapRequest) Unmarshal(dAtA []byte) error {
+func (m *EstimateBurnBySwapOutRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -6430,15 +6414,15 @@ func (m *QueryBurnBySwapRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBurnBySwapRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateBurnBySwapOutRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBurnBySwapRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateBurnBySwapOutRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BurnTarget", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BurnIn", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -6465,7 +6449,7 @@ func (m *QueryBurnBySwapRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.BurnTarget.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.BurnIn.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -6522,7 +6506,7 @@ func (m *QueryBurnBySwapRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBurnBySwapResponse) Unmarshal(dAtA []byte) error {
+func (m *EstimateBurnBySwapOutResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -6545,10 +6529,10 @@ func (m *QueryBurnBySwapResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBurnBySwapResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateBurnBySwapOutResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBurnBySwapResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateBurnBySwapOutResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -6671,7 +6655,7 @@ func (m *QueryBurnBySwapResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBuyBackingRequest) Unmarshal(dAtA []byte) error {
+func (m *EstimateBuyBackingOutRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -6694,10 +6678,10 @@ func (m *QueryBuyBackingRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBuyBackingRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateBuyBackingOutRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBuyBackingRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateBuyBackingOutRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -6786,7 +6770,7 @@ func (m *QueryBuyBackingRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBuyBackingResponse) Unmarshal(dAtA []byte) error {
+func (m *EstimateBuyBackingOutResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -6809,10 +6793,10 @@ func (m *QueryBuyBackingResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBuyBackingResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateBuyBackingOutResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBuyBackingResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateBuyBackingOutResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -6902,7 +6886,7 @@ func (m *QueryBuyBackingResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QuerySellBackingRequest) Unmarshal(dAtA []byte) error {
+func (m *EstimateSellBackingOutRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -6925,10 +6909,10 @@ func (m *QuerySellBackingRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QuerySellBackingRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateSellBackingOutRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QuerySellBackingRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateSellBackingOutRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -6985,7 +6969,7 @@ func (m *QuerySellBackingRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QuerySellBackingResponse) Unmarshal(dAtA []byte) error {
+func (m *EstimateSellBackingOutResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -7008,10 +6992,10 @@ func (m *QuerySellBackingResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QuerySellBackingResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateSellBackingOutResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QuerySellBackingResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateSellBackingOutResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -7101,7 +7085,7 @@ func (m *QuerySellBackingResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryMintByCollateralRequirementRequest) Unmarshal(dAtA []byte) error {
+func (m *EstimateMintByCollateralInRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -7124,10 +7108,10 @@ func (m *QueryMintByCollateralRequirementRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryMintByCollateralRequirementRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateMintByCollateralInRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryMintByCollateralRequirementRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateMintByCollateralInRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -7164,7 +7148,7 @@ func (m *QueryMintByCollateralRequirementRequest) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MintTarget", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MintOut", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -7191,7 +7175,7 @@ func (m *QueryMintByCollateralRequirementRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.MintTarget.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.MintOut.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -7281,7 +7265,7 @@ func (m *QueryMintByCollateralRequirementRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryMintByCollateralRequirementResponse) Unmarshal(dAtA []byte) error {
+func (m *EstimateMintByCollateralInResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -7304,10 +7288,10 @@ func (m *QueryMintByCollateralRequirementResponse) Unmarshal(dAtA []byte) error 
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryMintByCollateralRequirementResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: EstimateMintByCollateralInResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryMintByCollateralRequirementResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EstimateMintByCollateralInResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

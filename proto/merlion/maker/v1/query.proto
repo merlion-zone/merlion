@@ -76,45 +76,44 @@ service Query {
     option (google.api.http).get = "/merlion/maker/v1/params";
   }
 
-  // MintBySwapRequirement queries requirement of backing and lion for the mint
-  // target.
-  rpc MintBySwapRequirement(QueryMintBySwapRequirementRequest)
-      returns (QueryMintBySwapRequirementResponse) {
-    option (google.api.http).get = "/merlion/maker/v1/mint_by_swap_requirement";
+  // EstimateMintBySwapIn estimates input of minting by swap.
+  rpc EstimateMintBySwapIn(EstimateMintBySwapInRequest)
+      returns (EstimateMintBySwapInResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/estimate_mint_by_swap_in";
   }
 
-  // MintBySwapCapacity queries how much mer can be minted with provided backing
-  // and lion.
-  rpc MintBySwapCapacity(QueryMintBySwapCapacityRequest)
-      returns (QueryMintBySwapCapacityResponse) {
-    option (google.api.http).get = "/merlion/maker/v1/mint_by_swap_capacity";
+  // EstimateMintBySwapOut estimates output of minting by swap.
+  rpc EstimateMintBySwapOut(EstimateMintBySwapOutRequest)
+      returns (EstimateMintBySwapOutResponse) {
+    option (google.api.http).get =
+        "/merlion/maker/v1/estimate_mint_by_swap_out";
   }
 
-  // QueryBurnBySwap queries how much backing and lion will be returned when mer
-  // is burned.
-  rpc QueryBurnBySwap(QueryBurnBySwapRequest)
-      returns (QueryBurnBySwapResponse) {
-    option (google.api.http).get = "/merlion/maker/v1/query_burn_by_swap";
+  // EstimateBurnBySwapOut estimates output of burning by swap.
+  rpc EstimateBurnBySwapOut(EstimateBurnBySwapOutRequest)
+      returns (EstimateBurnBySwapOutResponse) {
+    option (google.api.http).get =
+        "/merlion/maker/v1/estimate_burn_by_swap_out";
   }
 
-  // QueryBuyBacking queries how much backing can be bought with provided lion.
-  rpc QueryBuyBacking(QueryBuyBackingRequest)
-      returns (QueryBuyBackingResponse) {
-    option (google.api.http).get = "/merlion/maker/v1/query_buy_backing";
+  // EstimateBuyBackingOut estimates output of buying backing assets.
+  rpc EstimateBuyBackingOut(EstimateBuyBackingOutRequest)
+      returns (EstimateBuyBackingOutResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/estimate_buy_backing_out";
   }
 
-  // QuerySellBacking queries how much lion can be exchanged for provided
-  // backing.
-  rpc QuerySellBacking(QuerySellBackingRequest)
-      returns (QuerySellBackingResponse) {
-    option (google.api.http).get = "/merlion/maker/v1/query_sell_backing";
+  // EstimateSellBackingOut estimates output of selling backing assets.
+  rpc EstimateSellBackingOut(EstimateSellBackingOutRequest)
+      returns (EstimateSellBackingOutResponse) {
+    option (google.api.http).get =
+        "/merlion/maker/v1/estimate_sell_backing_out";
   }
 
-  // MintByCollateralRequirement queries the requirement of when minting by
-  // collateral.
-  rpc MintByCollateralRequirement(QueryMintByCollateralRequirementRequest)
-      returns (QueryMintByCollateralRequirementResponse) {
-    option (google.api.http).get = "/merlion/maker/v1/query_mint_by_collateral";
+  // EstimateMintByCollateralIn estimates input of minting by collateral.
+  rpc EstimateMintByCollateralIn(EstimateMintByCollateralInRequest)
+      returns (EstimateMintByCollateralInResponse) {
+    option (google.api.http).get =
+        "/merlion/maker/v1/estimate_mint_by_collateral_in";
   }
 }
 
@@ -195,68 +194,68 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryMintBySwapRequirementRequest {
-  cosmos.base.v1beta1.Coin mint_target = 1 [ (gogoproto.nullable) = false ];
+message EstimateMintBySwapInRequest {
+  cosmos.base.v1beta1.Coin mint_out = 1 [ (gogoproto.nullable) = false ];
   string backing_denom = 2;
-  bool full_collateral = 3;
+  bool full_backing = 3;
 }
 
-message QueryMintBySwapRequirementResponse {
+message EstimateMintBySwapInResponse {
   cosmos.base.v1beta1.Coin backing_in = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin lion_in = 2 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_fee = 3 [ (gogoproto.nullable) = false ];
 }
 
-message QueryMintBySwapCapacityRequest {
-  cosmos.base.v1beta1.Coin backing_avail = 1 [ (gogoproto.nullable) = false ];
-  cosmos.base.v1beta1.Coin lion_avail = 2 [ (gogoproto.nullable) = false ];
+message EstimateMintBySwapOutRequest {
+  cosmos.base.v1beta1.Coin backing_in_max = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin lion_in_max = 2 [ (gogoproto.nullable) = false ];
 }
 
-message QueryMintBySwapCapacityResponse {
+message EstimateMintBySwapOutResponse {
   cosmos.base.v1beta1.Coin backing_in = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin lion_in = 2 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_out = 3 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_fee = 4 [ (gogoproto.nullable) = false ];
 }
 
-message QueryBurnBySwapRequest {
-  cosmos.base.v1beta1.Coin burn_target = 1 [ (gogoproto.nullable) = false ];
+message EstimateBurnBySwapOutRequest {
+  cosmos.base.v1beta1.Coin burn_in = 1 [ (gogoproto.nullable) = false ];
   string backing_denom = 2;
 }
 
-message QueryBurnBySwapResponse {
+message EstimateBurnBySwapOutResponse {
   cosmos.base.v1beta1.Coin backing_out = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin lion_out = 2 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin burn_fee = 3 [ (gogoproto.nullable) = false ];
 }
 
-message QueryBuyBackingRequest {
+message EstimateBuyBackingOutRequest {
   cosmos.base.v1beta1.Coin lion_in = 1 [ (gogoproto.nullable) = false ];
   string backing_denom = 2;
 }
 
-message QueryBuyBackingResponse {
+message EstimateBuyBackingOutResponse {
   cosmos.base.v1beta1.Coin backing_out = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin buyback_fee = 2 [ (gogoproto.nullable) = false ];
 }
 
-message QuerySellBackingRequest {
+message EstimateSellBackingOutRequest {
   cosmos.base.v1beta1.Coin backing_in = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QuerySellBackingResponse {
+message EstimateSellBackingOutResponse {
   cosmos.base.v1beta1.Coin lion_out = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin sellback_fee = 2 [ (gogoproto.nullable) = false ];
 }
 
-message QueryMintByCollateralRequirementRequest {
+message EstimateMintByCollateralInRequest {
   string address = 1;
-  cosmos.base.v1beta1.Coin mint_target = 2 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin mint_out = 2 [ (gogoproto.nullable) = false ];
   string collateral_denom = 3;
   cosmos.base.v1beta1.Coin lion_in_max = 4 [ (gogoproto.nullable) = false ];
 }
 
-message QueryMintByCollateralRequirementResponse {
+message EstimateMintByCollateralInResponse {
   cosmos.base.v1beta1.Coin lion_in = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_fee = 2 [ (gogoproto.nullable) = false ];
   merlion.maker.v1.TotalCollateral total_coll = 3

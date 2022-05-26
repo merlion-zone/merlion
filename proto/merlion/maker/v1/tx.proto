@@ -126,15 +126,15 @@ message MsgBurnBySwap {
 
 // MsgBurnBySwapResponse defines the Msg/BurnBySwap response type.
 message MsgBurnBySwapResponse {
-  cosmos.base.v1beta1.Coin burn_fee = 2 [
+  cosmos.base.v1beta1.Coin burn_fee = 1 [
     (gogoproto.moretags) = "yaml:\"burn_fee\"",
     (gogoproto.nullable) = false
   ];
-  cosmos.base.v1beta1.Coin backing_out = 3 [
+  cosmos.base.v1beta1.Coin backing_out = 2 [
     (gogoproto.moretags) = "yaml:\"backing_out\"",
     (gogoproto.nullable) = false
   ];
-  cosmos.base.v1beta1.Coin lion_out = 4 [
+  cosmos.base.v1beta1.Coin lion_out = 3 [
     (gogoproto.moretags) = "yaml:\"lion_out\"",
     (gogoproto.nullable) = false
   ];
@@ -159,7 +159,7 @@ message MsgBuyBacking {
 
 // MsgBuyBackingResponse defines the Msg/BuyBacking response type.
 message MsgBuyBackingResponse {
-  cosmos.base.v1beta1.Coin backing_out = 4 [
+  cosmos.base.v1beta1.Coin backing_out = 1 [
     (gogoproto.moretags) = "yaml:\"backing_out\"",
     (gogoproto.nullable) = false
   ];
@@ -185,7 +185,7 @@ message MsgSellBacking {
 
 // MsgSellBackingResponse defines the Msg/SellBacking response type.
 message MsgSellBackingResponse {
-  cosmos.base.v1beta1.Coin lion_out = 4 [
+  cosmos.base.v1beta1.Coin lion_out = 1 [
     (gogoproto.moretags) = "yaml:\"lion_out\"",
     (gogoproto.nullable) = false
   ];
