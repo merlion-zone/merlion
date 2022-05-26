@@ -71,6 +71,18 @@
     - [TotalCollateral](#merlion.maker.v1.TotalCollateral)
   
 - [merlion/maker/v1/query.proto](#merlion/maker/v1/query.proto)
+    - [EstimateBurnBySwapOutRequest](#merlion.maker.v1.EstimateBurnBySwapOutRequest)
+    - [EstimateBurnBySwapOutResponse](#merlion.maker.v1.EstimateBurnBySwapOutResponse)
+    - [EstimateBuyBackingOutRequest](#merlion.maker.v1.EstimateBuyBackingOutRequest)
+    - [EstimateBuyBackingOutResponse](#merlion.maker.v1.EstimateBuyBackingOutResponse)
+    - [EstimateMintByCollateralInRequest](#merlion.maker.v1.EstimateMintByCollateralInRequest)
+    - [EstimateMintByCollateralInResponse](#merlion.maker.v1.EstimateMintByCollateralInResponse)
+    - [EstimateMintBySwapInRequest](#merlion.maker.v1.EstimateMintBySwapInRequest)
+    - [EstimateMintBySwapInResponse](#merlion.maker.v1.EstimateMintBySwapInResponse)
+    - [EstimateMintBySwapOutRequest](#merlion.maker.v1.EstimateMintBySwapOutRequest)
+    - [EstimateMintBySwapOutResponse](#merlion.maker.v1.EstimateMintBySwapOutResponse)
+    - [EstimateSellBackingOutRequest](#merlion.maker.v1.EstimateSellBackingOutRequest)
+    - [EstimateSellBackingOutResponse](#merlion.maker.v1.EstimateSellBackingOutResponse)
     - [QueryAllBackingPoolsRequest](#merlion.maker.v1.QueryAllBackingPoolsRequest)
     - [QueryAllBackingPoolsResponse](#merlion.maker.v1.QueryAllBackingPoolsResponse)
     - [QueryAllBackingRiskParamsRequest](#merlion.maker.v1.QueryAllBackingRiskParamsRequest)
@@ -81,26 +93,14 @@
     - [QueryAllCollateralRiskParamsResponse](#merlion.maker.v1.QueryAllCollateralRiskParamsResponse)
     - [QueryBackingPoolRequest](#merlion.maker.v1.QueryBackingPoolRequest)
     - [QueryBackingPoolResponse](#merlion.maker.v1.QueryBackingPoolResponse)
-    - [QueryBurnBySwapRequest](#merlion.maker.v1.QueryBurnBySwapRequest)
-    - [QueryBurnBySwapResponse](#merlion.maker.v1.QueryBurnBySwapResponse)
-    - [QueryBuyBackingRequest](#merlion.maker.v1.QueryBuyBackingRequest)
-    - [QueryBuyBackingResponse](#merlion.maker.v1.QueryBuyBackingResponse)
     - [QueryCollateralOfAccountRequest](#merlion.maker.v1.QueryCollateralOfAccountRequest)
     - [QueryCollateralOfAccountResponse](#merlion.maker.v1.QueryCollateralOfAccountResponse)
     - [QueryCollateralPoolRequest](#merlion.maker.v1.QueryCollateralPoolRequest)
     - [QueryCollateralPoolResponse](#merlion.maker.v1.QueryCollateralPoolResponse)
     - [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest)
     - [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse)
-    - [QueryMintByCollateralRequirementRequest](#merlion.maker.v1.QueryMintByCollateralRequirementRequest)
-    - [QueryMintByCollateralRequirementResponse](#merlion.maker.v1.QueryMintByCollateralRequirementResponse)
-    - [QueryMintBySwapCapacityRequest](#merlion.maker.v1.QueryMintBySwapCapacityRequest)
-    - [QueryMintBySwapCapacityResponse](#merlion.maker.v1.QueryMintBySwapCapacityResponse)
-    - [QueryMintBySwapRequirementRequest](#merlion.maker.v1.QueryMintBySwapRequirementRequest)
-    - [QueryMintBySwapRequirementResponse](#merlion.maker.v1.QueryMintBySwapRequirementResponse)
     - [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest)
     - [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse)
-    - [QuerySellBackingRequest](#merlion.maker.v1.QuerySellBackingRequest)
-    - [QuerySellBackingResponse](#merlion.maker.v1.QuerySellBackingResponse)
     - [QueryTotalBackingRequest](#merlion.maker.v1.QueryTotalBackingRequest)
     - [QueryTotalBackingResponse](#merlion.maker.v1.QueryTotalBackingResponse)
     - [QueryTotalCollateralRequest](#merlion.maker.v1.QueryTotalCollateralRequest)
@@ -1081,6 +1081,207 @@ parameters.
 
 
 
+<a name="merlion.maker.v1.EstimateBurnBySwapOutRequest"></a>
+
+### EstimateBurnBySwapOutRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `burn_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `backing_denom` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateBurnBySwapOutResponse"></a>
+
+### EstimateBurnBySwapOutResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `burn_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateBuyBackingOutRequest"></a>
+
+### EstimateBuyBackingOutRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `backing_denom` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateBuyBackingOutResponse"></a>
+
+### EstimateBuyBackingOutResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `buyback_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateMintByCollateralInRequest"></a>
+
+### EstimateMintByCollateralInRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `address` | [string](#string) |  |  |
+| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `collateral_denom` | [string](#string) |  |  |
+| `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateMintByCollateralInResponse"></a>
+
+### EstimateMintByCollateralInResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `total_coll` | [TotalCollateral](#merlion.maker.v1.TotalCollateral) |  |  |
+| `pool_coll` | [PoolCollateral](#merlion.maker.v1.PoolCollateral) |  |  |
+| `acc_coll` | [AccountCollateral](#merlion.maker.v1.AccountCollateral) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateMintBySwapInRequest"></a>
+
+### EstimateMintBySwapInRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `backing_denom` | [string](#string) |  |  |
+| `full_backing` | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateMintBySwapInResponse"></a>
+
+### EstimateMintBySwapInResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateMintBySwapOutRequest"></a>
+
+### EstimateMintBySwapOutRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateMintBySwapOutResponse"></a>
+
+### EstimateMintBySwapOutResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateSellBackingOutRequest"></a>
+
+### EstimateSellBackingOutRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateSellBackingOutResponse"></a>
+
+### EstimateSellBackingOutResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `sellback_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.QueryAllBackingPoolsRequest"></a>
 
 ### QueryAllBackingPoolsRequest
@@ -1211,71 +1412,6 @@ parameters.
 
 
 
-<a name="merlion.maker.v1.QueryBurnBySwapRequest"></a>
-
-### QueryBurnBySwapRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `burn_target` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `backing_denom` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryBurnBySwapResponse"></a>
-
-### QueryBurnBySwapResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `backing_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `burn_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryBuyBackingRequest"></a>
-
-### QueryBuyBackingRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `backing_denom` | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryBuyBackingResponse"></a>
-
-### QueryBuyBackingResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `backing_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `buyback_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
 <a name="merlion.maker.v1.QueryCollateralOfAccountRequest"></a>
 
 ### QueryCollateralOfAccountRequest
@@ -1363,111 +1499,6 @@ parameters.
 
 
 
-<a name="merlion.maker.v1.QueryMintByCollateralRequirementRequest"></a>
-
-### QueryMintByCollateralRequirementRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `address` | [string](#string) |  |  |
-| `mint_target` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `collateral_denom` | [string](#string) |  |  |
-| `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryMintByCollateralRequirementResponse"></a>
-
-### QueryMintByCollateralRequirementResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `total_coll` | [TotalCollateral](#merlion.maker.v1.TotalCollateral) |  |  |
-| `pool_coll` | [PoolCollateral](#merlion.maker.v1.PoolCollateral) |  |  |
-| `acc_coll` | [AccountCollateral](#merlion.maker.v1.AccountCollateral) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryMintBySwapCapacityRequest"></a>
-
-### QueryMintBySwapCapacityRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `backing_avail` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `lion_avail` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryMintBySwapCapacityResponse"></a>
-
-### QueryMintBySwapCapacityResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryMintBySwapRequirementRequest"></a>
-
-### QueryMintBySwapRequirementRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `mint_target` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `backing_denom` | [string](#string) |  |  |
-| `full_collateral` | [bool](#bool) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryMintBySwapRequirementResponse"></a>
-
-### QueryMintBySwapRequirementResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
 <a name="merlion.maker.v1.QueryParamsRequest"></a>
 
 ### QueryParamsRequest
@@ -1487,37 +1518,6 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `params` | [Params](#merlion.maker.v1.Params) |  | params holds all the parameters of this module. |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QuerySellBackingRequest"></a>
-
-### QuerySellBackingRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QuerySellBackingResponse"></a>
-
-### QuerySellBackingResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `sellback_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -1598,12 +1598,12 @@ Query defines the maker gRPC querier service.
 | `TotalCollateral` | [QueryTotalCollateralRequest](#merlion.maker.v1.QueryTotalCollateralRequest) | [QueryTotalCollateralResponse](#merlion.maker.v1.QueryTotalCollateralResponse) | TotalCollateral queries the total collateral. | GET|/merlion/maker/v1/total_collateral|
 | `CollateralRatio` | [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest) | [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse) | CollateralRatio queries the collateral ratio. | GET|/merlion/maker/v1/collateral_ratio|
 | `Params` | [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/maker/v1/params|
-| `MintBySwapRequirement` | [QueryMintBySwapRequirementRequest](#merlion.maker.v1.QueryMintBySwapRequirementRequest) | [QueryMintBySwapRequirementResponse](#merlion.maker.v1.QueryMintBySwapRequirementResponse) | MintBySwapRequirement queries requirement of backing and lion for the mint target. | GET|/merlion/maker/v1/mint_by_swap_requirement|
-| `MintBySwapCapacity` | [QueryMintBySwapCapacityRequest](#merlion.maker.v1.QueryMintBySwapCapacityRequest) | [QueryMintBySwapCapacityResponse](#merlion.maker.v1.QueryMintBySwapCapacityResponse) | MintBySwapCapacity queries how much mer can be minted with provided backing and lion. | GET|/merlion/maker/v1/mint_by_swap_capacity|
-| `QueryBurnBySwap` | [QueryBurnBySwapRequest](#merlion.maker.v1.QueryBurnBySwapRequest) | [QueryBurnBySwapResponse](#merlion.maker.v1.QueryBurnBySwapResponse) | QueryBurnBySwap queries how much backing and lion will be returned when mer is burned. | GET|/merlion/maker/v1/query_burn_by_swap|
-| `QueryBuyBacking` | [QueryBuyBackingRequest](#merlion.maker.v1.QueryBuyBackingRequest) | [QueryBuyBackingResponse](#merlion.maker.v1.QueryBuyBackingResponse) | QueryBuyBacking queries how much backing can be bought with provided lion. | GET|/merlion/maker/v1/query_buy_backing|
-| `QuerySellBacking` | [QuerySellBackingRequest](#merlion.maker.v1.QuerySellBackingRequest) | [QuerySellBackingResponse](#merlion.maker.v1.QuerySellBackingResponse) | QuerySellBacking queries how much lion can be exchanged for provided backing. | GET|/merlion/maker/v1/query_sell_backing|
-| `MintByCollateralRequirement` | [QueryMintByCollateralRequirementRequest](#merlion.maker.v1.QueryMintByCollateralRequirementRequest) | [QueryMintByCollateralRequirementResponse](#merlion.maker.v1.QueryMintByCollateralRequirementResponse) | MintByCollateralRequirement queries the requirement of when minting by collateral. | GET|/merlion/maker/v1/query_mint_by_collateral|
+| `EstimateMintBySwapIn` | [EstimateMintBySwapInRequest](#merlion.maker.v1.EstimateMintBySwapInRequest) | [EstimateMintBySwapInResponse](#merlion.maker.v1.EstimateMintBySwapInResponse) | EstimateMintBySwapIn estimates input of minting by swap. | GET|/merlion/maker/v1/estimate_mint_by_swap_in|
+| `EstimateMintBySwapOut` | [EstimateMintBySwapOutRequest](#merlion.maker.v1.EstimateMintBySwapOutRequest) | [EstimateMintBySwapOutResponse](#merlion.maker.v1.EstimateMintBySwapOutResponse) | EstimateMintBySwapOut estimates output of minting by swap. | GET|/merlion/maker/v1/estimate_mint_by_swap_out|
+| `EstimateBurnBySwapOut` | [EstimateBurnBySwapOutRequest](#merlion.maker.v1.EstimateBurnBySwapOutRequest) | [EstimateBurnBySwapOutResponse](#merlion.maker.v1.EstimateBurnBySwapOutResponse) | EstimateBurnBySwapOut estimates output of burning by swap. | GET|/merlion/maker/v1/estimate_burn_by_swap_out|
+| `EstimateBuyBackingOut` | [EstimateBuyBackingOutRequest](#merlion.maker.v1.EstimateBuyBackingOutRequest) | [EstimateBuyBackingOutResponse](#merlion.maker.v1.EstimateBuyBackingOutResponse) | EstimateBuyBackingOut estimates output of buying backing assets. | GET|/merlion/maker/v1/estimate_buy_backing_out|
+| `EstimateSellBackingOut` | [EstimateSellBackingOutRequest](#merlion.maker.v1.EstimateSellBackingOutRequest) | [EstimateSellBackingOutResponse](#merlion.maker.v1.EstimateSellBackingOutResponse) | EstimateSellBackingOut estimates output of selling backing assets. | GET|/merlion/maker/v1/estimate_sell_backing_out|
+| `EstimateMintByCollateralIn` | [EstimateMintByCollateralInRequest](#merlion.maker.v1.EstimateMintByCollateralInRequest) | [EstimateMintByCollateralInResponse](#merlion.maker.v1.EstimateMintByCollateralInResponse) | EstimateMintByCollateralIn estimates input of minting by collateral. | GET|/merlion/maker/v1/estimate_mint_by_collateral_in|
 
  <!-- end services -->
 

@@ -29,7 +29,7 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 		return nil, err
 	}
 
-	backingIn, lionIn, mintFee, err := m.mintBySwapRequirement(ctx, msg.MintOut, msg.BackingInMax.Denom, msg.LionInMax.IsZero())
+	backingIn, lionIn, mintFee, err := m.Keeper.estimateMintBySwapIn(ctx, msg.MintOut, msg.BackingInMax.Denom, msg.LionInMax.IsZero())
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +114,7 @@ func (m msgServer) BurnBySwap(c context.Context, msg *types.MsgBurnBySwap) (*typ
 		return nil, err
 	}
 
-	backingOut, lionOut, burnFee, err := m.Keeper.queryBurnBySwap(ctx, msg.BurnIn, msg.BackingOutMin.Denom)
+	backingOut, lionOut, burnFee, err := m.Keeper.estimateBurnBySwapOut(ctx, msg.BurnIn, msg.BackingOutMin.Denom)
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +197,7 @@ func (m msgServer) BuyBacking(c context.Context, msg *types.MsgBuyBacking) (*typ
 		return nil, err
 	}
 
-	backingOut, buybackFee, err := m.Keeper.queryBuyBacking(ctx, msg.LionIn, msg.BackingOutMin.Denom)
+	backingOut, buybackFee, err := m.Keeper.estimateBuyBackingOut(ctx, msg.LionIn, msg.BackingOutMin.Denom)
 	if err != nil {
 		return nil, err
 	}
@@ -264,7 +264,7 @@ func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*t
 		return nil, err
 	}
 
-	lionOut, sellbackFee, err := m.Keeper.querySellBacking(ctx, msg.BackingIn)
+	lionOut, sellbackFee, err := m.Keeper.estimateSellBackingOut(ctx, msg.BackingIn)
 	if err != nil {
 		return nil, err
 	}
@@ -335,11 +335,11 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 		return nil, err
 	}
 
-	lionIn, mintFee, totalColl, poolColl, accColl, err := m.Keeper.mintByCollateralRequirement(ctx, sender, msg.MintOut, msg.CollateralDenom, msg.LionInMax)
+	lionIn, mintFee, totalColl, poolColl, accColl, err := m.Keeper.estimateMintByCollateralIn(ctx, sender, msg.MintOut, msg.CollateralDenom, msg.LionInMax)
 	if err != nil {
 		return nil, err
 	}
-	mint := msg.MintOut.Add(mintFee)
+	mintTotal := msg.MintOut.Add(mintFee)
 
 	m.Keeper.SetAccountCollateral(ctx, sender, accColl)
 	m.Keeper.SetPoolCollateral(ctx, poolColl)
@@ -358,7 +358,7 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 	}
 
 	// mint mer
-	err = m.Keeper.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mint))
+	err = m.Keeper.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintTotal))
 	if err != nil {
 		return nil, err
 	}
