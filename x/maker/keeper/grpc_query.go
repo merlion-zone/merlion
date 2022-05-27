@@ -196,11 +196,11 @@ func (k Keeper) EstimateSellBackingOut(c context.Context, req *types.EstimateSel
 
 func (k Keeper) EstimateMintByCollateralIn(c context.Context, req *types.EstimateMintByCollateralInRequest) (*types.EstimateMintByCollateralInResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	addr, err := sdk.AccAddressFromBech32(req.Address)
+	sender, err := sdk.AccAddressFromBech32(req.Sender)
 	if err != nil {
 		return nil, err
 	}
-	lionIn, mintFee, totalColl, poolColl, accColl, err := k.estimateMintByCollateralIn(ctx, addr, req.MintOut, req.CollateralDenom, req.LionInMax)
+	lionIn, mintFee, totalColl, poolColl, accColl, err := k.estimateMintByCollateralIn(ctx, sender, req.MintOut, req.CollateralDenom, req.LionInMax)
 	if err != nil {
 		return nil, err
 	}
@@ -211,5 +211,26 @@ func (k Keeper) EstimateMintByCollateralIn(c context.Context, req *types.Estimat
 		TotalColl: totalColl,
 		PoolColl:  poolColl,
 		AccColl:   accColl,
+	}, nil
+}
+
+func (k Keeper) EstimateBurnByCollateralIn(c context.Context, req *types.EstimateBurnByCollateralInRequest) (*types.EstimateBurnByCollateralInResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	sender, err := sdk.AccAddressFromBech32(req.Sender)
+	if err != nil {
+		return nil, err
+	}
+
+	repayIn, interestFee, totalColl, poolColl, accColl, err := k.estimateBurnByCollateralIn(ctx, sender, req.CollateralDenom, req.RepayInMax)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.EstimateBurnByCollateralInResponse{
+		RepayIn:     repayIn,
+		InterestFee: interestFee,
+		TotalColl:   totalColl,
+		PoolColl:    poolColl,
+		AccColl:     accColl,
 	}, nil
 }

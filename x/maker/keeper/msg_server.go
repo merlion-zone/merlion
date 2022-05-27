@@ -395,55 +395,16 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 
 func (m msgServer) BurnByCollateral(c context.Context, msg *types.MsgBurnByCollateral) (*types.MsgBurnByCollateralResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-
-	collateralDenom := msg.CollateralDenom
-
 	sender, _, err := getSenderReceiver(msg.Sender, "")
 	if err != nil {
 		return nil, err
 	}
 
-	// get prices in usd
-	merPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	repayIn, interestFee, totalColl, poolColl, accColl, err := m.Keeper.estimateBurnByCollateralIn(ctx, sender, msg.CollateralDenom, msg.RepayInMax)
 	if err != nil {
 		return nil, err
 	}
-
-	// check price upper bound
-	merPriceUpperBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Add(m.Keeper.BurnPriceBias(ctx)))
-	if merPrice.GT(merPriceUpperBound) {
-		return nil, sdkerrors.Wrapf(types.ErrMerPriceTooHigh, "%s price too high: %s", merlion.MicroUSDDenom, merPrice)
-	}
-
-	collateralParams, found := m.Keeper.GetCollateralRiskParams(ctx, collateralDenom)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
-	}
-	if !collateralParams.Enabled {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
-	}
-
-	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, sender, collateralDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	// settle interestFee fee
-	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
-
-	// compute burn-in
-	if !accColl.MerDebt.IsPositive() {
-		return nil, sdkerrors.Wrapf(types.ErrAccountNoDebt, "account has no debt for %s collateral", collateralDenom)
-	}
-	repayIn := sdk.NewCoin(msg.RepayInMax.Denom, sdk.MinInt(accColl.MerDebt.Amount, msg.RepayInMax.Amount))
-	interestFee := sdk.NewCoin(msg.RepayInMax.Denom, sdk.MinInt(accColl.LastInterest.Amount, repayIn.Amount))
 	burn := repayIn.Sub(interestFee)
-
-	// update debt
-	accColl.LastInterest = accColl.LastInterest.Sub(interestFee)
-	accColl.MerDebt = accColl.MerDebt.Sub(repayIn)
-	poolColl.MerDebt = poolColl.MerDebt.Sub(repayIn)
-	totalColl.MerDebt = totalColl.MerDebt.Sub(repayIn)
 
 	// eventually update collateral
 	m.Keeper.SetAccountCollateral(ctx, sender, accColl)
