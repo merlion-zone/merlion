@@ -65,10 +65,10 @@ service Query {
     option (google.api.http).get = "/merlion/maker/v1/total_collateral";
   }
 
-  // CollateralRatio queries the collateral ratio.
-  rpc CollateralRatio(QueryCollateralRatioRequest)
-      returns (QueryCollateralRatioResponse) {
-    option (google.api.http).get = "/merlion/maker/v1/collateral_ratio";
+  // BackingRatio queries the backing ratio.
+  rpc BackingRatio(QueryBackingRatioRequest)
+      returns (QueryBackingRatioResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/backing_ratio";
   }
 
   // Parameters queries the parameters of the module.
@@ -182,10 +182,10 @@ message QueryTotalCollateralResponse {
   TotalCollateral total_collateral = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryCollateralRatioRequest {}
+message QueryBackingRatioRequest {}
 
-message QueryCollateralRatioResponse {
-  string collateral_ratio = 1 [
+message QueryBackingRatioResponse {
+  string backing_ratio = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];

@@ -12,7 +12,7 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	k.SetParams(ctx, genState.Params)
-	k.SetCollateralRatio(ctx, genState.CollateralRatio)
+	k.SetBackingRatio(ctx, genState.BackingRatio)
 
 	// check if the module account exists
 	moduleAcc := k.GetMakerAccount(ctx)
@@ -25,7 +25,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
-	genesis.CollateralRatio = k.GetCollateralRatio(ctx)
+	genesis.BackingRatio = k.GetBackingRatio(ctx)
 
 	return genesis
 }
