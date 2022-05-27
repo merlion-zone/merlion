@@ -115,6 +115,13 @@ service Query {
     option (google.api.http).get =
         "/merlion/maker/v1/estimate_mint_by_collateral_in";
   }
+
+  // EstimateBurnByCollateralIn estimates input of burning by collateral.
+  rpc EstimateBurnByCollateralIn(EstimateBurnByCollateralInRequest)
+      returns (EstimateBurnByCollateralInResponse) {
+    option (google.api.http).get =
+        "/merlion/maker/v1/estimate_burn_by_collateral_in";
+  }
 }
 
 message QueryAllBackingRiskParamsRequest {}
@@ -249,7 +256,7 @@ message EstimateSellBackingOutResponse {
 }
 
 message EstimateMintByCollateralInRequest {
-  string address = 1;
+  string sender = 1;
   cosmos.base.v1beta1.Coin mint_out = 2 [ (gogoproto.nullable) = false ];
   string collateral_denom = 3;
   cosmos.base.v1beta1.Coin lion_in_max = 4 [ (gogoproto.nullable) = false ];
@@ -258,6 +265,23 @@ message EstimateMintByCollateralInRequest {
 message EstimateMintByCollateralInResponse {
   cosmos.base.v1beta1.Coin lion_in = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_fee = 2 [ (gogoproto.nullable) = false ];
+  merlion.maker.v1.TotalCollateral total_coll = 3
+      [ (gogoproto.nullable) = false ];
+  merlion.maker.v1.PoolCollateral pool_coll = 4
+      [ (gogoproto.nullable) = false ];
+  merlion.maker.v1.AccountCollateral acc_coll = 5
+      [ (gogoproto.nullable) = false ];
+}
+
+message EstimateBurnByCollateralInRequest {
+  string sender = 1;
+  string collateral_denom = 2;
+  cosmos.base.v1beta1.Coin repay_in_max = 3 [ (gogoproto.nullable) = false ];
+}
+
+message EstimateBurnByCollateralInResponse {
+  cosmos.base.v1beta1.Coin repay_in = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin interest_fee = 2 [ (gogoproto.nullable) = false ];
   merlion.maker.v1.TotalCollateral total_coll = 3
       [ (gogoproto.nullable) = false ];
   merlion.maker.v1.PoolCollateral pool_coll = 4

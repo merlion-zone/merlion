@@ -415,7 +415,7 @@ func (k Keeper) estimateSellBackingOut(
 
 func (k Keeper) estimateMintByCollateralIn(
 	ctx sdk.Context,
-	addr sdk.AccAddress,
+	sender sdk.AccAddress,
 	mintOut sdk.Coin,
 	collateralDenom string,
 	lionInMax sdk.Coin,
@@ -429,7 +429,7 @@ func (k Keeper) estimateMintByCollateralIn(
 ) {
 	lionIn = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
 	mintFee = sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
-	
+
 	// get prices in usd
 	collateralPrice, err := k.oracleKeeper.GetExchangeRate(ctx, collateralDenom)
 	if err != nil {
@@ -461,7 +461,7 @@ func (k Keeper) estimateMintByCollateralIn(
 		return
 	}
 
-	totalColl, poolColl, accColl, err = k.getCollateral(ctx, addr, collateralDenom)
+	totalColl, poolColl, accColl, err = k.getCollateral(ctx, sender, collateralDenom)
 	if err != nil {
 		return
 	}
@@ -517,6 +517,67 @@ func (k Keeper) estimateMintByCollateralIn(
 		err = sdkerrors.Wrapf(types.ErrAccountInsufficientCollateral, "account has insufficient collateral: %s", collateralDenom)
 		return
 	}
+
+	return
+}
+
+func (k Keeper) estimateBurnByCollateralIn(
+	ctx sdk.Context,
+	sender sdk.AccAddress,
+	collateralDenom string,
+	repayInMax sdk.Coin,
+) (
+	repayIn sdk.Coin,
+	interestFee sdk.Coin,
+	totalColl types.TotalCollateral,
+	poolColl types.PoolCollateral,
+	accColl types.AccountCollateral,
+	err error,
+) {
+	// get prices in usd
+	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	if err != nil {
+		return
+	}
+
+	// check price upper bound
+	merPriceUpperBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Add(k.BurnPriceBias(ctx)))
+	if merPrice.GT(merPriceUpperBound) {
+		err = sdkerrors.Wrapf(types.ErrMerPriceTooHigh, "%s price too high: %s", merlion.MicroUSDDenom, merPrice)
+		return
+	}
+
+	collateralParams, found := k.GetCollateralRiskParams(ctx, collateralDenom)
+	if !found {
+		err = sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
+		return
+	}
+	if !collateralParams.Enabled {
+		err = sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
+		return
+	}
+
+	totalColl, poolColl, accColl, err = k.getCollateral(ctx, sender, collateralDenom)
+	if err != nil {
+		return
+	}
+
+	// settle interestFee fee
+	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
+
+	// compute burn-in
+	if !accColl.MerDebt.IsPositive() {
+		err = sdkerrors.Wrapf(types.ErrAccountNoDebt, "account has no debt for %s collateral", collateralDenom)
+		return
+	}
+	repayIn = sdk.NewCoin(repayInMax.Denom, sdk.MinInt(accColl.MerDebt.Amount, repayInMax.Amount))
+	interestFee = sdk.NewCoin(repayInMax.Denom, sdk.MinInt(accColl.LastInterest.Amount, repayIn.Amount))
+
+	// update debt
+	accColl.LastInterest = accColl.LastInterest.Sub(interestFee)
+	accColl.MerDebt = accColl.MerDebt.Sub(repayIn)
+	poolColl.MerDebt = poolColl.MerDebt.Sub(repayIn)
+	totalColl.MerDebt = totalColl.MerDebt.Sub(repayIn)
 
 	return
 }
