@@ -95,12 +95,12 @@
     - [QueryAllCollateralRiskParamsResponse](#merlion.maker.v1.QueryAllCollateralRiskParamsResponse)
     - [QueryBackingPoolRequest](#merlion.maker.v1.QueryBackingPoolRequest)
     - [QueryBackingPoolResponse](#merlion.maker.v1.QueryBackingPoolResponse)
+    - [QueryBackingRatioRequest](#merlion.maker.v1.QueryBackingRatioRequest)
+    - [QueryBackingRatioResponse](#merlion.maker.v1.QueryBackingRatioResponse)
     - [QueryCollateralOfAccountRequest](#merlion.maker.v1.QueryCollateralOfAccountRequest)
     - [QueryCollateralOfAccountResponse](#merlion.maker.v1.QueryCollateralOfAccountResponse)
     - [QueryCollateralPoolRequest](#merlion.maker.v1.QueryCollateralPoolRequest)
     - [QueryCollateralPoolResponse](#merlion.maker.v1.QueryCollateralPoolResponse)
-    - [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest)
-    - [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse)
     - [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest)
     - [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse)
     - [QueryTotalBackingRequest](#merlion.maker.v1.QueryTotalBackingRequest)
@@ -768,7 +768,7 @@ GenesisState defines the maker module's genesis state.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `params` | [Params](#merlion.maker.v1.Params) |  |  |
-| `collateral_ratio` | [string](#string) |  |  |
+| `backing_ratio` | [string](#string) |  |  |
 
 
 
@@ -783,9 +783,9 @@ Params defines the parameters for the maker module.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `collateral_ratio_step` | [string](#string) |  | adjusting collateral step |
-| `collateral_ratio_price_band` | [string](#string) |  | price band for adjusting collateral ratio |
-| `collateral_ratio_cooldown_period` | [int64](#int64) |  | cooldown period for adjusting collateral ratio |
+| `backing_ratio_step` | [string](#string) |  | step of adjusting backing ratio |
+| `backing_ratio_price_band` | [string](#string) |  | price band for adjusting backing ratio |
+| `backing_ratio_cooldown_period` | [int64](#int64) |  | cooldown period for adjusting backing ratio |
 | `mint_price_bias` | [string](#string) |  | mint Mer price bias ratio |
 | `burn_price_bias` | [string](#string) |  | burn Mer price bias ratio |
 | `recollateralize_bonus` | [string](#string) |  | recollateralization bonus ratio |
@@ -1479,6 +1479,32 @@ parameters.
 
 
 
+<a name="merlion.maker.v1.QueryBackingRatioRequest"></a>
+
+### QueryBackingRatioRequest
+
+
+
+
+
+
+
+<a name="merlion.maker.v1.QueryBackingRatioResponse"></a>
+
+### QueryBackingRatioResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_ratio` | [string](#string) |  |  |
+| `last_update_block` | [int64](#int64) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.QueryCollateralOfAccountRequest"></a>
 
 ### QueryCollateralOfAccountRequest
@@ -1534,32 +1560,6 @@ parameters.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `collateral_pool` | [PoolCollateral](#merlion.maker.v1.PoolCollateral) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryCollateralRatioRequest"></a>
-
-### QueryCollateralRatioRequest
-
-
-
-
-
-
-
-<a name="merlion.maker.v1.QueryCollateralRatioResponse"></a>
-
-### QueryCollateralRatioResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `collateral_ratio` | [string](#string) |  |  |
-| `last_update_block` | [int64](#int64) |  |  |
 
 
 
@@ -1663,7 +1663,7 @@ Query defines the maker gRPC querier service.
 | `CollateralOfAccount` | [QueryCollateralOfAccountRequest](#merlion.maker.v1.QueryCollateralOfAccountRequest) | [QueryCollateralOfAccountResponse](#merlion.maker.v1.QueryCollateralOfAccountResponse) | CollateralOfAccount queries the collateral of an account. | GET|/merlion/maker/v1/collateral_account|
 | `TotalBacking` | [QueryTotalBackingRequest](#merlion.maker.v1.QueryTotalBackingRequest) | [QueryTotalBackingResponse](#merlion.maker.v1.QueryTotalBackingResponse) | TotalBacking queries the total backing. | GET|/merlion/maker/v1/total_backing|
 | `TotalCollateral` | [QueryTotalCollateralRequest](#merlion.maker.v1.QueryTotalCollateralRequest) | [QueryTotalCollateralResponse](#merlion.maker.v1.QueryTotalCollateralResponse) | TotalCollateral queries the total collateral. | GET|/merlion/maker/v1/total_collateral|
-| `CollateralRatio` | [QueryCollateralRatioRequest](#merlion.maker.v1.QueryCollateralRatioRequest) | [QueryCollateralRatioResponse](#merlion.maker.v1.QueryCollateralRatioResponse) | CollateralRatio queries the collateral ratio. | GET|/merlion/maker/v1/collateral_ratio|
+| `BackingRatio` | [QueryBackingRatioRequest](#merlion.maker.v1.QueryBackingRatioRequest) | [QueryBackingRatioResponse](#merlion.maker.v1.QueryBackingRatioResponse) | BackingRatio queries the backing ratio. | GET|/merlion/maker/v1/backing_ratio|
 | `Params` | [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/maker/v1/params|
 | `EstimateMintBySwapIn` | [EstimateMintBySwapInRequest](#merlion.maker.v1.EstimateMintBySwapInRequest) | [EstimateMintBySwapInResponse](#merlion.maker.v1.EstimateMintBySwapInResponse) | EstimateMintBySwapIn estimates input of minting by swap. | GET|/merlion/maker/v1/estimate_mint_by_swap_in|
 | `EstimateMintBySwapOut` | [EstimateMintBySwapOutRequest](#merlion.maker.v1.EstimateMintBySwapOutRequest) | [EstimateMintBySwapOutResponse](#merlion.maker.v1.EstimateMintBySwapOutResponse) | EstimateMintBySwapOut estimates output of minting by swap. | GET|/merlion/maker/v1/estimate_mint_by_swap_out|

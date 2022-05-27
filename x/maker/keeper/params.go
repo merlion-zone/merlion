@@ -16,21 +16,21 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramstore.SetParamSet(ctx, &params)
 }
 
-// CollateralRatioStep is collateral ratio adjust step
-func (k Keeper) CollateralRatioStep(ctx sdk.Context) (res sdk.Dec) {
-	k.paramstore.Get(ctx, types.KeyCollateralRatioStep, &res)
+// BackingRatioStep is backing ratio adjust step
+func (k Keeper) BackingRatioStep(ctx sdk.Context) (res sdk.Dec) {
+	k.paramstore.Get(ctx, types.KeyBackingRatioStep, &res)
 	return
 }
 
-// CollateralRatioPriceBand is price band within which collateral ratio will not be adjusted
-func (k Keeper) CollateralRatioPriceBand(ctx sdk.Context) (res sdk.Dec) {
-	k.paramstore.Get(ctx, types.KeyCollateralRatioPriceBand, &res)
+// BackingRatioPriceBand is price band within which backing ratio will not be adjusted
+func (k Keeper) BackingRatioPriceBand(ctx sdk.Context) (res sdk.Dec) {
+	k.paramstore.Get(ctx, types.KeyBackingRatioPriceBand, &res)
 	return
 }
 
-// CollateralRatioCooldownPeriod is minimum cooldown period after which collateral ratio can be adjusted
-func (k Keeper) CollateralRatioCooldownPeriod(ctx sdk.Context) (res int64) {
-	k.paramstore.Get(ctx, types.KeyCollateralRatioCooldownPeriod, &res)
+// BackingRatioCooldownPeriod is minimum cooldown period after which backing ratio can be adjusted
+func (k Keeper) BackingRatioCooldownPeriod(ctx sdk.Context) (res int64) {
+	k.paramstore.Get(ctx, types.KeyBackingRatioCooldownPeriod, &res)
 	return
 }
 

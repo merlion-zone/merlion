@@ -9,8 +9,8 @@ option go_package = "github.com/merlion-zone/merlion/x/maker/types";
 message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
 
-  string collateral_ratio = 2 [
-    (gogoproto.moretags) = "yaml:\"collateral_ratio\"",
+  string backing_ratio = 2 [
+    (gogoproto.moretags) = "yaml:\"backing_ratio\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
@@ -21,21 +21,21 @@ message Params {
   option (gogoproto.equal) = true;
   option (gogoproto.goproto_stringer) = false;
 
-  // adjusting collateral step
-  string collateral_ratio_step = 1 [
-    (gogoproto.moretags) = "yaml:\"collateral_ratio_step\"",
+  // step of adjusting backing ratio
+  string backing_ratio_step = 1 [
+    (gogoproto.moretags) = "yaml:\"backing_ratio_step\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
-  // price band for adjusting collateral ratio
-  string collateral_ratio_price_band = 2 [
-    (gogoproto.moretags) = "yaml:\"collateral_ratio_price_band\"",
+  // price band for adjusting backing ratio
+  string backing_ratio_price_band = 2 [
+    (gogoproto.moretags) = "yaml:\"backing_ratio_price_band\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
-  // cooldown period for adjusting collateral ratio
-  int64 collateral_ratio_cooldown_period = 3
-      [ (gogoproto.moretags) = "yaml:\"collateral_ration_cooldown_period\"" ];
+  // cooldown period for adjusting backing ratio
+  int64 backing_ratio_cooldown_period = 3
+      [ (gogoproto.moretags) = "yaml:\"backing_ratio_cooldown_period\"" ];
   // mint Mer price bias ratio
   string mint_price_bias = 4 [
     (gogoproto.moretags) = "yaml:\"mint_price_bias\"",

@@ -11,24 +11,24 @@ import (
 
 // Parameter keys
 var (
-	KeyCollateralRatioStep           = []byte("CollateralRatioStep")
-	KeyCollateralRatioPriceBand      = []byte("CollateralRatioPriceBand")
-	KeyCollateralRatioCooldownPeriod = []byte("CollateralRatioCooldownPeriod")
-	KeyMintPriceBias                 = []byte("MintPriceBias")
-	KeyBurnPriceBias                 = []byte("BurnPriceBias")
-	KeyRecollateralizeBonus          = []byte("RecollateralizeBonus")
-	KeyLiquidationCommissionFee      = []byte("LiquidationCommissionFee")
+	KeyBackingRatioStep           = []byte("BackingRatioStep")
+	KeyBackingRatioPriceBand      = []byte("BackingRatioPriceBand")
+	KeyBackingRatioCooldownPeriod = []byte("BackingRatioCooldownPeriod")
+	KeyMintPriceBias              = []byte("MintPriceBias")
+	KeyBurnPriceBias              = []byte("BurnPriceBias")
+	KeyRecollateralizeBonus       = []byte("RecollateralizeBonus")
+	KeyLiquidationCommissionFee   = []byte("LiquidationCommissionFee")
 )
 
 // Default parameter values
 var (
-	DefaultCollateralRatioStep           = sdk.NewDecWithPrec(25, 4)    // 0.25%
-	DefaultCollateralRatioPriceBand      = sdk.NewDecWithPrec(5, 3)     // 0.5%
-	DefaultCollateralRatioCooldownPeriod = int64(merlion.BlocksPerHour) // 600
-	DefaultMintPriceBias                 = sdk.NewDecWithPrec(1, 2)     // 1%
-	DefaultBurnPriceBias                 = sdk.NewDecWithPrec(1, 2)     // 1%
-	DefaultRecollateralizeBonus          = sdk.NewDecWithPrec(75, 4)    // 0.75%
-	DefaultLiquidationCommissionFee      = sdk.NewDecWithPrec(10, 2)    // 10%
+	DefaultBackingRatioStep           = sdk.NewDecWithPrec(25, 4)    // 0.25%
+	DefaultBackingRatioPriceBand      = sdk.NewDecWithPrec(5, 3)     // 0.5%
+	DefaultBackingRatioCooldownPeriod = int64(merlion.BlocksPerHour) // 600
+	DefaultMintPriceBias              = sdk.NewDecWithPrec(1, 2)     // 1%
+	DefaultBurnPriceBias              = sdk.NewDecWithPrec(1, 2)     // 1%
+	DefaultRecollateralizeBonus       = sdk.NewDecWithPrec(75, 4)    // 0.75%
+	DefaultLiquidationCommissionFee   = sdk.NewDecWithPrec(10, 2)    // 10%
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -41,22 +41,22 @@ func ParamKeyTable() paramtypes.KeyTable {
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
 	return Params{
-		CollateralRatioStep:           DefaultCollateralRatioStep,
-		CollateralRatioPriceBand:      DefaultCollateralRatioPriceBand,
-		CollateralRatioCooldownPeriod: DefaultCollateralRatioCooldownPeriod,
-		MintPriceBias:                 DefaultMintPriceBias,
-		BurnPriceBias:                 DefaultBurnPriceBias,
-		RecollateralizeBonus:          DefaultRecollateralizeBonus,
-		LiquidationCommissionFee:      DefaultLiquidationCommissionFee,
+		BackingRatioStep:           DefaultBackingRatioStep,
+		BackingRatioPriceBand:      DefaultBackingRatioPriceBand,
+		BackingRatioCooldownPeriod: DefaultBackingRatioCooldownPeriod,
+		MintPriceBias:              DefaultMintPriceBias,
+		BurnPriceBias:              DefaultBurnPriceBias,
+		RecollateralizeBonus:       DefaultRecollateralizeBonus,
+		LiquidationCommissionFee:   DefaultLiquidationCommissionFee,
 	}
 }
 
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyCollateralRatioStep, &p.CollateralRatioStep, validateCollateralRatioStep),
-		paramtypes.NewParamSetPair(KeyCollateralRatioPriceBand, &p.CollateralRatioPriceBand, validateCollateralRatioPriceBand),
-		paramtypes.NewParamSetPair(KeyCollateralRatioCooldownPeriod, &p.CollateralRatioCooldownPeriod, validateCollateralRatioCooldownPeriod),
+		paramtypes.NewParamSetPair(KeyBackingRatioStep, &p.BackingRatioStep, validateBackingRatioStep),
+		paramtypes.NewParamSetPair(KeyBackingRatioPriceBand, &p.BackingRatioPriceBand, validateBackingRatioPriceBand),
+		paramtypes.NewParamSetPair(KeyBackingRatioCooldownPeriod, &p.BackingRatioCooldownPeriod, validateBackingRatioCooldownPeriod),
 		paramtypes.NewParamSetPair(KeyMintPriceBias, &p.MintPriceBias, validateMintBurnPriceBias),
 		paramtypes.NewParamSetPair(KeyBurnPriceBias, &p.BurnPriceBias, validateMintBurnPriceBias),
 		paramtypes.NewParamSetPair(KeyRecollateralizeBonus, &p.RecollateralizeBonus, validateRecollateralizeBonus),
@@ -66,14 +66,14 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 
 // Validate validates the set of params
 func (p Params) Validate() error {
-	if !p.CollateralRatioStep.IsPositive() || p.CollateralRatioStep.GT(sdk.OneDec()) {
-		return fmt.Errorf("collateral ratio adjusting step should be a value between (0,1], is %s", p.CollateralRatioStep)
+	if !p.BackingRatioStep.IsPositive() || p.BackingRatioStep.GT(sdk.OneDec()) {
+		return fmt.Errorf("backing ratio adjusting step should be a value between (0,1], is %s", p.BackingRatioStep)
 	}
-	if !p.CollateralRatioPriceBand.IsPositive() || p.CollateralRatioPriceBand.GT(sdk.OneDec()) {
-		return fmt.Errorf("price band for adjusting collateral ratio should be a value between (0,1], is %s", p.CollateralRatioPriceBand)
+	if !p.BackingRatioPriceBand.IsPositive() || p.BackingRatioPriceBand.GT(sdk.OneDec()) {
+		return fmt.Errorf("price band for adjusting backing ratio should be a value between (0,1], is %s", p.BackingRatioPriceBand)
 	}
-	if p.CollateralRatioCooldownPeriod <= 0 {
-		return fmt.Errorf("cooldown period for adjusting collateral ratio should be positive, is %d", p.CollateralRatioCooldownPeriod)
+	if p.BackingRatioCooldownPeriod <= 0 {
+		return fmt.Errorf("cooldown period for adjusting backing ratio should be positive, is %d", p.BackingRatioCooldownPeriod)
 	}
 	if !p.MintPriceBias.IsPositive() || p.MintPriceBias.GT(sdk.OneDec()) {
 		return fmt.Errorf("mint price bias ratio should be a value between (0,1], is %s", p.MintPriceBias)
@@ -96,48 +96,48 @@ func (p Params) String() string {
 	return string(out)
 }
 
-func validateCollateralRatioStep(i interface{}) error {
+func validateBackingRatioStep(i interface{}) error {
 	v, ok := i.(sdk.Dec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
 	if !v.IsPositive() {
-		return fmt.Errorf("collateral ratio adjusting step must be positive: %s", v)
+		return fmt.Errorf("backing ratio adjusting step must be positive: %s", v)
 	}
 
 	if v.GT(sdk.OneDec()) {
-		return fmt.Errorf("collateral ratio adjusting step is too large: %s", v)
+		return fmt.Errorf("backing ratio adjusting step is too large: %s", v)
 	}
 
 	return nil
 }
 
-func validateCollateralRatioPriceBand(i interface{}) error {
+func validateBackingRatioPriceBand(i interface{}) error {
 	v, ok := i.(sdk.Dec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
 	if !v.IsPositive() {
-		return fmt.Errorf("price band for adjusting collateral ratio must be positive: %s", v)
+		return fmt.Errorf("price band for adjusting backing ratio must be positive: %s", v)
 	}
 
 	if v.GT(sdk.OneDec()) {
-		return fmt.Errorf("price band for adjusting collateral ratio is too large: %s", v)
+		return fmt.Errorf("price band for adjusting backing ratio is too large: %s", v)
 	}
 
 	return nil
 }
 
-func validateCollateralRatioCooldownPeriod(i interface{}) error {
+func validateBackingRatioCooldownPeriod(i interface{}) error {
 	v, ok := i.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
 	if v <= 0 {
-		return fmt.Errorf("cooldown period for adjusting collateral ratio must be positive: %d", v)
+		return fmt.Errorf("cooldown period for adjusting backing ratio must be positive: %d", v)
 	}
 
 	return nil

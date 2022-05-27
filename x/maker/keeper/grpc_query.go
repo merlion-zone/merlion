@@ -107,12 +107,12 @@ func (k Keeper) TotalCollateral(c context.Context, req *types.QueryTotalCollater
 	}, nil
 }
 
-func (k Keeper) CollateralRatio(c context.Context, req *types.QueryCollateralRatioRequest) (*types.QueryCollateralRatioResponse, error) {
+func (k Keeper) BackingRatio(c context.Context, req *types.QueryBackingRatioRequest) (*types.QueryBackingRatioResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	return &types.QueryCollateralRatioResponse{
-		CollateralRatio: k.GetCollateralRatio(ctx),
-		LastUpdateBlock: k.GetCollateralRatioLastBlock(ctx),
+	return &types.QueryBackingRatioResponse{
+		BackingRatio:    k.GetBackingRatio(ctx),
+		LastUpdateBlock: k.GetBackingRatioLastBlock(ctx),
 	}, nil
 }
 

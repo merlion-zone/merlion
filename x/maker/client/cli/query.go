@@ -36,7 +36,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		GetCollateralOfAccountCmd(),
 		GetTotalBackingCmd(),
 		GetTotalCollateralCmd(),
-		GetCollateralRatioCmd(),
+		GetBackingRatioCmd(),
 		GetParamsCmd(),
 	)
 
@@ -302,10 +302,10 @@ func GetTotalCollateralCmd() *cobra.Command {
 	return cmd
 }
 
-func GetCollateralRatioCmd() *cobra.Command {
+func GetBackingRatioCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "collateral-ratio",
-		Short: "Gets the collateral ratio",
+		Short: "Gets the backing ratio",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -315,9 +315,9 @@ func GetCollateralRatioCmd() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			req := &types.QueryCollateralRatioRequest{}
+			req := &types.QueryBackingRatioRequest{}
 
-			res, err := queryClient.CollateralRatio(context.Background(), req)
+			res, err := queryClient.BackingRatio(context.Background(), req)
 			if err != nil {
 				return err
 			}

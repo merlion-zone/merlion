@@ -68,17 +68,17 @@ func (k Keeper) estimateMintBySwapIn(
 
 	mintTotalInUSD := mintTotal.Amount.ToDec().Mul(merlion.MicroUSDTarget)
 
-	collateralRatio := k.GetCollateralRatio(ctx)
-	if collateralRatio.GTE(sdk.OneDec()) || fullBacking {
+	backingRatio := k.GetBackingRatio(ctx)
+	if backingRatio.GTE(sdk.OneDec()) || fullBacking {
 		// full/over backed, or user selects full backing
 		backingIn.Amount = mintTotalInUSD.QuoRoundUp(backingPrice).RoundInt()
-	} else if collateralRatio.IsZero() {
+	} else if backingRatio.IsZero() {
 		// algorithmic
 		lionIn.Amount = mintTotalInUSD.QuoRoundUp(lionPrice).RoundInt()
 	} else {
 		// fractional
-		backingIn.Amount = mintTotalInUSD.Mul(collateralRatio).QuoRoundUp(backingPrice).RoundInt()
-		lionIn.Amount = mintTotalInUSD.Mul(sdk.OneDec().Sub(collateralRatio)).QuoRoundUp(lionPrice).RoundInt()
+		backingIn.Amount = mintTotalInUSD.Mul(backingRatio).QuoRoundUp(backingPrice).RoundInt()
+		lionIn.Amount = mintTotalInUSD.Mul(sdk.OneDec().Sub(backingRatio)).QuoRoundUp(lionPrice).RoundInt()
 	}
 
 	poolBacking.Backing = poolBacking.Backing.Add(backingIn)
@@ -144,27 +144,27 @@ func (k Keeper) estimateMintBySwapOut(
 
 	mintTotalInUSD := sdk.ZeroDec()
 
-	collateralRatio := k.GetCollateralRatio(ctx)
-	if collateralRatio.GTE(sdk.OneDec()) || lionInMax.IsZero() {
+	backingRatio := k.GetBackingRatio(ctx)
+	if backingRatio.GTE(sdk.OneDec()) || lionInMax.IsZero() {
 		// full/over backed, or user selects full backing
 		mintTotalInUSD = backingAvailInUSD
 		backingIn.Amount = backingInMax.Amount
-	} else if collateralRatio.IsZero() {
+	} else if backingRatio.IsZero() {
 		// algorithmic
 		mintTotalInUSD = lionAvailInUSD
 		lionIn.Amount = lionInMax.Amount
 	} else {
 		// fractional
-		mintTotalWithBackingInUSD := backingAvailInUSD.QuoRoundUp(collateralRatio)
-		mintTotalWithLionInUSD := lionAvailInUSD.QuoRoundUp(sdk.OneDec().Sub(collateralRatio))
+		mintTotalWithBackingInUSD := backingAvailInUSD.QuoRoundUp(backingRatio)
+		mintTotalWithLionInUSD := lionAvailInUSD.QuoRoundUp(sdk.OneDec().Sub(backingRatio))
 		if mintTotalWithBackingInUSD.LT(mintTotalWithLionInUSD) {
 			mintTotalInUSD = mintTotalWithBackingInUSD
 			backingIn.Amount = backingInMax.Amount
-			lionIn.Amount = mintTotalInUSD.Mul(sdk.OneDec().Sub(collateralRatio)).QuoRoundUp(lionPrice).RoundInt()
+			lionIn.Amount = mintTotalInUSD.Mul(sdk.OneDec().Sub(backingRatio)).QuoRoundUp(lionPrice).RoundInt()
 		} else {
 			mintTotalInUSD = mintTotalWithLionInUSD
 			lionIn.Amount = lionInMax.Amount
-			backingIn.Amount = mintTotalInUSD.Mul(collateralRatio).QuoRoundUp(backingPrice).RoundInt()
+			backingIn.Amount = mintTotalInUSD.Mul(backingRatio).QuoRoundUp(backingPrice).RoundInt()
 		}
 	}
 
@@ -246,17 +246,17 @@ func (k Keeper) estimateBurnBySwapOut(
 	burnActual := burnIn.Sub(burnFee)
 	burnActualInUSD := burnActual.Amount.ToDec().Mul(merlion.MicroUSDTarget)
 
-	collateralRatio := k.GetCollateralRatio(ctx)
-	if collateralRatio.GTE(sdk.OneDec()) {
+	backingRatio := k.GetBackingRatio(ctx)
+	if backingRatio.GTE(sdk.OneDec()) {
 		// full/over collateralized
 		backingOut.Amount = burnActualInUSD.QuoRoundUp(backingPrice).RoundInt()
-	} else if collateralRatio.IsZero() {
+	} else if backingRatio.IsZero() {
 		// algorithmic
 		lionOut.Amount = burnActualInUSD.QuoRoundUp(lionPrice).RoundInt()
 	} else {
 		// fractional
-		backingOut.Amount = burnActualInUSD.Mul(collateralRatio).QuoRoundUp(backingPrice).RoundInt()
-		lionOut.Amount = burnActualInUSD.Mul(sdk.OneDec().Sub(collateralRatio)).QuoRoundUp(lionPrice).RoundInt()
+		backingOut.Amount = burnActualInUSD.Mul(backingRatio).QuoRoundUp(backingPrice).RoundInt()
+		lionOut.Amount = burnActualInUSD.Mul(sdk.OneDec().Sub(backingRatio)).QuoRoundUp(lionPrice).RoundInt()
 	}
 
 	moduleOwnedBacking := k.bankKeeper.GetBalance(ctx, k.accountKeeper.GetModuleAddress(types.ModuleName), backingDenom)
@@ -309,8 +309,8 @@ func (k Keeper) estimateBuyBackingOut(
 		return
 	}
 
-	collateralRatio := k.GetCollateralRatio(ctx)
-	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(collateralRatio).TruncateInt()
+	backingRatio := k.GetBackingRatio(ctx)
+	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(backingRatio).TruncateInt()
 
 	totalBackingValue, err := k.totalBackingInUSD(ctx)
 	if err != nil {
@@ -384,8 +384,8 @@ func (k Keeper) estimateSellBackingOut(
 		return
 	}
 
-	collateralRatio := k.GetCollateralRatio(ctx)
-	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(collateralRatio).TruncateInt()
+	backingRatio := k.GetBackingRatio(ctx)
+	requiredBackingValue := totalBacking.MerMinted.Amount.ToDec().Mul(backingRatio).TruncateInt()
 
 	totalBackingValue, err := k.totalBackingInUSD(ctx)
 	if err != nil {
