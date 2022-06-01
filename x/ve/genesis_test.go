@@ -56,6 +56,6 @@ func (suite *GenesisTestSuite) TestVeExportGenesis() {
 		InitGenesis(suite.ctx, veKeeper, *types.DefaultGenesis())
 	})
 
-	genesisExported := ExportGenesis(suite.ctx, app.VeKeeper)
+	genesisExported := ExportGenesis(suite.ctx, veKeeper)
 	suite.Require().Equal(genesisExported.Params.GetLockDenom(), merlion.BaseDenom)
 }

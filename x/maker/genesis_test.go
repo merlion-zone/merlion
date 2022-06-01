@@ -1,29 +1,55 @@
-package maker_test
+package maker
 
 import (
 	"testing"
 
-	keepertest "github.com/merlion-zone/merlion/testutil/keeper"
-	"github.com/merlion-zone/merlion/testutil/nullify"
-	"github.com/merlion-zone/merlion/x/maker"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/suite"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
+	"github.com/merlion-zone/merlion/app"
 	"github.com/merlion-zone/merlion/x/maker/types"
-	"github.com/stretchr/testify/require"
 )
 
-func TestGenesis(t *testing.T) {
-	genesisState := types.GenesisState{
-		Params: types.DefaultParams(),
+type GenesisTestSuite struct {
+	suite.Suite
+	ctx sdk.Context
+	app *app.Merlion
+}
 
-		// this line is used by starport scaffolding # genesis/test/state
-	}
+func (suite *GenesisTestSuite) SetupTest() {
+	suite.app = app.Setup(false)
+	suite.ctx = suite.app.BaseApp.NewContext(false, tmproto.Header{})
+}
 
-	k, ctx := keepertest.MakerKeeper(t)
-	maker.InitGenesis(ctx, *k, genesisState)
-	got := maker.ExportGenesis(ctx, *k)
-	require.NotNil(t, got)
+func TestGenesisTestSuite(t *testing.T) {
+	suite.Run(t, new(GenesisTestSuite))
+}
 
-	nullify.Fill(&genesisState)
-	nullify.Fill(got)
+func (suite *GenesisTestSuite) TestMakerInitGenesis() {
+	app := suite.app
+	makerKeeper := app.MakerKeeper
 
-	// this line is used by starport scaffolding # genesis/test/assert
+	suite.Require().NotPanics(func() {
+		InitGenesis(suite.ctx, makerKeeper, *types.DefaultGenesis())
+	})
+
+	backingRatio := makerKeeper.GetBackingRatio(suite.ctx)
+	params := makerKeeper.GetParams(suite.ctx)
+
+	suite.Require().Equal(backingRatio, sdk.OneDec())
+	suite.Require().Equal(params, types.DefaultParams())
+}
+
+func (suite *GenesisTestSuite) TestMakerExportGenesis() {
+	app := suite.app
+	makerKeeper := app.MakerKeeper
+
+	suite.Require().NotPanics(func() {
+		InitGenesis(suite.ctx, makerKeeper, *types.DefaultGenesis())
+	})
+
+	genesisExported := ExportGenesis(suite.ctx, makerKeeper)
+	suite.Require().Equal(genesisExported.BackingRatio, sdk.OneDec())
+	suite.Require().Equal(genesisExported.Params, types.DefaultParams())
 }
