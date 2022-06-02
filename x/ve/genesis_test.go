@@ -1,14 +1,16 @@
-package ve
+package ve_test
 
 import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/merlion-zone/merlion/app"
-	merlion "github.com/merlion-zone/merlion/types"
-	"github.com/merlion-zone/merlion/x/ve/types"
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
+	"github.com/merlion-zone/merlion/app"
+	merlion "github.com/merlion-zone/merlion/types"
+	"github.com/merlion-zone/merlion/x/ve"
+	"github.com/merlion-zone/merlion/x/ve/types"
 )
 
 type GenesisTestSuite struct {
@@ -31,7 +33,7 @@ func (suite *GenesisTestSuite) TestVeInitGenesis() {
 	veKeeper := app.VeKeeper
 
 	suite.Require().NotPanics(func() {
-		InitGenesis(suite.ctx, veKeeper, *types.DefaultGenesis())
+		ve.InitGenesis(suite.ctx, veKeeper, *types.DefaultGenesis())
 	})
 
 	params := veKeeper.GetParams(suite.ctx)
@@ -53,9 +55,9 @@ func (suite *GenesisTestSuite) TestVeExportGenesis() {
 	veKeeper := app.VeKeeper
 
 	suite.Require().NotPanics(func() {
-		InitGenesis(suite.ctx, veKeeper, *types.DefaultGenesis())
+		ve.InitGenesis(suite.ctx, veKeeper, *types.DefaultGenesis())
 	})
 
-	genesisExported := ExportGenesis(suite.ctx, veKeeper)
+	genesisExported := ve.ExportGenesis(suite.ctx, veKeeper)
 	suite.Require().Equal(genesisExported.Params.GetLockDenom(), merlion.BaseDenom)
 }

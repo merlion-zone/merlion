@@ -1,13 +1,15 @@
-package erc20
+package erc20_test
 
 import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/merlion-zone/merlion/app"
-	"github.com/merlion-zone/merlion/x/erc20/types"
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
+	"github.com/merlion-zone/merlion/app"
+	"github.com/merlion-zone/merlion/x/erc20"
+	"github.com/merlion-zone/merlion/x/erc20/types"
 )
 
 type GenesisTestSuite struct {
@@ -56,7 +58,7 @@ func (suite *GenesisTestSuite) TestERC20InitGenesis() {
 	for _, tc := range testCases {
 
 		suite.Require().NotPanics(func() {
-			InitGenesis(suite.ctx, suite.app.Erc20Keeper, suite.app.AccountKeeper, tc.genesisState)
+			erc20.InitGenesis(suite.ctx, suite.app.Erc20Keeper, suite.app.AccountKeeper, tc.genesisState)
 		})
 		params := suite.app.Erc20Keeper.GetParams(suite.ctx)
 
@@ -99,9 +101,9 @@ func (suite *GenesisTestSuite) TestErc20ExportGenesis() {
 	}
 
 	for _, tc := range testGenCases {
-		InitGenesis(suite.ctx, suite.app.Erc20Keeper, suite.app.AccountKeeper, tc.genesisState)
+		erc20.InitGenesis(suite.ctx, suite.app.Erc20Keeper, suite.app.AccountKeeper, tc.genesisState)
 		suite.Require().NotPanics(func() {
-			genesisExported := ExportGenesis(suite.ctx, suite.app.Erc20Keeper)
+			genesisExported := erc20.ExportGenesis(suite.ctx, suite.app.Erc20Keeper)
 			params := suite.app.Erc20Keeper.GetParams(suite.ctx)
 			suite.Require().Equal(genesisExported.Params, params)
 
