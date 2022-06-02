@@ -1,4 +1,4 @@
-package maker
+package maker_test
 
 import (
 	"testing"
@@ -8,6 +8,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	"github.com/merlion-zone/merlion/app"
+	"github.com/merlion-zone/merlion/x/maker"
 	"github.com/merlion-zone/merlion/x/maker/types"
 )
 
@@ -31,7 +32,7 @@ func (suite *GenesisTestSuite) TestMakerInitGenesis() {
 	makerKeeper := app.MakerKeeper
 
 	suite.Require().NotPanics(func() {
-		InitGenesis(suite.ctx, makerKeeper, *types.DefaultGenesis())
+		maker.InitGenesis(suite.ctx, makerKeeper, *types.DefaultGenesis())
 	})
 
 	backingRatio := makerKeeper.GetBackingRatio(suite.ctx)
@@ -46,10 +47,10 @@ func (suite *GenesisTestSuite) TestMakerExportGenesis() {
 	makerKeeper := app.MakerKeeper
 
 	suite.Require().NotPanics(func() {
-		InitGenesis(suite.ctx, makerKeeper, *types.DefaultGenesis())
+		maker.InitGenesis(suite.ctx, makerKeeper, *types.DefaultGenesis())
 	})
 
-	genesisExported := ExportGenesis(suite.ctx, makerKeeper)
+	genesisExported := maker.ExportGenesis(suite.ctx, makerKeeper)
 	suite.Require().Equal(genesisExported.BackingRatio, sdk.OneDec())
 	suite.Require().Equal(genesisExported.Params, types.DefaultParams())
 }

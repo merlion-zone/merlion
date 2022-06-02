@@ -32,7 +32,7 @@ func (k Keeper) AdjustBackingRatio(ctx sdk.Context) {
 		backingRatio = sdk.MinDec(backingRatio.Add(ratioStep), sdk.OneDec())
 	}
 
-	// TODO: consider adjusting CR based on total minted Mer, even though Mer price is within the band
+	// TODO: consider adjusting BR based on total minted Mer, even though Mer price is within the band
 
 	k.SetBackingRatio(ctx, backingRatio)
 	k.SetBackingRatioLastBlock(ctx, ctx.BlockHeight())
