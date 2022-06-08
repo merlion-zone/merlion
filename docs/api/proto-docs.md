@@ -788,7 +788,7 @@ Params defines the parameters for the maker module.
 | `backing_ratio_cooldown_period` | [int64](#int64) |  | cooldown period for adjusting backing ratio |
 | `mint_price_bias` | [string](#string) |  | mint Mer price bias ratio |
 | `burn_price_bias` | [string](#string) |  | burn Mer price bias ratio |
-| `recollateralize_bonus` | [string](#string) |  | recollateralization bonus ratio |
+| `reback_bonus` | [string](#string) |  | reback bonus ratio |
 | `liquidation_commission_fee` | [string](#string) |  | liquidation commission fee ratio |
 
 
@@ -858,7 +858,7 @@ BackingRiskParams represents an object of backing coin risk parameters.
 | `mint_fee` | [string](#string) |  | mint fee rate |
 | `burn_fee` | [string](#string) |  | burn fee rate |
 | `buyback_fee` | [string](#string) |  | buyback fee rate |
-| `recollateralize_fee` | [string](#string) |  | recollateralize fee rate |
+| `reback_fee` | [string](#string) |  | reback fee rate |
 
 
 
@@ -1834,7 +1834,8 @@ MsgLiquidateCollateral represents a message to liquidates collateral assets.
 <a name="merlion.maker.v1.MsgLiquidateCollateralResponse"></a>
 
 ### MsgLiquidateCollateralResponse
-MsgReCollateralizeResponse defines the Msg/LiquidateCollateral response type.
+MsgLiquidateCollateralResponse defines the Msg/LiquidateCollateral response
+type.
 
 
 | Field | Type | Label | Description |

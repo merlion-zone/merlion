@@ -29,8 +29,8 @@ message BackingRiskParams {
   // buyback fee rate
   string buyback_fee = 7
       [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
-  // recollateralize fee rate
-  string recollateralize_fee = 8
+  // reback fee rate
+  string reback_fee = 8
       [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec" ];
 }
 

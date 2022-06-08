@@ -786,7 +786,8 @@ func (m *MsgLiquidateCollateral) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgLiquidateCollateral proto.InternalMessageInfo
 
-// MsgReCollateralizeResponse defines the Msg/LiquidateCollateral response type.
+// MsgLiquidateCollateralResponse defines the Msg/LiquidateCollateral response
+// type.
 type MsgLiquidateCollateralResponse struct {
 	RepayIn       types.Coin `protobuf:"bytes,1,opt,name=repay_in,json=repayIn,proto3" json:"repay_in" yaml:"repay_in"`
 	CollateralOut types.Coin `protobuf:"bytes,2,opt,name=collateral_out,json=collateralOut,proto3" json:"collateral_out" yaml:"collateral_out"`

@@ -33,9 +33,9 @@ func HandleRegisterBackingProposal(ctx sdk.Context, k Keeper, p *types.RegisterB
 		dec := sdk.ZeroDec()
 		params.BuybackFee = &dec
 	}
-	if params.RecollateralizeFee == nil {
+	if params.RebackFee == nil {
 		dec := sdk.ZeroDec()
-		params.RecollateralizeFee = &dec
+		params.RebackFee = &dec
 	}
 
 	if err := validateBackingRiskParams(ctx, k, &params); err != nil {
@@ -185,7 +185,7 @@ func setBackingRiskParamsProposal(ctx sdk.Context, k Keeper, patch *types.Backin
 	updated |= updateDecimal(params.MintFee, patch.MintFee)
 	updated |= updateDecimal(params.BurnFee, patch.BurnFee)
 	updated |= updateDecimal(params.BuybackFee, patch.BuybackFee)
-	updated |= updateDecimal(params.RecollateralizeFee, patch.RecollateralizeFee)
+	updated |= updateDecimal(params.RebackFee, patch.RebackFee)
 
 	if updated > 0 {
 		if err := validateBackingRiskParams(ctx, k, &params); err != nil {
@@ -249,8 +249,8 @@ func setCollateralRiskParamsProposal(ctx sdk.Context, k Keeper, patch *types.Col
 }
 
 func validateBackingRiskParams(ctx sdk.Context, keeper Keeper, params *types.BackingRiskParams) error {
-	if params.RecollateralizeFee.GT(keeper.RecollateralizeBonus(ctx)) {
-		return sdkerrors.Wrap(types.ErrBackingParamsInvalid, "recollateralize fee ratio should not be greater than recollateralize bonus ratio")
+	if params.RebackFee.GT(keeper.RebackBonus(ctx)) {
+		return sdkerrors.Wrap(types.ErrBackingParamsInvalid, "reback fee ratio should not be greater than reback bonus ratio")
 	}
 	return nil
 }
