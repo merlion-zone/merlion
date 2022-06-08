@@ -398,10 +398,10 @@ func (k Keeper) estimateSellBackingOut(
 	}
 	availableLionOut := availableMissingBackingValue.Amount.ToDec().Quo(lionPrice)
 
-	bonusRatio := k.RecollateralizeBonus(ctx)
+	bonusRatio := k.RebackBonus(ctx)
 	lionMint := sdk.NewCoin(merlion.AttoLionDenom, backingIn.Amount.ToDec().Mul(backingPrice).Quo(lionPrice).TruncateInt())
 	bonus := computeFee(lionMint, &bonusRatio)
-	sellbackFee = computeFee(lionMint, backingParams.RecollateralizeFee)
+	sellbackFee = computeFee(lionMint, backingParams.RebackFee)
 
 	lionMint = lionMint.Add(bonus)
 	if lionMint.Amount.ToDec().GT(availableLionOut) {

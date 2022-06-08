@@ -138,8 +138,8 @@ func validateBackingRiskParams(params *BackingRiskParams) error {
 	if params.BuybackFee != nil && (params.BuybackFee.IsNegative() || params.BuybackFee.GT(sdk.OneDec())) {
 		return fmt.Errorf("buyback fee must be in [0, 1]")
 	}
-	if params.RecollateralizeFee != nil && (params.RecollateralizeFee.IsNegative() || params.RecollateralizeFee.GT(sdk.OneDec())) {
-		return fmt.Errorf("recollateralize fee must be in [0, 1]")
+	if params.RebackFee != nil && (params.RebackFee.IsNegative() || params.RebackFee.GT(sdk.OneDec())) {
+		return fmt.Errorf("reback fee must be in [0, 1]")
 	}
 	return nil
 }

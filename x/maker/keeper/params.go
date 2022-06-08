@@ -46,9 +46,9 @@ func (k Keeper) BurnPriceBias(ctx sdk.Context) (res sdk.Dec) {
 	return
 }
 
-// RecollateralizeBonus is recollateralization bonus ratio
-func (k Keeper) RecollateralizeBonus(ctx sdk.Context) (res sdk.Dec) {
-	k.paramstore.Get(ctx, types.KeyRecollateralizeBonus, &res)
+// RebackBonus is reback bonus ratio
+func (k Keeper) RebackBonus(ctx sdk.Context) (res sdk.Dec) {
+	k.paramstore.Get(ctx, types.KeyRebackBonus, &res)
 	return
 }
 

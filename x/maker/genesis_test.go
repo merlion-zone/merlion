@@ -38,8 +38,8 @@ func (suite *GenesisTestSuite) TestMakerInitGenesis() {
 	backingRatio := makerKeeper.GetBackingRatio(suite.ctx)
 	params := makerKeeper.GetParams(suite.ctx)
 
-	suite.Require().Equal(backingRatio, sdk.OneDec())
-	suite.Require().Equal(params, types.DefaultParams())
+	suite.Require().Equal(sdk.OneDec(), backingRatio)
+	suite.Require().Equal(types.DefaultParams(), params)
 }
 
 func (suite *GenesisTestSuite) TestMakerExportGenesis() {
@@ -51,6 +51,6 @@ func (suite *GenesisTestSuite) TestMakerExportGenesis() {
 	})
 
 	genesisExported := maker.ExportGenesis(suite.ctx, makerKeeper)
-	suite.Require().Equal(genesisExported.BackingRatio, sdk.OneDec())
-	suite.Require().Equal(genesisExported.Params, types.DefaultParams())
+	suite.Require().Equal(sdk.OneDec(), genesisExported.BackingRatio)
+	suite.Require().Equal(types.DefaultParams(), genesisExported.Params)
 }

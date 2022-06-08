@@ -48,9 +48,9 @@ message Params {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
-  // recollateralization bonus ratio
-  string recollateralize_bonus = 6 [
-    (gogoproto.moretags) = "yaml:\"recollateralize_bonus\"",
+  // reback bonus ratio
+  string reback_bonus = 6 [
+    (gogoproto.moretags) = "yaml:\"reback_bonus\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
