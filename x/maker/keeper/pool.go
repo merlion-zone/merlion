@@ -114,7 +114,7 @@ func (k Keeper) SetAccountCollateral(ctx sdk.Context, addr sdk.AccAddress, col t
 }
 
 func (k Keeper) GetAccountCollateral(ctx sdk.Context, addr sdk.AccAddress, denom string) (types.AccountCollateral, bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixCollateralPool)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefixCollateralAccount)
 	bz := store.Get(keyByAddrDenom(types.KeyPrefixCollateralAccount, addr, denom))
 	var collateral types.AccountCollateral
 	if len(bz) == 0 {

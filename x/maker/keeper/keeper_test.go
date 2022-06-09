@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	abci "github.com/tendermint/tendermint/abci/types"
 	"testing"
 	"time"
 
@@ -67,4 +68,23 @@ func (suite *KeeperTestSuite) SetupTest() {
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
 	types.RegisterQueryServer(queryHelper, suite.app.MakerKeeper)
 	suite.queryClient = types.NewQueryClient(queryHelper)
+}
+
+func (suite *KeeperTestSuite) Commit() {
+	suite.CommitAfter(time.Nanosecond)
+}
+
+func (suite *KeeperTestSuite) CommitAfter(t time.Duration) {
+	_ = suite.app.Commit()
+	header := suite.ctx.BlockHeader()
+	header.Height += 1
+	header.Time = header.Time.Add(t)
+	suite.app.BeginBlock(abci.RequestBeginBlock{
+		Header: header,
+	})
+
+	// update ctx and query client
+	suite.ctx = suite.app.BaseApp.NewContext(false, header)
+	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
+	types.RegisterQueryServer(queryHelper, suite.app.MakerKeeper)
 }
