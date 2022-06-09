@@ -38,9 +38,9 @@ func (k Keeper) AdjustBackingRatio(ctx sdk.Context) {
 	k.SetBackingRatioLastBlock(ctx, ctx.BlockHeight())
 }
 
-func (k Keeper) SetBackingRatio(ctx sdk.Context, cr sdk.Dec) {
+func (k Keeper) SetBackingRatio(ctx sdk.Context, br sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.DecProto{Dec: cr})
+	bz := k.cdc.MustMarshal(&sdk.DecProto{Dec: br})
 	store.Set(types.KeyPrefixBackingRatio, bz)
 }
 
@@ -66,7 +66,7 @@ func (k Keeper) SetBackingRatioLastBlock(ctx sdk.Context, bh int64) {
 
 func (k Keeper) GetBackingRatioLastBlock(ctx sdk.Context) int64 {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.KeyPrefixBackingRatio)
+	bz := store.Get(types.KeyPrefixBackingRatioLastBlock)
 	if bz == nil {
 		return 0
 	}
