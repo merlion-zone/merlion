@@ -304,7 +304,7 @@ func GetTotalCollateralCmd() *cobra.Command {
 
 func GetBackingRatioCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "collateral-ratio",
+		Use:   "backing-ratio",
 		Short: "Gets the backing ratio",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
