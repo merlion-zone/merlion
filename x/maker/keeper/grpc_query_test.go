@@ -14,52 +14,22 @@ func (suite *KeeperTestSuite) TestAllBackingRiskParams() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(&types.QueryAllBackingRiskParamsResponse{}, res)
 
+	brp, brp2 := dummyBackingRiskParams()
+	suite.Require().NotEqual(brp.BackingDenom, brp2.BackingDenom)
 	// add backing risk params
-	maxBacking := sdk.NewInt(100)
-	maxMerMint := sdk.NewInt(10)
-	mintFee := sdk.NewDecWithPrec(5, 3)
-	burnFee := sdk.NewDecWithPrec(6, 3)
-	buybackFee := sdk.NewDecWithPrec(7, 3)
-	rebackFee := sdk.NewDecWithPrec(8, 3)
-	backingRiskParams := types.BackingRiskParams{
-		BackingDenom: "btc",
-		Enabled:      false,
-		MaxBacking:   &maxBacking,
-		MaxMerMint:   &maxMerMint,
-		MintFee:      &mintFee,
-		BurnFee:      &burnFee,
-		BuybackFee:   &buybackFee,
-		RebackFee:    &rebackFee,
-	}
-	suite.app.MakerKeeper.SetBackingRiskParams(suite.ctx, backingRiskParams)
+	suite.app.MakerKeeper.SetBackingRiskParams(suite.ctx, brp)
 	res, err = suite.queryClient.AllBackingRiskParams(ctx, &types.QueryAllBackingRiskParamsRequest{})
 	expRes := &types.QueryAllBackingRiskParamsResponse{
-		RiskParams: []types.BackingRiskParams{backingRiskParams},
+		RiskParams: []types.BackingRiskParams{brp},
 	}
 	suite.Require().NoError(err)
 	suite.Require().Equal(expRes, res)
 
 	// add another risk params
-	maxBacking2 := sdk.NewInt(200)
-	maxMerMint2 := sdk.NewInt(20)
-	mintFee2 := sdk.NewDecWithPrec(6, 3)
-	burnFee2 := sdk.NewDecWithPrec(7, 3)
-	buybackFee2 := sdk.NewDecWithPrec(8, 3)
-	rebackFee2 := sdk.NewDecWithPrec(9, 3)
-	backingRiskParams2 := types.BackingRiskParams{
-		BackingDenom: "eth",
-		Enabled:      true,
-		MaxBacking:   &maxBacking2,
-		MaxMerMint:   &maxMerMint2,
-		MintFee:      &mintFee2,
-		BurnFee:      &burnFee2,
-		BuybackFee:   &buybackFee2,
-		RebackFee:    &rebackFee2,
-	}
-	suite.app.MakerKeeper.SetBackingRiskParams(suite.ctx, backingRiskParams2)
+	suite.app.MakerKeeper.SetBackingRiskParams(suite.ctx, brp2)
 	res, err = suite.queryClient.AllBackingRiskParams(ctx, &types.QueryAllBackingRiskParamsRequest{})
 	expRes = &types.QueryAllBackingRiskParamsResponse{
-		RiskParams: []types.BackingRiskParams{backingRiskParams, backingRiskParams2},
+		RiskParams: []types.BackingRiskParams{brp, brp2},
 	}
 	suite.Require().NoError(err)
 	suite.Require().Equal(expRes, res)
@@ -72,65 +42,22 @@ func (suite *KeeperTestSuite) TestAllCollateralRiskParams() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(&types.QueryAllCollateralRiskParamsResponse{}, res)
 
+	crp, crp2 := dummyCollateralRiskParams()
+	suite.Require().NotEqual(crp.CollateralDenom, crp2.CollateralDenom)
 	// add collateral risk params
-	maxCollateral := sdk.NewInt(100)
-	maxMerMint := sdk.NewInt(10)
-	liquidationThreshold := sdk.NewDecWithPrec(75, 2)
-	loanToValue := sdk.NewDecWithPrec(70, 2)
-	basicLoanToValue := sdk.NewDecWithPrec(50, 2)
-	catalyticLionRation := sdk.NewDecWithPrec(5, 2)
-	liquidationFee := sdk.NewDecWithPrec(10, 2)
-	mintFee := sdk.NewDecWithPrec(1, 2)
-	InterestFee := sdk.NewDecWithPrec(3, 2)
-	collateralRiskParams := types.CollateralRiskParams{
-		CollateralDenom:      "btc",
-		Enabled:              true,
-		MaxCollateral:        &maxCollateral,
-		MaxMerMint:           &maxMerMint,
-		LiquidationThreshold: &liquidationThreshold,
-		LoanToValue:          &loanToValue,
-		BasicLoanToValue:     &basicLoanToValue,
-		CatalyticLionRatio:   &catalyticLionRation,
-		LiquidationFee:       &liquidationFee,
-		MintFee:              &mintFee,
-		InterestFee:          &InterestFee,
-	}
-	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, collateralRiskParams)
+	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, crp)
 	res, err = suite.queryClient.AllCollateralRiskParams(ctx, &types.QueryAllCollateralRiskParamsRequest{})
 	expRes := &types.QueryAllCollateralRiskParamsResponse{
-		RiskParams: []types.CollateralRiskParams{collateralRiskParams},
+		RiskParams: []types.CollateralRiskParams{crp},
 	}
 	suite.Require().NoError(err)
 	suite.Require().Equal(expRes, res)
 
 	// add another collateral risk params
-	maxCollateral2 := sdk.NewInt(200)
-	maxMerMint2 := sdk.NewInt(20)
-	liquidationThreshold2 := sdk.NewDecWithPrec(76, 2)
-	loanToValue2 := sdk.NewDecWithPrec(71, 2)
-	basicLoanToValue2 := sdk.NewDecWithPrec(51, 2)
-	catalyticLionRation2 := sdk.NewDecWithPrec(6, 2)
-	liquidationFee2 := sdk.NewDecWithPrec(11, 2)
-	mintFee2 := sdk.NewDecWithPrec(2, 2)
-	InterestFee2 := sdk.NewDecWithPrec(4, 2)
-	collateralRiskParams2 := types.CollateralRiskParams{
-		CollateralDenom:      "eth",
-		Enabled:              false,
-		MaxCollateral:        &maxCollateral2,
-		MaxMerMint:           &maxMerMint2,
-		LiquidationThreshold: &liquidationThreshold2,
-		LoanToValue:          &loanToValue2,
-		BasicLoanToValue:     &basicLoanToValue2,
-		CatalyticLionRatio:   &catalyticLionRation2,
-		LiquidationFee:       &liquidationFee2,
-		MintFee:              &mintFee2,
-		InterestFee:          &InterestFee2,
-	}
-
-	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, collateralRiskParams2)
+	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, crp2)
 	res, err = suite.queryClient.AllCollateralRiskParams(ctx, &types.QueryAllCollateralRiskParamsRequest{})
 	expRes = &types.QueryAllCollateralRiskParamsResponse{
-		RiskParams: []types.CollateralRiskParams{collateralRiskParams, collateralRiskParams2},
+		RiskParams: []types.CollateralRiskParams{crp, crp2},
 	}
 	suite.Require().NoError(err)
 	suite.Require().Equal(expRes, res)
