@@ -83,7 +83,7 @@ func (suite *KeeperTestSuite) CommitAfter(t time.Duration) {
 		Header: header,
 	})
 
-	// update ctx and query client
+	// update ctx and query helper
 	suite.ctx = suite.app.BaseApp.NewContext(false, header)
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
 	types.RegisterQueryServer(queryHelper, suite.app.MakerKeeper)
