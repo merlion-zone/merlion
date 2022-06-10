@@ -1,0 +1,155 @@
+package keeper_test
+
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/merlion-zone/merlion/x/maker/types"
+)
+
+func (suite *KeeperTestSuite) TestSetGetBackingRiskParams() {
+	brp, brp2 := dummyBackingRiskParams()
+	suite.app.MakerKeeper.SetBackingRiskParams(suite.ctx, brp)
+
+	// backing denom not found
+	suite.Require().NotEqual(brp.BackingDenom, brp2.BackingDenom)
+	isBackingRegistered := suite.app.MakerKeeper.IsBackingRegistered(suite.ctx, brp2.BackingDenom)
+	suite.Require().False(isBackingRegistered)
+	gotBrp, found := suite.app.MakerKeeper.GetBackingRiskParams(suite.ctx, brp2.BackingDenom)
+	suite.Require().False(found)
+	suite.Require().Equal(types.BackingRiskParams{}, gotBrp)
+
+	// backing denom found
+	isBackingRegistered = suite.app.MakerKeeper.IsBackingRegistered(suite.ctx, brp.BackingDenom)
+	suite.Require().True(isBackingRegistered)
+	gotBrp, found = suite.app.MakerKeeper.GetBackingRiskParams(suite.ctx, brp.BackingDenom)
+	suite.Require().True(found)
+	suite.Require().Equal(brp, gotBrp)
+
+	// update backing risk params
+	newMaxBacking := sdk.NewInt(300)
+	newBrp := brp
+	newBrp.MaxBacking = &newMaxBacking
+	suite.Require().NotEqual(brp.MaxBacking, newBrp.MaxBacking)
+	suite.app.MakerKeeper.SetBackingRiskParams(suite.ctx, newBrp)
+	gotBrp, found = suite.app.MakerKeeper.GetBackingRiskParams(suite.ctx, brp.BackingDenom)
+	suite.Require().True(found)
+	suite.Require().Equal(newBrp.MaxBacking, gotBrp.MaxBacking)
+}
+
+func (suite *KeeperTestSuite) TestSetGetCollateralRiskParams() {
+	crp, crp2 := dummyCollateralRiskParams()
+	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, crp)
+
+	// collateral denom not found
+	suite.Require().NotEqual(crp.CollateralDenom, crp2.CollateralDenom)
+	isCollateralRegistered := suite.app.MakerKeeper.IsCollateralRegistered(suite.ctx, crp2.CollateralDenom)
+	suite.Require().False(isCollateralRegistered)
+	gotBrp, found := suite.app.MakerKeeper.GetCollateralRiskParams(suite.ctx, crp2.CollateralDenom)
+	suite.Require().False(found)
+	suite.Require().Equal(types.CollateralRiskParams{}, gotBrp)
+
+	// collateral denom found
+	isCollateralRegistered = suite.app.MakerKeeper.IsCollateralRegistered(suite.ctx, crp.CollateralDenom)
+	suite.Require().True(isCollateralRegistered)
+	gotBrp, found = suite.app.MakerKeeper.GetCollateralRiskParams(suite.ctx, crp.CollateralDenom)
+	suite.Require().True(found)
+	suite.Require().Equal(crp, gotBrp)
+
+	// update Collateral risk params
+	newMaxCollateral := sdk.NewInt(300)
+	newBrp := crp
+	newBrp.MaxCollateral = &newMaxCollateral
+	suite.Require().NotEqual(crp.MaxCollateral, newBrp.MaxCollateral)
+	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, newBrp)
+	gotBrp, found = suite.app.MakerKeeper.GetCollateralRiskParams(suite.ctx, crp.CollateralDenom)
+	suite.Require().True(found)
+	suite.Require().Equal(newBrp.MaxCollateral, gotBrp.MaxCollateral)
+
+}
+
+func dummyBackingRiskParams() (brp, brp2 types.BackingRiskParams) {
+	maxBacking := sdk.NewInt(100)
+	maxMerMint := sdk.NewInt(10)
+	mintFee := sdk.NewDecWithPrec(5, 3)
+	burnFee := sdk.NewDecWithPrec(6, 3)
+	buybackFee := sdk.NewDecWithPrec(7, 3)
+	rebackFee := sdk.NewDecWithPrec(8, 3)
+	brp = types.BackingRiskParams{
+		BackingDenom: "btc",
+		Enabled:      false,
+		MaxBacking:   &maxBacking,
+		MaxMerMint:   &maxMerMint,
+		MintFee:      &mintFee,
+		BurnFee:      &burnFee,
+		BuybackFee:   &buybackFee,
+		RebackFee:    &rebackFee,
+	}
+
+	maxBacking2 := sdk.NewInt(200)
+	maxMerMint2 := sdk.NewInt(20)
+	mintFee2 := sdk.NewDecWithPrec(6, 3)
+	burnFee2 := sdk.NewDecWithPrec(7, 3)
+	buybackFee2 := sdk.NewDecWithPrec(8, 3)
+	rebackFee2 := sdk.NewDecWithPrec(9, 3)
+	brp2 = types.BackingRiskParams{
+		BackingDenom: "eth",
+		Enabled:      true,
+		MaxBacking:   &maxBacking2,
+		MaxMerMint:   &maxMerMint2,
+		MintFee:      &mintFee2,
+		BurnFee:      &burnFee2,
+		BuybackFee:   &buybackFee2,
+		RebackFee:    &rebackFee2,
+	}
+
+	return
+}
+
+func dummyCollateralRiskParams() (crp, crp2 types.CollateralRiskParams) {
+	maxCollateral := sdk.NewInt(100)
+	maxMerMint := sdk.NewInt(10)
+	liquidationThreshold := sdk.NewDecWithPrec(75, 2)
+	loanToValue := sdk.NewDecWithPrec(70, 2)
+	basicLoanToValue := sdk.NewDecWithPrec(50, 2)
+	catalyticLionRation := sdk.NewDecWithPrec(5, 2)
+	liquidationFee := sdk.NewDecWithPrec(10, 2)
+	mintFee := sdk.NewDecWithPrec(1, 2)
+	InterestFee := sdk.NewDecWithPrec(3, 2)
+	crp = types.CollateralRiskParams{
+		CollateralDenom:      "btc",
+		Enabled:              true,
+		MaxCollateral:        &maxCollateral,
+		MaxMerMint:           &maxMerMint,
+		LiquidationThreshold: &liquidationThreshold,
+		LoanToValue:          &loanToValue,
+		BasicLoanToValue:     &basicLoanToValue,
+		CatalyticLionRatio:   &catalyticLionRation,
+		LiquidationFee:       &liquidationFee,
+		MintFee:              &mintFee,
+		InterestFee:          &InterestFee,
+	}
+
+	maxCollateral2 := sdk.NewInt(200)
+	maxMerMint2 := sdk.NewInt(20)
+	liquidationThreshold2 := sdk.NewDecWithPrec(76, 2)
+	loanToValue2 := sdk.NewDecWithPrec(71, 2)
+	basicLoanToValue2 := sdk.NewDecWithPrec(51, 2)
+	catalyticLionRation2 := sdk.NewDecWithPrec(6, 2)
+	liquidationFee2 := sdk.NewDecWithPrec(11, 2)
+	mintFee2 := sdk.NewDecWithPrec(2, 2)
+	InterestFee2 := sdk.NewDecWithPrec(4, 2)
+	crp2 = types.CollateralRiskParams{
+		CollateralDenom:      "eth",
+		Enabled:              false,
+		MaxCollateral:        &maxCollateral2,
+		MaxMerMint:           &maxMerMint2,
+		LiquidationThreshold: &liquidationThreshold2,
+		LoanToValue:          &loanToValue2,
+		BasicLoanToValue:     &basicLoanToValue2,
+		CatalyticLionRatio:   &catalyticLionRation2,
+		LiquidationFee:       &liquidationFee2,
+		MintFee:              &mintFee2,
+		InterestFee:          &InterestFee2,
+	}
+
+	return
+}
