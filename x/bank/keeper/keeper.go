@@ -86,7 +86,6 @@ func (k Keeper) GetDenomMetaData(ctx sdk.Context, denom string) (banktypes.Metad
 }
 
 func (k Keeper) GetAllDenomMetaData(ctx sdk.Context) []banktypes.Metadata {
-	// NOTE: not including denom metadata of all erc20 native tokens
 	return k.BaseKeeper.GetAllDenomMetaData(ctx)
 }
 

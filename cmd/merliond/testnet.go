@@ -4,6 +4,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -27,6 +28,7 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	"github.com/cosmos/go-bip39"
 	"github.com/ethereum/go-ethereum/common"
 	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/spf13/cobra"
@@ -46,27 +48,33 @@ import (
 )
 
 var (
-	flagNodeDirPrefix     = "node-dir-prefix"
-	flagNumValidators     = "validators"
-	flagOutputDir         = "output-dir"
-	flagNodeDaemonHome    = "node-daemon-home"
-	flagStartingIPAddress = "starting-ip-address"
-	flagEnableLogging     = "enable-logging"
-	flagRPCAddress        = "rpc.address"
-	flagAPIAddress        = "api.address"
-	flagPrintMnemonic     = "print-mnemonic"
+	flagNodeDirPrefix         = "node-dir-prefix"
+	flagNumValidators         = "validators"
+	flagOutputDir             = "output-dir"
+	flagNodeDaemonHome        = "node-daemon-home"
+	flagStartingIPAddress     = "starting-ip-address"
+	flagPredeterminedMnemonic = "predetermined-mnemonic"
+	flagEnableLogging         = "enable-logging"
+	flagRPCAddress            = "rpc.address"
+	flagAPIAddress            = "api.address"
+	flagPrintMnemonic         = "print-mnemonic"
+)
+
+var (
+	predeterminedEntropy = bytes.Repeat([]byte{0x00}, 16)
 )
 
 type initArgs struct {
-	algo              string
-	chainID           string
-	keyringBackend    string
-	minGasPrices      string
-	nodeDaemonHome    string
-	nodeDirPrefix     string
-	numValidators     int
-	outputDir         string
-	startingIPAddress string
+	algo                  string
+	chainID               string
+	keyringBackend        string
+	minGasPrices          string
+	nodeDaemonHome        string
+	nodeDirPrefix         string
+	numValidators         int
+	outputDir             string
+	startingIPAddress     string
+	predeterminedMnemonic bool
 }
 
 type startArgs struct {
@@ -140,6 +148,7 @@ Example:
 			args.nodeDirPrefix, _ = cmd.Flags().GetString(flagNodeDirPrefix)
 			args.nodeDaemonHome, _ = cmd.Flags().GetString(flagNodeDaemonHome)
 			args.startingIPAddress, _ = cmd.Flags().GetString(flagStartingIPAddress)
+			args.predeterminedMnemonic, _ = cmd.Flags().GetBool(flagPredeterminedMnemonic)
 			args.numValidators, _ = cmd.Flags().GetInt(flagNumValidators)
 			args.algo, _ = cmd.Flags().GetString(flags.FlagKeyAlgorithm)
 
@@ -151,6 +160,7 @@ Example:
 	cmd.Flags().String(flagNodeDirPrefix, "node", "Prefix the directory name for each node with (node results in node0, node1, ...)")
 	cmd.Flags().String(flagNodeDaemonHome, "merliond", "Home directory of the node's daemon configuration")
 	cmd.Flags().String(flagStartingIPAddress, "192.168.0.1", "Starting IP address (192.168.0.1 results in persistent peers list ID0@192.168.0.1:46656, ID1@192.168.0.2:46656, ...)")
+	cmd.Flags().Bool(flagPredeterminedMnemonic, false, "Use predetermined mnemonic for key derivation")
 	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, "Select keyring backend (os|file|test)")
 
 	return cmd
@@ -271,7 +281,21 @@ func initTestnetFiles(
 			return err
 		}
 
-		addr, mnemonic, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, "", true, algo)
+		mnemonic := ""
+		if args.predeterminedMnemonic {
+			entropy := append([]byte{}, predeterminedEntropy...)
+			entropy[len(entropy)-1] = byte(i)
+			if i > 255 {
+				panic("too many validators")
+			}
+			mnemonic, err = bip39.NewMnemonic(entropy)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("Mnemonic for validator %d: %s\n", i, mnemonic)
+		}
+
+		addr, mnemonic, err := testutil.GenerateSaveCoinKey(kb, nodeDirName, mnemonic, true, algo)
 		if err != nil {
 			_ = os.RemoveAll(args.outputDir)
 			return err

@@ -6,7 +6,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/ethereum/go-ethereum/common"
 	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/erc20/types"
@@ -38,61 +37,6 @@ func (k Keeper) getContractByDenom(ctx sdk.Context, denom string) (common.Addres
 			panic(sdkerrors.Wrapf(types.ErrTokenPairNotFound, "token pair '%s' with denom '%s' not found", id, denom))
 		}
 		return pair.GetERC20Contract(), true
-	}
-}
-
-func (k Keeper) GetDenomMetaData(ctx sdk.Context, denom string) (banktypes.Metadata, bool) {
-	if k.IsDenomForErc20(denom) {
-		contract, found := k.getContractByDenom(ctx, denom)
-		if !found {
-			return banktypes.Metadata{}, false
-		}
-
-		strContract := contract.String()
-
-		erc20Data, err := k.QueryERC20(ctx, contract)
-		if err != nil {
-			return banktypes.Metadata{}, false
-		}
-
-		// Base denomination
-		base := types.CreateDenom(strContract)
-
-		// Create a bank denom metadata based on the ERC20 token ABI details
-		metadata := banktypes.Metadata{
-			Description: types.CreateDenomDescription(strContract),
-			Base:        base,
-			DenomUnits: []*banktypes.DenomUnit{
-				{
-					Denom:    base,
-					Exponent: 0,
-				},
-			},
-			Name:    types.CreateDenom(strContract),
-			Symbol:  erc20Data.Symbol,
-			Display: base,
-		}
-
-		// Only append metadata if decimals > 0, otherwise validation fails
-		if erc20Data.Decimals > 0 {
-			nameSanitized := types.SanitizeERC20Name(erc20Data.Name)
-			metadata.DenomUnits = append(
-				metadata.DenomUnits,
-				&banktypes.DenomUnit{
-					Denom:    nameSanitized,
-					Exponent: uint32(erc20Data.Decimals),
-				},
-			)
-			metadata.Display = nameSanitized
-		}
-
-		if err := metadata.Validate(); err != nil {
-			return banktypes.Metadata{}, false
-		}
-
-		return metadata, true
-	} else {
-		return k.bankKeeper.GetDenomMetaData(ctx, denom)
 	}
 }
 

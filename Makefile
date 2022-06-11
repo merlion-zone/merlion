@@ -518,7 +518,7 @@ localnet-build:
 # Start a multi-node testnet locally
 localnet-start: localnet-stop build-linux localnet-build
 	@if ! [ -f $(BUILDDIR)/node0/merliond/config/genesis.json ]; \
-	then docker run --rm -v $(BUILDDIR):/merlion:Z merlionzone/localnetnode testnet init-files -v 4 -o /merlion --starting-ip-address 192.168.10.2 --keyring-backend=test; \
+	then docker run --rm -v $(BUILDDIR):/merlion:Z merlionzone/localnetnode testnet init-files -v 4 -o /merlion --starting-ip-address 192.168.10.2 --predetermined-mnemonic --keyring-backend=test; \
 	fi
 	docker-compose up -d
 
