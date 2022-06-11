@@ -3,7 +3,7 @@ package types
 // DONTCOVER
 
 import (
-	erc20types "github.com/tharsis/evmos/v3/x/erc20/types"
+	erc20types "github.com/tharsis/evmos/v4/x/erc20/types"
 )
 
 // x/erc20 module sentinel errors

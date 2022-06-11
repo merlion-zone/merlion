@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/erc20/types"
-	"github.com/tharsis/evmos/v3/contracts"
+	"github.com/tharsis/evmos/v4/contracts"
 )
 
 // RegisterCoin deploys an erc20 contract and creates the token pair for the existing cosmos coin
@@ -101,10 +101,12 @@ func (k Keeper) RegisterERC20(ctx sdk.Context, contract common.Address) (types.T
 	k.SetTokenPair(ctx, pair)
 	k.SetDenomMap(ctx, pair.Denom, pair.GetID())
 	k.SetERC20Map(ctx, common.HexToAddress(pair.Erc20Address), pair.GetID())
+
+	k.Logger(ctx).Info("registered erc20 token pair", "token_pair", pair)
 	return pair, nil
 }
 
-// CreateCoinMetadata generates the metadata to represent the ERC20 token on evmos.
+// CreateCoinMetadata generates the coin metadata to represent the ERC20 token.
 func (k Keeper) CreateCoinMetadata(ctx sdk.Context, contract common.Address) (*banktypes.Metadata, error) {
 	strContract := contract.String()
 
@@ -163,5 +165,6 @@ func (k Keeper) CreateCoinMetadata(ctx sdk.Context, contract common.Address) (*b
 
 	k.bankKeeper.SetDenomMetaData(ctx, metadata)
 
+	k.Logger(ctx).Info("created coin metadata", "metadata", metadata)
 	return &metadata, nil
 }

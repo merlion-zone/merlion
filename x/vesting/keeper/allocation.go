@@ -6,6 +6,7 @@ import (
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/vesting/types"
+	ethermint "github.com/tharsis/ethermint/types"
 )
 
 func (k Keeper) AllocateAtGenesis(ctx sdk.Context, genState types.GenesisState) {
@@ -64,7 +65,7 @@ func (k Keeper) ClaimVested(ctx sdk.Context) {
 func (k Keeper) createContinuousVestingAccount(ctx sdk.Context, vestingName string, amount sdk.Int, startTime int64, duration int64) {
 	baseAccount := k.accountKeeper.NewAccountWithAddress(ctx, k.getVestingAddress(vestingName))
 	amt := sdk.NewCoin(merlion.BaseDenom, amount)
-	vestingAccount := vestingtypes.NewContinuousVestingAccount(baseAccount.(*authtypes.BaseAccount), sdk.NewCoins(amt), startTime, startTime+duration)
+	vestingAccount := vestingtypes.NewContinuousVestingAccount(baseAccount.(*ethermint.EthAccount).BaseAccount, sdk.NewCoins(amt), startTime, startTime+duration)
 	k.accountKeeper.SetAccount(ctx, vestingAccount)
 
 	err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(amt))

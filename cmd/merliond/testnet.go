@@ -40,7 +40,7 @@ import (
 	srvflags "github.com/tharsis/ethermint/server/flags"
 	ethermint "github.com/tharsis/ethermint/types"
 	evmtypes "github.com/tharsis/ethermint/x/evm/types"
-	evmoskr "github.com/tharsis/evmos/v3/crypto/keyring"
+	evmoskr "github.com/tharsis/evmos/v4/crypto/keyring"
 
 	"github.com/merlion-zone/merlion/testutil/network"
 )

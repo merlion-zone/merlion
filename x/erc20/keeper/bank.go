@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/erc20/types"
-	"github.com/tharsis/evmos/v3/contracts"
+	"github.com/tharsis/evmos/v4/contracts"
 )
 
 func (k Keeper) IsDenomForErc20(denom string) bool {

@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 	ethermint "github.com/tharsis/ethermint/types"
 	evmtypes "github.com/tharsis/ethermint/x/evm/types"
-	evmoskr "github.com/tharsis/evmos/v3/crypto/keyring"
+	evmoskr "github.com/tharsis/evmos/v4/crypto/keyring"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -23,8 +23,8 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-	vestingcli "github.com/tharsis/evmos/v3/x/vesting/client/cli"
-	vestingtypes "github.com/tharsis/evmos/v3/x/vesting/types"
+	vestingcli "github.com/tharsis/evmos/v4/x/vesting/client/cli"
+	vestingtypes "github.com/tharsis/evmos/v4/x/vesting/types"
 )
 
 const (

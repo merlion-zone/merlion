@@ -82,11 +82,7 @@ func (k Keeper) HasSupply(ctx sdk.Context, denom string) bool {
 }
 
 func (k Keeper) GetDenomMetaData(ctx sdk.Context, denom string) (banktypes.Metadata, bool) {
-	if !k.erc20Keeper().IsDenomForErc20(denom) {
-		return k.BaseKeeper.GetDenomMetaData(ctx, denom)
-	} else {
-		return k.erc20Keeper().GetDenomMetaData(ctx, denom)
-	}
+	return k.BaseKeeper.GetDenomMetaData(ctx, denom)
 }
 
 func (k Keeper) GetAllDenomMetaData(ctx sdk.Context) []banktypes.Metadata {

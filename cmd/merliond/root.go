@@ -38,7 +38,7 @@ import (
 	"github.com/tharsis/ethermint/encoding"
 	ethermintserver "github.com/tharsis/ethermint/server"
 	servercfg "github.com/tharsis/ethermint/server/config"
-	evmoskr "github.com/tharsis/evmos/v3/crypto/keyring"
+	evmoskr "github.com/tharsis/evmos/v4/crypto/keyring"
 )
 
 type (

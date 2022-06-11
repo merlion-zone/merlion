@@ -12,7 +12,7 @@ import (
 	evmtypes "github.com/tharsis/ethermint/x/evm/types"
 
 	"github.com/merlion-zone/merlion/x/erc20/types"
-	"github.com/tharsis/evmos/v3/contracts"
+	"github.com/tharsis/evmos/v4/contracts"
 )
 
 // EvmHooks wrapper struct for erc20 keeper
@@ -62,12 +62,14 @@ func (h EvmHooks) PostTxProcessing(
 		}
 
 		if len(transferEvent) == 0 {
+			h.k.Logger(ctx).Info("WARN: empty erc20 Transfer event")
 			continue
 		}
 
 		tokens, ok := transferEvent[0].(*big.Int)
 		// safety check and ignore if amount not positive
 		if !ok || tokens == nil || tokens.Sign() != 1 {
+			h.k.Logger(ctx).Info("WARN: invalid erc20 Transfer event: %s", transferEvent)
 			continue
 		}
 

@@ -108,7 +108,7 @@ import (
 	"github.com/tharsis/ethermint/x/feemarket"
 	feemarketkeeper "github.com/tharsis/ethermint/x/feemarket/keeper"
 	feemarkettypes "github.com/tharsis/ethermint/x/feemarket/types"
-	"github.com/tharsis/evmos/v3/app/ante"
+	"github.com/tharsis/evmos/v4/app/ante"
 
 	"github.com/merlion-zone/merlion/docs"
 	"github.com/merlion-zone/merlion/x/erc20"
@@ -376,7 +376,7 @@ func NewMerlion(
 
 	// add keepers
 	app.AccountKeeper = authkeeper.NewAccountKeeper(
-		appCodec, keys[authtypes.StoreKey], app.GetSubspace(authtypes.ModuleName), authtypes.ProtoBaseAccount, maccPerms,
+		appCodec, keys[authtypes.StoreKey], app.GetSubspace(authtypes.ModuleName), ethermint.ProtoAccount, maccPerms,
 	)
 	var erc20Keeper erc20keeper.Keeper
 	getErc20Keeper := func() custombanktypes.Erc20Keeper {
@@ -518,6 +518,12 @@ func NewMerlion(
 
 	app.VestingKeeper = *customvestingkeeper.NewKeeper(appCodec, keys[customvestingtypes.StoreKey], app.GetSubspace(customvestingtypes.ModuleName), app.AccountKeeper, app.BankKeeper, app.DistrKeeper, app.VeKeeper, authtypes.FeeCollectorName)
 	vestingModule := customvesting.NewAppModule(appCodec, app.VestingKeeper, app.AccountKeeper, app.BankKeeper)
+
+	app.EvmKeeper = app.EvmKeeper.SetHooks(
+		evmkeeper.NewMultiEvmHooks(
+			app.Erc20Keeper.EvmHooks(),
+		),
+	)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
