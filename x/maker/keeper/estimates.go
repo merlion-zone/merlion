@@ -55,6 +55,7 @@ func (k Keeper) estimateMintBySwapIn(
 
 	mintFee = computeFee(mintOut, backingParams.MintFee)
 	mintTotal := mintOut.Add(mintFee)
+	mintTotalInUSD := mintTotal.Amount.ToDec().Mul(merlion.MicroUSDTarget)
 
 	_, poolBacking, err := k.getBacking(ctx, backingDenom)
 	if err != nil {
@@ -65,8 +66,6 @@ func (k Keeper) estimateMintBySwapIn(
 		err = sdkerrors.Wrapf(types.ErrMerCeiling, "mer over ceiling")
 		return
 	}
-
-	mintTotalInUSD := mintTotal.Amount.ToDec().Mul(merlion.MicroUSDTarget)
 
 	backingRatio := k.GetBackingRatio(ctx)
 	if backingRatio.GTE(sdk.OneDec()) || fullBacking {

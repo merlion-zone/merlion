@@ -14,7 +14,7 @@ func (suite *KeeperTestSuite) TestAllBackingRiskParams() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(&types.QueryAllBackingRiskParamsResponse{}, res)
 
-	brp, brp2 := dummyBackingRiskParams()
+	brp, brp2 := suite.dummyBackingRiskParams()
 	suite.Require().NotEqual(brp.BackingDenom, brp2.BackingDenom)
 	// add backing risk params
 	suite.app.MakerKeeper.SetBackingRiskParams(suite.ctx, brp)
@@ -42,7 +42,7 @@ func (suite *KeeperTestSuite) TestAllCollateralRiskParams() {
 	suite.Require().NoError(err)
 	suite.Require().Equal(&types.QueryAllCollateralRiskParamsResponse{}, res)
 
-	crp, crp2 := dummyCollateralRiskParams()
+	crp, crp2 := suite.dummyCollateralRiskParams()
 	suite.Require().NotEqual(crp.CollateralDenom, crp2.CollateralDenom)
 	// add collateral risk params
 	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, crp)
@@ -73,7 +73,7 @@ func (suite *KeeperTestSuite) TestAllBackingPools() {
 	// add backing pool
 	poolBacking := types.PoolBacking{
 		MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(100)),
-		Backing:    sdk.NewCoin("btc", sdk.NewInt(10)),
+		Backing:    sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
 	}
 	suite.app.MakerKeeper.SetPoolBacking(suite.ctx, poolBacking)
@@ -108,7 +108,7 @@ func (suite *KeeperTestSuite) TestAllCollateralPools() {
 
 	// add collateral pool
 	poolColl := types.PoolCollateral{
-		Collateral: sdk.NewCoin("btc", sdk.NewInt(10)),
+		Collateral: sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
 		MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(100)),
 		MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
@@ -140,18 +140,18 @@ func (suite *KeeperTestSuite) TestAllCollateralPools() {
 func (suite *KeeperTestSuite) TestBackingPool() {
 	poolBacking := types.PoolBacking{
 		MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
-		Backing:    sdk.NewCoin("eth", sdk.NewInt(20)),
+		Backing:    sdk.NewCoin(suite.bcDenom, sdk.NewInt(20)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
 	}
 	suite.app.MakerKeeper.SetPoolBacking(suite.ctx, poolBacking)
 
 	// backing pool not found
 	ctx := sdk.WrapSDKContext(suite.ctx)
-	_, err := suite.queryClient.BackingPool(ctx, &types.QueryBackingPoolRequest{BackingDenom: "btc"})
+	_, err := suite.queryClient.BackingPool(ctx, &types.QueryBackingPoolRequest{BackingDenom: "eth"})
 	suite.Require().Error(err)
 
 	// correct
-	res, err := suite.queryClient.BackingPool(ctx, &types.QueryBackingPoolRequest{BackingDenom: "eth"})
+	res, err := suite.queryClient.BackingPool(ctx, &types.QueryBackingPoolRequest{BackingDenom: suite.bcDenom})
 	expRes := &types.QueryBackingPoolResponse{BackingPool: poolBacking}
 	suite.Require().NoError(err)
 	suite.Require().Equal(expRes, res)
@@ -159,7 +159,7 @@ func (suite *KeeperTestSuite) TestBackingPool() {
 
 func (suite *KeeperTestSuite) TestCollateralPool() {
 	poolCollateral := types.PoolCollateral{
-		Collateral: sdk.NewCoin("eth", sdk.NewInt(10)),
+		Collateral: sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
 		MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
 		MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(300)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
@@ -168,11 +168,11 @@ func (suite *KeeperTestSuite) TestCollateralPool() {
 
 	// collateral pool not found
 	ctx := sdk.WrapSDKContext(suite.ctx)
-	_, err := suite.queryClient.CollateralPool(ctx, &types.QueryCollateralPoolRequest{CollateralDenom: "btc"})
+	_, err := suite.queryClient.CollateralPool(ctx, &types.QueryCollateralPoolRequest{CollateralDenom: "eth"})
 	suite.Require().Error(err)
 
 	// correct
-	res, err := suite.queryClient.CollateralPool(ctx, &types.QueryCollateralPoolRequest{CollateralDenom: "eth"})
+	res, err := suite.queryClient.CollateralPool(ctx, &types.QueryCollateralPoolRequest{CollateralDenom: suite.bcDenom})
 	expRes := &types.QueryCollateralPoolResponse{CollateralPool: poolCollateral}
 	suite.Require().NoError(err)
 	suite.Require().Equal(expRes, res)
@@ -189,7 +189,7 @@ func (suite *KeeperTestSuite) TestCollateralOfAccount() {
 
 	accColl := types.AccountCollateral{
 		Account:             accAddress.String(),
-		Collateral:          sdk.NewCoin("btc", sdk.NewInt(100)),
+		Collateral:          sdk.NewCoin(suite.bcDenom, sdk.NewInt(100)),
 		MerDebt:             sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
 		MerByLion:           sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(50)),
 		LionBurned:          sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
@@ -202,7 +202,7 @@ func (suite *KeeperTestSuite) TestCollateralOfAccount() {
 	ctx := sdk.WrapSDKContext(suite.ctx)
 	_, err = suite.queryClient.CollateralOfAccount(ctx, &types.QueryCollateralOfAccountRequest{
 		Account:         accAddress2.String(),
-		CollateralDenom: "btc",
+		CollateralDenom: suite.bcDenom,
 	})
 	suite.Require().Error(err)
 
@@ -216,7 +216,7 @@ func (suite *KeeperTestSuite) TestCollateralOfAccount() {
 	// correct
 	res, err := suite.queryClient.CollateralOfAccount(ctx, &types.QueryCollateralOfAccountRequest{
 		Account:         accAddress.String(),
-		CollateralDenom: "btc",
+		CollateralDenom: suite.bcDenom,
 	})
 	expRes := &types.QueryCollateralOfAccountResponse{AccountCollateral: accColl}
 	suite.Require().NoError(err)

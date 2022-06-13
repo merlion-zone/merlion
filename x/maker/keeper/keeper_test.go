@@ -27,6 +27,7 @@ type KeeperTestSuite struct {
 	address     common.Address
 	signer      keyring.Signer
 	consAddress sdk.ConsAddress
+	bcDenom     string
 }
 
 var s *KeeperTestSuite
@@ -37,17 +38,15 @@ func TestKeeperTestSuite(t *testing.T) {
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
-	require := suite.Require()
-
 	// account key
 	priv, err := ethsecp256k1.GenerateKey()
-	require.NoError(err)
+	suite.Require().NoError(err)
 	suite.address = common.BytesToAddress(priv.PubKey().Address().Bytes())
 	suite.signer = tests.NewSigner(priv)
 
 	// consensus key
 	privCons, err := ethsecp256k1.GenerateKey()
-	require.NoError(err)
+	suite.Require().NoError(err)
 	suite.consAddress = sdk.ConsAddress(privCons.PubKey().Address())
 
 	// init app
@@ -68,6 +67,9 @@ func (suite *KeeperTestSuite) SetupTest() {
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
 	types.RegisterQueryServer(queryHelper, suite.app.MakerKeeper)
 	suite.queryClient = types.NewQueryClient(queryHelper)
+
+	// set backing and collateral denom
+	suite.bcDenom = "uDAI"
 }
 
 func (suite *KeeperTestSuite) Commit() {

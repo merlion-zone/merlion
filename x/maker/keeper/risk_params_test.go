@@ -6,7 +6,7 @@ import (
 )
 
 func (suite *KeeperTestSuite) TestSetGetBackingRiskParams() {
-	brp, brp2 := dummyBackingRiskParams()
+	brp, brp2 := suite.dummyBackingRiskParams()
 	suite.app.MakerKeeper.SetBackingRiskParams(suite.ctx, brp)
 
 	// backing denom not found
@@ -36,46 +36,46 @@ func (suite *KeeperTestSuite) TestSetGetBackingRiskParams() {
 }
 
 func (suite *KeeperTestSuite) TestSetGetCollateralRiskParams() {
-	crp, crp2 := dummyCollateralRiskParams()
+	crp, crp2 := suite.dummyCollateralRiskParams()
 	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, crp)
 
 	// collateral denom not found
 	suite.Require().NotEqual(crp.CollateralDenom, crp2.CollateralDenom)
 	isCollateralRegistered := suite.app.MakerKeeper.IsCollateralRegistered(suite.ctx, crp2.CollateralDenom)
 	suite.Require().False(isCollateralRegistered)
-	gotBrp, found := suite.app.MakerKeeper.GetCollateralRiskParams(suite.ctx, crp2.CollateralDenom)
+	gotCrp, found := suite.app.MakerKeeper.GetCollateralRiskParams(suite.ctx, crp2.CollateralDenom)
 	suite.Require().False(found)
-	suite.Require().Equal(types.CollateralRiskParams{}, gotBrp)
+	suite.Require().Equal(types.CollateralRiskParams{}, gotCrp)
 
 	// collateral denom found
 	isCollateralRegistered = suite.app.MakerKeeper.IsCollateralRegistered(suite.ctx, crp.CollateralDenom)
 	suite.Require().True(isCollateralRegistered)
-	gotBrp, found = suite.app.MakerKeeper.GetCollateralRiskParams(suite.ctx, crp.CollateralDenom)
+	gotCrp, found = suite.app.MakerKeeper.GetCollateralRiskParams(suite.ctx, crp.CollateralDenom)
 	suite.Require().True(found)
-	suite.Require().Equal(crp, gotBrp)
+	suite.Require().Equal(crp, gotCrp)
 
 	// update Collateral risk params
 	newMaxCollateral := sdk.NewInt(300)
-	newBrp := crp
-	newBrp.MaxCollateral = &newMaxCollateral
-	suite.Require().NotEqual(crp.MaxCollateral, newBrp.MaxCollateral)
-	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, newBrp)
-	gotBrp, found = suite.app.MakerKeeper.GetCollateralRiskParams(suite.ctx, crp.CollateralDenom)
+	newCrp := crp
+	newCrp.MaxCollateral = &newMaxCollateral
+	suite.Require().NotEqual(crp.MaxCollateral, newCrp.MaxCollateral)
+	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, newCrp)
+	gotCrp, found = suite.app.MakerKeeper.GetCollateralRiskParams(suite.ctx, crp.CollateralDenom)
 	suite.Require().True(found)
-	suite.Require().Equal(newBrp.MaxCollateral, gotBrp.MaxCollateral)
+	suite.Require().Equal(newCrp.MaxCollateral, gotCrp.MaxCollateral)
 
 }
 
-func dummyBackingRiskParams() (brp, brp2 types.BackingRiskParams) {
-	maxBacking := sdk.NewInt(100)
-	maxMerMint := sdk.NewInt(10)
+func (suite *KeeperTestSuite) dummyBackingRiskParams() (brp, brp2 types.BackingRiskParams) {
+	maxBacking := sdk.NewInt(15_000000)
+	maxMerMint := sdk.NewInt(10_000000)
 	mintFee := sdk.NewDecWithPrec(5, 3)
 	burnFee := sdk.NewDecWithPrec(6, 3)
 	buybackFee := sdk.NewDecWithPrec(7, 3)
 	rebackFee := sdk.NewDecWithPrec(8, 3)
 	brp = types.BackingRiskParams{
-		BackingDenom: "btc",
-		Enabled:      false,
+		BackingDenom: suite.bcDenom,
+		Enabled:      true,
 		MaxBacking:   &maxBacking,
 		MaxMerMint:   &maxMerMint,
 		MintFee:      &mintFee,
@@ -85,14 +85,14 @@ func dummyBackingRiskParams() (brp, brp2 types.BackingRiskParams) {
 	}
 
 	maxBacking2 := sdk.NewInt(200)
-	maxMerMint2 := sdk.NewInt(20)
+	maxMerMint2 := sdk.NewInt(2000_000000)
 	mintFee2 := sdk.NewDecWithPrec(6, 3)
 	burnFee2 := sdk.NewDecWithPrec(7, 3)
 	buybackFee2 := sdk.NewDecWithPrec(8, 3)
 	rebackFee2 := sdk.NewDecWithPrec(9, 3)
 	brp2 = types.BackingRiskParams{
 		BackingDenom: "eth",
-		Enabled:      true,
+		Enabled:      false,
 		MaxBacking:   &maxBacking2,
 		MaxMerMint:   &maxMerMint2,
 		MintFee:      &mintFee2,
@@ -104,7 +104,7 @@ func dummyBackingRiskParams() (brp, brp2 types.BackingRiskParams) {
 	return
 }
 
-func dummyCollateralRiskParams() (crp, crp2 types.CollateralRiskParams) {
+func (suite *KeeperTestSuite) dummyCollateralRiskParams() (crp, crp2 types.CollateralRiskParams) {
 	maxCollateral := sdk.NewInt(100)
 	maxMerMint := sdk.NewInt(10)
 	liquidationThreshold := sdk.NewDecWithPrec(75, 2)
@@ -115,7 +115,7 @@ func dummyCollateralRiskParams() (crp, crp2 types.CollateralRiskParams) {
 	mintFee := sdk.NewDecWithPrec(1, 2)
 	InterestFee := sdk.NewDecWithPrec(3, 2)
 	crp = types.CollateralRiskParams{
-		CollateralDenom:      "btc",
+		CollateralDenom:      suite.bcDenom,
 		Enabled:              true,
 		MaxCollateral:        &maxCollateral,
 		MaxMerMint:           &maxMerMint,
