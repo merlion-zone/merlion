@@ -7,9 +7,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math/big"
 	"net"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -429,7 +431,11 @@ func initGenFiles(
 	var govGenState govtypes.GenesisState
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[govtypes.ModuleName], &govGenState)
 
-	govGenState.DepositParams.MinDeposit[0].Denom = coinDenom
+	govMinDepositAmt := sdk.NewIntFromBigInt(big.NewInt(0).Exp(big.NewInt(10), big.NewInt(ethermint.BaseDenomUnit), nil)).MulRaw(1) // 1 lion
+	govGenState.DepositParams.MinDeposit[0] = sdk.NewCoin(coinDenom, govMinDepositAmt)
+	govGenState.DepositParams.MaxDepositPeriod = time.Hour * 24 * 14 // 14 days
+	// govGenState.VotingParams.VotingPeriod = time.Hour * 24 * 5       // 5 days
+	govGenState.VotingParams.VotingPeriod = time.Minute // 1 minute
 	appGenState[govtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&govGenState)
 
 	var crisisGenState crisistypes.GenesisState

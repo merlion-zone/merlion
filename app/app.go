@@ -93,6 +93,7 @@ import (
 	"github.com/merlion-zone/merlion/x/voter"
 	voterkeeper "github.com/merlion-zone/merlion/x/voter/keeper"
 	votertypes "github.com/merlion-zone/merlion/x/voter/types"
+	statikfs "github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
 	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -110,7 +111,7 @@ import (
 	feemarkettypes "github.com/tharsis/ethermint/x/feemarket/types"
 	"github.com/tharsis/evmos/v4/app/ante"
 
-	"github.com/merlion-zone/merlion/docs"
+	_ "github.com/merlion-zone/merlion/client/docs/statik"
 	"github.com/merlion-zone/merlion/x/erc20"
 	erc20keeper "github.com/merlion-zone/merlion/x/erc20/keeper"
 	erc20types "github.com/merlion-zone/merlion/x/erc20/types"
@@ -427,16 +428,6 @@ func NewMerlion(
 		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
-	// register the proposal types
-	govRouter := govtypes.NewRouter()
-	govRouter.AddRoute(govtypes.RouterKey, govtypes.ProposalHandler).
-		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
-		AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(app.DistrKeeper)).
-		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
-		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
-		AddRoute(makertypes.RouterKey, maker.NewMakerProposalHandler(app.MakerKeeper)).
-		AddRoute(banktypes.RouterKey, custombank.NewBankProposalHandler(app.BankKeeper))
-
 	// Create Transfer Keepers
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey], app.GetSubspace(ibctransfertypes.ModuleName),
@@ -452,11 +443,6 @@ func NewMerlion(
 	)
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
-
-	app.GovKeeper = govkeeper.NewKeeper(
-		appCodec, keys[govtypes.StoreKey], app.GetSubspace(govtypes.ModuleName), app.AccountKeeper, app.BankKeeper,
-		&stakingKeeper, govRouter,
-	)
 
 	// Create ethermint keepers
 	tracer := cast.ToString(appOpts.Get(srvflags.EVMTracer))
@@ -523,6 +509,21 @@ func NewMerlion(
 		evmkeeper.NewMultiEvmHooks(
 			app.Erc20Keeper.EvmHooks(),
 		),
+	)
+
+	// register the proposal types
+	govRouter := govtypes.NewRouter()
+	govRouter.AddRoute(govtypes.RouterKey, govtypes.ProposalHandler).
+		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
+		AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(app.DistrKeeper)).
+		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
+		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
+		AddRoute(makertypes.RouterKey, maker.NewMakerProposalHandler(app.MakerKeeper)).
+		AddRoute(banktypes.RouterKey, custombank.NewBankProposalHandler(app.BankKeeper))
+
+	app.GovKeeper = govkeeper.NewKeeper(
+		appCodec, keys[govtypes.StoreKey], app.GetSubspace(govtypes.ModuleName), app.AccountKeeper, app.BankKeeper,
+		&stakingKeeper, govRouter,
 	)
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -879,7 +880,11 @@ func (app *Merlion) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APICo
 	ModuleBasics.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
 
 	// register app's OpenAPI routes.
-	apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(http.FS(docs.Docs)))
+	statikFS, err := statikfs.New()
+	if err != nil {
+		panic(err)
+	}
+	apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(statikFS))
 	apiSvr.Router.HandleFunc("/", openapiconsole.Handler(Name, "/static/openapi.yml"))
 }
 
