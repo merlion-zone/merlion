@@ -171,11 +171,6 @@ func (k Keeper) estimateMintBySwapOut(
 	if err != nil {
 		return
 	}
-	poolBacking.Backing = poolBacking.Backing.Add(backingIn)
-	if backingParams.MaxBacking != nil && poolBacking.Backing.Amount.GT(*backingParams.MaxBacking) {
-		err = sdkerrors.Wrapf(types.ErrBackingCeiling, "backing over ceiling")
-		return
-	}
 
 	mintTotalValue := mintTotalInUSD.QuoRoundUp(merPrice)
 	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(mintTotalValue.RoundInt())
@@ -184,15 +179,22 @@ func (k Keeper) estimateMintBySwapOut(
 		return
 	}
 
+	poolBacking.Backing = poolBacking.Backing.Add(backingIn)
+	if backingParams.MaxBacking != nil && poolBacking.Backing.Amount.GT(*backingParams.MaxBacking) {
+		err = sdkerrors.Wrapf(types.ErrBackingCeiling, "backing over ceiling")
+		return
+	}
+
 	mintFeeRate := sdk.ZeroDec()
 	if backingParams.MintFee != nil {
 		mintFeeRate = *backingParams.MintFee
 	}
-	mintOutValue := mintTotalValue.QuoRoundUp(sdk.OneDec().Add(mintFeeRate))
-	mintFeeValue := mintOutValue.Mul(mintFeeRate)
 
-	mintOut = sdk.NewCoin(merlion.MicroUSDDenom, mintOutValue.RoundInt())
-	mintFee = sdk.NewCoin(merlion.MicroUSDDenom, mintFeeValue.RoundInt())
+	mintOutInUSD := mintTotalInUSD.QuoRoundUp(sdk.OneDec().Add(mintFeeRate))
+	mintFeeInUSD := mintOutInUSD.Mul(mintFeeRate)
+
+	mintOut = sdk.NewCoin(merlion.MicroUSDDenom, mintOutInUSD.RoundInt())
+	mintFee = sdk.NewCoin(merlion.MicroUSDDenom, mintFeeInUSD.RoundInt())
 	return
 }
 

@@ -67,7 +67,7 @@ func (suite *KeeperTestSuite) TestSetGetCollateralRiskParams() {
 }
 
 func (suite *KeeperTestSuite) dummyBackingRiskParams() (brp, brp2 types.BackingRiskParams) {
-	maxBacking := sdk.NewInt(10_500000)
+	maxBacking := sdk.NewInt(10_100000)
 	maxMerMint := sdk.NewInt(10_000000)
 	mintFee := sdk.NewDecWithPrec(5, 3)
 	burnFee := sdk.NewDecWithPrec(6, 3)
