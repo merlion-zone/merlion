@@ -28,11 +28,10 @@ func (suite *KeeperTestSuite) TestAllBackingRiskParams() {
 	// add another risk params
 	suite.app.MakerKeeper.SetBackingRiskParams(suite.ctx, brp2)
 	res, err = suite.queryClient.AllBackingRiskParams(ctx, &types.QueryAllBackingRiskParamsRequest{})
-	expRes = &types.QueryAllBackingRiskParamsResponse{
-		RiskParams: []types.BackingRiskParams{brp, brp2},
-	}
 	suite.Require().NoError(err)
-	suite.Require().Equal(expRes, res)
+	suite.Require().Len(res.RiskParams, 2)
+	suite.Require().Contains(res.RiskParams, brp)
+	suite.Require().Contains(res.RiskParams, brp2)
 }
 
 func (suite *KeeperTestSuite) TestAllCollateralRiskParams() {
@@ -56,11 +55,10 @@ func (suite *KeeperTestSuite) TestAllCollateralRiskParams() {
 	// add another collateral risk params
 	suite.app.MakerKeeper.SetCollateralRiskParams(suite.ctx, crp2)
 	res, err = suite.queryClient.AllCollateralRiskParams(ctx, &types.QueryAllCollateralRiskParamsRequest{})
-	expRes = &types.QueryAllCollateralRiskParamsResponse{
-		RiskParams: []types.CollateralRiskParams{crp, crp2},
-	}
 	suite.Require().NoError(err)
-	suite.Require().Equal(expRes, res)
+	suite.Require().Len(res.RiskParams, 2)
+	suite.Require().Contains(res.RiskParams, crp)
+	suite.Require().Contains(res.RiskParams, crp2)
 }
 
 func (suite *KeeperTestSuite) TestAllBackingPools() {
@@ -92,11 +90,10 @@ func (suite *KeeperTestSuite) TestAllBackingPools() {
 	}
 	suite.app.MakerKeeper.SetPoolBacking(suite.ctx, poolBacking2)
 	res, err = suite.queryClient.AllBackingPools(ctx, &types.QueryAllBackingPoolsRequest{})
-	expRes = &types.QueryAllBackingPoolsResponse{
-		BackingPools: []types.PoolBacking{poolBacking, poolBacking2},
-	}
 	suite.Require().NoError(err)
-	suite.Require().Equal(expRes, res)
+	suite.Require().Len(res.BackingPools, 2)
+	suite.Require().Contains(res.BackingPools, poolBacking)
+	suite.Require().Contains(res.BackingPools, poolBacking2)
 }
 
 func (suite *KeeperTestSuite) TestAllCollateralPools() {
@@ -130,11 +127,10 @@ func (suite *KeeperTestSuite) TestAllCollateralPools() {
 	}
 	suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, poolColl2)
 	res, err = suite.queryClient.AllCollateralPools(ctx, &types.QueryAllCollateralPoolsRequest{})
-	expRes = &types.QueryAllCollateralPoolsResponse{
-		CollateralPools: []types.PoolCollateral{poolColl, poolColl2},
-	}
 	suite.Require().NoError(err)
-	suite.Require().Equal(expRes, res)
+	suite.Require().Len(res.CollateralPools, 2)
+	suite.Require().Contains(res.CollateralPools, poolColl)
+	suite.Require().Contains(res.CollateralPools, poolColl2)
 }
 
 func (suite *KeeperTestSuite) TestBackingPool() {
