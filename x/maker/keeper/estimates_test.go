@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/maker/types"
@@ -60,19 +61,6 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapIn() {
 			},
 		},
 		{
-			name: "default full backing",
-			req: &types.EstimateMintBySwapInRequest{
-				MintOut:      sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(1_000000)),
-				BackingDenom: suite.bcDenom,
-			},
-			expPass: true,
-			expRes: &types.EstimateMintBySwapInResponse{
-				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1015152)), // 1_000000 * (1+0.005) / 0.99
-				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
-				MintFee:   sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(5000)),
-			},
-		},
-		{
 			name: "user asked full backing",
 			malleate: func() {
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(80, 2))
@@ -88,6 +76,31 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapIn() {
 				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 				MintFee:   sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(5000)),
 			},
+		},
+		{
+			name: "full algorithmic",
+			malleate: func() {
+				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.ZeroDec())
+			},
+			req: &types.EstimateMintBySwapInRequest{
+				MintOut:      sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(1_000000)),
+				BackingDenom: suite.bcDenom,
+			},
+			expPass: true,
+			expRes: &types.EstimateMintBySwapInResponse{
+				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),
+				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(10050000000000000)), // 1_000000 * (1+0.005) / (100*10^-12)
+				MintFee:   sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(5000)),
+			},
+		},
+		{
+			name: "backing over ceiling",
+			req: &types.EstimateMintBySwapInRequest{
+				MintOut:      sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(1_500000)),
+				BackingDenom: suite.bcDenom,
+			},
+			expPass: false,
+			expErr:  types.ErrBackingCeiling,
 		},
 	}
 
@@ -118,7 +131,7 @@ func (suite *KeeperTestSuite) setupEstimation() {
 	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, suite.bcDenom, sdk.NewDecWithPrec(99, 2))
 	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, "eth", sdk.NewDec(1000_000000))
 	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, "fil", sdk.NewDec(5_000000))
-	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.AttoLionDenom, sdk.NewDecWithPrec(10, 12))
+	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.AttoLionDenom, sdk.NewDecWithPrec(100, 12))
 	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(101, 2))
 
 	// set risk params
