@@ -154,8 +154,8 @@ func (k Keeper) estimateMintBySwapOut(
 		lionIn.Amount = lionInMax.Amount
 	} else {
 		// fractional
-		mintTotalWithBackingInUSD := backingAvailInUSD.QuoRoundUp(backingRatio)
-		mintTotalWithLionInUSD := lionAvailInUSD.QuoRoundUp(sdk.OneDec().Sub(backingRatio))
+		mintTotalWithBackingInUSD := backingAvailInUSD.Quo(backingRatio)
+		mintTotalWithLionInUSD := lionAvailInUSD.Quo(sdk.OneDec().Sub(backingRatio))
 		if mintTotalWithBackingInUSD.LT(mintTotalWithLionInUSD) {
 			mintTotalInUSD = mintTotalWithBackingInUSD
 			backingIn.Amount = backingInMax.Amount
@@ -172,8 +172,7 @@ func (k Keeper) estimateMintBySwapOut(
 		return
 	}
 
-	mintTotalValue := mintTotalInUSD.QuoRoundUp(merPrice)
-	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(mintTotalValue.RoundInt())
+	poolBacking.MerMinted = poolBacking.MerMinted.AddAmount(mintTotalInUSD.RoundInt())
 	if backingParams.MaxMerMint != nil && poolBacking.MerMinted.Amount.GT(*backingParams.MaxMerMint) {
 		err = sdkerrors.Wrapf(types.ErrMerCeiling, "mer over ceiling")
 		return
@@ -190,11 +189,11 @@ func (k Keeper) estimateMintBySwapOut(
 		mintFeeRate = *backingParams.MintFee
 	}
 
-	mintOutInUSD := mintTotalInUSD.QuoRoundUp(sdk.OneDec().Add(mintFeeRate))
-	mintFeeInUSD := mintOutInUSD.Mul(mintFeeRate)
+	mintOutValue := mintTotalInUSD.Quo(merlion.MicroUSDTarget).Quo(sdk.OneDec().Add(mintFeeRate))
+	mintFeeValue := mintOutValue.Mul(mintFeeRate)
 
-	mintOut = sdk.NewCoin(merlion.MicroUSDDenom, mintOutInUSD.RoundInt())
-	mintFee = sdk.NewCoin(merlion.MicroUSDDenom, mintFeeInUSD.RoundInt())
+	mintOut = sdk.NewCoin(merlion.MicroUSDDenom, mintOutValue.RoundInt())
+	mintFee = sdk.NewCoin(merlion.MicroUSDDenom, mintFeeValue.RoundInt())
 	return
 }
 
@@ -249,7 +248,7 @@ func (k Keeper) estimateBurnBySwapOut(
 
 	backingRatio := k.GetBackingRatio(ctx)
 	if backingRatio.GTE(sdk.OneDec()) {
-		// full/over collateralized
+		// full/over backing
 		backingOut.Amount = burnActualInUSD.QuoRoundUp(backingPrice).RoundInt()
 	} else if backingRatio.IsZero() {
 		// algorithmic
