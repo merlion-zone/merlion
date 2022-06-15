@@ -120,6 +120,7 @@ import (
 	makerkeeper "github.com/merlion-zone/merlion/x/maker/keeper"
 	makertypes "github.com/merlion-zone/merlion/x/maker/types"
 	"github.com/merlion-zone/merlion/x/oracle"
+	oracleclient "github.com/merlion-zone/merlion/x/oracle/client"
 	oraclekeeper "github.com/merlion-zone/merlion/x/oracle/keeper"
 	oracletypes "github.com/merlion-zone/merlion/x/oracle/types"
 	customvesting "github.com/merlion-zone/merlion/x/vesting"
@@ -163,6 +164,7 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		makerclient.SetCollateralProposalHandler,
 		makerclient.BatchSetBackingProposalHandler,
 		makerclient.BatchSetCollateralProposalHandler,
+		oracleclient.RegisterTargetProposalHandler,
 	)
 
 	return govProposalHandlers
@@ -519,6 +521,7 @@ func NewMerlion(
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
 		AddRoute(makertypes.RouterKey, maker.NewMakerProposalHandler(app.MakerKeeper)).
+		AddRoute(oracletypes.RouterKey, oracle.NewOracleProposalHandler(app.OracleKeeper)).
 		AddRoute(banktypes.RouterKey, custombank.NewBankProposalHandler(app.BankKeeper))
 
 	app.GovKeeper = govkeeper.NewKeeper(

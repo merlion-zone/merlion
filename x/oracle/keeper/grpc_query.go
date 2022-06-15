@@ -79,6 +79,15 @@ func (k Keeper) VoteTargets(c context.Context, req *types.QueryVoteTargetsReques
 	return &types.QueryVoteTargetsResponse{VoteTargets: k.GetVoteTargets(ctx)}, nil
 }
 
+func (k Keeper) Targets(c context.Context, req *types.QueryTargetsRequest) (*types.QueryTargetsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+	return &types.QueryTargetsResponse{Targets: k.GetTargets(ctx)}, nil
+}
+
 func (k Keeper) FeederDelegation(c context.Context, req *types.QueryFeederDelegationRequest) (*types.QueryFeederDelegationResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")

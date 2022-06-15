@@ -33,6 +33,11 @@ service Query {
     option (google.api.http).get = "/merlion/oracle/v1/denoms/vote_targets";
   }
 
+  // Targets returns all target denoms (including vote targets).
+  rpc Targets(QueryTargetsRequest) returns (QueryTargetsResponse) {
+    option (google.api.http).get = "/merlion/oracle/v1/denoms/targets";
+  }
+
   // FeederDelegation returns feeder delegation of a validator.
   rpc FeederDelegation(QueryFeederDelegationRequest)
       returns (QueryFeederDelegationResponse) {
@@ -137,6 +142,18 @@ message QueryVoteTargetsResponse {
   // vote_targets defines a list of the denomination in which everyone
   // should vote in the current vote period.
   repeated string vote_targets = 1;
+}
+
+// QueryTargetsRequest is the request type for the Query/Targets RPC
+// method.
+message QueryTargetsRequest {}
+
+// QueryTargetsResponse is response type for the
+// Query/Targets RPC method.
+message QueryTargetsResponse {
+  // targets defines a list of the denomination which will be fed
+  // with price quotation (including voting targets).
+  repeated string targets = 1;
 }
 
 // QueryFeederDelegationRequest is the request type for the

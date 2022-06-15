@@ -34,6 +34,7 @@ type AccountKeeper interface {
 
 // BankKeeper defines the expected interface needed to retrieve account balances.
 type BankKeeper interface {
+	HasSupply(ctx sdk.Context, denom string) bool
 	GetDenomMetaData(ctx sdk.Context, denom string) (banktypes.Metadata, bool)
 	SetDenomMetaData(ctx sdk.Context, denomMetaData banktypes.Metadata)
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins

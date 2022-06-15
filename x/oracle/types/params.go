@@ -15,7 +15,6 @@ var (
 	KeyVoteThreshold            = []byte("VoteThreshold")
 	KeyRewardBand               = []byte("RewardBand")
 	KeyRewardDistributionWindow = []byte("RewardDistributionWindow")
-	KeyWhitelist                = []byte("Whitelist")
 	KeySlashFraction            = []byte("SlashFraction")
 	KeySlashWindow              = []byte("SlashWindow")
 	KeyMinValidPerWindow        = []byte("MinValidPerWindow")
@@ -30,14 +29,10 @@ const (
 
 // Default parameter values
 var (
-	DefaultVoteThreshold = sdk.NewDecWithPrec(50, 2) // 50%
-	DefaultRewardBand    = sdk.NewDecWithPrec(2, 2)  // 2% (-1, 1)
-	DefaultWhitelist     = DenomList{
-		{Name: types.AttoLionDenom},
-		{Name: types.MicroUSDDenom},
-	}
-	DefaultSlashFraction     = sdk.NewDecWithPrec(1, 4) // 0.01%
-	DefaultMinValidPerWindow = sdk.NewDecWithPrec(5, 2) // 5%
+	DefaultVoteThreshold     = sdk.NewDecWithPrec(50, 2) // 50%
+	DefaultRewardBand        = sdk.NewDecWithPrec(2, 2)  // 2% (-1, 1)
+	DefaultSlashFraction     = sdk.NewDecWithPrec(1, 4)  // 0.01%
+	DefaultMinValidPerWindow = sdk.NewDecWithPrec(5, 2)  // 5%
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -59,7 +54,6 @@ func DefaultParams() Params {
 		VoteThreshold:            DefaultVoteThreshold,
 		RewardBand:               DefaultRewardBand,
 		RewardDistributionWindow: DefaultRewardDistributionWindow,
-		Whitelist:                DefaultWhitelist,
 		SlashFraction:            DefaultSlashFraction,
 		SlashWindow:              DefaultSlashWindow,
 		MinValidPerWindow:        DefaultMinValidPerWindow,
@@ -73,7 +67,6 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyVoteThreshold, &p.VoteThreshold, validateVoteThreshold),
 		paramtypes.NewParamSetPair(KeyRewardBand, &p.RewardBand, validateRewardBand),
 		paramtypes.NewParamSetPair(KeyRewardDistributionWindow, &p.RewardDistributionWindow, validateRewardDistributionWindow),
-		paramtypes.NewParamSetPair(KeyWhitelist, &p.Whitelist, validateWhitelist),
 		paramtypes.NewParamSetPair(KeySlashFraction, &p.SlashFraction, validateSlashFraction),
 		paramtypes.NewParamSetPair(KeySlashWindow, &p.SlashWindow, validateSlashWindow),
 		paramtypes.NewParamSetPair(KeyMinValidPerWindow, &p.MinValidPerWindow, validateMinValidPerWindow),
@@ -109,11 +102,6 @@ func (p Params) Validate() error {
 		return fmt.Errorf("oracle parameter MinValidPerWindow must be between [0, 1]")
 	}
 
-	for _, denom := range p.Whitelist {
-		if len(denom.Name) == 0 {
-			return fmt.Errorf("oracle parameter Whitelist Denom must have name")
-		}
-	}
 	return nil
 }
 
@@ -178,21 +166,6 @@ func validateRewardDistributionWindow(i interface{}) error {
 
 	if v == 0 {
 		return fmt.Errorf("reward distribution window must be positive: %d", v)
-	}
-
-	return nil
-}
-
-func validateWhitelist(i interface{}) error {
-	v, ok := i.(DenomList)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
-	for _, d := range v {
-		if len(d.Name) == 0 {
-			return fmt.Errorf("oracle parameter Whitelist Denom must have name")
-		}
 	}
 
 	return nil

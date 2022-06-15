@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/oracle/types"
 )
 
@@ -18,10 +17,9 @@ func (k Keeper) RewardBallotWinners(
 	voteTargets map[string]struct{},
 	ballotWinners map[string]types.Claim,
 ) {
-	rewardDenoms := make([]string, len(voteTargets)+1)
-	rewardDenoms[0] = merlion.AttoLionDenom
+	rewardDenoms := make([]string, len(voteTargets))
 
-	i := 1
+	i := 0
 	for denom := range voteTargets {
 		rewardDenoms[i] = denom
 		i++

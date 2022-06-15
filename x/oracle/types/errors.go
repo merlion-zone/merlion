@@ -24,4 +24,5 @@ var (
 	ErrNoAggregateVote       = sdkerrors.Register(ModuleName, 12, "no aggregate vote")
 	ErrNoVoteTarget          = sdkerrors.Register(ModuleName, 13, "no vote target")
 	ErrUnknownDenom          = sdkerrors.Register(ModuleName, 14, "unknown denom")
+	ErrExistingTarget        = sdkerrors.Register(ModuleName, 15, "existing denom")
 )

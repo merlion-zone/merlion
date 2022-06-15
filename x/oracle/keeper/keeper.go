@@ -343,16 +343,6 @@ func (k Keeper) IterateVoteTargets(ctx sdk.Context, handler func(denom string) (
 	}
 }
 
-// ClearVoteTargets clears vote targets.
-func (k Keeper) ClearVoteTargets(ctx sdk.Context) {
-	store := ctx.KVStore(k.storeKey)
-	iter := sdk.KVStorePrefixIterator(store, types.VoteTargetKey)
-	defer iter.Close()
-	for ; iter.Valid(); iter.Next() {
-		store.Delete(iter.Key())
-	}
-}
-
 // GetVoteTargets returns the voting target list on current vote period.
 func (k Keeper) GetVoteTargets(ctx sdk.Context) (voteTargets []string) {
 	k.IterateVoteTargets(ctx, func(denom string) bool {
@@ -361,6 +351,46 @@ func (k Keeper) GetVoteTargets(ctx sdk.Context) (voteTargets []string) {
 	})
 
 	return voteTargets
+}
+
+// -----------------------------------
+// Target logic
+
+// IsTarget returns existence of a denom in the target list.
+func (k Keeper) IsTarget(ctx sdk.Context, denom string) bool {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.GetTargetKey(denom))
+	return bz != nil
+}
+
+// SetTarget sets target for the denom.
+func (k Keeper) SetTarget(ctx sdk.Context, denom string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.GetTargetKey(denom), []byte(denom))
+}
+
+// IterateTargets iterates rate over targets in the store.
+func (k Keeper) IterateTargets(ctx sdk.Context, handler func(denom string) (stop bool)) {
+	store := ctx.KVStore(k.storeKey)
+	iter := sdk.KVStorePrefixIterator(store, types.TargetKey)
+	defer iter.Close()
+	for ; iter.Valid(); iter.Next() {
+		denom := types.ExtractDenomFromTargetKey(iter.Key())
+
+		if handler(denom) {
+			break
+		}
+	}
+}
+
+// GetTargets returns the target list on current vote period.
+func (k Keeper) GetTargets(ctx sdk.Context) (targets []string) {
+	k.IterateTargets(ctx, func(denom string) bool {
+		targets = append(targets, denom)
+		return false
+	})
+
+	return targets
 }
 
 // ValidateFeeder return the given feeder is allowed to feed the message or not.

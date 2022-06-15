@@ -8,6 +8,7 @@ import (
 // OracleKeeper defines the expected oracle keeper
 type OracleKeeper interface {
 	GetExchangeRate(ctx sdk.Context, denom string) (price sdk.Dec, err error)
+	IsTarget(ctx sdk.Context, denom string) bool
 	// Methods imported from oracle should be defined here
 }
 

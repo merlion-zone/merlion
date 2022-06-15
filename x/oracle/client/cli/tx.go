@@ -2,12 +2,17 @@ package cli
 
 import (
 	"fmt"
+	"io/ioutil"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/gov/client/cli"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	"github.com/gogo/protobuf/proto"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
@@ -201,4 +206,102 @@ where "mer1..." is the address you want to delegate your voting rights to.
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
+}
+
+func NewRegisterTargetProposalCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "register-oracle-target [proposal-file]",
+		Args:  cobra.ExactArgs(1),
+		Short: "Submit a register oracle target proposal",
+		Long: strings.TrimSpace(
+			`Submit a register oracle target proposal along with an initial deposit.
+The proposal details must be supplied via a JSON file.`,
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			from := clientCtx.GetFromAddress()
+
+			title, description, deposit, err := getProposalArgs(cmd)
+			if err != nil {
+				return err
+			}
+
+			var targetParams types.TargetParams
+			err = parseProposalContent(clientCtx.Codec, args[0], &targetParams)
+			if err != nil {
+				return err
+			}
+
+			content := &types.RegisterTargetProposal{
+				Title:        title,
+				Description:  description,
+				TargetParams: targetParams,
+			}
+
+			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
+			if err != nil {
+				return err
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	addProposalTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func parseProposalContent(cdc codec.JSONCodec, proposalFile string, proposal proto.Message) error {
+	content, err := ioutil.ReadFile(proposalFile)
+	if err != nil {
+		return err
+	}
+	if err = cdc.UnmarshalJSON(content, proposal); err != nil {
+		return err
+	}
+	return nil
+}
+
+func getProposalArgs(cmd *cobra.Command) (title, description string, deposit sdk.Coins, err error) {
+	title, err = cmd.Flags().GetString(cli.FlagTitle)
+	if err != nil {
+		return
+	}
+
+	description, err = cmd.Flags().GetString(cli.FlagDescription)
+	if err != nil {
+		return
+	}
+
+	depositStr, err := cmd.Flags().GetString(cli.FlagDeposit)
+	if err != nil {
+		return
+	}
+
+	deposit, err = sdk.ParseCoinsNormalized(depositStr)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func addProposalTxFlagsToCmd(cmd *cobra.Command) {
+	cmd.Flags().String(cli.FlagTitle, "", "title of proposal")
+	cmd.Flags().String(cli.FlagDescription, "", "description of proposal")
+	cmd.Flags().String(cli.FlagDeposit, "1ulion", "deposit of proposal")
+	if err := cmd.MarkFlagRequired(cli.FlagTitle); err != nil {
+		panic(err)
+	}
+	if err := cmd.MarkFlagRequired(cli.FlagDescription); err != nil {
+		panic(err)
+	}
+	if err := cmd.MarkFlagRequired(cli.FlagDeposit); err != nil {
+		panic(err)
+	}
 }

@@ -2423,6 +2423,50 @@ paths:
                       format: byte
       tags:
         - Query
+  /merlion/oracle/v1/denoms/targets:
+    get:
+      summary: Targets returns all target denoms (including vote targets).
+      operationId: Targets
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              targets:
+                type: array
+                items:
+                  type: string
+                description: |-
+                  targets defines a list of the denomination which will be fed
+                  with price quotation (including voting targets).
+            description: |-
+              QueryTargetsResponse is response type for the
+              Query/Targets RPC method.
+        default:
+          description: An unexpected error response
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      tags:
+        - Query
   /merlion/oracle/v1/denoms/vote_targets:
     get:
       summary: VoteTargets returns all vote target denoms.
@@ -2899,16 +2943,6 @@ paths:
                   reward_distribution_window:
                     type: string
                     format: uint64
-                  whitelist:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                      title: >-
-                        Denom represents an object to hold configurations of
-                        each denom
                   slash_fraction:
                     type: string
                   slash_window:
@@ -31467,12 +31501,6 @@ definitions:
     description: |-
       AggregateExchangeRateVote represents the voting on
       the exchange rates of various assets denominated in uUSD.
-  merlion.oracle.v1.Denom:
-    type: object
-    properties:
-      name:
-        type: string
-    title: Denom represents an object to hold configurations of each denom
   merlion.oracle.v1.ExchangeRateTuple:
     type: object
     properties:
@@ -31494,14 +31522,6 @@ definitions:
       reward_distribution_window:
         type: string
         format: uint64
-      whitelist:
-        type: array
-        items:
-          type: object
-          properties:
-            name:
-              type: string
-          title: Denom represents an object to hold configurations of each denom
       slash_fraction:
         type: string
       slash_window:
@@ -31717,14 +31737,6 @@ definitions:
           reward_distribution_window:
             type: string
             format: uint64
-          whitelist:
-            type: array
-            items:
-              type: object
-              properties:
-                name:
-                  type: string
-              title: Denom represents an object to hold configurations of each denom
           slash_fraction:
             type: string
           slash_window:
@@ -31733,6 +31745,19 @@ definitions:
           min_valid_per_window:
             type: string
     description: QueryParamsResponse is response type for the Query/Params RPC method.
+  merlion.oracle.v1.QueryTargetsResponse:
+    type: object
+    properties:
+      targets:
+        type: array
+        items:
+          type: string
+        description: |-
+          targets defines a list of the denomination which will be fed
+          with price quotation (including voting targets).
+    description: |-
+      QueryTargetsResponse is response type for the
+      Query/Targets RPC method.
   merlion.oracle.v1.QueryVoteTargetsResponse:
     type: object
     properties:

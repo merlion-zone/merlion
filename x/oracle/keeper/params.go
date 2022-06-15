@@ -40,19 +40,6 @@ func (k Keeper) RewardDistributionWindow(ctx sdk.Context) (res uint64) {
 	return
 }
 
-// Whitelist returns the denom list that can be activated.
-func (k Keeper) Whitelist(ctx sdk.Context) (res types.DenomList) {
-	k.paramstore.Get(ctx, types.KeyWhitelist, &res)
-	return
-}
-
-// SetWhitelist store new whitelist to param store.
-// This function is only for test purpose.
-func (k Keeper) SetWhitelist(ctx sdk.Context, whitelist types.DenomList) {
-	k.paramstore.Set(ctx, types.KeyWhitelist, whitelist)
-	return
-}
-
 // SlashFraction returns oracle voting penalty rate.
 func (k Keeper) SlashFraction(ctx sdk.Context) (res sdk.Dec) {
 	k.paramstore.Get(ctx, types.KeySlashFraction, &res)

@@ -135,9 +135,12 @@
 - [merlion/oracle/v1/oracle.proto](#merlion/oracle/v1/oracle.proto)
     - [AggregateExchangeRatePrevote](#merlion.oracle.v1.AggregateExchangeRatePrevote)
     - [AggregateExchangeRateVote](#merlion.oracle.v1.AggregateExchangeRateVote)
-    - [Denom](#merlion.oracle.v1.Denom)
     - [ExchangeRateTuple](#merlion.oracle.v1.ExchangeRateTuple)
     - [Params](#merlion.oracle.v1.Params)
+    - [RegisterTargetProposal](#merlion.oracle.v1.RegisterTargetProposal)
+    - [TargetParams](#merlion.oracle.v1.TargetParams)
+  
+    - [TargetSource](#merlion.oracle.v1.TargetSource)
   
 - [merlion/oracle/v1/genesis.proto](#merlion/oracle/v1/genesis.proto)
     - [FeederDelegation](#merlion.oracle.v1.FeederDelegation)
@@ -165,6 +168,8 @@
     - [QueryMissCounterResponse](#merlion.oracle.v1.QueryMissCounterResponse)
     - [QueryParamsRequest](#merlion.oracle.v1.QueryParamsRequest)
     - [QueryParamsResponse](#merlion.oracle.v1.QueryParamsResponse)
+    - [QueryTargetsRequest](#merlion.oracle.v1.QueryTargetsRequest)
+    - [QueryTargetsResponse](#merlion.oracle.v1.QueryTargetsResponse)
     - [QueryVoteTargetsRequest](#merlion.oracle.v1.QueryVoteTargetsRequest)
     - [QueryVoteTargetsResponse](#merlion.oracle.v1.QueryVoteTargetsResponse)
   
@@ -2052,21 +2057,6 @@ the exchange rates of various assets denominated in uUSD.
 
 
 
-<a name="merlion.oracle.v1.Denom"></a>
-
-### Denom
-Denom represents an object to hold configurations of each denom
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `name` | [string](#string) |  |  |
-
-
-
-
-
-
 <a name="merlion.oracle.v1.ExchangeRateTuple"></a>
 
 ### ExchangeRateTuple
@@ -2095,7 +2085,6 @@ Params defines the parameters for the oracle module.
 | `vote_threshold` | [string](#string) |  |  |
 | `reward_band` | [string](#string) |  |  |
 | `reward_distribution_window` | [uint64](#uint64) |  |  |
-| `whitelist` | [Denom](#merlion.oracle.v1.Denom) | repeated |  |
 | `slash_fraction` | [string](#string) |  |  |
 | `slash_window` | [uint64](#uint64) |  |  |
 | `min_valid_per_window` | [string](#string) |  |  |
@@ -2104,7 +2093,57 @@ Params defines the parameters for the oracle module.
 
 
 
+
+<a name="merlion.oracle.v1.RegisterTargetProposal"></a>
+
+### RegisterTargetProposal
+RegisterTargetProposal is a gov Content type to register eligible
+target asset which will be price quoted.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `title` | [string](#string) |  | title of the proposal |
+| `description` | [string](#string) |  | proposal description |
+| `target_params` | [TargetParams](#merlion.oracle.v1.TargetParams) |  | target params |
+
+
+
+
+
+
+<a name="merlion.oracle.v1.TargetParams"></a>
+
+### TargetParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `denom` | [string](#string) |  | coin denom |
+| `source` | [TargetSource](#merlion.oracle.v1.TargetSource) |  | quotation source |
+| `source_dex_contract` | [string](#string) |  | quotation source DEX contract address |
+
+
+
+
+
  <!-- end messages -->
+
+
+<a name="merlion.oracle.v1.TargetSource"></a>
+
+### TargetSource
+TargetSource enumerates the quotation source of a target asset.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TARGET_SOURCE_UNSPECIFIED | 0 | TARGET_SOURCE_UNSPECIFIED defines an invalid/undefined target source. |
+| TARGET_SOURCE_VALIDATORS | 1 | TARGET_SOURCE_VALIDATORS target quotation source is from validators. |
+| TARGET_SOURCE_DEX | 2 | TARGET_SOURCE_DEX target quotation source is from on-chain DEX. |
+| TARGET_SOURCE_INTERCHAIN_DEX | 3 | TARGET_SOURCE_INTERCHAIN_DEX target quotation source is from inter-chain DEX. |
+| TARGET_SOURCE_INTERCHAIN_ORACLE | 4 | TARGET_SOURCE_INTERCHAIN_ORACLE target quotation source is from inter-chain oracle. |
+
 
  <!-- end enums -->
 
@@ -2484,6 +2523,33 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 
 
 
+<a name="merlion.oracle.v1.QueryTargetsRequest"></a>
+
+### QueryTargetsRequest
+QueryTargetsRequest is the request type for the Query/Targets RPC
+method.
+
+
+
+
+
+
+<a name="merlion.oracle.v1.QueryTargetsResponse"></a>
+
+### QueryTargetsResponse
+QueryTargetsResponse is response type for the
+Query/Targets RPC method.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `targets` | [string](#string) | repeated | targets defines a list of the denomination which will be fed with price quotation (excluding voting targets). |
+
+
+
+
+
+
 <a name="merlion.oracle.v1.QueryVoteTargetsRequest"></a>
 
 ### QueryVoteTargetsRequest
@@ -2528,6 +2594,7 @@ Query defines the gRPC querier service.
 | `ExchangeRates` | [QueryExchangeRatesRequest](#merlion.oracle.v1.QueryExchangeRatesRequest) | [QueryExchangeRatesResponse](#merlion.oracle.v1.QueryExchangeRatesResponse) | ExchangeRates returns exchange rates of all denoms. | GET|/merlion/oracle/v1/denoms/exchange_rates|
 | `Actives` | [QueryActivesRequest](#merlion.oracle.v1.QueryActivesRequest) | [QueryActivesResponse](#merlion.oracle.v1.QueryActivesResponse) | Actives returns all active denoms. | GET|/merlion/oracle/v1/denoms/actives|
 | `VoteTargets` | [QueryVoteTargetsRequest](#merlion.oracle.v1.QueryVoteTargetsRequest) | [QueryVoteTargetsResponse](#merlion.oracle.v1.QueryVoteTargetsResponse) | VoteTargets returns all vote target denoms. | GET|/merlion/oracle/v1/denoms/vote_targets|
+| `Targets` | [QueryTargetsRequest](#merlion.oracle.v1.QueryTargetsRequest) | [QueryTargetsResponse](#merlion.oracle.v1.QueryTargetsResponse) | Targets returns all target denoms (excluding vote targets). | GET|/merlion/oracle/v1/denoms/targets|
 | `FeederDelegation` | [QueryFeederDelegationRequest](#merlion.oracle.v1.QueryFeederDelegationRequest) | [QueryFeederDelegationResponse](#merlion.oracle.v1.QueryFeederDelegationResponse) | FeederDelegation returns feeder delegation of a validator. | GET|/merlion/oracle/v1/validators/{validator_addr}/feeder|
 | `MissCounter` | [QueryMissCounterRequest](#merlion.oracle.v1.QueryMissCounterRequest) | [QueryMissCounterResponse](#merlion.oracle.v1.QueryMissCounterResponse) | MissCounter returns oracle miss counter of a validator. | GET|/merlion/oracle/v1/validators/{validator_addr}/miss|
 | `AggregatePrevote` | [QueryAggregatePrevoteRequest](#merlion.oracle.v1.QueryAggregatePrevoteRequest) | [QueryAggregatePrevoteResponse](#merlion.oracle.v1.QueryAggregatePrevoteResponse) | AggregatePrevote returns an aggregate prevote of a validator. | GET|/merlion/oracle/v1/validators/{validator_addr}/aggregate_prevote|

@@ -72,7 +72,6 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 
 				// Convert ballot to cross exchange rates
 				if denom != referenceMer {
-
 					ballot = ballot.ToCrossRateWithSort(voteMapRT)
 				}
 
@@ -113,13 +112,11 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 
 		// Clear the ballot
 		k.ClearBallots(ctx, params.VotePeriod)
-
-		// Update vote targets
-		k.ApplyWhitelist(ctx, params.Whitelist, voteTargets)
 	}
 
 	// Do slash who did miss voting over threshold and
-	// reset miss counters of all validators at the last block of slash window
+	// reset miss counters of all validators
+	// at the last block of slash window
 	if merlion.IsPeriodLastBlock(ctx, params.SlashWindow) {
 		k.SlashAndResetMissCounters(ctx)
 	}
