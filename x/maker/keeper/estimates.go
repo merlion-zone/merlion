@@ -31,25 +31,14 @@ func (k Keeper) estimateMintBySwapIn(
 	if err != nil {
 		return
 	}
-	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+
+	err = k.checkMerPriceLowerBound(ctx)
 	if err != nil {
 		return
 	}
 
-	// check price lower bound
-	merPriceLowerBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Sub(k.MintPriceBias(ctx)))
-	if merPrice.LT(merPriceLowerBound) {
-		err = sdkerrors.Wrapf(types.ErrMerPriceTooLow, "%s price too low: %s", merlion.MicroUSDDenom, merPrice)
-		return
-	}
-
-	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
-	if !found {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
-		return
-	}
-	if !backingParams.Enabled {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+	backingParams, err := k.getEnabledBackingParams(ctx, backingDenom)
+	if err != nil {
 		return
 	}
 
@@ -116,25 +105,14 @@ func (k Keeper) estimateMintBySwapOut(
 	if err != nil {
 		return
 	}
-	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+
+	err = k.checkMerPriceLowerBound(ctx)
 	if err != nil {
 		return
 	}
 
-	// check price lower bound
-	merPriceLowerBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Sub(k.MintPriceBias(ctx)))
-	if merPrice.LT(merPriceLowerBound) {
-		err = sdkerrors.Wrapf(types.ErrMerPriceTooLow, "%s price too low: %s", merlion.MicroUSDDenom, merPrice)
-		return
-	}
-
-	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
-	if !found {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
-		return
-	}
-	if !backingParams.Enabled {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+	backingParams, err := k.getEnabledBackingParams(ctx, backingDenom)
+	if err != nil {
 		return
 	}
 
@@ -220,25 +198,14 @@ func (k Keeper) estimateBurnBySwapOut(
 	if err != nil {
 		return
 	}
-	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+
+	err = k.checkMerPriceUpperBound(ctx)
 	if err != nil {
 		return
 	}
 
-	// check price upper bound
-	merPriceUpperBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Add(k.BurnPriceBias(ctx)))
-	if merPrice.GT(merPriceUpperBound) {
-		err = sdkerrors.Wrapf(types.ErrMerPriceTooHigh, "%s price too high: %s", merlion.MicroUSDDenom, merPrice)
-		return
-	}
-
-	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
-	if !found {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
-		return
-	}
-	if !backingParams.Enabled {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+	backingParams, err := k.getEnabledBackingParams(ctx, backingDenom)
+	if err != nil {
 		return
 	}
 
@@ -290,13 +257,8 @@ func (k Keeper) estimateBuyBackingOut(
 		return
 	}
 
-	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
-	if !found {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
-		return
-	}
-	if !backingParams.Enabled {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+	backingParams, err := k.getEnabledBackingParams(ctx, backingDenom)
+	if err != nil {
 		return
 	}
 
@@ -363,13 +325,8 @@ func (k Keeper) estimateSellBackingOut(
 		return
 	}
 
-	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
-	if !found {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
-		return
-	}
-	if !backingParams.Enabled {
-		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+	backingParams, err := k.getEnabledBackingParams(ctx, backingDenom)
+	if err != nil {
 		return
 	}
 
@@ -579,5 +536,42 @@ func (k Keeper) estimateBurnByCollateralIn(
 	poolColl.MerDebt = poolColl.MerDebt.Sub(repayIn)
 	totalColl.MerDebt = totalColl.MerDebt.Sub(repayIn)
 
+	return
+}
+
+func (k Keeper) checkMerPriceLowerBound(ctx sdk.Context) error {
+	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	if err != nil {
+		return err
+	}
+	merPriceLowerBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Sub(k.MintPriceBias(ctx)))
+	if merPrice.LT(merPriceLowerBound) {
+		return sdkerrors.Wrapf(types.ErrMerPriceTooLow, "%s price too low: %s", merlion.MicroUSDDenom, merPrice)
+	}
+	return nil
+}
+
+func (k Keeper) checkMerPriceUpperBound(ctx sdk.Context) error {
+	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	if err != nil {
+		return err
+	}
+	merPriceUpperBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Add(k.BurnPriceBias(ctx)))
+	if merPrice.GT(merPriceUpperBound) {
+		return sdkerrors.Wrapf(types.ErrMerPriceTooHigh, "%s price too high: %s", merlion.MicroUSDDenom, merPrice)
+	}
+	return nil
+}
+
+func (k Keeper) getEnabledBackingParams(ctx sdk.Context, backingDenom string) (backingParams types.BackingRiskParams, err error) {
+	backingParams, found := k.GetBackingRiskParams(ctx, backingDenom)
+	if !found {
+		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "backing coin denomination not found: %s", backingDenom)
+		return
+	}
+	if !backingParams.Enabled {
+		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+		return
+	}
 	return
 }
