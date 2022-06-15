@@ -57,22 +57,23 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 		// NOTE: **Filter out inactive or jailed validators**
 		// NOTE: **Make abstain votes to have zero vote power**
 		voteMap := k.OrganizeBallotByDenom(ctx, validatorClaimMap)
+		ctx.Logger().Debug("organized ballot by denom", "voteMap", voteMap)
 
 		if referenceMer := pickReferenceMer(ctx, k, voteTargets, voteMap); referenceMer != "" {
 			// make voteMap of Reference Mer to calculate cross exchange rates
-			ballotRT := voteMap[referenceMer]
-			voteMapRT := ballotRT.ToMap()
+			ballotRM := voteMap[referenceMer]
+			voteMapRM := ballotRM.ToMap()
 
-			var exchangeRateRT sdk.Dec
+			var exchangeRateRM sdk.Dec
 
-			exchangeRateRT = ballotRT.WeightedMedianWithAssertion()
+			exchangeRateRM = ballotRM.WeightedMedianWithAssertion()
 
 			// Iterate through ballots and update exchange rates; drop if not enough votes have been achieved.
 			for denom, ballot := range voteMap {
 
 				// Convert ballot to cross exchange rates
 				if denom != referenceMer {
-					ballot = ballot.ToCrossRateWithSort(voteMapRT)
+					ballot = ballot.ToCrossRateWithSort(voteMapRM)
 				}
 
 				// Get weighted median of cross exchange rates
@@ -80,7 +81,12 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 
 				// Transform into the original form {denom}/uUSD
 				if denom != referenceMer {
-					exchangeRate = exchangeRateRT.Quo(exchangeRate)
+					if exchangeRate.IsZero() {
+						k.Logger(ctx).Error("invalid tallied cross exchange rate", "denom", denom, "exchangeRate", exchangeRate)
+						// Do not set exchange rate
+						continue
+					}
+					exchangeRate = exchangeRateRM.Quo(exchangeRate)
 				}
 
 				// Set the exchange rate, emit ABCI event

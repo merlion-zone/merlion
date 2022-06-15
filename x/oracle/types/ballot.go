@@ -47,8 +47,8 @@ func (pb ExchangeRateBallot) ToCrossRate(bases map[string]sdk.Dec) (cb ExchangeR
 	for i := range pb {
 		vote := pb[i]
 
-		if exchangeRateRT, ok := bases[string(vote.Voter)]; ok && vote.ExchangeRate.IsPositive() {
-			vote.ExchangeRate = exchangeRateRT.Quo(vote.ExchangeRate)
+		if exchangeRateRM, ok := bases[string(vote.Voter)]; ok && vote.ExchangeRate.IsPositive() {
+			vote.ExchangeRate = exchangeRateRM.Quo(vote.ExchangeRate)
 		} else {
 			// If we can't get reference exchange rate, we just convert the vote as abstain vote.
 			vote.ExchangeRate = sdk.ZeroDec()
@@ -63,7 +63,8 @@ func (pb ExchangeRateBallot) ToCrossRate(bases map[string]sdk.Dec) (cb ExchangeR
 
 // ToCrossRateWithSort return sorted cross_rate(base/exchange_rate) ballot.
 func (pb ExchangeRateBallot) ToCrossRateWithSort(bases map[string]sdk.Dec) (cb ExchangeRateBallot) {
-	sort.Sort(pb.ToCrossRate(bases))
+	cb = pb.ToCrossRate(bases)
+	sort.Sort(cb)
 	return
 }
 
