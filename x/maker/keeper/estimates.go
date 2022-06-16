@@ -396,25 +396,15 @@ func (k Keeper) estimateMintByCollateralIn(
 	if err != nil {
 		return
 	}
-	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+
+	// check price lower bound
+	err = k.checkMerPriceLowerBound(ctx)
 	if err != nil {
 		return
 	}
 
-	// check price lower bound
-	merPriceLowerBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Sub(k.MintPriceBias(ctx)))
-	if merPrice.LT(merPriceLowerBound) {
-		err = sdkerrors.Wrapf(types.ErrMerPriceTooLow, "%s price too low: %s", merlion.MicroUSDDenom, merPrice)
-		return
-	}
-
-	collateralParams, found := k.GetCollateralRiskParams(ctx, collateralDenom)
-	if !found {
-		err = sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
-		return
-	}
-	if !collateralParams.Enabled {
-		err = sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
+	collateralParams, err := k.getEnabledCollateralParams(ctx, collateralDenom)
+	if err != nil {
 		return
 	}
 
@@ -491,26 +481,14 @@ func (k Keeper) estimateBurnByCollateralIn(
 	accColl types.AccountCollateral,
 	err error,
 ) {
-	// get prices in usd
-	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	// check price upper bound
+	err = k.checkMerPriceUpperBound(ctx)
 	if err != nil {
 		return
 	}
 
-	// check price upper bound
-	merPriceUpperBound := merlion.MicroUSDTarget.Mul(sdk.OneDec().Add(k.BurnPriceBias(ctx)))
-	if merPrice.GT(merPriceUpperBound) {
-		err = sdkerrors.Wrapf(types.ErrMerPriceTooHigh, "%s price too high: %s", merlion.MicroUSDDenom, merPrice)
-		return
-	}
-
-	collateralParams, found := k.GetCollateralRiskParams(ctx, collateralDenom)
-	if !found {
-		err = sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
-		return
-	}
-	if !collateralParams.Enabled {
-		err = sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
+	collateralParams, err := k.getEnabledCollateralParams(ctx, collateralDenom)
+	if err != nil {
 		return
 	}
 
@@ -571,6 +549,19 @@ func (k Keeper) getEnabledBackingParams(ctx sdk.Context, backingDenom string) (b
 	}
 	if !backingParams.Enabled {
 		err = sdkerrors.Wrapf(types.ErrBackingCoinDisabled, "backing coin disabled: %s", backingDenom)
+		return
+	}
+	return
+}
+
+func (k Keeper) getEnabledCollateralParams(ctx sdk.Context, collateralDenom string) (collateralParams types.CollateralRiskParams, err error) {
+	collateralParams, found := k.GetCollateralRiskParams(ctx, collateralDenom)
+	if !found {
+		err = sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
+		return
+	}
+	if !collateralParams.Enabled {
+		err = sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
 		return
 	}
 	return

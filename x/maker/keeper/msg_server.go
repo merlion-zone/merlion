@@ -457,12 +457,9 @@ func (m msgServer) DepositCollateral(c context.Context, msg *types.MsgDepositCol
 		return nil, err
 	}
 
-	collateralParams, found := m.Keeper.GetCollateralRiskParams(ctx, collateralDenom)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
-	}
-	if !collateralParams.Enabled {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
+	collateralParams, err := m.Keeper.getEnabledCollateralParams(ctx, collateralDenom)
+	if err != nil {
+		return nil, err
 	}
 
 	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, receiver, collateralDenom)
@@ -514,15 +511,12 @@ func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemColla
 		return nil, err
 	}
 
-	collateralParams, found := m.Keeper.GetCollateralRiskParams(ctx, collateralDenom)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
-	}
-	if !collateralParams.Enabled {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
+	collateralParams, err := m.Keeper.getEnabledCollateralParams(ctx, collateralDenom)
+	if err != nil {
+		return nil, err
 	}
 
-	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, receiver, collateralDenom)
+	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, sender, collateralDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -584,16 +578,12 @@ func (m msgServer) LiquidateCollateral(c context.Context, msg *types.MsgLiquidat
 		return nil, err
 	}
 
-	collateralParams, found := m.Keeper.GetCollateralRiskParams(ctx, collateralDenom)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinNotFound, "collateral coin denomination not found: %s", collateralDenom)
+	collateralParams, err := m.Keeper.getEnabledCollateralParams(ctx, collateralDenom)
+	if err != nil {
+		return nil, err
 	}
 
-	if !collateralParams.Enabled {
-		return nil, sdkerrors.Wrapf(types.ErrCollateralCoinDisabled, "collateral coin disabled: %s", collateralDenom)
-	}
-
-	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, receiver, collateralDenom)
+	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, debtor, collateralDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -629,7 +619,7 @@ func (m msgServer) LiquidateCollateral(c context.Context, msg *types.MsgLiquidat
 	totalColl.MerDebt = totalColl.MerDebt.Sub(repayDebt)
 
 	// eventually persist collateral
-	m.Keeper.SetAccountCollateral(ctx, sender, accColl)
+	m.Keeper.SetAccountCollateral(ctx, debtor, accColl)
 	m.Keeper.SetPoolCollateral(ctx, poolColl)
 	m.Keeper.SetTotalCollateral(ctx, totalColl)
 

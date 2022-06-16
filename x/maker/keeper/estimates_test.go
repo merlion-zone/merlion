@@ -137,7 +137,6 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapIn() {
 				suite.Require().Error(err)
 				suite.Require().ErrorIs(err, tc.expErr)
 			}
-
 		})
 	}
 }
@@ -288,7 +287,6 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 				suite.Require().Error(err)
 				suite.Require().ErrorIs(err, tc.expErr)
 			}
-
 		})
 	}
 }
@@ -401,7 +399,6 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapOut() {
 				suite.Require().Error(err)
 				suite.Require().ErrorIs(err, tc.expErr)
 			}
-
 		})
 	}
 }
@@ -493,7 +490,6 @@ func (suite *KeeperTestSuite) TestEstimateBuyBackingOut() {
 				suite.Require().Error(err)
 				suite.Require().ErrorIs(err, tc.expErr)
 			}
-
 		})
 	}
 }
@@ -564,7 +560,68 @@ func (suite *KeeperTestSuite) TestEstimateSellBackingOut() {
 				suite.Require().Error(err)
 				suite.Require().ErrorIs(err, tc.expErr)
 			}
+		})
+	}
+}
 
+func (suite *KeeperTestSuite) TestEstimateBurnByCollateralIn() {
+	testCases := []struct {
+		name     string
+		malleate func()
+		req      *types.EstimateBurnByCollateralInRequest
+		expPass  bool
+		expErr   error
+		expRes   *types.EstimateBurnByCollateralInResponse
+	}{
+		{
+			name: "mer price too high",
+			malleate: func() {
+				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(1011, 3))
+			},
+			req: &types.EstimateBurnByCollateralInRequest{
+				Sender:          suite.accAddress.String(),
+				CollateralDenom: suite.bcDenom,
+			},
+			expPass: false,
+			expErr:  types.ErrMerPriceTooHigh,
+		},
+		{
+			name: "collateral denom not found",
+			req: &types.EstimateBurnByCollateralInRequest{
+				Sender:          suite.accAddress.String(),
+				CollateralDenom: "fil",
+			},
+			expPass: false,
+			expErr:  types.ErrCollateralCoinNotFound,
+		},
+		{
+			name: "collateral denom disabled",
+			req: &types.EstimateBurnByCollateralInRequest{
+				Sender:          suite.accAddress.String(),
+				CollateralDenom: "eth",
+			},
+			expPass: false,
+			expErr:  types.ErrCollateralCoinDisabled,
+		},
+	}
+
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("Case %s", tc.name), func() {
+			suite.SetupTest() // reset
+			suite.setupEstimation()
+			if tc.malleate != nil {
+				tc.malleate()
+			}
+
+			ctx := sdk.WrapSDKContext(suite.ctx)
+			res, err := suite.queryClient.EstimateBurnByCollateralIn(ctx, tc.req)
+			if tc.expPass {
+				suite.Require().NoError(err)
+				suite.Require().Equal(tc.expRes, res)
+			} else {
+				suite.Require().Error(err)
+				suite.Require().ErrorIs(err, tc.expErr)
+			}
 		})
 	}
 }
