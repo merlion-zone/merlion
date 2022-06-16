@@ -279,13 +279,13 @@ func (k Keeper) estimateBuyBackingOut(
 		return
 	}
 
-	availableExcessBacking := sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
+	availableExcessBackingValue := sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
 	if requiredBackingValue.LT(totalBackingValue.Amount) {
-		availableExcessBacking.Amount = totalBackingValue.Amount.Sub(requiredBackingValue)
+		availableExcessBackingValue.Amount = totalBackingValue.Amount.Sub(requiredBackingValue)
 	}
 
 	lionInValue := lionIn.Amount.ToDec().Mul(lionPrice)
-	if lionInValue.TruncateInt().GT(availableExcessBacking.Amount) {
+	if lionInValue.TruncateInt().GT(availableExcessBackingValue.Amount) {
 		err = sdkerrors.Wrap(types.ErrBackingCoinInsufficient, "insufficient available backing coin")
 		return
 	}
