@@ -8,7 +8,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/merlion-zone/merlion/app"
 	"github.com/merlion-zone/merlion/x/maker/types"
 	"github.com/stretchr/testify/suite"
@@ -24,7 +23,7 @@ type KeeperTestSuite struct {
 	ctx         sdk.Context
 	app         *app.Merlion
 	queryClient types.QueryClient
-	address     common.Address
+	accAddress  sdk.AccAddress
 	signer      keyring.Signer
 	consAddress sdk.ConsAddress
 	bcDenom     string
@@ -41,7 +40,7 @@ func (suite *KeeperTestSuite) SetupTest() {
 	// account key
 	priv, err := ethsecp256k1.GenerateKey()
 	suite.Require().NoError(err)
-	suite.address = common.BytesToAddress(priv.PubKey().Address().Bytes())
+	suite.accAddress = sdk.AccAddress(priv.PubKey().Address())
 	suite.signer = tests.NewSigner(priv)
 
 	// consensus key
