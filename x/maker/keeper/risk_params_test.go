@@ -72,7 +72,7 @@ func (suite *KeeperTestSuite) dummyBackingRiskParams() (brp, brp2 types.BackingR
 	mintFee := sdk.NewDecWithPrec(5, 3)
 	burnFee := sdk.NewDecWithPrec(6, 3)
 	buybackFee := sdk.NewDecWithPrec(7, 3)
-	rebackFee := sdk.NewDecWithPrec(8, 3)
+	rebackFee := sdk.NewDecWithPrec(4, 3)
 	brp = types.BackingRiskParams{
 		BackingDenom: suite.bcDenom,
 		Enabled:      true,

@@ -443,9 +443,9 @@ func (suite *KeeperTestSuite) TestEstimateBuyBackingOut() {
 			name: "excess backing insufficient",
 			req: &types.EstimateBuyBackingOutRequest{
 				BackingDenom: suite.bcDenom,
-				LionIn:       sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(5000_000000_000000)), // 0.5*10**16 * 10**-10 > 9*10**6 * 0.99 - 8.5*10**6
+				LionIn:       sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(5000_000000_000000)),
 			},
-			expPass: false,
+			expPass: false, // 0.5*10**16 * 10**-10 > 9*10**6 * 0.99 * 1 - 8.5*10**6
 			expErr:  types.ErrBackingCoinInsufficient,
 		},
 		{
@@ -471,8 +471,8 @@ func (suite *KeeperTestSuite) TestEstimateBuyBackingOut() {
 			},
 			expPass: true,
 			expRes: &types.EstimateBuyBackingOutResponse{
-				BackingOut: sdk.NewCoin(suite.bcDenom, sdk.NewInt(300909)),
-				BuybackFee: sdk.NewCoin(suite.bcDenom, sdk.NewInt(2121)),
+				BackingOut: sdk.NewCoin(suite.bcDenom, sdk.NewInt(300909)), // 0.3*10**16 * 10**-10 / 0.99  * (1 - 0.007)
+				BuybackFee: sdk.NewCoin(suite.bcDenom, sdk.NewInt(2121)),   // 0.3*10**16 * 10**-10 / 0.99  * 0.007
 			},
 		},
 	}
@@ -496,7 +496,77 @@ func (suite *KeeperTestSuite) TestEstimateBuyBackingOut() {
 
 		})
 	}
+}
 
+func (suite *KeeperTestSuite) TestEstimateSellBackingOut() {
+	testCases := []struct {
+		name     string
+		malleate func()
+		req      *types.EstimateSellBackingOutRequest
+		expPass  bool
+		expErr   error
+		expRes   *types.EstimateSellBackingOutResponse
+	}{
+		{
+			name:    "backing denom not found",
+			req:     &types.EstimateSellBackingOutRequest{BackingIn: sdk.NewCoin("fil", sdk.ZeroInt())},
+			expPass: false,
+			expErr:  types.ErrBackingCoinNotFound,
+		},
+		{
+			name:    "backing denom disabled",
+			req:     &types.EstimateSellBackingOutRequest{BackingIn: sdk.NewCoin("eth", sdk.ZeroInt())},
+			expPass: false,
+			expErr:  types.ErrBackingCoinDisabled,
+		},
+		{
+			name:    "pool backing over ceiling",
+			req:     &types.EstimateSellBackingOutRequest{BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(2_000000))},
+			expPass: false,
+			expErr:  types.ErrBackingCeiling,
+		},
+		{
+			name:    "lion insufficient",
+			req:     &types.EstimateSellBackingOutRequest{BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1_000000))},
+			expPass: false,
+			expErr:  types.ErrLionCoinInsufficient,
+		},
+		{
+			name: "correct",
+			malleate: func() {
+				totalBacking, found := suite.app.MakerKeeper.GetTotalBacking(suite.ctx)
+				suite.Require().True(found)
+				totalBacking.MerMinted.Amount = sdk.NewInt(10_000000)
+				suite.app.MakerKeeper.SetTotalBacking(suite.ctx, totalBacking)
+			},
+			req:     &types.EstimateSellBackingOutRequest{BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1_000000))},
+			expPass: true,
+			expRes: &types.EstimateSellBackingOutResponse{
+				LionOut:     sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(9934_650000_000000)), // 1*10**6 * 0.99 / 10**-10 * (1+0.075-0.004)
+				SellbackFee: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(39_600000_000000)),   // 1*10**6 * 0.99 / 10**-10 * 0.004
+			},
+		},
+	}
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("Case %s", tc.name), func() {
+			suite.SetupTest() // reset
+			suite.setupEstimation()
+			if tc.malleate != nil {
+				tc.malleate()
+			}
+
+			ctx := sdk.WrapSDKContext(suite.ctx)
+			res, err := suite.queryClient.EstimateSellBackingOut(ctx, tc.req)
+			if tc.expPass {
+				suite.Require().NoError(err)
+				suite.Require().Equal(tc.expRes, res)
+			} else {
+				suite.Require().Error(err)
+				suite.Require().ErrorIs(err, tc.expErr)
+			}
+
+		})
+	}
 }
 
 func (suite *KeeperTestSuite) setupEstimation() {
