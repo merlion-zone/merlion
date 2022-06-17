@@ -400,11 +400,40 @@ func (m msgServer) BurnByCollateral(c context.Context, msg *types.MsgBurnByColla
 		return nil, err
 	}
 
-	repayIn, interestFee, totalColl, poolColl, accColl, err := m.Keeper.estimateBurnByCollateralIn(ctx, sender, msg.CollateralDenom, msg.RepayInMax)
+	collateralDenom := msg.CollateralDenom
+
+	// check price upper bound
+	err = m.Keeper.checkMerPriceUpperBound(ctx)
 	if err != nil {
 		return nil, err
 	}
+
+	collateralParams, err := m.Keeper.getEnabledCollateralParams(ctx, collateralDenom)
+	if err != nil {
+		return nil, err
+	}
+
+	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, sender, collateralDenom)
+	if err != nil {
+		return nil, err
+	}
+
+	// settle interestFee fee
+	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
+
+	// compute burn-in
+	if !accColl.MerDebt.IsPositive() {
+		return nil, sdkerrors.Wrapf(types.ErrAccountNoDebt, "account has no debt for %s collateral", collateralDenom)
+	}
+	repayIn := sdk.NewCoin(msg.RepayInMax.Denom, sdk.MinInt(accColl.MerDebt.Amount, msg.RepayInMax.Amount))
+	interestFee := sdk.NewCoin(msg.RepayInMax.Denom, sdk.MinInt(accColl.LastInterest.Amount, repayIn.Amount))
 	burn := repayIn.Sub(interestFee)
+
+	// update debt
+	accColl.LastInterest = accColl.LastInterest.Sub(interestFee)
+	accColl.MerDebt = accColl.MerDebt.Sub(repayIn)
+	poolColl.MerDebt = poolColl.MerDebt.Sub(repayIn)
+	totalColl.MerDebt = totalColl.MerDebt.Sub(repayIn)
 
 	// eventually update collateral
 	m.Keeper.SetAccountCollateral(ctx, sender, accColl)

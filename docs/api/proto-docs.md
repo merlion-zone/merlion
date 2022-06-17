@@ -71,8 +71,6 @@
     - [TotalCollateral](#merlion.maker.v1.TotalCollateral)
   
 - [merlion/maker/v1/query.proto](#merlion/maker/v1/query.proto)
-    - [EstimateBurnByCollateralInRequest](#merlion.maker.v1.EstimateBurnByCollateralInRequest)
-    - [EstimateBurnByCollateralInResponse](#merlion.maker.v1.EstimateBurnByCollateralInResponse)
     - [EstimateBurnBySwapOutRequest](#merlion.maker.v1.EstimateBurnBySwapOutRequest)
     - [EstimateBurnBySwapOutResponse](#merlion.maker.v1.EstimateBurnBySwapOutResponse)
     - [EstimateBuyBackingOutRequest](#merlion.maker.v1.EstimateBuyBackingOutRequest)
@@ -1117,42 +1115,6 @@ parameters.
 
 
 
-<a name="merlion.maker.v1.EstimateBurnByCollateralInRequest"></a>
-
-### EstimateBurnByCollateralInRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `sender` | [string](#string) |  |  |
-| `collateral_denom` | [string](#string) |  |  |
-| `repay_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-
-
-
-
-
-
-<a name="merlion.maker.v1.EstimateBurnByCollateralInResponse"></a>
-
-### EstimateBurnByCollateralInResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| `repay_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `interest_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `total_coll` | [TotalCollateral](#merlion.maker.v1.TotalCollateral) |  |  |
-| `pool_coll` | [PoolCollateral](#merlion.maker.v1.PoolCollateral) |  |  |
-| `acc_coll` | [AccountCollateral](#merlion.maker.v1.AccountCollateral) |  |  |
-
-
-
-
-
-
 <a name="merlion.maker.v1.EstimateBurnBySwapOutRequest"></a>
 
 ### EstimateBurnBySwapOutRequest
@@ -1676,7 +1638,6 @@ Query defines the maker gRPC querier service.
 | `EstimateBuyBackingOut` | [EstimateBuyBackingOutRequest](#merlion.maker.v1.EstimateBuyBackingOutRequest) | [EstimateBuyBackingOutResponse](#merlion.maker.v1.EstimateBuyBackingOutResponse) | EstimateBuyBackingOut estimates output of buying backing assets. | GET|/merlion/maker/v1/estimate_buy_backing_out|
 | `EstimateSellBackingOut` | [EstimateSellBackingOutRequest](#merlion.maker.v1.EstimateSellBackingOutRequest) | [EstimateSellBackingOutResponse](#merlion.maker.v1.EstimateSellBackingOutResponse) | EstimateSellBackingOut estimates output of selling backing assets. | GET|/merlion/maker/v1/estimate_sell_backing_out|
 | `EstimateMintByCollateralIn` | [EstimateMintByCollateralInRequest](#merlion.maker.v1.EstimateMintByCollateralInRequest) | [EstimateMintByCollateralInResponse](#merlion.maker.v1.EstimateMintByCollateralInResponse) | EstimateMintByCollateralIn estimates input of minting by collateral. | GET|/merlion/maker/v1/estimate_mint_by_collateral_in|
-| `EstimateBurnByCollateralIn` | [EstimateBurnByCollateralInRequest](#merlion.maker.v1.EstimateBurnByCollateralInRequest) | [EstimateBurnByCollateralInResponse](#merlion.maker.v1.EstimateBurnByCollateralInResponse) | EstimateBurnByCollateralIn estimates input of burning by collateral. | GET|/merlion/maker/v1/estimate_burn_by_collateral_in|
 
  <!-- end services -->
 
@@ -2543,7 +2504,7 @@ Query/Targets RPC method.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `targets` | [string](#string) | repeated | targets defines a list of the denomination which will be fed with price quotation (excluding voting targets). |
+| `targets` | [string](#string) | repeated | targets defines a list of the denomination which will be fed with price quotation (including voting targets). |
 
 
 
@@ -2594,7 +2555,7 @@ Query defines the gRPC querier service.
 | `ExchangeRates` | [QueryExchangeRatesRequest](#merlion.oracle.v1.QueryExchangeRatesRequest) | [QueryExchangeRatesResponse](#merlion.oracle.v1.QueryExchangeRatesResponse) | ExchangeRates returns exchange rates of all denoms. | GET|/merlion/oracle/v1/denoms/exchange_rates|
 | `Actives` | [QueryActivesRequest](#merlion.oracle.v1.QueryActivesRequest) | [QueryActivesResponse](#merlion.oracle.v1.QueryActivesResponse) | Actives returns all active denoms. | GET|/merlion/oracle/v1/denoms/actives|
 | `VoteTargets` | [QueryVoteTargetsRequest](#merlion.oracle.v1.QueryVoteTargetsRequest) | [QueryVoteTargetsResponse](#merlion.oracle.v1.QueryVoteTargetsResponse) | VoteTargets returns all vote target denoms. | GET|/merlion/oracle/v1/denoms/vote_targets|
-| `Targets` | [QueryTargetsRequest](#merlion.oracle.v1.QueryTargetsRequest) | [QueryTargetsResponse](#merlion.oracle.v1.QueryTargetsResponse) | Targets returns all target denoms (excluding vote targets). | GET|/merlion/oracle/v1/denoms/targets|
+| `Targets` | [QueryTargetsRequest](#merlion.oracle.v1.QueryTargetsRequest) | [QueryTargetsResponse](#merlion.oracle.v1.QueryTargetsResponse) | Targets returns all target denoms (including vote targets). | GET|/merlion/oracle/v1/denoms/targets|
 | `FeederDelegation` | [QueryFeederDelegationRequest](#merlion.oracle.v1.QueryFeederDelegationRequest) | [QueryFeederDelegationResponse](#merlion.oracle.v1.QueryFeederDelegationResponse) | FeederDelegation returns feeder delegation of a validator. | GET|/merlion/oracle/v1/validators/{validator_addr}/feeder|
 | `MissCounter` | [QueryMissCounterRequest](#merlion.oracle.v1.QueryMissCounterRequest) | [QueryMissCounterResponse](#merlion.oracle.v1.QueryMissCounterResponse) | MissCounter returns oracle miss counter of a validator. | GET|/merlion/oracle/v1/validators/{validator_addr}/miss|
 | `AggregatePrevote` | [QueryAggregatePrevoteRequest](#merlion.oracle.v1.QueryAggregatePrevoteRequest) | [QueryAggregatePrevoteResponse](#merlion.oracle.v1.QueryAggregatePrevoteResponse) | AggregatePrevote returns an aggregate prevote of a validator. | GET|/merlion/oracle/v1/validators/{validator_addr}/aggregate_prevote|

@@ -468,55 +468,6 @@ func (k Keeper) estimateMintByCollateralIn(
 	return
 }
 
-func (k Keeper) estimateBurnByCollateralIn(
-	ctx sdk.Context,
-	sender sdk.AccAddress,
-	collateralDenom string,
-	repayInMax sdk.Coin,
-) (
-	repayIn sdk.Coin,
-	interestFee sdk.Coin,
-	totalColl types.TotalCollateral,
-	poolColl types.PoolCollateral,
-	accColl types.AccountCollateral,
-	err error,
-) {
-	// check price upper bound
-	err = k.checkMerPriceUpperBound(ctx)
-	if err != nil {
-		return
-	}
-
-	collateralParams, err := k.getEnabledCollateralParams(ctx, collateralDenom)
-	if err != nil {
-		return
-	}
-
-	totalColl, poolColl, accColl, err = k.getCollateral(ctx, sender, collateralDenom)
-	if err != nil {
-		return
-	}
-
-	// settle interestFee fee
-	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
-
-	// compute burn-in
-	if !accColl.MerDebt.IsPositive() {
-		err = sdkerrors.Wrapf(types.ErrAccountNoDebt, "account has no debt for %s collateral", collateralDenom)
-		return
-	}
-	repayIn = sdk.NewCoin(repayInMax.Denom, sdk.MinInt(accColl.MerDebt.Amount, repayInMax.Amount))
-	interestFee = sdk.NewCoin(repayInMax.Denom, sdk.MinInt(accColl.LastInterest.Amount, repayIn.Amount))
-
-	// update debt
-	accColl.LastInterest = accColl.LastInterest.Sub(interestFee)
-	accColl.MerDebt = accColl.MerDebt.Sub(repayIn)
-	poolColl.MerDebt = poolColl.MerDebt.Sub(repayIn)
-	totalColl.MerDebt = totalColl.MerDebt.Sub(repayIn)
-
-	return
-}
-
 func (k Keeper) checkMerPriceLowerBound(ctx sdk.Context) error {
 	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
 	if err != nil {

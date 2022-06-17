@@ -411,7 +411,7 @@ var xxx_messageInfo_QueryTargetsRequest proto.InternalMessageInfo
 // Query/Targets RPC method.
 type QueryTargetsResponse struct {
 	// targets defines a list of the denomination which will be fed
-	// with price quotation (excluding voting targets).
+	// with price quotation (including voting targets).
 	Targets []string `protobuf:"bytes,1,rep,name=targets,proto3" json:"targets,omitempty"`
 }
 
@@ -1183,7 +1183,7 @@ type QueryClient interface {
 	Actives(ctx context.Context, in *QueryActivesRequest, opts ...grpc.CallOption) (*QueryActivesResponse, error)
 	// VoteTargets returns all vote target denoms.
 	VoteTargets(ctx context.Context, in *QueryVoteTargetsRequest, opts ...grpc.CallOption) (*QueryVoteTargetsResponse, error)
-	// Targets returns all target denoms (excluding vote targets).
+	// Targets returns all target denoms (including vote targets).
 	Targets(ctx context.Context, in *QueryTargetsRequest, opts ...grpc.CallOption) (*QueryTargetsResponse, error)
 	// FeederDelegation returns feeder delegation of a validator.
 	FeederDelegation(ctx context.Context, in *QueryFeederDelegationRequest, opts ...grpc.CallOption) (*QueryFeederDelegationResponse, error)
@@ -1327,7 +1327,7 @@ type QueryServer interface {
 	Actives(context.Context, *QueryActivesRequest) (*QueryActivesResponse, error)
 	// VoteTargets returns all vote target denoms.
 	VoteTargets(context.Context, *QueryVoteTargetsRequest) (*QueryVoteTargetsResponse, error)
-	// Targets returns all target denoms (excluding vote targets).
+	// Targets returns all target denoms (including vote targets).
 	Targets(context.Context, *QueryTargetsRequest) (*QueryTargetsResponse, error)
 	// FeederDelegation returns feeder delegation of a validator.
 	FeederDelegation(context.Context, *QueryFeederDelegationRequest) (*QueryFeederDelegationResponse, error)

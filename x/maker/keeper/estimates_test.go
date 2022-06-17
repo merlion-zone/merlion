@@ -564,31 +564,32 @@ func (suite *KeeperTestSuite) TestEstimateSellBackingOut() {
 	}
 }
 
-func (suite *KeeperTestSuite) TestEstimateBurnByCollateralIn() {
+func (suite *KeeperTestSuite) TestEstimateMintByCollateralIn() {
+	sendAddr := suite.accAddress.String()
 	testCases := []struct {
 		name     string
 		malleate func()
-		req      *types.EstimateBurnByCollateralInRequest
+		req      *types.EstimateMintByCollateralInRequest
 		expPass  bool
 		expErr   error
-		expRes   *types.EstimateBurnByCollateralInResponse
+		expRes   *types.EstimateMintByCollateralInResponse
 	}{
 		{
-			name: "mer price too high",
+			name: "mer price too low",
 			malleate: func() {
-				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(1011, 3))
+				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(989, 3))
 			},
-			req: &types.EstimateBurnByCollateralInRequest{
-				Sender:          suite.accAddress.String(),
+			req: &types.EstimateMintByCollateralInRequest{
+				Sender:          sendAddr,
 				CollateralDenom: suite.bcDenom,
 			},
 			expPass: false,
-			expErr:  types.ErrMerPriceTooHigh,
+			expErr:  types.ErrMerPriceTooLow,
 		},
 		{
 			name: "collateral denom not found",
-			req: &types.EstimateBurnByCollateralInRequest{
-				Sender:          suite.accAddress.String(),
+			req: &types.EstimateMintByCollateralInRequest{
+				Sender:          sendAddr,
 				CollateralDenom: "fil",
 			},
 			expPass: false,
@@ -596,8 +597,8 @@ func (suite *KeeperTestSuite) TestEstimateBurnByCollateralIn() {
 		},
 		{
 			name: "collateral denom disabled",
-			req: &types.EstimateBurnByCollateralInRequest{
-				Sender:          suite.accAddress.String(),
+			req: &types.EstimateMintByCollateralInRequest{
+				Sender:          sendAddr,
 				CollateralDenom: "eth",
 			},
 			expPass: false,
@@ -614,7 +615,7 @@ func (suite *KeeperTestSuite) TestEstimateBurnByCollateralIn() {
 			}
 
 			ctx := sdk.WrapSDKContext(suite.ctx)
-			res, err := suite.queryClient.EstimateBurnByCollateralIn(ctx, tc.req)
+			res, err := suite.queryClient.EstimateMintByCollateralIn(ctx, tc.req)
 			if tc.expPass {
 				suite.Require().NoError(err)
 				suite.Require().Equal(tc.expRes, res)
