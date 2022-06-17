@@ -213,24 +213,3 @@ func (k Keeper) EstimateMintByCollateralIn(c context.Context, req *types.Estimat
 		AccColl:   accColl,
 	}, nil
 }
-
-func (k Keeper) EstimateBurnByCollateralIn(c context.Context, req *types.EstimateBurnByCollateralInRequest) (*types.EstimateBurnByCollateralInResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-	sender, err := sdk.AccAddressFromBech32(req.Sender)
-	if err != nil {
-		return nil, err
-	}
-
-	repayIn, interestFee, totalColl, poolColl, accColl, err := k.estimateBurnByCollateralIn(ctx, sender, req.CollateralDenom, req.RepayInMax)
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.EstimateBurnByCollateralInResponse{
-		RepayIn:     repayIn,
-		InterestFee: interestFee,
-		TotalColl:   totalColl,
-		PoolColl:    poolColl,
-		AccColl:     accColl,
-	}, nil
-}
