@@ -74,32 +74,36 @@ message MsgMintBySwap {
   string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
   string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
   bool full_backing = 3 [ (gogoproto.moretags) = "yaml:\"full_backing\"" ];
-  cosmos.base.v1beta1.Coin mint_out = 4 [
-    (gogoproto.moretags) = "yaml:\"mint_out\"",
-    (gogoproto.nullable) = false
-  ];
-  cosmos.base.v1beta1.Coin backing_in_max = 5 [
+  cosmos.base.v1beta1.Coin backing_in_max = 4 [
     (gogoproto.moretags) = "yaml:\"backing_in_max\"",
     (gogoproto.nullable) = false
   ];
-  cosmos.base.v1beta1.Coin lion_in_max = 6 [
+  cosmos.base.v1beta1.Coin lion_in_max = 5 [
     (gogoproto.moretags) = "yaml:\"lion_in_max\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin mint_out_min = 6 [
+    (gogoproto.moretags) = "yaml:\"mint_out_min\"",
     (gogoproto.nullable) = false
   ];
 }
 
 // MsgMintBySwapResponse defines the Msg/MintBySwap response type.
 message MsgMintBySwapResponse {
-  cosmos.base.v1beta1.Coin mint_fee = 1 [
-    (gogoproto.moretags) = "yaml:\"mint_fee\"",
-    (gogoproto.nullable) = false
-  ];
-  cosmos.base.v1beta1.Coin backing_in = 2 [
+  cosmos.base.v1beta1.Coin backing_in = 1 [
     (gogoproto.moretags) = "yaml:\"backing_in\"",
     (gogoproto.nullable) = false
   ];
-  cosmos.base.v1beta1.Coin lion_in = 3 [
+  cosmos.base.v1beta1.Coin lion_in = 2 [
     (gogoproto.moretags) = "yaml:\"lion_in\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin mint_out = 3 [
+    (gogoproto.moretags) = "yaml:\"mint_out\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin mint_fee = 4 [
+    (gogoproto.moretags) = "yaml:\"mint_fee\"",
     (gogoproto.nullable) = false
   ];
 }
