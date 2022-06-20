@@ -29,7 +29,7 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 		return nil, err
 	}
 
-	backingIn, lionIn, mintFee, err := m.Keeper.estimateMintBySwapIn(ctx, msg.MintOut, msg.BackingInMax.Denom, msg.LionInMax.IsZero())
+	backingIn, lionIn, mintFee, err := m.Keeper.estimateMintBySwapIn(ctx, msg.MintOut, msg.BackingInMax.Denom, msg.FullBacking)
 	if err != nil {
 		return nil, err
 	}
