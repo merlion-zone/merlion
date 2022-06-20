@@ -58,10 +58,10 @@ func (k Keeper) estimateMintBySwapIn(
 
 	backingRatio := k.GetBackingRatio(ctx)
 	if backingRatio.GTE(sdk.OneDec()) || fullBacking {
-		// full/over backed, or user selects full backing
+		// full/over backing, or user selects full backing
 		backingIn.Amount = mintTotalInUSD.QuoRoundUp(backingPrice).RoundInt()
 	} else if backingRatio.IsZero() {
-		// algorithmic
+		// full algorithmic
 		lionIn.Amount = mintTotalInUSD.QuoRoundUp(lionPrice).RoundInt()
 	} else {
 		// fractional
@@ -124,18 +124,18 @@ func (k Keeper) estimateMintBySwapOut(
 
 	backingRatio := k.GetBackingRatio(ctx)
 	if backingRatio.GTE(sdk.OneDec()) || fullBacking {
-		// full/over backed, or user selects full backing
+		// full/over backing, or user selects full backing
 		mintTotalInUSD = backingAvailInUSD
 		backingIn.Amount = backingInMax.Amount
 	} else if backingRatio.IsZero() {
-		// algorithmic
+		// full algorithmic
 		mintTotalInUSD = lionAvailInUSD
 		lionIn.Amount = lionInMax.Amount
 	} else {
 		// fractional
 		mintTotalWithBackingInUSD := backingAvailInUSD.Quo(backingRatio)
 		mintTotalWithLionInUSD := lionAvailInUSD.Quo(sdk.OneDec().Sub(backingRatio))
-		if mintTotalWithBackingInUSD.LT(mintTotalWithLionInUSD) {
+		if lionInMax.IsZero() || (backingInMax.IsPositive() && mintTotalWithBackingInUSD.LT(mintTotalWithLionInUSD)) {
 			mintTotalInUSD = mintTotalWithBackingInUSD
 			backingIn.Amount = backingInMax.Amount
 			lionIn.Amount = mintTotalInUSD.Mul(sdk.OneDec().Sub(backingRatio)).QuoRoundUp(lionPrice).RoundInt()
@@ -219,7 +219,7 @@ func (k Keeper) estimateBurnBySwapOut(
 		// full/over backing
 		backingOut.Amount = burnActualInUSD.QuoRoundUp(backingPrice).RoundInt()
 	} else if backingRatio.IsZero() {
-		// algorithmic
+		// full algorithmic
 		lionOut.Amount = burnActualInUSD.QuoRoundUp(lionPrice).RoundInt()
 	} else {
 		// fractional
