@@ -141,7 +141,7 @@ func (k Keeper) EstimateMintBySwapIn(c context.Context, req *types.EstimateMintB
 
 func (k Keeper) EstimateMintBySwapOut(c context.Context, req *types.EstimateMintBySwapOutRequest) (*types.EstimateMintBySwapOutResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	backingIn, lionIn, mintOut, mintFee, err := k.estimateMintBySwapOut(ctx, req.BackingInMax, req.LionInMax)
+	backingIn, lionIn, mintOut, mintFee, err := k.estimateMintBySwapOut(ctx, req.BackingInMax, req.LionInMax, req.FullBacking)
 	if err != nil {
 		return nil, err
 	}

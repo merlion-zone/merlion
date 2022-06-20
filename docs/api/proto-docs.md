@@ -1261,6 +1261,7 @@ parameters.
 | ----- | ---- | ----- | ----------- |
 | `backing_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `full_backing` | [bool](#bool) |  |  |
 
 
 
@@ -1860,6 +1861,7 @@ MsgMintBySwap represents a message to mint Mer stablecoins by swapping.
 | ----- | ---- | ----- | ----------- |
 | `sender` | [string](#string) |  |  |
 | `to` | [string](#string) |  |  |
+| `full_backing` | [bool](#bool) |  |  |
 | `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `backing_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |

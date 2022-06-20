@@ -191,7 +191,7 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 			},
 			req: &types.EstimateMintBySwapOutRequest{
 				BackingInMax: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1_000000)),
-				LionInMax:    sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+				FullBacking:  true,
 			},
 			expPass: true,
 			expRes: &types.EstimateMintBySwapOutResponse{
@@ -574,18 +574,18 @@ func (suite *KeeperTestSuite) TestEstimateMintByCollateralIn() {
 		expErr   error
 		expRes   *types.EstimateMintByCollateralInResponse
 	}{
-		{
-			name: "mer price too low",
-			malleate: func() {
-				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(989, 3))
-			},
-			req: &types.EstimateMintByCollateralInRequest{
-				Sender:          sendAddr,
-				CollateralDenom: suite.bcDenom,
-			},
-			expPass: false,
-			expErr:  types.ErrMerPriceTooLow,
-		},
+		//{
+		//	name: "mer price too low",
+		//	malleate: func() {
+		//		suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(989, 3))
+		//	},
+		//	req: &types.EstimateMintByCollateralInRequest{
+		//		Sender:          sendAddr,
+		//		CollateralDenom: suite.bcDenom,
+		//	},
+		//	expPass: false,
+		//	expErr:  types.ErrMerPriceTooLow,
+		//},
 		{
 			name: "collateral denom not found",
 			req: &types.EstimateMintByCollateralInRequest{

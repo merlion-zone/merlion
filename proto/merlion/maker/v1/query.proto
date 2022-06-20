@@ -209,6 +209,7 @@ message EstimateMintBySwapInResponse {
 message EstimateMintBySwapOutRequest {
   cosmos.base.v1beta1.Coin backing_in_max = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin lion_in_max = 2 [ (gogoproto.nullable) = false ];
+  bool full_backing = 3;
 }
 
 message EstimateMintBySwapOutResponse {

@@ -82,6 +82,7 @@ func (k Keeper) estimateMintBySwapOut(
 	ctx sdk.Context,
 	backingInMax sdk.Coin,
 	lionInMax sdk.Coin,
+	fullBacking bool,
 ) (
 	backingIn sdk.Coin,
 	lionIn sdk.Coin,
@@ -122,7 +123,7 @@ func (k Keeper) estimateMintBySwapOut(
 	mintTotalInUSD := sdk.ZeroDec()
 
 	backingRatio := k.GetBackingRatio(ctx)
-	if backingRatio.GTE(sdk.OneDec()) || lionInMax.IsZero() {
+	if backingRatio.GTE(sdk.OneDec()) || fullBacking {
 		// full/over backed, or user selects full backing
 		mintTotalInUSD = backingAvailInUSD
 		backingIn.Amount = backingInMax.Amount
@@ -397,11 +398,11 @@ func (k Keeper) estimateMintByCollateralIn(
 		return
 	}
 
-	// check price lower bound
-	err = k.checkMerPriceLowerBound(ctx)
-	if err != nil {
-		return
-	}
+	// check price lower bound ?
+	//err = k.checkMerPriceLowerBound(ctx)
+	//if err != nil {
+	//	return
+	//}
 
 	collateralParams, err := k.getEnabledCollateralParams(ctx, collateralDenom)
 	if err != nil {
