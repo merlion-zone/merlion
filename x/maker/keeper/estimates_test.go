@@ -219,6 +219,23 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 			},
 		},
 		{
+			name: "zero lion using backing",
+			malleate: func() {
+				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(80, 2))
+			},
+			req: &types.EstimateMintBySwapOutRequest{
+				BackingInMax: sdk.NewCoin(suite.bcDenom, sdk.NewInt(500000)),
+				LionInMax:    sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+			},
+			expPass: true,
+			expRes: &types.EstimateMintBySwapOutResponse{
+				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(500000)),
+				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1237_500000_000000)), // 500000 * 0.99 / 0.8 * 0.2 / (10**-10)
+				MintOut:   sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(615672)),             // 500000 * 0.99 / 0.8 * (1 / (1+0.005))
+				MintFee:   sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(3078)),               // 500000 * 0.99 / 0.8 * (0.005 / (1+0.005))
+			},
+		},
+		{
 			name: "fractional using max backing",
 			malleate: func() {
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(80, 2))
@@ -233,6 +250,23 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1237_500000_000000)), // 500000 * 0.99 / 0.8 * 0.2 / (10**-10)
 				MintOut:   sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(615672)),             // 500000 * 0.99 / 0.8 * (1 / (1+0.005))
 				MintFee:   sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(3078)),               // 500000 * 0.99 / 0.8 * (0.005 / (1+0.005))
+			},
+		},
+		{
+			name: "zero backing using lion",
+			malleate: func() {
+				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(20, 2))
+			},
+			req: &types.EstimateMintBySwapOutRequest{
+				BackingInMax: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),
+				LionInMax:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(10000_000000_000000)),
+			},
+			expPass: true,
+			expRes: &types.EstimateMintBySwapOutResponse{
+				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(252525)), // 10**16 * 10**-10 / 0.8 * 0.2 / 0.99
+				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(10000_000000_000000)),
+				MintOut:   sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(1243781)), // 10**16 * 10**-10 / 0.8 * (1 / (1+0.005))
+				MintFee:   sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(6219)),    // 10**16 * 10**-10 / 0.8 * (0.005 / (1+0.005))
 			},
 		},
 		{
