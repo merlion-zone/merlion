@@ -102,7 +102,7 @@ func NewMintBySwapCmd() *cobra.Command {
 			msg := &types.MsgMintBySwap{
 				Sender:       sender,
 				To:           receiver,
-				MintOut:      mintOut,
+				MintOutMin:   mintOut,
 				BackingInMax: backingInMax,
 				LionInMax:    lionInMax,
 			}

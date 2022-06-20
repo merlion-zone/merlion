@@ -29,17 +29,14 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 		return nil, err
 	}
 
-	backingIn, lionIn, mintFee, err := m.Keeper.estimateMintBySwapIn(ctx, msg.MintOut, msg.BackingInMax.Denom, msg.FullBacking)
+	backingIn, lionIn, mintOut, mintFee, err := m.Keeper.estimateMintBySwapOut(ctx, msg.BackingInMax, msg.LionInMax, msg.FullBacking)
 	if err != nil {
 		return nil, err
 	}
-	mintTotal := msg.MintOut.Add(mintFee)
+	mintTotal := mintOut.Add(mintFee)
 
-	if msg.BackingInMax.IsLT(backingIn) {
-		return nil, sdkerrors.Wrapf(types.ErrBackingCoinSlippage, "backing coin needed: %s", backingIn)
-	}
-	if msg.LionInMax.IsLT(lionIn) {
-		return nil, sdkerrors.Wrapf(types.ErrLionCoinSlippage, "lion coin needed: %s", lionIn)
+	if mintOut.IsLT(msg.MintOutMin) {
+		return nil, sdkerrors.Wrapf(types.ErrMerSlippage, "mint out: %s", mintOut)
 	}
 
 	totalBacking, poolBacking, err := m.Keeper.getBacking(ctx, msg.BackingInMax.Denom)
@@ -76,7 +73,7 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 		return nil, err
 	}
 	// send mer to receiver
-	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(msg.MintOut))
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(mintOut))
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +88,7 @@ func (m msgServer) MintBySwap(c context.Context, msg *types.MsgMintBySwap) (*typ
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(types.EventTypeMintBySwap,
 			sdk.NewAttribute(types.AttributeKeyCoinIn, sdk.NewCoins(backingIn, lionIn).String()),
-			sdk.NewAttribute(types.AttributeKeyCoinOut, msg.MintOut.String()),
+			sdk.NewAttribute(types.AttributeKeyCoinOut, mintOut.String()),
 			sdk.NewAttribute(types.AttributeKeyFee, mintFee.String()),
 		),
 		sdk.NewEvent(
