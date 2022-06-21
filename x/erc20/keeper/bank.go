@@ -76,7 +76,7 @@ func (k Keeper) SplitCoinsByErc20(amt sdk.Coins) (nativeCoins sdk.Coins, nativeE
 }
 
 func (k Keeper) SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, nativeCoins sdk.Coins, nativeErc20Tokens sdk.Coins) (err error) {
-	erc20 := contracts.ERC20BurnableContract.ABI
+	erc20 := contracts.ERC20MinterBurnerDecimalsContract.ABI
 	from := common.BytesToAddress(fromAddr)
 	to := common.BytesToAddress(toAddr)
 

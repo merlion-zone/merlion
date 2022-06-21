@@ -197,7 +197,7 @@ message TotalCollateral {
   // total existing mer debt, including minted by collateral, mint fee, last
   // interest
   cosmos.base.v1beta1.Coin mer_debt = 1 [ (gogoproto.nullable) = false ];
-  // total minted merl by burning lion
+  // total minted mer by burning lion
   cosmos.base.v1beta1.Coin mer_by_lion = 2 [ (gogoproto.nullable) = false ];
   // total burned lion
   cosmos.base.v1beta1.Coin lion_burned = 3 [ (gogoproto.nullable) = false ];
@@ -211,7 +211,7 @@ message PoolCollateral {
   // total existing mer debt, including minted by collateral, mint fee, last
   // interest
   cosmos.base.v1beta1.Coin mer_debt = 2 [ (gogoproto.nullable) = false ];
-  // total minted merl by burning lion
+  // total minted mer by burning lion
   cosmos.base.v1beta1.Coin mer_by_lion = 3 [ (gogoproto.nullable) = false ];
   // total burned lion
   cosmos.base.v1beta1.Coin lion_burned = 4 [ (gogoproto.nullable) = false ];
