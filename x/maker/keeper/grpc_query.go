@@ -183,6 +183,19 @@ func (k Keeper) EstimateBurnBySwapOut(c context.Context, req *types.EstimateBurn
 	}, nil
 }
 
+func (k Keeper) EstimateBuyBackingIn(c context.Context, req *types.EstimateBuyBackingInRequest) (*types.EstimateBuyBackingInResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	lionIn, buybackFee, err := k.estimateBuyBackingIn(ctx, req.BackingOut)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.EstimateBuyBackingInResponse{
+		LionIn:     lionIn,
+		BuybackFee: buybackFee,
+	}, nil
+}
+
 func (k Keeper) EstimateBuyBackingOut(c context.Context, req *types.EstimateBuyBackingOutRequest) (*types.EstimateBuyBackingOutResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	backingOut, buybackFee, err := k.estimateBuyBackingOut(ctx, req.LionIn, req.BackingDenom)

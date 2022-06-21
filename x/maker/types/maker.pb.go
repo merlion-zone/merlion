@@ -806,7 +806,7 @@ type TotalCollateral struct {
 	// total existing mer debt, including minted by collateral, mint fee, last
 	// interest
 	MerDebt types.Coin `protobuf:"bytes,1,opt,name=mer_debt,json=merDebt,proto3" json:"mer_debt"`
-	// total minted merl by burning lion
+	// total minted mer by burning lion
 	MerByLion types.Coin `protobuf:"bytes,2,opt,name=mer_by_lion,json=merByLion,proto3" json:"mer_by_lion"`
 	// total burned lion
 	LionBurned types.Coin `protobuf:"bytes,3,opt,name=lion_burned,json=lionBurned,proto3" json:"lion_burned"`
@@ -872,7 +872,7 @@ type PoolCollateral struct {
 	// total existing mer debt, including minted by collateral, mint fee, last
 	// interest
 	MerDebt types.Coin `protobuf:"bytes,2,opt,name=mer_debt,json=merDebt,proto3" json:"mer_debt"`
-	// total minted merl by burning lion
+	// total minted mer by burning lion
 	MerByLion types.Coin `protobuf:"bytes,3,opt,name=mer_by_lion,json=merByLion,proto3" json:"mer_by_lion"`
 	// total burned lion
 	LionBurned types.Coin `protobuf:"bytes,4,opt,name=lion_burned,json=lionBurned,proto3" json:"lion_burned"`
