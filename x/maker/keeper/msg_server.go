@@ -265,7 +265,7 @@ func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*t
 	if err != nil {
 		return nil, err
 	}
-	lionMint := lionOut.Add(sellbackFee)
+	lionMintWithBonus := lionOut.Add(sellbackFee)
 
 	if lionOut.IsLT(msg.LionOutMin) {
 		return nil, sdkerrors.Wrap(types.ErrLionCoinSlippage, "lion coin over slippage")
@@ -280,8 +280,8 @@ func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*t
 
 	// allow LionBurned to be negative
 	// here use AddAmount(Neg()) to bypass Sub negativeness check
-	poolBacking.LionBurned = poolBacking.LionBurned.AddAmount(lionMint.Amount.Neg())
-	totalBacking.LionBurned = totalBacking.LionBurned.AddAmount(lionMint.Amount.Neg())
+	poolBacking.LionBurned = poolBacking.LionBurned.AddAmount(lionMintWithBonus.Amount.Neg())
+	totalBacking.LionBurned = totalBacking.LionBurned.AddAmount(lionMintWithBonus.Amount.Neg())
 
 	m.Keeper.SetPoolBacking(ctx, poolBacking)
 	m.Keeper.SetTotalBacking(ctx, totalBacking)
@@ -293,7 +293,7 @@ func (m msgServer) SellBacking(c context.Context, msg *types.MsgSellBacking) (*t
 	}
 
 	// mint lion
-	err = m.Keeper.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(lionMint))
+	err = m.Keeper.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(lionMintWithBonus))
 	if err != nil {
 		return nil, err
 	}
@@ -741,19 +741,6 @@ func (k Keeper) getCollateral(ctx sdk.Context, account sdk.AccAddress, denom str
 	return
 }
 
-func (k Keeper) totalBackingInUSD(ctx sdk.Context) (sdk.Coin, error) {
-	totalBackingValue := sdk.ZeroDec()
-	for _, pool := range k.GetAllPoolBacking(ctx) {
-		// get price in usd
-		backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, pool.Backing.Denom)
-		if err != nil {
-			return sdk.Coin{}, err
-		}
-		totalBackingValue = totalBackingValue.Add(pool.Backing.Amount.ToDec().Mul(backingPrice))
-	}
-	return sdk.NewCoin(merlion.MicroUSDDenom, totalBackingValue.TruncateInt()), nil
-}
-
 func settleInterestFee(ctx sdk.Context, acc *types.AccountCollateral, pool *types.PoolCollateral, total *types.TotalCollateral, apr *sdk.Dec) {
 	if apr != nil {
 		period := ctx.BlockHeight() - acc.LastSettlementBlock
@@ -773,14 +760,6 @@ func settleInterestFee(ctx sdk.Context, acc *types.AccountCollateral, pool *type
 	}
 	// update settlement block
 	acc.LastSettlementBlock = ctx.BlockHeight()
-}
-
-func computeFee(coin sdk.Coin, rate *sdk.Dec) sdk.Coin {
-	amt := sdk.ZeroInt()
-	if rate != nil {
-		amt = coin.Amount.ToDec().Mul(*rate).TruncateInt()
-	}
-	return sdk.NewCoin(coin.Denom, amt)
 }
 
 func maxLoanToValueForAccount(acc *types.AccountCollateral, collateralParams *types.CollateralRiskParams) sdk.Dec {
