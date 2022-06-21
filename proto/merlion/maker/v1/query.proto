@@ -102,6 +102,12 @@ service Query {
         "/merlion/maker/v1/estimate_burn_by_swap_out";
   }
 
+  // EstimateBuyBackingIn estimates inpput of buying backing assets.
+  rpc EstimateBuyBackingIn(EstimateBuyBackingInRequest)
+      returns (EstimateBuyBackingInResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/estimate_buy_backing_in";
+  }
+
   // EstimateBuyBackingOut estimates output of buying backing assets.
   rpc EstimateBuyBackingOut(EstimateBuyBackingOutRequest)
       returns (EstimateBuyBackingOutResponse) {
@@ -246,6 +252,15 @@ message EstimateBurnBySwapOutResponse {
   cosmos.base.v1beta1.Coin backing_out = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin lion_out = 2 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin burn_fee = 3 [ (gogoproto.nullable) = false ];
+}
+
+message EstimateBuyBackingInRequest {
+  cosmos.base.v1beta1.Coin backing_out = 1 [ (gogoproto.nullable) = false ];
+}
+
+message EstimateBuyBackingInResponse {
+  cosmos.base.v1beta1.Coin lion_in = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin buyback_fee = 2 [ (gogoproto.nullable) = false ];
 }
 
 message EstimateBuyBackingOutRequest {
