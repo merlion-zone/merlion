@@ -378,7 +378,6 @@ func (k Keeper) estimateBuyBackingIn(
 
 	lionIn = sdk.NewCoin(merlion.AttoLionDenom, backingOutTotalValue.Quo(lionPrice).RoundInt())
 	buybackFee = sdk.NewCoin(backingDenom, backingOutTotalValue.Mul(buybackFeeRate).RoundInt())
-
 	return
 }
 
@@ -437,7 +436,70 @@ func (k Keeper) estimateBuyBackingOut(
 
 	buybackFee = computeFee(backingOutTotal, backingParams.BuybackFee)
 	backingOut = backingOutTotal.Sub(buybackFee)
+	return
+}
 
+func (k Keeper) estimateSellBackingIn(
+	ctx sdk.Context,
+	lionOut sdk.Coin,
+	backingDenom string,
+) (
+	backingIn sdk.Coin,
+	sellbackFee sdk.Coin,
+	err error,
+) {
+	backingIn = sdk.NewCoin(backingDenom, sdk.ZeroInt())
+	sellbackFee = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
+
+	// get prices in usd
+	backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, backingDenom)
+	if err != nil {
+		return
+	}
+	lionPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.AttoLionDenom)
+	if err != nil {
+		return
+	}
+
+	backingParams, err := k.getEnabledBackingParams(ctx, backingDenom)
+	if err != nil {
+		return
+	}
+
+	_, poolBacking, err := k.getBacking(ctx, backingDenom)
+	if err != nil {
+		return
+	}
+
+	excessBackingValue, err := k.getExcessBackingValue(ctx, backingDenom)
+	if err != nil {
+		return
+	}
+	missingBackingValue := excessBackingValue.Amount.Neg()
+	availableLionMint := missingBackingValue.ToDec().Quo(lionPrice)
+
+	bonusRatio := k.RebackBonus(ctx)
+	sellbackFeeRate := sdk.ZeroDec()
+	if backingParams.RebackFee != nil {
+		sellbackFeeRate = *backingParams.RebackFee
+	}
+
+	lionMint := lionOut.Amount.ToDec().Quo(sdk.OneDec().Add(bonusRatio).Sub(sellbackFeeRate))
+	lionMintWithBonus := lionMint.Mul(sdk.OneDec().Add(bonusRatio))
+
+	backingIn = sdk.NewCoin(backingDenom, lionMint.Mul(lionPrice).Quo(backingPrice).RoundInt())
+	sellbackFee = sdk.NewCoin(merlion.AttoLionDenom, lionMint.Mul(sellbackFeeRate).RoundInt())
+
+	poolBacking.Backing = poolBacking.Backing.Add(backingIn)
+	if backingParams.MaxBacking != nil && poolBacking.Backing.Amount.GT(*backingParams.MaxBacking) {
+		err = sdkerrors.Wrap(types.ErrBackingCeiling, "backing over ceiling")
+		return
+	}
+	if lionMintWithBonus.GT(availableLionMint) {
+		err = sdkerrors.Wrap(types.ErrLionCoinInsufficient, "insufficient available lion coin")
+		return
+	}
+	
 	return
 }
 
@@ -449,10 +511,10 @@ func (k Keeper) estimateSellBackingOut(
 	sellbackFee sdk.Coin,
 	err error,
 ) {
+	backingDenom := backingIn.Denom
+
 	lionOut = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
 	sellbackFee = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
-
-	backingDenom := backingIn.Denom
 
 	// get prices in usd
 	backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, backingDenom)
@@ -476,7 +538,7 @@ func (k Keeper) estimateSellBackingOut(
 
 	poolBacking.Backing = poolBacking.Backing.Add(backingIn)
 	if backingParams.MaxBacking != nil && poolBacking.Backing.Amount.GT(*backingParams.MaxBacking) {
-		err = sdkerrors.Wrap(types.ErrBackingCeiling, "over ceiling")
+		err = sdkerrors.Wrap(types.ErrBackingCeiling, "backing over ceiling")
 		return
 	}
 
@@ -485,20 +547,20 @@ func (k Keeper) estimateSellBackingOut(
 		return
 	}
 	missingBackingValue := excessBackingValue.Amount.Neg()
-	availableLionOut := missingBackingValue.ToDec().Quo(lionPrice)
+	availableLionMint := missingBackingValue.ToDec().Quo(lionPrice)
 
 	bonusRatio := k.RebackBonus(ctx)
 	lionMint := sdk.NewCoin(merlion.AttoLionDenom, backingIn.Amount.ToDec().Mul(backingPrice).Quo(lionPrice).RoundInt())
 	bonus := computeFee(lionMint, &bonusRatio)
 	sellbackFee = computeFee(lionMint, backingParams.RebackFee)
 
-	lionMint = lionMint.Add(bonus)
-	if lionMint.Amount.ToDec().GT(availableLionOut) {
+	lionMintWithBonus := lionMint.Add(bonus)
+	if lionMintWithBonus.Amount.ToDec().GT(availableLionMint) {
 		err = sdkerrors.Wrap(types.ErrLionCoinInsufficient, "insufficient available lion coin")
 		return
 	}
 
-	lionOut = lionMint.Sub(sellbackFee)
+	lionOut = lionMintWithBonus.Sub(sellbackFee)
 	return
 }
 
@@ -600,6 +662,14 @@ func (k Keeper) estimateMintByCollateralIn(
 	return
 }
 
+func computeFee(coin sdk.Coin, rate *sdk.Dec) sdk.Coin {
+	amt := sdk.ZeroInt()
+	if rate != nil {
+		amt = coin.Amount.ToDec().Mul(*rate).RoundInt()
+	}
+	return sdk.NewCoin(coin.Denom, amt)
+}
+
 func (k Keeper) checkMerPriceLowerBound(ctx sdk.Context) error {
 	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
 	if err != nil {
@@ -669,4 +739,17 @@ func (k Keeper) getExcessBackingValue(ctx sdk.Context, backingDenom string) (exc
 	// may be negative
 	excessBackingValue.Amount = totalBackingValue.Amount.Sub(requiredBackingValue)
 	return
+}
+
+func (k Keeper) totalBackingInUSD(ctx sdk.Context) (sdk.Coin, error) {
+	totalBackingValue := sdk.ZeroDec()
+	for _, pool := range k.GetAllPoolBacking(ctx) {
+		// get price in usd
+		backingPrice, err := k.oracleKeeper.GetExchangeRate(ctx, pool.Backing.Denom)
+		if err != nil {
+			return sdk.Coin{}, err
+		}
+		totalBackingValue = totalBackingValue.Add(pool.Backing.Amount.ToDec().Mul(backingPrice))
+	}
+	return sdk.NewCoin(merlion.MicroUSDDenom, totalBackingValue.RoundInt()), nil
 }

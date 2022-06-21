@@ -114,6 +114,12 @@ service Query {
     option (google.api.http).get = "/merlion/maker/v1/estimate_buy_backing_out";
   }
 
+  // EstimateSellBackingIn estimates input of selling backing assets.
+  rpc EstimateSellBackingIn(EstimateSellBackingInRequest)
+      returns (EstimateSellBackingInResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/estimate_sell_backing_in";
+  }
+
   // EstimateSellBackingOut estimates output of selling backing assets.
   rpc EstimateSellBackingOut(EstimateSellBackingOutRequest)
       returns (EstimateSellBackingOutResponse) {
@@ -271,6 +277,16 @@ message EstimateBuyBackingOutRequest {
 message EstimateBuyBackingOutResponse {
   cosmos.base.v1beta1.Coin backing_out = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin buyback_fee = 2 [ (gogoproto.nullable) = false ];
+}
+
+message EstimateSellBackingInRequest {
+  cosmos.base.v1beta1.Coin lion_out = 1 [ (gogoproto.nullable) = false ];
+  string backing_denom = 2;
+}
+
+message EstimateSellBackingInResponse {
+  cosmos.base.v1beta1.Coin backing_in = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin sellback_fee = 2 [ (gogoproto.nullable) = false ];
 }
 
 message EstimateSellBackingOutRequest {

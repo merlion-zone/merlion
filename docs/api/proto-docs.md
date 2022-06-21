@@ -85,6 +85,8 @@
     - [EstimateMintBySwapInResponse](#merlion.maker.v1.EstimateMintBySwapInResponse)
     - [EstimateMintBySwapOutRequest](#merlion.maker.v1.EstimateMintBySwapOutRequest)
     - [EstimateMintBySwapOutResponse](#merlion.maker.v1.EstimateMintBySwapOutResponse)
+    - [EstimateSellBackingInRequest](#merlion.maker.v1.EstimateSellBackingInRequest)
+    - [EstimateSellBackingInResponse](#merlion.maker.v1.EstimateSellBackingInResponse)
     - [EstimateSellBackingOutRequest](#merlion.maker.v1.EstimateSellBackingOutRequest)
     - [EstimateSellBackingOutResponse](#merlion.maker.v1.EstimateSellBackingOutResponse)
     - [QueryAllBackingPoolsRequest](#merlion.maker.v1.QueryAllBackingPoolsRequest)
@@ -1355,6 +1357,38 @@ parameters.
 
 
 
+<a name="merlion.maker.v1.EstimateSellBackingInRequest"></a>
+
+### EstimateSellBackingInRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `backing_denom` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateSellBackingInResponse"></a>
+
+### EstimateSellBackingInResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `sellback_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.EstimateSellBackingOutRequest"></a>
 
 ### EstimateSellBackingOutRequest
@@ -1708,6 +1742,7 @@ Query defines the maker gRPC querier service.
 | `EstimateBurnBySwapOut` | [EstimateBurnBySwapOutRequest](#merlion.maker.v1.EstimateBurnBySwapOutRequest) | [EstimateBurnBySwapOutResponse](#merlion.maker.v1.EstimateBurnBySwapOutResponse) | EstimateBurnBySwapOut estimates output of burning by swap. | GET|/merlion/maker/v1/estimate_burn_by_swap_out|
 | `EstimateBuyBackingIn` | [EstimateBuyBackingInRequest](#merlion.maker.v1.EstimateBuyBackingInRequest) | [EstimateBuyBackingInResponse](#merlion.maker.v1.EstimateBuyBackingInResponse) | EstimateBuyBackingIn estimates inpput of buying backing assets. | GET|/merlion/maker/v1/estimate_buy_backing_in|
 | `EstimateBuyBackingOut` | [EstimateBuyBackingOutRequest](#merlion.maker.v1.EstimateBuyBackingOutRequest) | [EstimateBuyBackingOutResponse](#merlion.maker.v1.EstimateBuyBackingOutResponse) | EstimateBuyBackingOut estimates output of buying backing assets. | GET|/merlion/maker/v1/estimate_buy_backing_out|
+| `EstimateSellBackingIn` | [EstimateSellBackingInRequest](#merlion.maker.v1.EstimateSellBackingInRequest) | [EstimateSellBackingInResponse](#merlion.maker.v1.EstimateSellBackingInResponse) | EstimateSellBackingIn estimates input of selling backing assets. | GET|/merlion/maker/v1/estimate_sell_backing_in|
 | `EstimateSellBackingOut` | [EstimateSellBackingOutRequest](#merlion.maker.v1.EstimateSellBackingOutRequest) | [EstimateSellBackingOutResponse](#merlion.maker.v1.EstimateSellBackingOutResponse) | EstimateSellBackingOut estimates output of selling backing assets. | GET|/merlion/maker/v1/estimate_sell_backing_out|
 | `EstimateMintByCollateralIn` | [EstimateMintByCollateralInRequest](#merlion.maker.v1.EstimateMintByCollateralInRequest) | [EstimateMintByCollateralInResponse](#merlion.maker.v1.EstimateMintByCollateralInResponse) | EstimateMintByCollateralIn estimates input of minting by collateral. | GET|/merlion/maker/v1/estimate_mint_by_collateral_in|
 

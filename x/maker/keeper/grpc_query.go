@@ -209,6 +209,19 @@ func (k Keeper) EstimateBuyBackingOut(c context.Context, req *types.EstimateBuyB
 	}, nil
 }
 
+func (k Keeper) EstimateSellBackingIn(c context.Context, req *types.EstimateSellBackingInRequest) (*types.EstimateSellBackingInResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	backingIn, sellbackFee, err := k.estimateSellBackingIn(ctx, req.LionOut, req.BackingDenom)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.EstimateSellBackingInResponse{
+		BackingIn:   backingIn,
+		SellbackFee: sellbackFee,
+	}, nil
+}
+
 func (k Keeper) EstimateSellBackingOut(c context.Context, req *types.EstimateSellBackingOutRequest) (*types.EstimateSellBackingOutResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	lionOut, sellbackFee, err := k.estimateSellBackingOut(ctx, req.BackingIn)
