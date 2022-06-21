@@ -154,6 +154,21 @@ func (k Keeper) EstimateMintBySwapOut(c context.Context, req *types.EstimateMint
 	}, nil
 }
 
+func (k Keeper) EstimateBurnBySwapIn(c context.Context, req *types.EstimateBurnBySwapInRequest) (*types.EstimateBurnBySwapInResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	burnIn, backingOut, lionOut, burnFee, err := k.estimateBurnBySwapIn(ctx, req.BackingOutMax, req.LionOutMax)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.EstimateBurnBySwapInResponse{
+		BurnIn:     burnIn,
+		BackingOut: backingOut,
+		LionOut:    lionOut,
+		BurnFee:    burnFee,
+	}, nil
+}
+
 func (k Keeper) EstimateBurnBySwapOut(c context.Context, req *types.EstimateBurnBySwapOutRequest) (*types.EstimateBurnBySwapOutResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	backingOut, lionOut, burnFee, err := k.estimateBurnBySwapOut(ctx, req.BurnIn, req.BackingDenom)

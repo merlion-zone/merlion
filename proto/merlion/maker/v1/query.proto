@@ -89,6 +89,12 @@ service Query {
         "/merlion/maker/v1/estimate_mint_by_swap_out";
   }
 
+  // EstimateBurnBySwapIn estimates input of burning by swap.
+  rpc EstimateBurnBySwapIn(EstimateBurnBySwapInRequest)
+      returns (EstimateBurnBySwapInResponse) {
+    option (google.api.http).get = "/merlion/maker/v1/estimate_burn_by_swap_in";
+  }
+
   // EstimateBurnBySwapOut estimates output of burning by swap.
   rpc EstimateBurnBySwapOut(EstimateBurnBySwapOutRequest)
       returns (EstimateBurnBySwapOutResponse) {
@@ -217,6 +223,18 @@ message EstimateMintBySwapOutResponse {
   cosmos.base.v1beta1.Coin lion_in = 2 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_out = 3 [ (gogoproto.nullable) = false ];
   cosmos.base.v1beta1.Coin mint_fee = 4 [ (gogoproto.nullable) = false ];
+}
+
+message EstimateBurnBySwapInRequest {
+  cosmos.base.v1beta1.Coin backing_out_max = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin lion_out_max = 2 [ (gogoproto.nullable) = false ];
+}
+
+message EstimateBurnBySwapInResponse {
+  cosmos.base.v1beta1.Coin burn_in = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin backing_out = 2 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin lion_out = 3 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin burn_fee = 4 [ (gogoproto.nullable) = false ];
 }
 
 message EstimateBurnBySwapOutRequest {
