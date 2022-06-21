@@ -71,6 +71,8 @@
     - [TotalCollateral](#merlion.maker.v1.TotalCollateral)
   
 - [merlion/maker/v1/query.proto](#merlion/maker/v1/query.proto)
+    - [EstimateBurnBySwapInRequest](#merlion.maker.v1.EstimateBurnBySwapInRequest)
+    - [EstimateBurnBySwapInResponse](#merlion.maker.v1.EstimateBurnBySwapInResponse)
     - [EstimateBurnBySwapOutRequest](#merlion.maker.v1.EstimateBurnBySwapOutRequest)
     - [EstimateBurnBySwapOutResponse](#merlion.maker.v1.EstimateBurnBySwapOutResponse)
     - [EstimateBuyBackingOutRequest](#merlion.maker.v1.EstimateBuyBackingOutRequest)
@@ -1115,6 +1117,40 @@ parameters.
 
 
 
+<a name="merlion.maker.v1.EstimateBurnBySwapInRequest"></a>
+
+### EstimateBurnBySwapInRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `backing_out_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_out_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateBurnBySwapInResponse"></a>
+
+### EstimateBurnBySwapInResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `burn_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `backing_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `burn_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+
+
+
+
+
+
 <a name="merlion.maker.v1.EstimateBurnBySwapOutRequest"></a>
 
 ### EstimateBurnBySwapOutRequest
@@ -1635,6 +1671,7 @@ Query defines the maker gRPC querier service.
 | `Params` | [QueryParamsRequest](#merlion.maker.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.maker.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/maker/v1/params|
 | `EstimateMintBySwapIn` | [EstimateMintBySwapInRequest](#merlion.maker.v1.EstimateMintBySwapInRequest) | [EstimateMintBySwapInResponse](#merlion.maker.v1.EstimateMintBySwapInResponse) | EstimateMintBySwapIn estimates input of minting by swap. | GET|/merlion/maker/v1/estimate_mint_by_swap_in|
 | `EstimateMintBySwapOut` | [EstimateMintBySwapOutRequest](#merlion.maker.v1.EstimateMintBySwapOutRequest) | [EstimateMintBySwapOutResponse](#merlion.maker.v1.EstimateMintBySwapOutResponse) | EstimateMintBySwapOut estimates output of minting by swap. | GET|/merlion/maker/v1/estimate_mint_by_swap_out|
+| `EstimateBurnBySwapIn` | [EstimateBurnBySwapInRequest](#merlion.maker.v1.EstimateBurnBySwapInRequest) | [EstimateBurnBySwapInResponse](#merlion.maker.v1.EstimateBurnBySwapInResponse) | EstimateBurnBySwapIn estimates input of burning by swap. | GET|/merlion/maker/v1/estimate_burn_by_swap_in|
 | `EstimateBurnBySwapOut` | [EstimateBurnBySwapOutRequest](#merlion.maker.v1.EstimateBurnBySwapOutRequest) | [EstimateBurnBySwapOutResponse](#merlion.maker.v1.EstimateBurnBySwapOutResponse) | EstimateBurnBySwapOut estimates output of burning by swap. | GET|/merlion/maker/v1/estimate_burn_by_swap_out|
 | `EstimateBuyBackingOut` | [EstimateBuyBackingOutRequest](#merlion.maker.v1.EstimateBuyBackingOutRequest) | [EstimateBuyBackingOutResponse](#merlion.maker.v1.EstimateBuyBackingOutResponse) | EstimateBuyBackingOut estimates output of buying backing assets. | GET|/merlion/maker/v1/estimate_buy_backing_out|
 | `EstimateSellBackingOut` | [EstimateSellBackingOutRequest](#merlion.maker.v1.EstimateSellBackingOutRequest) | [EstimateSellBackingOutResponse](#merlion.maker.v1.EstimateSellBackingOutResponse) | EstimateSellBackingOut estimates output of selling backing assets. | GET|/merlion/maker/v1/estimate_sell_backing_out|
