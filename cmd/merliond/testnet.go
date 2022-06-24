@@ -33,6 +33,7 @@ import (
 	"github.com/cosmos/go-bip39"
 	"github.com/ethereum/go-ethereum/common"
 	merlion "github.com/merlion-zone/merlion/types"
+	makertypes "github.com/merlion-zone/merlion/x/maker/types"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
@@ -449,6 +450,12 @@ func initGenFiles(
 
 	evmGenState.Params.EvmDenom = coinDenom
 	appGenState[evmtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&evmGenState)
+
+	var makerGenState makertypes.GenesisState
+	clientCtx.Codec.MustUnmarshalJSON(appGenState[makertypes.ModuleName], &makerGenState)
+
+	makerGenState.Params.BackingRatioStep = sdk.ZeroDec()
+	appGenState[makertypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&makerGenState)
 
 	appGenStateJSON, err := json.MarshalIndent(appGenState, "", "  ")
 	if err != nil {

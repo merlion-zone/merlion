@@ -13,8 +13,11 @@ func (k Keeper) AdjustBackingRatio(ctx sdk.Context) {
 		return
 	}
 
-	backingRatio := k.GetBackingRatio(ctx)
 	ratioStep := k.BackingRatioStep(ctx)
+	if ratioStep.IsZero() {
+		return
+	}
+	backingRatio := k.GetBackingRatio(ctx)
 	priceBand := merlion.MicroUSDTarget.Mul(k.BackingRatioPriceBand(ctx))
 
 	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)

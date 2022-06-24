@@ -102,8 +102,8 @@ func validateBackingRatioStep(i interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if !v.IsPositive() {
-		return fmt.Errorf("backing ratio adjusting step must be positive: %s", v)
+	if v.IsNegative() {
+		return fmt.Errorf("backing ratio adjusting step must be nonnegative: %s", v)
 	}
 
 	if v.GT(sdk.OneDec()) {
