@@ -337,21 +337,21 @@ func NewMintByCollateralCmd() *cobra.Command {
 				receiver = sender
 			}
 
-			lionInMaxStr, err := cmd.Flags().GetString(FlagLionInMax)
-			if err != nil {
-				return err
-			}
-			lionInMax, err := sdk.ParseCoinNormalized(lionInMaxStr)
-			if err != nil {
-				return fmt.Errorf("--%s: %w", FlagLionInMax, err)
-			}
+			//lionInMaxStr, err := cmd.Flags().GetString(FlagLionInMax)
+			//if err != nil {
+			//	return err
+			//}
+			//lionInMax, err := sdk.ParseCoinNormalized(lionInMaxStr)
+			//if err != nil {
+			//	return fmt.Errorf("--%s: %w", FlagLionInMax, err)
+			//}
 
 			msg := &types.MsgMintByCollateral{
 				Sender:          sender,
 				To:              receiver,
 				CollateralDenom: collateralDenom,
-				MintOut:         mintOut,
-				LionInMax:       lionInMax,
+				MintOutMin:      mintOut,
+				//LionInMax:       lionInMax,
 			}
 
 			if err := msg.ValidateBasic(); err != nil {

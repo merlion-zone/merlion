@@ -133,6 +133,13 @@ service Query {
     option (google.api.http).get =
         "/merlion/maker/v1/estimate_mint_by_collateral_in";
   }
+
+  // EstimateMintByCollateralOut estimates output of minting by collateral.
+  rpc EstimateMintByCollateralOut(EstimateMintByCollateralOutRequest)
+      returns (EstimateMintByCollateralOutResponse) {
+    option (google.api.http).get =
+        "/merlion/maker/v1/estimate_mint_by_collateral_out";
+  }
 }
 
 message QueryAllBackingRiskParamsRequest {}
@@ -299,19 +306,32 @@ message EstimateSellBackingOutResponse {
 }
 
 message EstimateMintByCollateralInRequest {
-  string sender = 1;
-  cosmos.base.v1beta1.Coin mint_out = 2 [ (gogoproto.nullable) = false ];
-  string collateral_denom = 3;
-  cosmos.base.v1beta1.Coin lion_in_max = 4 [ (gogoproto.nullable) = false ];
+  string account = 1;
+  string collateral_denom = 2;
+  cosmos.base.v1beta1.Coin mint_out = 3 [ (gogoproto.nullable) = false ];
+  string ltv = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
 }
 
 message EstimateMintByCollateralInResponse {
+  cosmos.base.v1beta1.Coin collateral_in = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin lion_in = 2 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin mint_fee = 3 [ (gogoproto.nullable) = false ];
+}
+
+message EstimateMintByCollateralOutRequest {
+  string account = 1;
+  cosmos.base.v1beta1.Coin collateral_in = 2 [ (gogoproto.nullable) = false ];
+  string ltv = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message EstimateMintByCollateralOutResponse {
   cosmos.base.v1beta1.Coin lion_in = 1 [ (gogoproto.nullable) = false ];
-  cosmos.base.v1beta1.Coin mint_fee = 2 [ (gogoproto.nullable) = false ];
-  merlion.maker.v1.TotalCollateral total_coll = 3
-      [ (gogoproto.nullable) = false ];
-  merlion.maker.v1.PoolCollateral pool_coll = 4
-      [ (gogoproto.nullable) = false ];
-  merlion.maker.v1.AccountCollateral acc_coll = 5
-      [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin mint_out = 2 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin mint_fee = 3 [ (gogoproto.nullable) = false ];
 }

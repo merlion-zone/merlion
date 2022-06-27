@@ -332,11 +332,16 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 		return nil, err
 	}
 
-	lionIn, mintFee, totalColl, poolColl, accColl, err := m.Keeper.estimateMintByCollateralIn(ctx, sender, msg.MintOut, msg.CollateralDenom, msg.LionInMax)
+	collateralIn := sdk.NewCoin(msg.CollateralDenom, sdk.ZeroInt())
+	lionIn, mintOut, mintFee, totalColl, poolColl, accColl, err := m.Keeper.estimateMintByCollateralOut(ctx, sender, collateralIn, msg.Ltv)
 	if err != nil {
 		return nil, err
 	}
-	mintTotal := msg.MintOut.Add(mintFee)
+	mintTotal := mintOut.Add(mintFee)
+
+	if mintOut.IsLT(msg.MintOutMin) {
+		return nil, sdkerrors.Wrapf(types.ErrMerSlippage, "mint out: %s", mintOut)
+	}
 
 	m.Keeper.SetAccountCollateral(ctx, sender, accColl)
 	m.Keeper.SetPoolCollateral(ctx, poolColl)
@@ -360,7 +365,7 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 		return nil, err
 	}
 	// send mer to receiver
-	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(msg.MintOut))
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(mintOut))
 	if err != nil {
 		return nil, err
 	}
@@ -375,7 +380,7 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(types.EventTypeMintByCollateral,
 			sdk.NewAttribute(types.AttributeKeyCoinIn, lionIn.String()),
-			sdk.NewAttribute(types.AttributeKeyCoinOut, msg.MintOut.String()),
+			sdk.NewAttribute(types.AttributeKeyCoinOut, mintOut.String()),
 			sdk.NewAttribute(types.AttributeKeyFee, mintFee.String()),
 		),
 		sdk.NewEvent(

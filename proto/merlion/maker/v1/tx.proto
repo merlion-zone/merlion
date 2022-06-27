@@ -206,24 +206,29 @@ message MsgMintByCollateral {
   string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
   string collateral_denom = 3
       [ (gogoproto.moretags) = "yaml:\"collateral_denom\"" ];
-  cosmos.base.v1beta1.Coin mint_out = 4 [
-    (gogoproto.moretags) = "yaml:\"mint_out\"",
+  string ltv = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.moretags) = "yaml:\"ltv\"",
     (gogoproto.nullable) = false
   ];
-  cosmos.base.v1beta1.Coin lion_in_max = 5 [
-    (gogoproto.moretags) = "yaml:\"lion_in_max\"",
+  cosmos.base.v1beta1.Coin mint_out_min = 5 [
+    (gogoproto.moretags) = "yaml:\"mint_out_min\"",
     (gogoproto.nullable) = false
   ];
 }
 
 // MsgMintByCollateralResponse defines the Msg/MintByCollateral response type.
 message MsgMintByCollateralResponse {
-  cosmos.base.v1beta1.Coin mint_fee = 1 [
-    (gogoproto.moretags) = "yaml:\"mint_fee\"",
+  cosmos.base.v1beta1.Coin lion_in = 1 [
+    (gogoproto.moretags) = "yaml:\"lion_in\"",
     (gogoproto.nullable) = false
   ];
-  cosmos.base.v1beta1.Coin lion_in = 2 [
-    (gogoproto.moretags) = "yaml:\"lion_in\"",
+  cosmos.base.v1beta1.Coin mint_out = 2 [
+    (gogoproto.moretags) = "yaml:\"mint_out\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin mint_fee = 3 [
+    (gogoproto.moretags) = "yaml:\"mint_fee\"",
     (gogoproto.nullable) = false
   ];
 }

@@ -38,4 +38,6 @@ var (
 	ErrAccountInsufficientCollateral = sdkerrors.Register(ModuleName, 22, "account has insufficient collateral")
 	ErrAccountNoDebt                 = sdkerrors.Register(ModuleName, 23, "account has no debt")
 	ErrNotUndercollateralized        = sdkerrors.Register(ModuleName, 24, "position is not undercollateralized")
+
+	ErrLTVOutOfRange = sdkerrors.Register(ModuleName, 25, "LTV is out of range")
 )

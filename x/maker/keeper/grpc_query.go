@@ -237,20 +237,38 @@ func (k Keeper) EstimateSellBackingOut(c context.Context, req *types.EstimateSel
 
 func (k Keeper) EstimateMintByCollateralIn(c context.Context, req *types.EstimateMintByCollateralInRequest) (*types.EstimateMintByCollateralInResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	sender, err := sdk.AccAddressFromBech32(req.Sender)
+	account, err := sdk.AccAddressFromBech32(req.Account)
 	if err != nil {
 		return nil, err
 	}
-	lionIn, mintFee, totalColl, poolColl, accColl, err := k.estimateMintByCollateralIn(ctx, sender, req.MintOut, req.CollateralDenom, req.LionInMax)
+
+	collateralIn, lionIn, mintFee, _, _, _, err := k.estimateMintByCollateralIn(ctx, account, req.MintOut, req.CollateralDenom, req.Ltv)
 	if err != nil {
 		return nil, err
 	}
 
 	return &types.EstimateMintByCollateralInResponse{
-		LionIn:    lionIn,
-		MintFee:   mintFee,
-		TotalColl: totalColl,
-		PoolColl:  poolColl,
-		AccColl:   accColl,
+		CollateralIn: collateralIn,
+		LionIn:       lionIn,
+		MintFee:      mintFee,
+	}, nil
+}
+
+func (k Keeper) EstimateMintByCollateralOut(c context.Context, req *types.EstimateMintByCollateralOutRequest) (*types.EstimateMintByCollateralOutResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	account, err := sdk.AccAddressFromBech32(req.Account)
+	if err != nil {
+		return nil, err
+	}
+
+	lionIn, mintOut, mintFee, _, _, _, err := k.estimateMintByCollateralOut(ctx, account, req.CollateralIn, req.Ltv)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.EstimateMintByCollateralOutResponse{
+		LionIn:  lionIn,
+		MintOut: mintOut,
+		MintFee: mintFee,
 	}, nil
 }
