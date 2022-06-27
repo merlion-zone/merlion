@@ -81,6 +81,8 @@
     - [EstimateBuyBackingOutResponse](#merlion.maker.v1.EstimateBuyBackingOutResponse)
     - [EstimateMintByCollateralInRequest](#merlion.maker.v1.EstimateMintByCollateralInRequest)
     - [EstimateMintByCollateralInResponse](#merlion.maker.v1.EstimateMintByCollateralInResponse)
+    - [EstimateMintByCollateralOutRequest](#merlion.maker.v1.EstimateMintByCollateralOutRequest)
+    - [EstimateMintByCollateralOutResponse](#merlion.maker.v1.EstimateMintByCollateralOutResponse)
     - [EstimateMintBySwapInRequest](#merlion.maker.v1.EstimateMintBySwapInRequest)
     - [EstimateMintBySwapInResponse](#merlion.maker.v1.EstimateMintBySwapInResponse)
     - [EstimateMintBySwapOutRequest](#merlion.maker.v1.EstimateMintBySwapOutRequest)
@@ -1259,10 +1261,10 @@ parameters.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `sender` | [string](#string) |  |  |
-| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `account` | [string](#string) |  |  |
 | `collateral_denom` | [string](#string) |  |  |
-| `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `ltv` | [string](#string) |  |  |
 
 
 
@@ -1277,11 +1279,43 @@ parameters.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| `collateral_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `total_coll` | [TotalCollateral](#merlion.maker.v1.TotalCollateral) |  |  |
-| `pool_coll` | [PoolCollateral](#merlion.maker.v1.PoolCollateral) |  |  |
-| `acc_coll` | [AccountCollateral](#merlion.maker.v1.AccountCollateral) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateMintByCollateralOutRequest"></a>
+
+### EstimateMintByCollateralOutRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `account` | [string](#string) |  |  |
+| `collateral_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `ltv` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.maker.v1.EstimateMintByCollateralOutResponse"></a>
+
+### EstimateMintByCollateralOutResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -1745,6 +1779,7 @@ Query defines the maker gRPC querier service.
 | `EstimateSellBackingIn` | [EstimateSellBackingInRequest](#merlion.maker.v1.EstimateSellBackingInRequest) | [EstimateSellBackingInResponse](#merlion.maker.v1.EstimateSellBackingInResponse) | EstimateSellBackingIn estimates input of selling backing assets. | GET|/merlion/maker/v1/estimate_sell_backing_in|
 | `EstimateSellBackingOut` | [EstimateSellBackingOutRequest](#merlion.maker.v1.EstimateSellBackingOutRequest) | [EstimateSellBackingOutResponse](#merlion.maker.v1.EstimateSellBackingOutResponse) | EstimateSellBackingOut estimates output of selling backing assets. | GET|/merlion/maker/v1/estimate_sell_backing_out|
 | `EstimateMintByCollateralIn` | [EstimateMintByCollateralInRequest](#merlion.maker.v1.EstimateMintByCollateralInRequest) | [EstimateMintByCollateralInResponse](#merlion.maker.v1.EstimateMintByCollateralInResponse) | EstimateMintByCollateralIn estimates input of minting by collateral. | GET|/merlion/maker/v1/estimate_mint_by_collateral_in|
+| `EstimateMintByCollateralOut` | [EstimateMintByCollateralOutRequest](#merlion.maker.v1.EstimateMintByCollateralOutRequest) | [EstimateMintByCollateralOutResponse](#merlion.maker.v1.EstimateMintByCollateralOutResponse) | EstimateMintByCollateralOut estimates output of minting by collateral. | GET|/merlion/maker/v1/estimate_mint_by_collateral_out|
 
  <!-- end services -->
 
@@ -1933,8 +1968,8 @@ collateral.
 | `sender` | [string](#string) |  |  |
 | `to` | [string](#string) |  |  |
 | `collateral_denom` | [string](#string) |  |  |
-| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
-| `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `ltv` | [string](#string) |  |  |
+| `mint_out_min` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -1949,8 +1984,9 @@ MsgMintByCollateralResponse defines the Msg/MintByCollateral response type.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `lion_in` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `mint_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
