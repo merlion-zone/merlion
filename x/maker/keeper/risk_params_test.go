@@ -105,7 +105,7 @@ func (suite *KeeperTestSuite) dummyBackingRiskParams() (brp, brp2 types.BackingR
 }
 
 func (suite *KeeperTestSuite) dummyCollateralRiskParams() (crp, crp2 types.CollateralRiskParams) {
-	maxCollateral := sdk.NewInt(20_000000)
+	maxCollateral := sdk.NewInt(16_000000)
 	maxMerMint := sdk.NewInt(10_000000)
 	liquidationThreshold := sdk.NewDecWithPrec(75, 2)
 	loanToValue := sdk.NewDecWithPrec(80, 2)
