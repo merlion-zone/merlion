@@ -36,9 +36,9 @@ message MsgAggregateExchangeRatePrevote {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string hash = 1;
-  string feeder = 2;
-  string validator = 3;
+  string hash = 1 [ (gogoproto.jsontag) = "hash" ];
+  string feeder = 2 [ (gogoproto.jsontag) = "feeder" ];
+  string validator = 3 [ (gogoproto.jsontag) = "validator" ];
 }
 
 // MsgAggregateExchangeRatePrevoteResponse defines the
@@ -51,10 +51,10 @@ message MsgAggregateExchangeRateVote {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string salt = 1;
-  string exchange_rates = 2;
-  string feeder = 3;
-  string validator = 4;
+  string salt = 1 [ (gogoproto.jsontag) = "salt" ];
+  string exchange_rates = 2 [ (gogoproto.jsontag) = "exchange_rates" ];
+  string feeder = 3 [ (gogoproto.jsontag) = "feeder" ];
+  string validator = 4 [ (gogoproto.jsontag) = "validator" ];
 }
 
 // MsgAggregateExchangeRateVoteResponse defines the MsgAggregateExchangeRateVote
@@ -67,8 +67,8 @@ message MsgDelegateFeedConsent {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string operator = 1;
-  string delegate = 2;
+  string operator = 1 [ (gogoproto.jsontag) = "operator" ];
+  string delegate = 2 [ (gogoproto.jsontag) = "delegate" ];
 }
 
 // MsgDelegateFeedConsentResponse defines the MsgDelegateFeedConsent response

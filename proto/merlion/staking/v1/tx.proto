@@ -20,9 +20,9 @@ message MsgVeDelegate {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string delegator_address = 1;
-  string validator_address = 2;
-  string ve_id = 3;
+  string delegator_address = 1 [ (gogoproto.jsontag) = "delegator_address" ];
+  string validator_address = 2 [ (gogoproto.jsontag) = "validator_address" ];
+  string ve_id = 3 [ (gogoproto.jsontag) = "ve_id" ];
   cosmos.base.v1beta1.Coin amount = 4 [ (gogoproto.nullable) = false ];
 }
 

@@ -71,9 +71,16 @@ message MsgMintBySwap {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
-  bool full_backing = 3 [ (gogoproto.moretags) = "yaml:\"full_backing\"" ];
+  string sender = 1 [
+    (gogoproto.jsontag) = "sender",
+    (gogoproto.moretags) = "yaml:\"sender\""
+  ];
+  string to = 2
+      [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
+  bool full_backing = 3 [
+    (gogoproto.jsontag) = "full_backing",
+    (gogoproto.moretags) = "yaml:\"full_backing\""
+  ];
   cosmos.base.v1beta1.Coin backing_in_max = 4 [
     (gogoproto.moretags) = "yaml:\"backing_in_max\"",
     (gogoproto.nullable) = false
@@ -113,8 +120,12 @@ message MsgBurnBySwap {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
+  string sender = 1 [
+    (gogoproto.jsontag) = "sender",
+    (gogoproto.moretags) = "yaml:\"sender\""
+  ];
+  string to = 2
+      [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
   cosmos.base.v1beta1.Coin burn_in = 3 [
     (gogoproto.moretags) = "yaml:\"burn_in\"",
     (gogoproto.nullable) = false
@@ -150,8 +161,12 @@ message MsgBuyBacking {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
+  string sender = 1 [
+    (gogoproto.jsontag) = "sender",
+    (gogoproto.moretags) = "yaml:\"sender\""
+  ];
+  string to = 2
+      [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
   cosmos.base.v1beta1.Coin lion_in = 3 [
     (gogoproto.moretags) = "yaml:\"lion_in\"",
     (gogoproto.nullable) = false
@@ -176,8 +191,12 @@ message MsgSellBacking {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
+  string sender = 1 [
+    (gogoproto.jsontag) = "sender",
+    (gogoproto.moretags) = "yaml:\"sender\""
+  ];
+  string to = 2
+      [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
   cosmos.base.v1beta1.Coin backing_in = 3 [
     (gogoproto.moretags) = "yaml:\"backing_in\"",
     (gogoproto.nullable) = false
@@ -202,10 +221,16 @@ message MsgMintByCollateral {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
-  string collateral_denom = 3
-      [ (gogoproto.moretags) = "yaml:\"collateral_denom\"" ];
+  string sender = 1 [
+    (gogoproto.jsontag) = "sender",
+    (gogoproto.moretags) = "yaml:\"sender\""
+  ];
+  string to = 2
+      [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
+  string collateral_denom = 3 [
+    (gogoproto.jsontag) = "collateral_denom",
+    (gogoproto.moretags) = "yaml:\"collateral_denom\""
+  ];
   string ltv = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.moretags) = "yaml:\"ltv\"",
@@ -239,9 +264,14 @@ message MsgBurnByCollateral {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string collateral_denom = 2
-      [ (gogoproto.moretags) = "yaml:\"collateral_denom\"" ];
+  string sender = 1 [
+    (gogoproto.jsontag) = "sender",
+    (gogoproto.moretags) = "yaml:\"sender\""
+  ];
+  string collateral_denom = 2 [
+    (gogoproto.jsontag) = "collateral_denom",
+    (gogoproto.moretags) = "yaml:\"collateral_denom\""
+  ];
   cosmos.base.v1beta1.Coin repay_in_max = 3 [
     (gogoproto.moretags) = "yaml:\"repay_in_max\"",
     (gogoproto.nullable) = false
@@ -261,8 +291,12 @@ message MsgDepositCollateral {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
+  string sender = 1 [
+    (gogoproto.jsontag) = "sender",
+    (gogoproto.moretags) = "yaml:\"sender\""
+  ];
+  string to = 2
+      [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
   cosmos.base.v1beta1.Coin collateral = 3 [
     (gogoproto.moretags) = "yaml:\"collateral\"",
     (gogoproto.nullable) = false
@@ -277,8 +311,12 @@ message MsgRedeemCollateral {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
+  string sender = 1 [
+    (gogoproto.jsontag) = "sender",
+    (gogoproto.moretags) = "yaml:\"sender\""
+  ];
+  string to = 2
+      [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
   cosmos.base.v1beta1.Coin collateral = 3 [
     (gogoproto.moretags) = "yaml:\"collateral\"",
     (gogoproto.nullable) = false
@@ -293,8 +331,12 @@ message MsgLiquidateCollateral {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string sender = 1 [ (gogoproto.moretags) = "yaml:\"sender\"" ];
-  string to = 2 [ (gogoproto.moretags) = "yaml:\"to\"" ];
+  string sender = 1 [
+    (gogoproto.jsontag) = "sender",
+    (gogoproto.moretags) = "yaml:\"sender\""
+  ];
+  string to = 2
+      [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
   string debtor = 3 [ (gogoproto.moretags) = "yaml:\"to\"" ];
   cosmos.base.v1beta1.Coin collateral = 4 [
     (gogoproto.moretags) = "yaml:\"collateral\"",
