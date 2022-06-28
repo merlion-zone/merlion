@@ -225,19 +225,37 @@ func (suite *KeeperTestSuite) TestTotalBacking() {
 	res, err := suite.queryClient.TotalBacking(ctx, &types.QueryTotalBackingRequest{})
 	expRes := &types.QueryTotalBackingResponse{
 		TotalBacking: types.TotalBacking{
-			MerMinted:  sdk.Coin{"", sdk.ZeroInt()},
-			LionBurned: sdk.Coin{"", sdk.ZeroInt()},
+			BackingValue: sdk.ZeroInt(),
+			MerMinted:    sdk.Coin{"", sdk.ZeroInt()},
+			LionBurned:   sdk.Coin{"", sdk.ZeroInt()},
 		},
 	}
 	suite.Require().NoError(err)
 	suite.Require().Equal(expRes, res)
 
-	// set total backing
+	// set prices, total backing & backings pools
+	suite.setupEstimationTest()
 	totalBacking := types.TotalBacking{
-		MerMinted:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
-		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
+		BackingValue: sdk.OneInt(),
+		MerMinted:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
+		LionBurned:   sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
 	}
 	suite.app.MakerKeeper.SetTotalBacking(suite.ctx, totalBacking)
+
+	suite.app.MakerKeeper.SetPoolBacking(suite.ctx, types.PoolBacking{
+		MerMinted:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
+		Backing:    sdk.NewCoin(suite.bcDenom, sdk.NewInt(10_000000)),
+		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
+	})
+
+	suite.app.MakerKeeper.SetPoolBacking(suite.ctx, types.PoolBacking{
+		MerMinted:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
+		Backing:    sdk.NewCoin("eth", sdk.NewInt(2)),
+		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
+	})
+
+	totalBacking.BackingValue = sdk.NewInt(2009_900000) // 10_000000 * 0.99 + 2 * 1000_000000
+
 	res, err = suite.queryClient.TotalBacking(ctx, &types.QueryTotalBackingRequest{})
 	expRes = &types.QueryTotalBackingResponse{TotalBacking: totalBacking}
 	suite.Require().NoError(err)

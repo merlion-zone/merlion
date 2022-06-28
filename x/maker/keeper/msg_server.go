@@ -335,8 +335,8 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 		return nil, err
 	}
 
-	collateralIn := sdk.NewCoin(msg.CollateralDenom, sdk.ZeroInt())
-	lionIn, mintOut, mintFee, totalColl, poolColl, accColl, err := m.Keeper.estimateMintByCollateralOut(ctx, sender, collateralIn, msg.Ltv)
+	zeroCollateralIn := sdk.NewCoin(msg.CollateralDenom, sdk.ZeroInt())
+	lionIn, mintOut, mintFee, totalColl, poolColl, accColl, err := m.Keeper.estimateMintByCollateralOut(ctx, sender, zeroCollateralIn, msg.Ltv)
 	if err != nil {
 		return nil, err
 	}

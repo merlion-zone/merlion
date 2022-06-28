@@ -107,13 +107,13 @@ func (suite *KeeperTestSuite) dummyBackingRiskParams() (brp, brp2 types.BackingR
 func (suite *KeeperTestSuite) dummyCollateralRiskParams() (crp, crp2 types.CollateralRiskParams) {
 	maxCollateral := sdk.NewInt(16_000000)
 	maxMerMint := sdk.NewInt(10_000000)
-	liquidationThreshold := sdk.NewDecWithPrec(75, 2)
+	liquidationThreshold := sdk.NewDecWithPrec(90, 2)
 	loanToValue := sdk.NewDecWithPrec(80, 2)
 	basicLoanToValue := sdk.NewDecWithPrec(50, 2)
-	catalyticLionRation := sdk.NewDecWithPrec(5, 2)
+	catalyticLionRatio := sdk.NewDecWithPrec(5, 2)
 	liquidationFee := sdk.NewDecWithPrec(10, 2)
 	mintFee := sdk.NewDecWithPrec(1, 2)
-	InterestFee := sdk.NewDec(4)
+	interestFee := sdk.NewDec(4)
 	crp = types.CollateralRiskParams{
 		CollateralDenom:      suite.bcDenom,
 		Enabled:              true,
@@ -122,21 +122,21 @@ func (suite *KeeperTestSuite) dummyCollateralRiskParams() (crp, crp2 types.Colla
 		LiquidationThreshold: &liquidationThreshold,
 		LoanToValue:          &loanToValue,
 		BasicLoanToValue:     &basicLoanToValue,
-		CatalyticLionRatio:   &catalyticLionRation,
+		CatalyticLionRatio:   &catalyticLionRatio,
 		LiquidationFee:       &liquidationFee,
 		MintFee:              &mintFee,
-		InterestFee:          &InterestFee,
+		InterestFee:          &interestFee,
 	}
 
 	maxCollateral2 := sdk.NewInt(200)
 	maxMerMint2 := sdk.NewInt(20)
-	liquidationThreshold2 := sdk.NewDecWithPrec(76, 2)
+	liquidationThreshold2 := sdk.NewDecWithPrec(91, 2)
 	loanToValue2 := sdk.NewDecWithPrec(71, 2)
 	basicLoanToValue2 := sdk.NewDecWithPrec(51, 2)
-	catalyticLionRation2 := sdk.NewDecWithPrec(6, 2)
+	catalyticLionRatio2 := sdk.NewDecWithPrec(6, 2)
 	liquidationFee2 := sdk.NewDecWithPrec(11, 2)
 	mintFee2 := sdk.NewDecWithPrec(2, 2)
-	InterestFee2 := sdk.NewDecWithPrec(4, 2)
+	interestFee2 := sdk.NewDecWithPrec(4, 2)
 	crp2 = types.CollateralRiskParams{
 		CollateralDenom:      "eth",
 		Enabled:              false,
@@ -145,10 +145,10 @@ func (suite *KeeperTestSuite) dummyCollateralRiskParams() (crp, crp2 types.Colla
 		LiquidationThreshold: &liquidationThreshold2,
 		LoanToValue:          &loanToValue2,
 		BasicLoanToValue:     &basicLoanToValue2,
-		CatalyticLionRatio:   &catalyticLionRation2,
+		CatalyticLionRatio:   &catalyticLionRatio2,
 		LiquidationFee:       &liquidationFee2,
 		MintFee:              &mintFee2,
-		InterestFee:          &InterestFee2,
+		InterestFee:          &interestFee2,
 	}
 
 	return
