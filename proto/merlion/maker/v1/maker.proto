@@ -173,7 +173,7 @@ message TotalBacking {
   option (gogoproto.equal) = false;
 
   // total backing value in uUSD
-  string backing_value = 5 [
+  string backing_value = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
