@@ -1063,6 +1063,149 @@ func (suite *KeeperTestSuite) TestEstimateMintByCollateralIn() {
 	}
 }
 
+func (suite *KeeperTestSuite) TestEstimateMintByCollateralOut() {
+	testCases := []struct {
+		name     string
+		malleate func()
+		req      *types.EstimateMintByCollateralOutRequest
+		expPass  bool
+		expErr   error
+		expRes   *types.EstimateMintByCollateralOutResponse
+	}{
+		//{
+		//	name: "mer price too low",
+		//	malleate: func() {
+		//		suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(989, 3))
+		//	},
+		//	req: &types.EstimateMintByCollateralOutRequest{
+		//		CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),
+		//	},
+		//	expPass: false,
+		//	expErr:  types.ErrMerPriceTooLow,
+		//},
+		{
+			name: "collateral denom not found",
+			req: &types.EstimateMintByCollateralOutRequest{
+				CollateralIn: sdk.NewCoin("fil", sdk.ZeroInt()),
+			},
+			expPass: false,
+			expErr:  types.ErrCollateralCoinNotFound,
+		},
+		{
+			name: "collateral denom disabled",
+			req: &types.EstimateMintByCollateralOutRequest{
+				CollateralIn: sdk.NewCoin("eth", sdk.ZeroInt()),
+			},
+			expPass: false,
+			expErr:  types.ErrCollateralCoinDisabled,
+		},
+		{
+			name: "ltv too low",
+			req: &types.EstimateMintByCollateralOutRequest{
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),
+				Ltv:          sdk.NewDecWithPrec(4, 1),
+			},
+			expPass: false,
+			expErr:  types.ErrLTVOutOfRange,
+		},
+		{
+			name: "ltv too high",
+			req: &types.EstimateMintByCollateralOutRequest{
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),
+				Ltv:          sdk.NewDecWithPrec(9, 1),
+			},
+			expPass: false,
+			expErr:  types.ErrLTVOutOfRange,
+		},
+		{
+			name: "collateral over ceiling",
+			req: &types.EstimateMintByCollateralOutRequest{
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1_000001)),
+				Ltv:          sdk.NewDecWithPrec(5, 1),
+			},
+			// pool.Collateral max adding:  1_000000
+			expPass: false,
+			expErr:  types.ErrCollateralCeiling,
+		},
+		{
+			name: "mer over ceiling",
+			malleate: func() {
+				poolColl, found := suite.app.MakerKeeper.GetPoolCollateral(suite.ctx, suite.bcDenom)
+				suite.Require().True(found)
+				poolColl.Collateral.Amount = sdk.NewInt(1_000000)
+				suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, poolColl)
+			},
+			req: &types.EstimateMintByCollateralOutRequest{
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(10_000000)),
+				Ltv:          sdk.NewDecWithPrec(5, 1),
+			},
+			// interestOfPeriod = 6_000000 * 4 * (1-0) / (10*60*24*365) = 5
+			// addedMerByLion = 0
+			// addedMerDebt = (10_000000 + 10_000000)*0.99*0.5 - (6_000000+5) = 3_899995
+			// pool.MerMint = 8_000000 + 3_899995 + 400000 > 10_000000
+			expPass: false,
+			expErr:  types.ErrMerCeiling,
+		},
+		{
+			name: "correct",
+			req: &types.EstimateMintByCollateralOutRequest{
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(500000)),
+				Ltv:          sdk.NewDecWithPrec(65, 2),
+			},
+			// CR = (0.65-0.5)/(0.8-0.5) * 0.05 = 0.025
+			// new acc MerDebt = (10_000000+500000)*0.99*0.65 = 6_756750
+			// addedMerDebt = 6_756750 - (6_000000+5) = 756745
+			// new acc MerByLion = 0.025*6_756750/(1-0.025) = 173250
+			// addedMerByLion = 173250 - 170000 = 3250
+			expPass: true,
+			expRes: &types.EstimateMintByCollateralOutResponse{
+				LionIn:  sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(325_00000_000000)), // (173250-170000)/10**-10,
+				MintOut: sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(752470)),           // (756745+3250)/(1+0.01)
+				MintFee: sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(7525)),             // (756745+3250)/(1+0.01)*0.01
+			},
+		},
+		{
+			name: "correct all zero",
+			req: &types.EstimateMintByCollateralOutRequest{
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),
+				Ltv:          sdk.NewDecWithPrec(5, 1),
+			},
+			// CR = 0
+			// addedMerByLion = 0
+			// new acc MerDebt = 10_000000*0.99*0.5 = 4_950000 < 6_000000+5
+			// addedMerDebt = 0
+			expPass: true,
+			expRes: &types.EstimateMintByCollateralOutResponse{
+				LionIn:  sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+				MintOut: sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
+				MintFee: sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt()),
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("Case %s", tc.name), func() {
+			suite.SetupTest() // reset
+			suite.setupEstimationTest()
+			if tc.malleate != nil {
+				tc.malleate()
+			}
+
+			ctx := sdk.WrapSDKContext(suite.ctx)
+			tc.req.Account = suite.accAddress.String()
+			res, err := suite.queryClient.EstimateMintByCollateralOut(ctx, tc.req)
+			if tc.expPass {
+				suite.Require().NoError(err)
+				suite.Require().Equal(tc.expRes, res)
+			} else {
+				suite.Require().Error(err)
+				suite.Require().ErrorIs(err, tc.expErr)
+			}
+		})
+	}
+
+}
+
 func (suite *KeeperTestSuite) setupEstimationTest() {
 	// set prices
 	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, suite.bcDenom, sdk.NewDecWithPrec(99, 2))
