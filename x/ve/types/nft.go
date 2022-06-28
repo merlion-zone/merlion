@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/nft"
@@ -18,7 +17,6 @@ var VeNftClass = nft.Class{
 	Name:        "veNFT",
 	Symbol:      "veNFT",
 	Description: "Merlion locks, can be used to boost gauge yields, vote on token emission, and receive bribes",
-	Uri:         "",
 }
 
 // VeIDFromUint64 converts ve id from integer to string
@@ -39,8 +37,8 @@ func Uint64FromVeID(veID string) uint64 {
 	return id
 }
 
-func VeNftUri(nftID string, balance sdk.Int, lockedEnd time.Time, value sdk.Int) string {
-	output := fmt.Sprintf(`<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%%" height="100%%" fill="black" /><text x="10" y="20" class="base">token %s</text><text x="10" y="40" class="base">balanceOf %s</text><text x="10" y="60" class="base">locked_end %d</text><text x="10" y="80" class="base">value %s</text></svg>`, nftID, balance, lockedEnd.Unix(), value)
+func VeNftUri(nftID string, balance sdk.Int, lockedEnd uint64, value sdk.Int) string {
+	output := fmt.Sprintf(`<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%%" height="100%%" fill="black" /><text x="10" y="20" class="base">token %s</text><text x="10" y="40" class="base">balanceOf %s</text><text x="10" y="60" class="base">locked_end %d</text><text x="10" y="80" class="base">value %s</text></svg>`, nftID, balance, lockedEnd, value)
 
 	var uri struct {
 		Name        string `json:"name"`

@@ -4,6 +4,7 @@ package merlion.ve.v1;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos/nft/v1beta1/nft.proto";
 import "merlion/ve/v1/genesis.proto";
 
 option go_package = "github.com/merlion-zone/merlion/x/ve/types";
@@ -19,6 +20,16 @@ service Query {
   // VotingPower queries the voting power of a veNFT.
   rpc VotingPower(QueryVotingPowerRequest) returns (QueryVotingPowerResponse) {
     option (google.api.http).get = "/merlion/ve/v1/voting_power/{ve_id}";
+  }
+
+  // VeNfts queries all veNFTs of a given owner.
+  rpc VeNfts(QueryVeNftsRequest) returns (QueryVeNftsResponse) {
+    option (google.api.http).get = "/merlion/ve/v1/venfts";
+  }
+
+  // VeNft queries an veNFT based on its id.
+  rpc VeNft(QueryVeNftRequest) returns (QueryVeNftResponse) {
+    option (google.api.http).get = "/merlion/ve/v1/venfts/{id}";
   }
 
   // Parameters queries the parameters of the module.
@@ -51,6 +62,24 @@ message QueryVotingPowerResponse {
     (gogoproto.nullable) = false
   ];
 }
+
+// QueryVeNftsRequest is the request type for the Query/VeNfts RPC method
+message QueryVeNftsRequest {
+  string owner = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryVeNftsResponse is the response type for the Query/VeNfts RPC methods
+message QueryVeNftsResponse {
+  repeated cosmos.nft.v1beta1.NFT nfts = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryVeNftRequest is the request type for the Query/VeNft RPC method
+message QueryVeNftRequest { string id = 1; }
+
+// QueryVeNftResponse is the response type for the Query/VeNft RPC method
+message QueryVeNftResponse { cosmos.nft.v1beta1.NFT nft = 1; }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}

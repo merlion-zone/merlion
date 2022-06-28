@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/cosmos/cosmos-sdk/x/nft"
 	"github.com/merlion-zone/merlion/x/ve/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -188,6 +189,57 @@ func (k Keeper) GetVotingPower(ctx sdk.Context, veID uint64, atTime uint64, atBl
 	}
 
 	return power
+}
+
+func (k Keeper) VeNfts(c context.Context, msg *types.QueryVeNftsRequest) (*types.QueryVeNftsResponse, error) {
+	if msg == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	nftsResponse, err := k.nftKeeper.NFTs(c, &nft.QueryNFTsRequest{
+		ClassId:    types.VeNftClass.Id,
+		Owner:      msg.Owner,
+		Pagination: msg.Pagination,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, nft := range nftsResponse.Nfts {
+		veID := types.Uint64FromVeID(nft.Id)
+		power := k.GetVotingPower(ctx, veID, 0, ctx.BlockHeight())
+		locked := k.GetLockedAmountByUser(ctx, veID)
+		nft.Uri = types.VeNftUri(nft.Id, power, locked.End, locked.Amount)
+	}
+
+	return &types.QueryVeNftsResponse{
+		Nfts:       nftsResponse.Nfts,
+		Pagination: nftsResponse.Pagination,
+	}, nil
+}
+
+func (k Keeper) VeNft(c context.Context, msg *types.QueryVeNftRequest) (*types.QueryVeNftResponse, error) {
+	if msg == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	nftResponse, err := k.nftKeeper.NFT(c, &nft.QueryNFTRequest{
+		ClassId: types.VeNftClass.Id,
+		Id:      msg.Id,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	nft := nftResponse.Nft
+	veID := types.Uint64FromVeID(nft.Id)
+	power := k.GetVotingPower(ctx, veID, 0, ctx.BlockHeight())
+	locked := k.GetLockedAmountByUser(ctx, veID)
+	nft.Uri = types.VeNftUri(nft.Id, power, locked.End, locked.Amount)
+
+	return &types.QueryVeNftResponse{Nft: nft}, nil
 }
 
 func (k Keeper) Params(c context.Context, msg *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {

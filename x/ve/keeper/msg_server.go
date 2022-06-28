@@ -54,7 +54,6 @@ func (m msgServer) Create(c context.Context, msg *types.MsgCreate) (*types.MsgCr
 	err = m.Keeper.nftKeeper.Mint(ctx, nfttypes.NFT{
 		ClassId: types.VeNftClass.Id,
 		Id:      types.VeIDFromUint64(veID),
-		Uri:     "", // TODO: implement Uri as method not field
 	}, receiver)
 	if err != nil {
 		return nil, err

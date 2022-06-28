@@ -7,7 +7,8 @@ import (
 	context "context"
 	fmt "fmt"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
-	_ "github.com/cosmos/cosmos-sdk/types/query"
+	query "github.com/cosmos/cosmos-sdk/types/query"
+	nft "github.com/cosmos/cosmos-sdk/x/nft"
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
@@ -217,6 +218,202 @@ func (m *QueryVotingPowerResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryVotingPowerResponse proto.InternalMessageInfo
 
+// QueryVeNftsRequest is the request type for the Query/VeNfts RPC method
+type QueryVeNftsRequest struct {
+	Owner      string             `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryVeNftsRequest) Reset()         { *m = QueryVeNftsRequest{} }
+func (m *QueryVeNftsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryVeNftsRequest) ProtoMessage()    {}
+func (*QueryVeNftsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_256fa148a9e7f65f, []int{4}
+}
+func (m *QueryVeNftsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryVeNftsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryVeNftsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryVeNftsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryVeNftsRequest.Merge(m, src)
+}
+func (m *QueryVeNftsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryVeNftsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryVeNftsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryVeNftsRequest proto.InternalMessageInfo
+
+func (m *QueryVeNftsRequest) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *QueryVeNftsRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+// QueryVeNftsResponse is the response type for the Query/VeNfts RPC methods
+type QueryVeNftsResponse struct {
+	Nfts       []*nft.NFT          `protobuf:"bytes,1,rep,name=nfts,proto3" json:"nfts,omitempty"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryVeNftsResponse) Reset()         { *m = QueryVeNftsResponse{} }
+func (m *QueryVeNftsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryVeNftsResponse) ProtoMessage()    {}
+func (*QueryVeNftsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_256fa148a9e7f65f, []int{5}
+}
+func (m *QueryVeNftsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryVeNftsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryVeNftsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryVeNftsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryVeNftsResponse.Merge(m, src)
+}
+func (m *QueryVeNftsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryVeNftsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryVeNftsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryVeNftsResponse proto.InternalMessageInfo
+
+func (m *QueryVeNftsResponse) GetNfts() []*nft.NFT {
+	if m != nil {
+		return m.Nfts
+	}
+	return nil
+}
+
+func (m *QueryVeNftsResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+// QueryVeNftRequest is the request type for the Query/VeNft RPC method
+type QueryVeNftRequest struct {
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (m *QueryVeNftRequest) Reset()         { *m = QueryVeNftRequest{} }
+func (m *QueryVeNftRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryVeNftRequest) ProtoMessage()    {}
+func (*QueryVeNftRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_256fa148a9e7f65f, []int{6}
+}
+func (m *QueryVeNftRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryVeNftRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryVeNftRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryVeNftRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryVeNftRequest.Merge(m, src)
+}
+func (m *QueryVeNftRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryVeNftRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryVeNftRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryVeNftRequest proto.InternalMessageInfo
+
+func (m *QueryVeNftRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+// QueryVeNftResponse is the response type for the Query/VeNft RPC method
+type QueryVeNftResponse struct {
+	Nft *nft.NFT `protobuf:"bytes,1,opt,name=nft,proto3" json:"nft,omitempty"`
+}
+
+func (m *QueryVeNftResponse) Reset()         { *m = QueryVeNftResponse{} }
+func (m *QueryVeNftResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryVeNftResponse) ProtoMessage()    {}
+func (*QueryVeNftResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_256fa148a9e7f65f, []int{7}
+}
+func (m *QueryVeNftResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryVeNftResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryVeNftResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryVeNftResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryVeNftResponse.Merge(m, src)
+}
+func (m *QueryVeNftResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryVeNftResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryVeNftResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryVeNftResponse proto.InternalMessageInfo
+
+func (m *QueryVeNftResponse) GetNft() *nft.NFT {
+	if m != nil {
+		return m.Nft
+	}
+	return nil
+}
+
 // QueryParamsRequest is request type for the Query/Params RPC method.
 type QueryParamsRequest struct {
 }
@@ -225,7 +422,7 @@ func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
 func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsRequest) ProtoMessage()    {}
 func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_256fa148a9e7f65f, []int{4}
+	return fileDescriptor_256fa148a9e7f65f, []int{8}
 }
 func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -264,7 +461,7 @@ func (m *QueryParamsResponse) Reset()         { *m = QueryParamsResponse{} }
 func (m *QueryParamsResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsResponse) ProtoMessage()    {}
 func (*QueryParamsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_256fa148a9e7f65f, []int{5}
+	return fileDescriptor_256fa148a9e7f65f, []int{9}
 }
 func (m *QueryParamsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -305,6 +502,10 @@ func init() {
 	proto.RegisterType((*QueryTotalVotingPowerResponse)(nil), "merlion.ve.v1.QueryTotalVotingPowerResponse")
 	proto.RegisterType((*QueryVotingPowerRequest)(nil), "merlion.ve.v1.QueryVotingPowerRequest")
 	proto.RegisterType((*QueryVotingPowerResponse)(nil), "merlion.ve.v1.QueryVotingPowerResponse")
+	proto.RegisterType((*QueryVeNftsRequest)(nil), "merlion.ve.v1.QueryVeNftsRequest")
+	proto.RegisterType((*QueryVeNftsResponse)(nil), "merlion.ve.v1.QueryVeNftsResponse")
+	proto.RegisterType((*QueryVeNftRequest)(nil), "merlion.ve.v1.QueryVeNftRequest")
+	proto.RegisterType((*QueryVeNftResponse)(nil), "merlion.ve.v1.QueryVeNftResponse")
 	proto.RegisterType((*QueryParamsRequest)(nil), "merlion.ve.v1.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "merlion.ve.v1.QueryParamsResponse")
 }
@@ -312,40 +513,51 @@ func init() {
 func init() { proto.RegisterFile("merlion/ve/v1/query.proto", fileDescriptor_256fa148a9e7f65f) }
 
 var fileDescriptor_256fa148a9e7f65f = []byte{
-	// 524 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x53, 0x4d, 0x6f, 0xd3, 0x30,
-	0x18, 0x6e, 0xfa, 0x35, 0xf0, 0x84, 0x84, 0xbc, 0x4d, 0xed, 0xca, 0x96, 0x6d, 0x99, 0x18, 0x63,
-	0x63, 0xb1, 0xba, 0xfd, 0x83, 0x6a, 0x97, 0x71, 0x1a, 0xd1, 0xc4, 0x81, 0x4b, 0x71, 0xda, 0x57,
-	0xc1, 0x5a, 0x63, 0x67, 0xb1, 0x1b, 0x18, 0x88, 0x0b, 0x57, 0x2e, 0x48, 0x5c, 0x38, 0xf2, 0x73,
-	0x76, 0x9c, 0xc4, 0x05, 0x71, 0x98, 0x50, 0xcb, 0x0f, 0x41, 0xb1, 0x2d, 0xd4, 0x94, 0x6e, 0x70,
-	0xd8, 0x29, 0x89, 0xfd, 0xbc, 0xcf, 0x87, 0xfd, 0x04, 0x2d, 0xc7, 0x90, 0x0e, 0x98, 0xe0, 0x24,
-	0x03, 0x92, 0xb5, 0xc9, 0xd9, 0x10, 0xd2, 0x73, 0x3f, 0x49, 0x85, 0x12, 0xf8, 0x9e, 0xdd, 0xf2,
-	0x33, 0xf0, 0xb3, 0x76, 0x6b, 0x31, 0x12, 0x91, 0xd0, 0x3b, 0x24, 0x7f, 0x33, 0xa0, 0xd6, 0x4a,
-	0x24, 0x44, 0x34, 0x00, 0x42, 0x13, 0x46, 0x28, 0xe7, 0x42, 0x51, 0xc5, 0x04, 0x97, 0x76, 0x77,
-	0xa7, 0x27, 0x64, 0x2c, 0x24, 0x09, 0xa9, 0x04, 0xc3, 0x4d, 0xb2, 0x76, 0x08, 0x8a, 0xb6, 0x49,
-	0x42, 0x23, 0xc6, 0x35, 0xd8, 0x62, 0x1f, 0x14, 0x9d, 0x44, 0xc0, 0x41, 0x32, 0x4b, 0xe4, 0x05,
-	0x68, 0xe5, 0x59, 0x3e, 0x7e, 0x22, 0x14, 0x1d, 0x3c, 0x17, 0x8a, 0xf1, 0xe8, 0x58, 0xbc, 0x86,
-	0x34, 0x80, 0xb3, 0x21, 0x48, 0x85, 0x1b, 0x68, 0x8e, 0xaa, 0xae, 0x62, 0x31, 0x34, 0x9d, 0x75,
-	0x67, 0xbb, 0x1a, 0xd4, 0xa9, 0x3a, 0x61, 0x31, 0xe0, 0x65, 0x74, 0x87, 0xaa, 0x6e, 0x38, 0x10,
-	0xbd, 0xd3, 0x66, 0x79, 0xdd, 0xd9, 0xae, 0x04, 0x73, 0x54, 0x75, 0xf2, 0x4f, 0x0f, 0xd0, 0xea,
-	0x35, 0x9c, 0x32, 0x11, 0x5c, 0x02, 0x3e, 0x44, 0xb5, 0x24, 0x5f, 0xd0, 0x94, 0x77, 0x3b, 0xfe,
-	0xc5, 0xd5, 0x5a, 0xe9, 0xc7, 0xd5, 0xda, 0x56, 0xc4, 0xd4, 0xab, 0x61, 0xe8, 0xf7, 0x44, 0x4c,
-	0x6c, 0x3e, 0xf3, 0xd8, 0x93, 0xfd, 0x53, 0xa2, 0xce, 0x13, 0x90, 0xfe, 0x11, 0x57, 0x81, 0x19,
-	0xf6, 0x42, 0xd4, 0xd0, 0x32, 0x33, 0x5c, 0x2f, 0xa0, 0x5a, 0x06, 0x5d, 0xd6, 0x37, 0x02, 0x41,
-	0x35, 0x83, 0xa3, 0xfe, 0x64, 0x94, 0xf2, 0xb5, 0x51, 0x2a, 0xc5, 0x28, 0x2f, 0x51, 0xf3, 0x6f,
-	0x8d, 0x5b, 0x4d, 0xb1, 0x88, 0xb0, 0x56, 0x38, 0xa6, 0x29, 0x8d, 0xa5, 0x0d, 0xe0, 0x3d, 0x45,
-	0x0b, 0x85, 0x55, 0x2b, 0x79, 0x80, 0xea, 0x89, 0x5e, 0xd1, 0x9a, 0xf3, 0xfb, 0x4b, 0x7e, 0xa1,
-	0x4a, 0xbe, 0x81, 0x77, 0xaa, 0xb9, 0x95, 0xc0, 0x42, 0xf7, 0xbf, 0x56, 0x50, 0x4d, 0x93, 0xe1,
-	0x2f, 0x0e, 0xba, 0x3f, 0x7d, 0x29, 0x78, 0x77, 0x8a, 0xe3, 0xa6, 0x3a, 0xb4, 0x9e, 0xfc, 0x1f,
-	0xd8, 0xd8, 0xf5, 0x1e, 0x7f, 0xf8, 0xf6, 0xeb, 0x73, 0x79, 0x13, 0x6f, 0x90, 0x62, 0x05, 0x55,
-	0x3e, 0xd0, 0xcd, 0xf4, 0x44, 0x57, 0x1f, 0x03, 0xfe, 0xe8, 0xa0, 0xf9, 0x49, 0x57, 0x5b, 0xb3,
-	0x84, 0x66, 0x18, 0x7a, 0xf4, 0x4f, 0x9c, 0xf5, 0xb2, 0xab, 0xbd, 0x3c, 0xc4, 0x9b, 0x53, 0x5e,
-	0x26, 0x5d, 0x90, 0x77, 0xba, 0x35, 0xef, 0x31, 0x47, 0x75, 0x73, 0x94, 0x78, 0x63, 0x16, 0x7f,
-	0xe1, 0xae, 0x5a, 0xde, 0x4d, 0x10, 0xab, 0xbe, 0xaa, 0xd5, 0x1b, 0x78, 0x69, 0x4a, 0xdd, 0x5c,
-	0x51, 0xe7, 0xf0, 0x62, 0xe4, 0x3a, 0x97, 0x23, 0xd7, 0xf9, 0x39, 0x72, 0x9d, 0x4f, 0x63, 0xb7,
-	0x74, 0x39, 0x76, 0x4b, 0xdf, 0xc7, 0x6e, 0xe9, 0xc5, 0xce, 0x44, 0x9b, 0xec, 0xe8, 0xde, 0x5b,
-	0xc1, 0xe1, 0x0f, 0xcf, 0x9b, 0x9c, 0x49, 0xb7, 0x2a, 0xac, 0xeb, 0x5f, 0xfa, 0xe0, 0x77, 0x00,
-	0x00, 0x00, 0xff, 0xff, 0xff, 0x10, 0x81, 0x35, 0x7b, 0x04, 0x00, 0x00,
+	// 698 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0x4d, 0x4f, 0xdb, 0x30,
+	0x18, 0x6e, 0xfa, 0xc5, 0x66, 0xb4, 0x69, 0x33, 0xa0, 0x96, 0x0e, 0x4a, 0x09, 0x1a, 0x9f, 0x23,
+	0x56, 0xe1, 0x07, 0x4c, 0xaa, 0x10, 0x13, 0x3b, 0x20, 0x16, 0xa1, 0x1d, 0x76, 0xe9, 0x5c, 0xea,
+	0x66, 0x11, 0xad, 0x1d, 0x62, 0x13, 0xc6, 0xd0, 0x2e, 0x5c, 0xb9, 0x4c, 0xda, 0x65, 0x3f, 0x89,
+	0x23, 0xd2, 0x2e, 0xd3, 0x0e, 0x68, 0x82, 0xfd, 0x90, 0x29, 0xb6, 0x53, 0x92, 0x2e, 0x2d, 0x3b,
+	0xec, 0x04, 0x89, 0x9f, 0xf7, 0xf9, 0xb0, 0x1f, 0xa7, 0x60, 0xba, 0x47, 0xfc, 0xae, 0xcb, 0x28,
+	0x0a, 0x08, 0x0a, 0xea, 0xe8, 0xe8, 0x98, 0xf8, 0xa7, 0x96, 0xe7, 0x33, 0xc1, 0xe0, 0x23, 0xbd,
+	0x64, 0x05, 0xc4, 0x0a, 0xea, 0x95, 0x49, 0x87, 0x39, 0x4c, 0xae, 0xa0, 0xf0, 0x3f, 0x05, 0xaa,
+	0xcc, 0x38, 0x8c, 0x39, 0x5d, 0x82, 0xb0, 0xe7, 0x22, 0x4c, 0x29, 0x13, 0x58, 0xb8, 0x8c, 0x72,
+	0xbd, 0xba, 0x7a, 0xc0, 0x78, 0x8f, 0x71, 0xd4, 0xc2, 0x9c, 0x28, 0x6e, 0x14, 0xd4, 0x5b, 0x44,
+	0xe0, 0x3a, 0xf2, 0xb0, 0xe3, 0x52, 0x09, 0x8e, 0x98, 0x34, 0x96, 0x76, 0x44, 0x1f, 0x44, 0x3b,
+	0x42, 0xaf, 0x3e, 0x4b, 0xfa, 0x74, 0x08, 0x25, 0xdc, 0xd5, 0x32, 0xa6, 0x0d, 0x66, 0xde, 0x84,
+	0xe4, 0xfb, 0x4c, 0xe0, 0xee, 0x5b, 0x26, 0x5c, 0xea, 0xec, 0xb1, 0x13, 0xe2, 0xdb, 0xe4, 0xe8,
+	0x98, 0x70, 0x01, 0x4b, 0x60, 0x0c, 0x8b, 0xa6, 0x70, 0x7b, 0xa4, 0x6c, 0xd4, 0x8c, 0xe5, 0xbc,
+	0x5d, 0xc4, 0x62, 0xdf, 0xed, 0x11, 0x38, 0x0d, 0x1e, 0x60, 0xd1, 0x6c, 0x75, 0xd9, 0xc1, 0x61,
+	0x39, 0x5b, 0x33, 0x96, 0x73, 0xf6, 0x18, 0x16, 0x8d, 0xf0, 0xd1, 0x24, 0x60, 0x76, 0x08, 0x27,
+	0xf7, 0x18, 0xe5, 0x04, 0x6e, 0x81, 0x82, 0x17, 0xbe, 0x90, 0x94, 0x0f, 0x1b, 0xd6, 0xe5, 0xf5,
+	0x5c, 0xe6, 0xe7, 0xf5, 0xdc, 0xa2, 0xe3, 0x8a, 0x0f, 0xc7, 0x2d, 0xeb, 0x80, 0xf5, 0x90, 0x4e,
+	0xa4, 0xfe, 0xac, 0xf3, 0xf6, 0x21, 0x12, 0xa7, 0x1e, 0xe1, 0xd6, 0x0e, 0x15, 0xb6, 0x1a, 0x36,
+	0x5b, 0xa0, 0x24, 0x65, 0x52, 0x5c, 0x4f, 0x80, 0x42, 0x40, 0x9a, 0x6e, 0x5b, 0x09, 0xd8, 0xf9,
+	0x80, 0xec, 0xb4, 0xe3, 0x51, 0xb2, 0x43, 0xa3, 0xe4, 0x92, 0x51, 0xde, 0x83, 0xf2, 0xdf, 0x1a,
+	0xff, 0x35, 0x85, 0x0f, 0xa0, 0x52, 0x20, 0xbb, 0x1d, 0xc1, 0xa3, 0x00, 0x93, 0xa0, 0xc0, 0x4e,
+	0x68, 0xc4, 0x6d, 0xab, 0x07, 0xb8, 0x0d, 0xc0, 0xdd, 0xd9, 0xcb, 0x10, 0xe3, 0x1b, 0x8b, 0x96,
+	0x62, 0xb7, 0xc2, 0xa2, 0x58, 0xaa, 0x84, 0xba, 0x03, 0xd6, 0x1e, 0x76, 0x88, 0x66, 0xb4, 0x63,
+	0x93, 0xe6, 0x85, 0x01, 0x26, 0x12, 0xa2, 0x3a, 0xd1, 0x1a, 0xc8, 0xd3, 0x8e, 0xe0, 0x65, 0xa3,
+	0x96, 0x5b, 0x1e, 0xdf, 0x28, 0x45, 0xcc, 0x61, 0x95, 0x22, 0xca, 0xdd, 0xed, 0x7d, 0x5b, 0x82,
+	0xe0, 0xab, 0x14, 0x33, 0x4b, 0xf7, 0x9a, 0x51, 0x4a, 0x09, 0x37, 0x0b, 0xe0, 0xe9, 0x9d, 0x99,
+	0x68, 0x03, 0x1e, 0x83, 0x6c, 0xff, 0xf8, 0xb2, 0x6e, 0xdb, 0x7c, 0x19, 0xdf, 0xa6, 0xbe, 0xe1,
+	0x15, 0x90, 0xa3, 0x1d, 0x21, 0x61, 0x23, 0xfc, 0x86, 0x18, 0x73, 0x52, 0x13, 0xec, 0x61, 0x1f,
+	0xf7, 0xa2, 0x7d, 0x36, 0x5f, 0xeb, 0x8d, 0x88, 0xde, 0x6a, 0xde, 0x4d, 0x50, 0xf4, 0xe4, 0x1b,
+	0x4d, 0x3d, 0x65, 0x25, 0x2e, 0xb4, 0xa5, 0xe0, 0x8d, 0x7c, 0x78, 0xe4, 0xb6, 0x86, 0x6e, 0x9c,
+	0x17, 0x40, 0x41, 0x92, 0xc1, 0x6f, 0x06, 0x78, 0x32, 0x58, 0x7e, 0xb8, 0x36, 0xc0, 0x31, 0xea,
+	0xda, 0x55, 0x5e, 0xfc, 0x1b, 0x58, 0xd9, 0x35, 0x57, 0xce, 0xbf, 0xff, 0xfe, 0x9a, 0x5d, 0x80,
+	0xf3, 0x28, 0x79, 0xd5, 0x45, 0x38, 0xd0, 0x0c, 0xe4, 0x44, 0x53, 0xd6, 0x0d, 0x5e, 0x18, 0x60,
+	0x3c, 0xee, 0x6a, 0x31, 0x4d, 0x28, 0xc5, 0xd0, 0xd2, 0xbd, 0x38, 0xed, 0x65, 0x4d, 0x7a, 0x79,
+	0x0e, 0x17, 0x06, 0xbc, 0xc4, 0x5d, 0xa0, 0x33, 0x79, 0x3b, 0x3f, 0x43, 0x0a, 0x8a, 0xaa, 0x82,
+	0x70, 0x3e, 0x95, 0x3f, 0x7e, 0x27, 0x2a, 0xe6, 0x28, 0x88, 0x56, 0x9f, 0x95, 0xea, 0x25, 0x38,
+	0x35, 0xa8, 0x4e, 0x64, 0x67, 0x3d, 0x50, 0x90, 0x03, 0xb0, 0x36, 0x94, 0x2b, 0x52, 0x9b, 0x1f,
+	0x81, 0xd0, 0x62, 0xa6, 0x14, 0x9b, 0x81, 0x95, 0x54, 0x31, 0x74, 0xa6, 0x13, 0xaa, 0xb2, 0xa4,
+	0x27, 0x4c, 0xb4, 0x31, 0x3d, 0x61, 0xb2, 0x9a, 0x43, 0x13, 0xaa, 0x12, 0x36, 0xb6, 0x2e, 0x6f,
+	0xaa, 0xc6, 0xd5, 0x4d, 0xd5, 0xf8, 0x75, 0x53, 0x35, 0xbe, 0xdc, 0x56, 0x33, 0x57, 0xb7, 0xd5,
+	0xcc, 0x8f, 0xdb, 0x6a, 0xe6, 0xdd, 0x6a, 0xec, 0xbb, 0xa4, 0x47, 0xd7, 0x3f, 0x31, 0x4a, 0xfa,
+	0x3c, 0x1f, 0x43, 0x26, 0xf9, 0x7d, 0x6a, 0x15, 0xe5, 0x8f, 0xc3, 0xe6, 0x9f, 0x00, 0x00, 0x00,
+	0xff, 0xff, 0x2d, 0xe3, 0xc7, 0x25, 0xe3, 0x06, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -364,6 +576,10 @@ type QueryClient interface {
 	TotalVotingPower(ctx context.Context, in *QueryTotalVotingPowerRequest, opts ...grpc.CallOption) (*QueryTotalVotingPowerResponse, error)
 	// VotingPower queries the voting power of a veNFT.
 	VotingPower(ctx context.Context, in *QueryVotingPowerRequest, opts ...grpc.CallOption) (*QueryVotingPowerResponse, error)
+	// VeNfts queries all veNFTs of a given owner.
+	VeNfts(ctx context.Context, in *QueryVeNftsRequest, opts ...grpc.CallOption) (*QueryVeNftsResponse, error)
+	// VeNft queries an veNFT based on its id.
+	VeNft(ctx context.Context, in *QueryVeNftRequest, opts ...grpc.CallOption) (*QueryVeNftResponse, error)
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 }
@@ -394,6 +610,24 @@ func (c *queryClient) VotingPower(ctx context.Context, in *QueryVotingPowerReque
 	return out, nil
 }
 
+func (c *queryClient) VeNfts(ctx context.Context, in *QueryVeNftsRequest, opts ...grpc.CallOption) (*QueryVeNftsResponse, error) {
+	out := new(QueryVeNftsResponse)
+	err := c.cc.Invoke(ctx, "/merlion.ve.v1.Query/VeNfts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) VeNft(ctx context.Context, in *QueryVeNftRequest, opts ...grpc.CallOption) (*QueryVeNftResponse, error) {
+	out := new(QueryVeNftResponse)
+	err := c.cc.Invoke(ctx, "/merlion.ve.v1.Query/VeNft", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
 	out := new(QueryParamsResponse)
 	err := c.cc.Invoke(ctx, "/merlion.ve.v1.Query/Params", in, out, opts...)
@@ -409,6 +643,10 @@ type QueryServer interface {
 	TotalVotingPower(context.Context, *QueryTotalVotingPowerRequest) (*QueryTotalVotingPowerResponse, error)
 	// VotingPower queries the voting power of a veNFT.
 	VotingPower(context.Context, *QueryVotingPowerRequest) (*QueryVotingPowerResponse, error)
+	// VeNfts queries all veNFTs of a given owner.
+	VeNfts(context.Context, *QueryVeNftsRequest) (*QueryVeNftsResponse, error)
+	// VeNft queries an veNFT based on its id.
+	VeNft(context.Context, *QueryVeNftRequest) (*QueryVeNftResponse, error)
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 }
@@ -422,6 +660,12 @@ func (*UnimplementedQueryServer) TotalVotingPower(ctx context.Context, req *Quer
 }
 func (*UnimplementedQueryServer) VotingPower(ctx context.Context, req *QueryVotingPowerRequest) (*QueryVotingPowerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VotingPower not implemented")
+}
+func (*UnimplementedQueryServer) VeNfts(ctx context.Context, req *QueryVeNftsRequest) (*QueryVeNftsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VeNfts not implemented")
+}
+func (*UnimplementedQueryServer) VeNft(ctx context.Context, req *QueryVeNftRequest) (*QueryVeNftResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VeNft not implemented")
 }
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
@@ -467,6 +711,42 @@ func _Query_VotingPower_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_VeNfts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryVeNftsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).VeNfts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.ve.v1.Query/VeNfts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).VeNfts(ctx, req.(*QueryVeNftsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_VeNft_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryVeNftRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).VeNft(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/merlion.ve.v1.Query/VeNft",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).VeNft(ctx, req.(*QueryVeNftRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryParamsRequest)
 	if err := dec(in); err != nil {
@@ -496,6 +776,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VotingPower",
 			Handler:    _Query_VotingPower_Handler,
+		},
+		{
+			MethodName: "VeNfts",
+			Handler:    _Query_VeNfts_Handler,
+		},
+		{
+			MethodName: "VeNft",
+			Handler:    _Query_VeNft_Handler,
 		},
 		{
 			MethodName: "Params",
@@ -645,6 +933,162 @@ func (m *QueryVotingPowerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryVeNftsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryVeNftsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryVeNftsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Owner) > 0 {
+		i -= len(m.Owner)
+		copy(dAtA[i:], m.Owner)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Owner)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryVeNftsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryVeNftsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryVeNftsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Nfts) > 0 {
+		for iNdEx := len(m.Nfts) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Nfts[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryVeNftRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryVeNftRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryVeNftRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Id)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryVeNftResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryVeNftResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryVeNftResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Nft != nil {
+		{
+			size, err := m.Nft.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *QueryParamsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -765,6 +1209,68 @@ func (m *QueryVotingPowerResponse) Size() (n int) {
 	_ = l
 	l = m.Power.Size()
 	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryVeNftsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Owner)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryVeNftsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Nfts) > 0 {
+		for _, e := range m.Nfts {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryVeNftRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryVeNftResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Nft != nil {
+		l = m.Nft.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
 	return n
 }
 
@@ -1146,6 +1652,412 @@ func (m *QueryVotingPowerResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.Power.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryVeNftsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryVeNftsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryVeNftsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Owner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryVeNftsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryVeNftsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryVeNftsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Nfts", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Nfts = append(m.Nfts, &nft.NFT{})
+			if err := m.Nfts[len(m.Nfts)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryVeNftRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryVeNftRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryVeNftRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryVeNftResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryVeNftResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryVeNftResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Nft", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Nft == nil {
+				m.Nft = &nft.NFT{}
+			}
+			if err := m.Nft.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

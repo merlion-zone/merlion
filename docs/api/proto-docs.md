@@ -226,6 +226,10 @@
     - [QueryParamsResponse](#merlion.ve.v1.QueryParamsResponse)
     - [QueryTotalVotingPowerRequest](#merlion.ve.v1.QueryTotalVotingPowerRequest)
     - [QueryTotalVotingPowerResponse](#merlion.ve.v1.QueryTotalVotingPowerResponse)
+    - [QueryVeNftRequest](#merlion.ve.v1.QueryVeNftRequest)
+    - [QueryVeNftResponse](#merlion.ve.v1.QueryVeNftResponse)
+    - [QueryVeNftsRequest](#merlion.ve.v1.QueryVeNftsRequest)
+    - [QueryVeNftsResponse](#merlion.ve.v1.QueryVeNftsResponse)
     - [QueryVotingPowerRequest](#merlion.ve.v1.QueryVotingPowerRequest)
     - [QueryVotingPowerResponse](#merlion.ve.v1.QueryVotingPowerResponse)
   
@@ -3290,6 +3294,68 @@ QueryParamsResponse is response type for the Query/Params RPC method.
 
 
 
+<a name="merlion.ve.v1.QueryVeNftRequest"></a>
+
+### QueryVeNftRequest
+QueryVeNftRequest is the request type for the Query/VeNft RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `id` | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.QueryVeNftResponse"></a>
+
+### QueryVeNftResponse
+QueryVeNftResponse is the response type for the Query/VeNft RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `nft` | [cosmos.nft.v1beta1.NFT](#cosmos.nft.v1beta1.NFT) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.QueryVeNftsRequest"></a>
+
+### QueryVeNftsRequest
+QueryVeNftsRequest is the request type for the Query/VeNfts RPC method
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `owner` | [string](#string) |  |  |
+| `pagination` | [cosmos.base.query.v1beta1.PageRequest](#cosmos.base.query.v1beta1.PageRequest) |  |  |
+
+
+
+
+
+
+<a name="merlion.ve.v1.QueryVeNftsResponse"></a>
+
+### QueryVeNftsResponse
+QueryVeNftsResponse is the response type for the Query/VeNfts RPC methods
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| `nfts` | [cosmos.nft.v1beta1.NFT](#cosmos.nft.v1beta1.NFT) | repeated |  |
+| `pagination` | [cosmos.base.query.v1beta1.PageResponse](#cosmos.base.query.v1beta1.PageResponse) |  |  |
+
+
+
+
+
+
 <a name="merlion.ve.v1.QueryVotingPowerRequest"></a>
 
 ### QueryVotingPowerRequest
@@ -3337,6 +3403,8 @@ Query defines the ve gRPC querier service.
 | ----------- | ------------ | ------------- | ------------| ------- | -------- |
 | `TotalVotingPower` | [QueryTotalVotingPowerRequest](#merlion.ve.v1.QueryTotalVotingPowerRequest) | [QueryTotalVotingPowerResponse](#merlion.ve.v1.QueryTotalVotingPowerResponse) | TotalVotingPower queries the total voting power. | GET|/merlion/ve/v1/total_voting_power|
 | `VotingPower` | [QueryVotingPowerRequest](#merlion.ve.v1.QueryVotingPowerRequest) | [QueryVotingPowerResponse](#merlion.ve.v1.QueryVotingPowerResponse) | VotingPower queries the voting power of a veNFT. | GET|/merlion/ve/v1/voting_power/{ve_id}|
+| `VeNfts` | [QueryVeNftsRequest](#merlion.ve.v1.QueryVeNftsRequest) | [QueryVeNftsResponse](#merlion.ve.v1.QueryVeNftsResponse) | VeNfts queries all veNFTs of a given owner. | GET|/merlion/ve/v1/venfts|
+| `VeNft` | [QueryVeNftRequest](#merlion.ve.v1.QueryVeNftRequest) | [QueryVeNftResponse](#merlion.ve.v1.QueryVeNftResponse) | VeNft queries an veNFT based on its id. | GET|/merlion/ve/v1/venfts/{id}|
 | `Params` | [QueryParamsRequest](#merlion.ve.v1.QueryParamsRequest) | [QueryParamsResponse](#merlion.ve.v1.QueryParamsResponse) | Parameters queries the parameters of the module. | GET|/merlion/ve/v1/params|
 
  <!-- end services -->
