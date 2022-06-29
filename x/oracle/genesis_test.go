@@ -3,27 +3,26 @@ package oracle_test
 import (
 	"testing"
 
-	keepertest "github.com/merlion-zone/merlion/testutil/keeper"
-	"github.com/merlion-zone/merlion/testutil/nullify"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/merlion-zone/merlion/x/oracle"
+	"github.com/merlion-zone/merlion/x/oracle/keeper"
 	"github.com/merlion-zone/merlion/x/oracle/types"
 	"github.com/stretchr/testify/require"
 )
 
-func TestGenesis(t *testing.T) {
-	genesisState := types.GenesisState{
-		Params: types.DefaultParams(),
+func TestExportInitGenesis(t *testing.T) {
+	input, _ := setup(t)
 
-		// this line is used by starport scaffolding # genesis/test/state
-	}
+	input.OracleKeeper.SetFeederDelegation(input.Ctx, keeper.ValAddrs[0], keeper.Addrs[1])
+	input.OracleKeeper.SetExchangeRate(input.Ctx, "denom", sdk.NewDec(123))
+	input.OracleKeeper.SetAggregateExchangeRatePrevote(input.Ctx, keeper.ValAddrs[0], types.NewAggregateExchangeRatePrevote(types.AggregateVoteHash{123}, keeper.ValAddrs[0], uint64(2)))
+	input.OracleKeeper.SetAggregateExchangeRateVote(input.Ctx, keeper.ValAddrs[0], types.NewAggregateExchangeRateVote(types.ExchangeRateTuples{{Denom: "foo", ExchangeRate: sdk.NewDec(123)}}, keeper.ValAddrs[0]))
+	input.OracleKeeper.SetMissCounter(input.Ctx, keeper.ValAddrs[0], 10)
+	genesis := oracle.ExportGenesis(input.Ctx, input.OracleKeeper)
 
-	k, ctx := keepertest.OracleKeeper(t)
-	oracle.InitGenesis(ctx, *k, genesisState)
-	got := oracle.ExportGenesis(ctx, *k)
-	require.NotNil(t, got)
+	newInput := keeper.CreateTestInput(t)
+	oracle.InitGenesis(newInput.Ctx, newInput.OracleKeeper, *genesis)
+	newGenesis := oracle.ExportGenesis(newInput.Ctx, newInput.OracleKeeper)
 
-	nullify.Fill(&genesisState)
-	nullify.Fill(got)
-
-	// this line is used by starport scaffolding # genesis/test/assert
+	require.Equal(t, genesis, newGenesis)
 }
