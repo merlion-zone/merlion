@@ -208,7 +208,7 @@ func (m msgServer) BuyBacking(c context.Context, msg *types.MsgBuyBacking) (*typ
 		return nil, err
 	}
 
-	poolBacking.Backing = poolBacking.Backing.Sub(backingOut)
+	poolBacking.Backing = poolBacking.Backing.Sub(backingOut).Sub(buybackFee)
 	poolBacking.LionBurned = poolBacking.LionBurned.Add(msg.LionIn)
 	totalBacking.LionBurned = totalBacking.LionBurned.Add(msg.LionIn)
 

@@ -584,10 +584,10 @@ func (k Keeper) estimateMintByCollateralIn(
 	mintFee = sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
 
 	// check price lower bound ?
-	//err = k.checkMerPriceLowerBound(ctx)
-	//if err != nil {
+	// err = k.checkMerPriceLowerBound(ctx)
+	// if err != nil {
 	//	return
-	//}
+	// }
 
 	collateralParams, err := k.getEnabledCollateralParams(ctx, collateralDenom)
 	if err != nil {
@@ -690,10 +690,10 @@ func (k Keeper) estimateMintByCollateralOut(
 	mintFee = sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
 
 	// check price lower bound ?
-	//err = k.checkMerPriceLowerBound(ctx)
-	//if err != nil {
+	// err = k.checkMerPriceLowerBound(ctx)
+	// if err != nil {
 	//	return
-	//}
+	// }
 
 	collateralParams, err := k.getEnabledCollateralParams(ctx, collateralDenom)
 	if err != nil {
@@ -834,8 +834,6 @@ func (k Keeper) getEnabledCollateralParams(ctx sdk.Context, collateralDenom stri
 }
 
 func (k Keeper) getExcessBackingValue(ctx sdk.Context) (excessBackingValue sdk.Coin, err error) {
-	excessBackingValue = sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
-
 	totalBacking, found := k.GetTotalBacking(ctx)
 	if !found {
 		err = sdkerrors.Wrapf(types.ErrBackingCoinNotFound, "total backing not found")
@@ -851,6 +849,7 @@ func (k Keeper) getExcessBackingValue(ctx sdk.Context) (excessBackingValue sdk.C
 	}
 
 	// may be negative
+	excessBackingValue = sdk.NewCoin(merlion.MicroUSDDenom, sdk.ZeroInt())
 	excessBackingValue.Amount = totalBackingValue.Amount.Sub(requiredBackingValue)
 	return
 }

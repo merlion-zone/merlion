@@ -92,6 +92,12 @@ func (k Keeper) TotalBacking(c context.Context, req *types.QueryTotalBackingRequ
 
 	total, _ := k.GetTotalBacking(ctx)
 
+	totalBackingValue, err := k.totalBackingInUSD(ctx)
+	if err != nil {
+		return nil, err
+	}
+	total.BackingValue = totalBackingValue.Amount
+
 	return &types.QueryTotalBackingResponse{
 		TotalBacking: total,
 	}, nil

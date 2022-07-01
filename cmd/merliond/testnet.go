@@ -454,6 +454,7 @@ func initGenFiles(
 	var makerGenState makertypes.GenesisState
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[makertypes.ModuleName], &makerGenState)
 
+	makerGenState.BackingRatio = sdk.NewDecWithPrec(95, 2)
 	makerGenState.Params.BackingRatioStep = sdk.ZeroDec()
 	appGenState[makertypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&makerGenState)
 

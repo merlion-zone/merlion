@@ -1086,6 +1086,7 @@ parameters.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
+| `backing_value` | [string](#string) |  | total backing value in USD |
 | `mer_minted` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted mer |
 | `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
 

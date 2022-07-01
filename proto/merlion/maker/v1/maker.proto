@@ -172,10 +172,15 @@ message BatchSetCollateralRiskParamsProposal {
 message TotalBacking {
   option (gogoproto.equal) = false;
 
+  // total backing value in USD
+  string backing_value = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
   // total minted mer
-  cosmos.base.v1beta1.Coin mer_minted = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin mer_minted = 2 [ (gogoproto.nullable) = false ];
   // total burned lion
-  cosmos.base.v1beta1.Coin lion_burned = 2 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin lion_burned = 3 [ (gogoproto.nullable) = false ];
 }
 
 message PoolBacking {
