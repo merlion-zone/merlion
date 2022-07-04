@@ -848,8 +848,7 @@ Params defines the parameters for the maker module.
 | `account` | [string](#string) |  | account who owns collateral |
 | `collateral` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | existing collateral |
 | `mer_debt` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | remaining mer debt, including minted by collateral, mint fee, last interest |
-| `mer_by_lion` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | minted mer by burning lion |
-| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
+| `lion_collateralized` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total collateralized lion |
 | `last_interest` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | remaining interest debt after last settlement |
 | `last_settlement_block` | [int64](#int64) |  | the block of last settlement |
 
@@ -961,7 +960,7 @@ CollateralRiskParams represents an object of collateral risk parameters.
 | `liquidation_threshold` | [string](#string) |  | ratio at which a position is defined as undercollateralized |
 | `loan_to_value` | [string](#string) |  | maximum ratio of maximum amount of currency that can be borrowed with a specific collateral |
 | `basic_loan_to_value` | [string](#string) |  | basic ratio of maximum amount of currency that can be borrowed with a specific collateral |
-| `catalytic_lion_ratio` | [string](#string) |  | catalytic ratio of burned Lion to minted stablecoins, to maximize the LTV in [basic-LTV, LTV] |
+| `catalytic_lion_ratio` | [string](#string) |  | catalytic ratio of collateralized Lion to asset, to maximize the LTV in [basic-LTV, LTV] |
 | `liquidation_fee` | [string](#string) |  | liquidation fee rate, i.e., the discount a liquidator gets when buying collateral flagged for a liquidation |
 | `mint_fee` | [string](#string) |  | mint fee rate, i.e., extra fee debt |
 | `interest_fee` | [string](#string) |  | annual interest fee rate (APR) |
@@ -998,8 +997,7 @@ CollateralRiskParams represents an object of collateral risk parameters.
 | ----- | ---- | ----- | ----------- |
 | `collateral` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total collateral |
 | `mer_debt` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total existing mer debt, including minted by collateral, mint fee, last interest |
-| `mer_by_lion` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted mer by burning lion |
-| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
+| `lion_collateralized` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total collateralized lion |
 
 
 
@@ -1104,8 +1102,7 @@ parameters.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `mer_debt` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total existing mer debt, including minted by collateral, mint fee, last interest |
-| `mer_by_lion` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted mer by burning lion |
-| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
+| `lion_collateralized` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total collateralized lion |
 
 
 

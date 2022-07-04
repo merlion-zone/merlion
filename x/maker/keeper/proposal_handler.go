@@ -123,17 +123,15 @@ func HandleRegisterCollateralProposal(ctx sdk.Context, k Keeper, p *types.Regist
 	_, found := k.GetTotalCollateral(ctx)
 	if !found {
 		k.SetTotalCollateral(ctx, types.TotalCollateral{
-			MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
-			MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
-			LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+			MerDebt:            sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
+			LionCollateralized: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 		})
 	}
 
 	k.SetPoolCollateral(ctx, types.PoolCollateral{
-		Collateral: sdk.NewCoin(params.CollateralDenom, sdk.ZeroInt()),
-		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
-		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+		Collateral:         sdk.NewCoin(params.CollateralDenom, sdk.ZeroInt()),
+		MerDebt:            sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
+		LionCollateralized: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 	})
 
 	ctx.EventManager().EmitEvents(sdk.Events{

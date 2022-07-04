@@ -561,10 +561,6 @@ func (k Keeper) estimateMintByCollateralIn(
 	accColl types.AccountCollateral,
 	err error,
 ) {
-	collateralIn = sdk.NewCoin(collateralDenom, sdk.ZeroInt())
-	lionIn = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
-	mintFee = sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt())
-
 	// check price lower bound ?
 	// err = k.checkMintPriceLowerBound(ctx)
 	// if err != nil {
@@ -599,47 +595,28 @@ func (k Keeper) estimateMintByCollateralIn(
 	// settle interest fee
 	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
 
-	// compute mint total amount
-	mintFee = computeFee(mintOut, collateralParams.MintFee)
-	mintTotal := mintOut.Add(mintFee)
+	// compute mint total
+	mintTotal := sdk.NewCoin(merlion.MicroUSMDenom, mintOut.Amount.ToDec().Quo(sdk.OneDec().Sub(*collateralParams.MintFee)).RoundInt())
+	mintFee = computeFee(mintTotal, collateralParams.MintFee)
 
-	// check mer ceiling
-	if collateralParams.MaxMerMint != nil && poolColl.MerDebt.Amount.Add(poolColl.MerByLion.Amount).Add(mintTotal.Amount).GT(*collateralParams.MaxMerMint) {
+	// update mer debt
+	accColl.MerDebt = accColl.MerDebt.Add(mintTotal)
+	poolColl.MerDebt = poolColl.MerDebt.Add(mintTotal)
+	totalColl.MerDebt = totalColl.MerDebt.Add(mintTotal)
+
+	if collateralParams.MaxMerMint != nil && poolColl.MerDebt.Amount.GT(*collateralParams.MaxMerMint) {
 		err = sdkerrors.Wrapf(types.ErrMerCeiling, "mer over ceiling")
 		return
 	}
 
-	// compute MerByLion and lion in
-	merDue := accColl.MerDebt.Add(accColl.MerByLion).Add(mintTotal)
-	catalyticLionRatio := ltv.Sub(*collateralParams.BasicLoanToValue).Quo(collateralParams.LoanToValue.Sub(*collateralParams.BasicLoanToValue)).Mul(*collateralParams.CatalyticLionRatio)
-	minAccMerByLion := merDue.Amount.ToDec().Mul(catalyticLionRatio).RoundInt()
-
-	addedMerByLion := sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt())
-	if accColl.MerByLion.Amount.LT(minAccMerByLion) {
-		addedMerByLion.Amount = minAccMerByLion.Sub(accColl.MerByLion.Amount)
-	}
-
-	accColl.MerByLion = accColl.MerByLion.Add(addedMerByLion)
-	poolColl.MerByLion = poolColl.MerByLion.Add(addedMerByLion)
-	totalColl.MerByLion = totalColl.MerByLion.Add(addedMerByLion)
-
-	lionIn = sdk.NewCoin(merlion.AttoLionDenom, addedMerByLion.Amount.ToDec().Quo(lionPrice).RoundInt())
-	accColl.LionBurned = accColl.LionBurned.Add(lionIn)
-	poolColl.LionBurned = poolColl.LionBurned.Add(lionIn)
-	totalColl.LionBurned = totalColl.LionBurned.Add(lionIn)
-
-	// compute MerDebt and collateral in
-	addedMerDebt := mintTotal.Sub(addedMerByLion)
-
-	accColl.MerDebt = accColl.MerDebt.Add(addedMerDebt)
-	poolColl.MerDebt = poolColl.MerDebt.Add(addedMerDebt)
-	totalColl.MerDebt = totalColl.MerDebt.Add(addedMerDebt)
-
+	// compute collateral in
+	collateralIn = sdk.NewCoin(collateralDenom, sdk.ZeroInt())
 	minAccCollateral := accColl.MerDebt.Amount.ToDec().Quo(ltv).Quo(collateralPrice).RoundInt()
 	if accColl.Collateral.Amount.LT(minAccCollateral) {
 		collateralIn.Amount = minAccCollateral.Sub(accColl.Collateral.Amount)
 	}
 
+	// update collateral
 	accColl.Collateral = accColl.Collateral.Add(collateralIn)
 	poolColl.Collateral = poolColl.Collateral.Add(collateralIn)
 
@@ -647,6 +624,19 @@ func (k Keeper) estimateMintByCollateralIn(
 		err = sdkerrors.Wrap(types.ErrCollateralCeiling, "collateral over ceiling")
 		return
 	}
+
+	// compute lion in
+	catalyticLionRatio := ltv.Sub(*collateralParams.BasicLoanToValue).Quo(collateralParams.LoanToValue.Sub(*collateralParams.BasicLoanToValue)).Mul(*collateralParams.CatalyticLionRatio)
+	minAccLionCollateralized := accColl.Collateral.Amount.ToDec().Mul(collateralPrice).Mul(catalyticLionRatio).Quo(lionPrice).RoundInt()
+
+	lionIn = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
+	if accColl.LionCollateralized.Amount.LT(minAccLionCollateralized) {
+		lionIn.Amount = minAccLionCollateralized.Sub(accColl.LionCollateralized.Amount)
+	}
+
+	accColl.LionCollateralized = accColl.LionCollateralized.Add(lionIn)
+	poolColl.LionCollateralized = poolColl.LionCollateralized.Add(lionIn)
+	totalColl.LionCollateralized = totalColl.LionCollateralized.Add(lionIn)
 
 	return
 }
@@ -665,19 +655,13 @@ func (k Keeper) estimateMintByCollateralOut(
 	accColl types.AccountCollateral,
 	err error,
 ) {
-	collateralDenom := collateralIn.Denom
-
-	lionIn = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
-	mintOut = sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt())
-	mintFee = sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt())
-
 	// check price lower bound ?
 	// err = k.checkMintPriceLowerBound(ctx)
 	// if err != nil {
 	//	return
 	// }
 
-	collateralParams, err := k.getEnabledCollateralParams(ctx, collateralDenom)
+	collateralParams, err := k.getEnabledCollateralParams(ctx, collateralIn.Denom)
 	if err != nil {
 		return
 	}
@@ -688,7 +672,7 @@ func (k Keeper) estimateMintByCollateralOut(
 	}
 
 	// get prices in usd
-	collateralPrice, err := k.oracleKeeper.GetExchangeRate(ctx, collateralDenom)
+	collateralPrice, err := k.oracleKeeper.GetExchangeRate(ctx, collateralIn.Denom)
 	if err != nil {
 		return
 	}
@@ -697,12 +681,15 @@ func (k Keeper) estimateMintByCollateralOut(
 		return
 	}
 
-	totalColl, poolColl, accColl, err = k.getCollateral(ctx, account, collateralDenom)
+	totalColl, poolColl, accColl, err = k.getCollateral(ctx, account, collateralIn.Denom)
 	if err != nil {
 		return
 	}
 
-	// update Collateral
+	// settle interest fee
+	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
+
+	// update collateral
 	accColl.Collateral = accColl.Collateral.Add(collateralIn)
 	poolColl.Collateral = poolColl.Collateral.Add(collateralIn)
 
@@ -711,48 +698,39 @@ func (k Keeper) estimateMintByCollateralOut(
 		return
 	}
 
-	// settle interest fee
-	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
-
-	// compute MerDebt
+	// compute mint total
 	maxAccMerDebt := accColl.Collateral.Amount.ToDec().Mul(collateralPrice).Mul(ltv).RoundInt()
-	addedMerDebt := sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt())
+	mintTotal := sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt())
 	if accColl.MerDebt.Amount.LT(maxAccMerDebt) {
-		addedMerDebt.Amount = maxAccMerDebt.Sub(accColl.MerDebt.Amount)
+		mintTotal.Amount = maxAccMerDebt.Sub(accColl.MerDebt.Amount)
 	}
 
-	accColl.MerDebt = accColl.MerDebt.Add(addedMerDebt)
-	poolColl.MerDebt = poolColl.MerDebt.Add(addedMerDebt)
-	totalColl.MerDebt = totalColl.MerDebt.Add(addedMerDebt)
+	// update mer debt
+	accColl.MerDebt = accColl.MerDebt.Add(mintTotal)
+	poolColl.MerDebt = poolColl.MerDebt.Add(mintTotal)
+	totalColl.MerDebt = totalColl.MerDebt.Add(mintTotal)
 
-	// compute MerByLion and lion in
-	catalyticLionRatio := ltv.Sub(*collateralParams.BasicLoanToValue).Quo(collateralParams.LoanToValue.Sub(*collateralParams.BasicLoanToValue)).Mul(*collateralParams.CatalyticLionRatio)
-	minAccMerByLion := catalyticLionRatio.MulInt(accColl.MerDebt.Amount).Quo(sdk.OneDec().Sub(catalyticLionRatio)).RoundInt()
-
-	addedMerByLion := sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt())
-	if accColl.MerByLion.Amount.LT(minAccMerByLion) {
-		addedMerByLion.Amount = minAccMerByLion.Sub(accColl.MerByLion.Amount)
-	}
-
-	accColl.MerByLion = accColl.MerByLion.Add(addedMerByLion)
-	poolColl.MerByLion = poolColl.MerByLion.Add(addedMerByLion)
-	totalColl.MerByLion = totalColl.MerByLion.Add(addedMerByLion)
-
-	lionIn = sdk.NewCoin(merlion.AttoLionDenom, addedMerByLion.Amount.ToDec().Quo(lionPrice).RoundInt())
-	accColl.LionBurned = accColl.LionBurned.Add(lionIn)
-	poolColl.LionBurned = poolColl.LionBurned.Add(lionIn)
-	totalColl.LionBurned = totalColl.LionBurned.Add(lionIn)
-
-	// check mer ceiling
-	if collateralParams.MaxMerMint != nil && poolColl.MerDebt.Amount.Add(poolColl.MerByLion.Amount).GT(*collateralParams.MaxMerMint) {
+	if collateralParams.MaxMerMint != nil && poolColl.MerDebt.Amount.GT(*collateralParams.MaxMerMint) {
 		err = sdkerrors.Wrapf(types.ErrMerCeiling, "mer over ceiling")
 		return
 	}
 
 	// compute mint out
-	mintTotal := addedMerDebt.Add(addedMerByLion)
-	mintOut = sdk.NewCoin(merlion.MicroUSMDenom, mintTotal.Amount.ToDec().Quo(sdk.OneDec().Add(*collateralParams.MintFee)).RoundInt())
-	mintFee = sdk.NewCoin(merlion.MicroUSMDenom, mintOut.Amount.ToDec().Mul(*collateralParams.MintFee).RoundInt())
+	mintFee = computeFee(mintTotal, collateralParams.MintFee)
+	mintOut = mintTotal.Sub(mintFee)
+
+	// compute lion in
+	catalyticLionRatio := ltv.Sub(*collateralParams.BasicLoanToValue).Quo(collateralParams.LoanToValue.Sub(*collateralParams.BasicLoanToValue)).Mul(*collateralParams.CatalyticLionRatio)
+	minAccLionCollateralized := accColl.Collateral.Amount.ToDec().Mul(collateralPrice).Mul(catalyticLionRatio).Quo(lionPrice).RoundInt()
+
+	lionIn = sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt())
+	if accColl.LionCollateralized.Amount.LT(minAccLionCollateralized) {
+		lionIn.Amount = minAccLionCollateralized.Sub(accColl.LionCollateralized.Amount)
+	}
+
+	accColl.LionCollateralized = accColl.LionCollateralized.Add(lionIn)
+	poolColl.LionCollateralized = poolColl.LionCollateralized.Add(lionIn)
+	totalColl.LionCollateralized = totalColl.LionCollateralized.Add(lionIn)
 
 	return
 }
