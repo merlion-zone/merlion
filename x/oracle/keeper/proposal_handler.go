@@ -15,7 +15,7 @@ func HandleRegisterTargetProposal(ctx sdk.Context, k Keeper, p *types.RegisterTa
 	}
 
 	// Check if the coin exists by ensuring the supply is set
-	if !k.bankKeeper.HasSupply(ctx, params.Denom) && params.Denom != merlion.MicroUSDDenom {
+	if !k.bankKeeper.HasSupply(ctx, params.Denom) && params.Denom != merlion.MicroUSMDenom {
 		return sdkerrors.Wrapf(
 			sdkerrors.ErrInvalidCoins,
 			"target denom '%s' cannot have a supply of 0", params.Denom,

@@ -956,8 +956,8 @@ CollateralRiskParams represents an object of collateral risk parameters.
 | ----- | ---- | ----- | ----------- |
 | `collateral_denom` | [string](#string) |  | collateral coin denom |
 | `enabled` | [bool](#bool) |  | whether enabled |
-| `max_collateral` | [string](#string) |  | maximum total collateral amount |
-| `max_mer_mint` | [string](#string) |  | maximum total mintable Mer amount |
+| `max_collateral` | [string](#string) |  | maximum total collateral amount; empty means no limit |
+| `max_mer_mint` | [string](#string) |  | maximum total mintable Mer amount; empty means no limit |
 | `liquidation_threshold` | [string](#string) |  | ratio at which a position is defined as undercollateralized |
 | `loan_to_value` | [string](#string) |  | maximum ratio of maximum amount of currency that can be borrowed with a specific collateral |
 | `basic_loan_to_value` | [string](#string) |  | basic ratio of maximum amount of currency that can be borrowed with a specific collateral |
@@ -979,9 +979,9 @@ CollateralRiskParams represents an object of collateral risk parameters.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `mer_minted` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted mer |
+| `mer_minted` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted mer; negative value means burned mer |
 | `backing` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total backing |
-| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
+| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion; negative value means minted lion |
 
 
 
@@ -1086,9 +1086,9 @@ parameters.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `backing_value` | [string](#string) |  | total backing value in USD |
-| `mer_minted` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted mer |
-| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion |
+| `backing_value` | [string](#string) |  | total backing value in uUSD |
+| `mer_minted` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total minted mer; negative value means burned mer |
+| `lion_burned` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  | total burned lion; negative value means minted lion |
 
 
 
@@ -1857,9 +1857,9 @@ MsgBurnBySwapResponse defines the Msg/BurnBySwap response type.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| `burn_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `backing_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `burn_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -1893,6 +1893,7 @@ MsgBuyBackingResponse defines the Msg/BuyBacking response type.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `backing_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `buyback_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -2008,10 +2009,10 @@ MsgMintBySwap represents a message to mint Mer stablecoins by swapping.
 | ----- | ---- | ----- | ----------- |
 | `sender` | [string](#string) |  |  |
 | `to` | [string](#string) |  |  |
-| `full_backing` | [bool](#bool) |  |  |
 | `backing_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `lion_in_max` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 | `mint_out_min` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `full_backing` | [bool](#bool) |  |  |
 
 
 
@@ -2091,6 +2092,7 @@ MsgSellBackingResponse defines the Msg/SellBacking response type.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `reback_fee` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 

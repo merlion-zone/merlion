@@ -98,9 +98,9 @@ type CollateralRiskParams struct {
 	CollateralDenom string `protobuf:"bytes,1,opt,name=collateral_denom,json=collateralDenom,proto3" json:"collateral_denom,omitempty"`
 	// whether enabled
 	Enabled bool `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	// maximum total collateral amount
+	// maximum total collateral amount; empty means no limit
 	MaxCollateral *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=max_collateral,json=maxCollateral,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_collateral,omitempty"`
-	// maximum total mintable Mer amount
+	// maximum total mintable Mer amount; empty means no limit
 	MaxMerMint *github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_mer_mint,json=maxMerMint,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_mer_mint,omitempty"`
 	// ratio at which a position is defined as undercollateralized
 	LiquidationThreshold *github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,5,opt,name=liquidation_threshold,json=liquidationThreshold,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"liquidation_threshold,omitempty"`
@@ -650,11 +650,11 @@ func (m *BatchSetCollateralRiskParamsProposal) GetRiskParams() []CollateralRiskP
 }
 
 type TotalBacking struct {
-	// total backing value in USD
+	// total backing value in uUSD
 	BackingValue github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=backing_value,json=backingValue,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"backing_value"`
-	// total minted mer
+	// total minted mer; negative value means burned mer
 	MerMinted types.Coin `protobuf:"bytes,2,opt,name=mer_minted,json=merMinted,proto3" json:"mer_minted"`
-	// total burned lion
+	// total burned lion; negative value means minted lion
 	LionBurned types.Coin `protobuf:"bytes,3,opt,name=lion_burned,json=lionBurned,proto3" json:"lion_burned"`
 }
 
@@ -706,11 +706,11 @@ func (m *TotalBacking) GetLionBurned() types.Coin {
 }
 
 type PoolBacking struct {
-	// total minted mer
+	// total minted mer; negative value means burned mer
 	MerMinted types.Coin `protobuf:"bytes,1,opt,name=mer_minted,json=merMinted,proto3" json:"mer_minted"`
 	// total backing
 	Backing types.Coin `protobuf:"bytes,2,opt,name=backing,proto3" json:"backing"`
-	// total burned lion
+	// total burned lion; negative value means minted lion
 	LionBurned types.Coin `protobuf:"bytes,3,opt,name=lion_burned,json=lionBurned,proto3" json:"lion_burned"`
 }
 

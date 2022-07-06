@@ -18,18 +18,18 @@ func (k Keeper) AdjustBackingRatio(ctx sdk.Context) {
 		return
 	}
 	backingRatio := k.GetBackingRatio(ctx)
-	priceBand := merlion.MicroUSDTarget.Mul(k.BackingRatioPriceBand(ctx))
+	priceBand := merlion.MicroUSMTarget.Mul(k.BackingRatioPriceBand(ctx))
 
-	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSDDenom)
+	merPrice, err := k.oracleKeeper.GetExchangeRate(ctx, merlion.MicroUSMDenom)
 	if err != nil {
 		panic(err)
 	}
 
-	if merPrice.GT(merlion.MicroUSDTarget.Add(priceBand)) {
+	if merPrice.GT(merlion.MicroUSMTarget.Add(priceBand)) {
 		// mer price is too high
 		// decrease backing ratio; min 0%
 		backingRatio = sdk.MaxDec(backingRatio.Sub(ratioStep), sdk.ZeroDec())
-	} else if merPrice.LT(merlion.MicroUSDTarget.Sub(priceBand)) {
+	} else if merPrice.LT(merlion.MicroUSMTarget.Sub(priceBand)) {
 		// mer price is too low
 		// increase backing ratio; max 100%
 		backingRatio = sdk.MinDec(backingRatio.Add(ratioStep), sdk.OneDec())

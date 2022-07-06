@@ -17,32 +17,33 @@ const (
 	BaseDenom = AttoLionDenom
 
 	AttoLionDenom = "alion" // 1e-18
-	MicroUSDDenom = "uusd"  // 1e-6
+	MicroUSMDenom = "uusm"  // 1e-6
 )
 
 var (
-	MicroUSDTarget = sdk.OneDec()
+	// MicroUSMTarget defines the target exchange rate of uusm denominated in uUSD.
+	MicroUSMTarget = sdk.OneDec()
 )
 
 func SetDenomMetaDataForStableCoins(ctx sdk.Context, k bankkeeper.Keeper) {
-	for _, base := range []string{MicroUSDDenom} {
+	for _, base := range []string{MicroUSMDenom} {
 		if _, ok := k.GetDenomMetaData(ctx, base); ok {
 			continue
 		}
 
-		display := base[1:] // e.g., usd
+		display := base[1:] // e.g., usm
 		// Register meta data to bank module
 		k.SetDenomMetaData(ctx, banktypes.Metadata{
 			Description: "The native stable token of the Merlion.",
 			DenomUnits: []*banktypes.DenomUnit{
-				{Denom: "u" + display, Exponent: uint32(0), Aliases: []string{"micro" + display}}, // e.g., uusd
-				{Denom: "m" + display, Exponent: uint32(3), Aliases: []string{"milli" + display}}, // e.g., musd
-				{Denom: display, Exponent: uint32(6), Aliases: []string{}},                        // e.g., usd
+				{Denom: "u" + display, Exponent: uint32(0), Aliases: []string{"micro" + display}}, // e.g., uusm
+				{Denom: "m" + display, Exponent: uint32(3), Aliases: []string{"milli" + display}}, // e.g., musm
+				{Denom: display, Exponent: uint32(6), Aliases: []string{}},                        // e.g., usm
 			},
 			Base:    base,
 			Display: display,
-			Name:    fmt.Sprintf("%s MER", strings.ToUpper(display)),               // e.g., USD MER
-			Symbol:  fmt.Sprintf("%sM", strings.ToUpper(display[:len(display)-1])), // e.g., USM
+			Name:    fmt.Sprintf("%s", strings.ToUpper(display)), // e.g., USM
+			Symbol:  fmt.Sprintf("%s", strings.ToUpper(display)), // e.g., USM
 		})
 	}
 }

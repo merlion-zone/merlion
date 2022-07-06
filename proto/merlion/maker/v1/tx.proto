@@ -77,21 +77,21 @@ message MsgMintBySwap {
   ];
   string to = 2
       [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
-  bool full_backing = 3 [
-    (gogoproto.jsontag) = "full_backing",
-    (gogoproto.moretags) = "yaml:\"full_backing\""
-  ];
-  cosmos.base.v1beta1.Coin backing_in_max = 4 [
+  cosmos.base.v1beta1.Coin backing_in_max = 3 [
     (gogoproto.moretags) = "yaml:\"backing_in_max\"",
     (gogoproto.nullable) = false
   ];
-  cosmos.base.v1beta1.Coin lion_in_max = 5 [
+  cosmos.base.v1beta1.Coin lion_in_max = 4 [
     (gogoproto.moretags) = "yaml:\"lion_in_max\"",
     (gogoproto.nullable) = false
   ];
-  cosmos.base.v1beta1.Coin mint_out_min = 6 [
+  cosmos.base.v1beta1.Coin mint_out_min = 5 [
     (gogoproto.moretags) = "yaml:\"mint_out_min\"",
     (gogoproto.nullable) = false
+  ];
+  bool full_backing = 6 [
+    (gogoproto.jsontag) = "full_backing",
+    (gogoproto.moretags) = "yaml:\"full_backing\""
   ];
 }
 
@@ -142,16 +142,16 @@ message MsgBurnBySwap {
 
 // MsgBurnBySwapResponse defines the Msg/BurnBySwap response type.
 message MsgBurnBySwapResponse {
-  cosmos.base.v1beta1.Coin burn_fee = 1 [
-    (gogoproto.moretags) = "yaml:\"burn_fee\"",
-    (gogoproto.nullable) = false
-  ];
-  cosmos.base.v1beta1.Coin backing_out = 2 [
+  cosmos.base.v1beta1.Coin backing_out = 1 [
     (gogoproto.moretags) = "yaml:\"backing_out\"",
     (gogoproto.nullable) = false
   ];
-  cosmos.base.v1beta1.Coin lion_out = 3 [
+  cosmos.base.v1beta1.Coin lion_out = 2 [
     (gogoproto.moretags) = "yaml:\"lion_out\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin burn_fee = 3 [
+    (gogoproto.moretags) = "yaml:\"burn_fee\"",
     (gogoproto.nullable) = false
   ];
 }
@@ -183,6 +183,10 @@ message MsgBuyBackingResponse {
     (gogoproto.moretags) = "yaml:\"backing_out\"",
     (gogoproto.nullable) = false
   ];
+  cosmos.base.v1beta1.Coin buyback_fee = 2 [
+    (gogoproto.moretags) = "yaml:\"buyback_fee\"",
+    (gogoproto.nullable) = false
+  ];
 }
 
 // MsgSellBacking represents a message to sell strong-backing
@@ -211,6 +215,10 @@ message MsgSellBacking {
 message MsgSellBackingResponse {
   cosmos.base.v1beta1.Coin lion_out = 1 [
     (gogoproto.moretags) = "yaml:\"lion_out\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin reback_fee = 2 [
+    (gogoproto.moretags) = "yaml:\"reback_fee\"",
     (gogoproto.nullable) = false
   ];
 }

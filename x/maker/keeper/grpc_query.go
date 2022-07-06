@@ -96,7 +96,7 @@ func (k Keeper) TotalBacking(c context.Context, req *types.QueryTotalBackingRequ
 	if err != nil {
 		return nil, err
 	}
-	total.BackingValue = totalBackingValue.Amount
+	total.BackingValue = totalBackingValue
 
 	return &types.QueryTotalBackingResponse{
 		TotalBacking: total,
@@ -147,7 +147,7 @@ func (k Keeper) EstimateMintBySwapIn(c context.Context, req *types.EstimateMintB
 
 func (k Keeper) EstimateMintBySwapOut(c context.Context, req *types.EstimateMintBySwapOutRequest) (*types.EstimateMintBySwapOutResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	backingIn, lionIn, mintOut, mintFee, err := k.estimateMintBySwapOut(ctx, req.BackingInMax, req.LionInMax, req.FullBacking)
+	backingIn, lionIn, mintOut, mintFee, err := k.calculateMintBySwapOut(ctx, req.BackingInMax, req.LionInMax, req.FullBacking)
 	if err != nil {
 		return nil, err
 	}
@@ -177,7 +177,7 @@ func (k Keeper) EstimateBurnBySwapIn(c context.Context, req *types.EstimateBurnB
 
 func (k Keeper) EstimateBurnBySwapOut(c context.Context, req *types.EstimateBurnBySwapOutRequest) (*types.EstimateBurnBySwapOutResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	backingOut, lionOut, burnFee, err := k.estimateBurnBySwapOut(ctx, req.BurnIn, req.BackingDenom)
+	backingOut, lionOut, burnFee, err := k.calculateBurnBySwapOut(ctx, req.BurnIn, req.BackingDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -191,7 +191,7 @@ func (k Keeper) EstimateBurnBySwapOut(c context.Context, req *types.EstimateBurn
 
 func (k Keeper) EstimateBuyBackingIn(c context.Context, req *types.EstimateBuyBackingInRequest) (*types.EstimateBuyBackingInResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	lionIn, buybackFee, err := k.estimateBuyBackingIn(ctx, req.BackingOut)
+	lionIn, buybackFee, err := k.calculateBuyBackingIn(ctx, req.BackingOut)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +204,7 @@ func (k Keeper) EstimateBuyBackingIn(c context.Context, req *types.EstimateBuyBa
 
 func (k Keeper) EstimateBuyBackingOut(c context.Context, req *types.EstimateBuyBackingOutRequest) (*types.EstimateBuyBackingOutResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	backingOut, buybackFee, err := k.estimateBuyBackingOut(ctx, req.LionIn, req.BackingDenom)
+	backingOut, buybackFee, err := k.calculateBuyBackingOut(ctx, req.LionIn, req.BackingDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +217,7 @@ func (k Keeper) EstimateBuyBackingOut(c context.Context, req *types.EstimateBuyB
 
 func (k Keeper) EstimateSellBackingIn(c context.Context, req *types.EstimateSellBackingInRequest) (*types.EstimateSellBackingInResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	backingIn, sellbackFee, err := k.estimateSellBackingIn(ctx, req.LionOut, req.BackingDenom)
+	backingIn, sellbackFee, err := k.calculateSellBackingIn(ctx, req.LionOut, req.BackingDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -230,7 +230,7 @@ func (k Keeper) EstimateSellBackingIn(c context.Context, req *types.EstimateSell
 
 func (k Keeper) EstimateSellBackingOut(c context.Context, req *types.EstimateSellBackingOutRequest) (*types.EstimateSellBackingOutResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	lionOut, sellbackFee, err := k.estimateSellBackingOut(ctx, req.BackingIn)
+	lionOut, sellbackFee, err := k.calculateSellBackingOut(ctx, req.BackingIn)
 	if err != nil {
 		return nil, err
 	}

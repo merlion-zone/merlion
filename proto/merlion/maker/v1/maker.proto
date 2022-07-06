@@ -42,10 +42,10 @@ message CollateralRiskParams {
   string collateral_denom = 1;
   // whether enabled
   bool enabled = 2;
-  // maximum total collateral amount
+  // maximum total collateral amount; empty means no limit
   string max_collateral = 3
       [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
-  // maximum total mintable Mer amount
+  // maximum total mintable Mer amount; empty means no limit
   string max_mer_mint = 4
       [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int" ];
   // ratio at which a position is defined as undercollateralized
@@ -172,25 +172,25 @@ message BatchSetCollateralRiskParamsProposal {
 message TotalBacking {
   option (gogoproto.equal) = false;
 
-  // total backing value in USD
+  // total backing value in uUSD
   string backing_value = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // total minted mer
+  // total minted mer; negative value means burned mer
   cosmos.base.v1beta1.Coin mer_minted = 2 [ (gogoproto.nullable) = false ];
-  // total burned lion
+  // total burned lion; negative value means minted lion
   cosmos.base.v1beta1.Coin lion_burned = 3 [ (gogoproto.nullable) = false ];
 }
 
 message PoolBacking {
   option (gogoproto.equal) = false;
 
-  // total minted mer
+  // total minted mer; negative value means burned mer
   cosmos.base.v1beta1.Coin mer_minted = 1 [ (gogoproto.nullable) = false ];
   // total backing
   cosmos.base.v1beta1.Coin backing = 2 [ (gogoproto.nullable) = false ];
-  // total burned lion
+  // total burned lion; negative value means minted lion
   cosmos.base.v1beta1.Coin lion_burned = 3 [ (gogoproto.nullable) = false ];
 }
 

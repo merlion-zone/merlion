@@ -53,20 +53,26 @@ func (m *MsgMintBySwap) ValidateBasic() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
 		}
 	}
-	if m.MintOutMin.Denom != merlion.MicroUSDDenom {
+	if m.MintOutMin.Denom != merlion.MicroUSMDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.MintOutMin.Denom)
 	}
 	if m.LionInMax.Denom != merlion.AttoLionDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionInMax.Denom)
 	}
 	if !m.MintOutMin.Amount.IsPositive() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.MintOutMin.String())
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "mint_out_min must be positive")
 	}
 	if m.BackingInMax.Amount.IsNegative() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.BackingInMax.String())
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "backing_in_max must be positive or zero")
 	}
 	if m.LionInMax.Amount.IsNegative() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionInMax.String())
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "lion_in_max must be positive or zero")
+	}
+	if m.BackingInMax.Amount.IsZero() && m.LionInMax.Amount.IsZero() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "backing_in_max and lion_in_max must not be both zero")
+	}
+	if m.FullBacking && m.LionInMax.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "lion_in_max must be zero when full_backing is true")
 	}
 	return nil
 }
@@ -103,7 +109,7 @@ func (m *MsgBurnBySwap) ValidateBasic() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
 		}
 	}
-	if m.BurnIn.Denom != merlion.MicroUSDDenom {
+	if m.BurnIn.Denom != merlion.MicroUSMDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.BurnIn.Denom)
 	}
 	if m.LionOutMin.Denom != merlion.AttoLionDenom {
@@ -241,18 +247,18 @@ func (m *MsgMintByCollateral) ValidateBasic() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
 		}
 	}
-	if m.MintOutMin.Denom != merlion.MicroUSDDenom {
+	if m.MintOutMin.Denom != merlion.MicroUSMDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.MintOutMin.Denom)
 	}
 	if !m.MintOutMin.Amount.IsPositive() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.MintOutMin.String())
 	}
-	//if m.LionInMax.Denom != merlion.AttoLionDenom {
+	// if m.LionInMax.Denom != merlion.AttoLionDenom {
 	//	return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionInMax.Denom)
-	//}
-	//if !m.LionInMax.Amount.IsPositive() {
+	// }
+	// if !m.LionInMax.Amount.IsPositive() {
 	//	return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionInMax.String())
-	//}
+	// }
 	return nil
 }
 
@@ -282,7 +288,7 @@ func (m *MsgBurnByCollateral) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
 	}
-	if m.RepayInMax.Denom != merlion.MicroUSDDenom {
+	if m.RepayInMax.Denom != merlion.MicroUSMDenom {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.RepayInMax.Denom)
 	}
 	if !m.RepayInMax.Amount.IsPositive() {

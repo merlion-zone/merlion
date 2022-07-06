@@ -22,7 +22,7 @@ var (
 	ErrBackingCoinNotFound         = sdkerrors.Register(ModuleName, 10, "backing coin not found")
 	ErrCollateralCoinNotFound      = sdkerrors.Register(ModuleName, 11, "collateral coin not found")
 
-	ErrMerSlippage         = sdkerrors.Register(ModuleName, 12, "mer under slippage")
+	ErrMerSlippage         = sdkerrors.Register(ModuleName, 12, "mer over slippage")
 	ErrBackingCoinSlippage = sdkerrors.Register(ModuleName, 13, "backing coin over slippage")
 	ErrLionCoinSlippage    = sdkerrors.Register(ModuleName, 14, "lion coin over slippage")
 
@@ -40,4 +40,5 @@ var (
 	ErrNotUndercollateralized        = sdkerrors.Register(ModuleName, 24, "position is not undercollateralized")
 
 	ErrLTVOutOfRange = sdkerrors.Register(ModuleName, 25, "LTV is out of range")
+	ErrOverSlippage  = sdkerrors.Register(ModuleName, 26, "over slippage")
 )

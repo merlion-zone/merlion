@@ -70,7 +70,7 @@ func (suite *KeeperTestSuite) TestAllBackingPools() {
 
 	// add backing pool
 	poolBacking := types.PoolBacking{
-		MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(100)),
+		MerMinted:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
 		Backing:    sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
 	}
@@ -84,7 +84,7 @@ func (suite *KeeperTestSuite) TestAllBackingPools() {
 
 	// add another backing pool
 	poolBacking2 := types.PoolBacking{
-		MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
+		MerMinted:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
 		Backing:    sdk.NewCoin("eth", sdk.NewInt(20)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
 	}
@@ -106,8 +106,8 @@ func (suite *KeeperTestSuite) TestAllCollateralPools() {
 	// add collateral pool
 	poolColl := types.PoolCollateral{
 		Collateral: sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
-		MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(100)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
+		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
+		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
 	}
 	suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, poolColl)
@@ -121,8 +121,8 @@ func (suite *KeeperTestSuite) TestAllCollateralPools() {
 	// add another collateral pool
 	poolColl2 := types.PoolCollateral{
 		Collateral: sdk.NewCoin("eth", sdk.NewInt(10)),
-		MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(300)),
+		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
+		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(300)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
 	}
 	suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, poolColl2)
@@ -135,7 +135,7 @@ func (suite *KeeperTestSuite) TestAllCollateralPools() {
 
 func (suite *KeeperTestSuite) TestBackingPool() {
 	poolBacking := types.PoolBacking{
-		MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
+		MerMinted:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
 		Backing:    sdk.NewCoin(suite.bcDenom, sdk.NewInt(20)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
 	}
@@ -156,8 +156,8 @@ func (suite *KeeperTestSuite) TestBackingPool() {
 func (suite *KeeperTestSuite) TestCollateralPool() {
 	poolCollateral := types.PoolCollateral{
 		Collateral: sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
-		MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(300)),
+		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
+		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(300)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
 	}
 	suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, poolCollateral)
@@ -186,10 +186,10 @@ func (suite *KeeperTestSuite) TestCollateralOfAccount() {
 	accColl := types.AccountCollateral{
 		Account:             accAddress.String(),
 		Collateral:          sdk.NewCoin(suite.bcDenom, sdk.NewInt(100)),
-		MerDebt:             sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(200)),
-		MerByLion:           sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(50)),
+		MerDebt:             sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
+		MerByLion:           sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(50)),
 		LionBurned:          sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
-		LastInterest:        sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(10)),
+		LastInterest:        sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(10)),
 		LastSettlementBlock: 666,
 	}
 	suite.app.MakerKeeper.SetAccountCollateral(suite.ctx, accAddress, accColl)
@@ -234,7 +234,7 @@ func (suite *KeeperTestSuite) TestTotalBacking() {
 
 	// set total backing
 	totalBacking := types.TotalBacking{
-		MerMinted:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(100)),
+		MerMinted:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
 	}
 	suite.app.MakerKeeper.SetTotalBacking(suite.ctx, totalBacking)
@@ -260,8 +260,8 @@ func (suite *KeeperTestSuite) TestTotalCollateral() {
 
 	// set total collateral
 	totalCollateral := types.TotalCollateral{
-		MerDebt:    sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(100)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSDDenom, sdk.NewInt(50)),
+		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
+		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(50)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
 	}
 	suite.app.MakerKeeper.SetTotalCollateral(suite.ctx, totalCollateral)

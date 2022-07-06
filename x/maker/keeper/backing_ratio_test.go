@@ -58,7 +58,7 @@ func (suite *KeeperTestSuite) TestAdjustBackingRatio() {
 					suite.Commit()
 				}
 				suite.Require().Equal(shortCooldownPeriod, suite.ctx.BlockHeight())
-				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(101, 2))
+				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(101, 2))
 			},
 			expPanic: false,
 			expRes: &types.QueryBackingRatioResponse{
@@ -73,7 +73,7 @@ func (suite *KeeperTestSuite) TestAdjustBackingRatio() {
 					suite.Commit()
 				}
 				suite.Require().Equal(shortCooldownPeriod, suite.ctx.BlockHeight())
-				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(101, 2))
+				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(101, 2))
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, types.DefaultBackingRatioStep.Sub(sdk.NewDecWithPrec(1, 4)))
 			},
 			expPanic: false,
@@ -89,7 +89,7 @@ func (suite *KeeperTestSuite) TestAdjustBackingRatio() {
 					suite.Commit()
 				}
 				suite.Require().Equal(shortCooldownPeriod, suite.ctx.BlockHeight())
-				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(99, 2))
+				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(99, 2))
 			},
 			expPanic: false,
 			expRes: &types.QueryBackingRatioResponse{
@@ -105,7 +105,7 @@ func (suite *KeeperTestSuite) TestAdjustBackingRatio() {
 				}
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(9, 1))
 				suite.Require().Equal(shortCooldownPeriod, suite.ctx.BlockHeight())
-				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSDDenom, sdk.NewDecWithPrec(99, 2))
+				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(99, 2))
 			},
 			expPanic: false,
 			expRes: &types.QueryBackingRatioResponse{
