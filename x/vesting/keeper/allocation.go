@@ -72,7 +72,7 @@ func (k Keeper) createContinuousVestingAccount(ctx sdk.Context, vestingName stri
 	if err != nil {
 		panic(err)
 	}
-	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, k.getVestingAddress(vestingName), sdk.NewCoins(amt))
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, vestingAccount.GetAddress(), sdk.NewCoins(amt))
 	if err != nil {
 		panic(err)
 	}

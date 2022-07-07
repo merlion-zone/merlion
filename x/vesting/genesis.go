@@ -11,22 +11,22 @@ import (
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	k.SetParams(ctx, genState.Params)
 
-	addr := k.GetAllocationAddresses(ctx)
+	allocAddresses := k.GetAllocationAddresses(ctx)
 	if len(genState.AllocationAddresses.StrategicReserveCustodianAddr) != 0 {
 		newSrca, err := sdk.AccAddressFromBech32(genState.AllocationAddresses.StrategicReserveCustodianAddr)
 		if err != nil {
 			panic(err)
 		}
-		addr.StrategicReserveCustodianAddr = newSrca.String()
+		allocAddresses.StrategicReserveCustodianAddr = newSrca.String()
 	}
 	if len(genState.AllocationAddresses.TeamVestingAddr) != 0 {
 		newTva, err := sdk.AccAddressFromBech32(genState.AllocationAddresses.TeamVestingAddr)
 		if err != nil {
 			panic(err)
 		}
-		addr.TeamVestingAddr = newTva.String()
+		allocAddresses.TeamVestingAddr = newTva.String()
 	}
-	k.SetAllocationAddresses(ctx, addr)
+	k.SetAllocationAddresses(ctx, allocAddresses)
 
 	if ctx.BlockHeight() <= 1 {
 		k.AllocateAtGenesis(ctx, genState)

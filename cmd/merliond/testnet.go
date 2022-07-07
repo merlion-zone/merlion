@@ -34,6 +34,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	merlion "github.com/merlion-zone/merlion/types"
 	makertypes "github.com/merlion-zone/merlion/x/maker/types"
+	customvestingtypes "github.com/merlion-zone/merlion/x/vesting/types"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
@@ -328,12 +329,13 @@ func initTestnetFiles(
 		})
 
 		valTokens := sdk.TokensFromConsensusPower(100, ethermint.PowerReduction)
+		commissionRate := sdk.NewDecWithPrec(5, 2)
 		createValMsg, err := stakingtypes.NewMsgCreateValidator(
 			sdk.ValAddress(addr),
 			valPubKeys[i],
 			sdk.NewCoin(merlion.BaseDenom, valTokens),
 			stakingtypes.NewDescription(nodeDirName, "", "", "", ""),
-			stakingtypes.NewCommissionRates(sdk.OneDec(), sdk.OneDec(), sdk.OneDec()),
+			stakingtypes.NewCommissionRates(commissionRate, commissionRate, commissionRate),
 			sdk.OneInt(),
 		)
 		if err != nil {
@@ -457,6 +459,12 @@ func initGenFiles(
 	makerGenState.BackingRatio = sdk.NewDecWithPrec(95, 2)
 	makerGenState.Params.BackingRatioStep = sdk.ZeroDec()
 	appGenState[makertypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&makerGenState)
+
+	var vestingGenState customvestingtypes.GenesisState
+	clientCtx.Codec.MustUnmarshalJSON(appGenState[customvestingtypes.ModuleName], &vestingGenState)
+	vestingGenState.AllocationAddresses.TeamVestingAddr = genAccounts[0].GetAddress().String()
+	vestingGenState.AllocationAddresses.StrategicReserveCustodianAddr = genAccounts[1].GetAddress().String()
+	appGenState[customvestingtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&vestingGenState)
 
 	appGenStateJSON, err := json.MarshalIndent(appGenState, "", "  ")
 	if err != nil {

@@ -26,6 +26,7 @@ func (m msgServer) AddAirdrops(c context.Context, msg *types.MsgAddAirdrops) (*t
 		return nil, err
 	}
 
+	// Airdrops can only be added by team vesting address
 	teamAddr := m.Keeper.GetAllocationAddresses(ctx).GetTeamVestingAddr()
 	if !sender.Equals(teamAddr) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "unauthorized sender")
@@ -65,6 +66,7 @@ func (m msgServer) ExecuteAirdrops(c context.Context, msg *types.MsgExecuteAirdr
 		return nil, err
 	}
 
+	// Airdrops can only be executed by team vesting address
 	teamAddr := m.Keeper.GetAllocationAddresses(ctx).GetTeamVestingAddr()
 	if !sender.Equals(teamAddr) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "unauthorized sender")

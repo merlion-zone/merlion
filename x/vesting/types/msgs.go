@@ -43,6 +43,7 @@ func (m *MsgAddAirdrops) ValidateBasic() error {
 		if err != nil {
 			return err
 		}
+		// Only native lion coin is allowed
 		_, err = sdk.ParseCoinNormalized(airdrop.Amount.String())
 		if err != nil {
 			return err
