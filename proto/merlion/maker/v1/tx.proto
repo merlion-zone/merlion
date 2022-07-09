@@ -52,7 +52,7 @@ service Msg {
     option (google.api.http).get = "/merlion/maker/v1/tx/deposit_collateral";
   }
 
-  // RedeemCollateral redeems collateral assets.
+  // RedeemCollateral redeems collateral assets and collateralized Lion coins.
   rpc RedeemCollateral(MsgRedeemCollateral)
       returns (MsgRedeemCollateralResponse) {
     option (google.api.http).get = "/merlion/maker/v1/tx/redeem_collateral";
@@ -314,7 +314,8 @@ message MsgDepositCollateral {
 // MsgDepositCollateralResponse defines the Msg/DepositCollateral response type.
 message MsgDepositCollateralResponse {}
 
-// MsgRedeemCollateral represents a message to redeem collateral assets.
+// MsgRedeemCollateral represents a message to redeem collateral assets and
+// collateralized Lion coins.
 message MsgRedeemCollateral {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
@@ -325,8 +326,12 @@ message MsgRedeemCollateral {
   ];
   string to = 2
       [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
-  cosmos.base.v1beta1.Coin collateral = 3 [
-    (gogoproto.moretags) = "yaml:\"collateral\"",
+  cosmos.base.v1beta1.Coin collateral_out = 3 [
+    (gogoproto.moretags) = "yaml:\"collateral_out\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin lion_out = 4 [
+    (gogoproto.moretags) = "yaml:\"lion_out\"",
     (gogoproto.nullable) = false
   ];
 }
