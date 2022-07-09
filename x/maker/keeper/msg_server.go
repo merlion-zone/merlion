@@ -633,13 +633,17 @@ func (m msgServer) LiquidateCollateral(c context.Context, msg *types.MsgLiquidat
 	}
 
 	liquidationFee := msg.Collateral.Amount.ToDec().Mul(*collateralParams.LiquidationFee)
-	repayIn := sdk.NewCoin(collateralDenom, msg.Collateral.Amount.ToDec().Sub(liquidationFee).Mul(collateralPrice).TruncateInt())
 	commissionFee := sdk.NewCoin(collateralDenom, liquidationFee.Mul(m.Keeper.LiquidationCommissionFee(ctx)).TruncateInt())
+	repayIn := sdk.NewCoin(merlion.MicroUSMDenom, msg.Collateral.Amount.ToDec().Sub(liquidationFee).Mul(collateralPrice).TruncateInt())
 	collateralOut := msg.Collateral.Sub(commissionFee)
 
-	// repay for debtor as much as possible
+	// repay for debtor as much as possible, and repay interest first
 	repayDebt := sdk.NewCoin(merlion.MicroUSMDenom, sdk.MinInt(accColl.MerDebt.Amount, repayIn.Amount))
 	merRefund := repayIn.Sub(repayDebt)
+
+	repayInterest := sdk.NewCoin(merlion.MicroUSMDenom, sdk.MinInt(accColl.LastInterest.Amount, repayDebt.Amount))
+	accColl.LastInterest = accColl.LastInterest.Sub(repayInterest)
+
 	accColl.MerDebt = accColl.MerDebt.Sub(repayDebt)
 	poolColl.MerDebt = poolColl.MerDebt.Sub(repayDebt)
 	totalColl.MerDebt = totalColl.MerDebt.Sub(repayDebt)
