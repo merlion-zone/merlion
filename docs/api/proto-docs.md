@@ -2037,14 +2037,16 @@ MsgMintBySwapResponse defines the Msg/MintBySwap response type.
 <a name="merlion.maker.v1.MsgRedeemCollateral"></a>
 
 ### MsgRedeemCollateral
-MsgRedeemCollateral represents a message to redeem collateral assets.
+MsgRedeemCollateral represents a message to redeem collateral assets and
+collateralized Lion coins.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | `sender` | [string](#string) |  |  |
 | `to` | [string](#string) |  |  |
-| `collateral` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `collateral_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
+| `lion_out` | [cosmos.base.v1beta1.Coin](#cosmos.base.v1beta1.Coin) |  |  |
 
 
 
@@ -2116,7 +2118,7 @@ Msg defines the maker Msg service.
 | `MintByCollateral` | [MsgMintByCollateral](#merlion.maker.v1.MsgMintByCollateral) | [MsgMintByCollateralResponse](#merlion.maker.v1.MsgMintByCollateralResponse) | MintByCollateral mints Mer stablecoins by locking collateral assets and spending Lion coins. | GET|/merlion/maker/v1/tx/mint_by_collateral|
 | `BurnByCollateral` | [MsgBurnByCollateral](#merlion.maker.v1.MsgBurnByCollateral) | [MsgBurnByCollateralResponse](#merlion.maker.v1.MsgBurnByCollateralResponse) | BurnByCollateral burns Mer stablecoins by unlocking collateral assets and earning Lion coins. | GET|/merlion/maker/v1/tx/burn_by_collateral|
 | `DepositCollateral` | [MsgDepositCollateral](#merlion.maker.v1.MsgDepositCollateral) | [MsgDepositCollateralResponse](#merlion.maker.v1.MsgDepositCollateralResponse) | DepositCollateral deposits collateral assets. | GET|/merlion/maker/v1/tx/deposit_collateral|
-| `RedeemCollateral` | [MsgRedeemCollateral](#merlion.maker.v1.MsgRedeemCollateral) | [MsgRedeemCollateralResponse](#merlion.maker.v1.MsgRedeemCollateralResponse) | RedeemCollateral redeems collateral assets. | GET|/merlion/maker/v1/tx/redeem_collateral|
+| `RedeemCollateral` | [MsgRedeemCollateral](#merlion.maker.v1.MsgRedeemCollateral) | [MsgRedeemCollateralResponse](#merlion.maker.v1.MsgRedeemCollateralResponse) | RedeemCollateral redeems collateral assets and collateralized Lion coins. | GET|/merlion/maker/v1/tx/redeem_collateral|
 | `LiquidateCollateral` | [MsgLiquidateCollateral](#merlion.maker.v1.MsgLiquidateCollateral) | [MsgLiquidateCollateralResponse](#merlion.maker.v1.MsgLiquidateCollateralResponse) | LiquidateCollateral liquidates collateral assets which is undercollateralized. | GET|/merlion/maker/v1/tx/liquidate_collateral|
 
  <!-- end services -->

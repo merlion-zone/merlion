@@ -367,8 +367,11 @@ func (m *MsgRedeemCollateral) ValidateBasic() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
 		}
 	}
-	if !m.Collateral.Amount.IsPositive() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.Collateral.String())
+	if !m.CollateralOut.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.CollateralOut.String())
+	}
+	if !m.LionOut.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionOut.String())
 	}
 	return nil
 }

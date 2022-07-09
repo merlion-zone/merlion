@@ -534,7 +534,7 @@ func (m msgServer) DepositCollateral(c context.Context, msg *types.MsgDepositCol
 func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemCollateral) (*types.MsgRedeemCollateralResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	collateralDenom := msg.Collateral.Denom
+	collateralDenom := msg.CollateralOut.Denom
 
 	sender, receiver, err := getSenderReceiver(msg.Sender, msg.To)
 	if err != nil {
@@ -554,8 +554,10 @@ func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemColla
 	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
 
 	// update collateral
-	poolColl.Collateral = poolColl.Collateral.Sub(msg.Collateral)
-	accColl.Collateral = accColl.Collateral.Sub(msg.Collateral)
+	poolColl.Collateral = poolColl.Collateral.Sub(msg.CollateralOut)
+	poolColl.LionCollateralized = poolColl.LionCollateralized.Sub(msg.LionOut)
+	accColl.Collateral = accColl.Collateral.Sub(msg.CollateralOut)
+	accColl.LionCollateralized = accColl.LionCollateralized.Sub(msg.LionOut)
 
 	_, maxDebtInUSD, err := m.Keeper.maxLoanToValueForAccount(ctx, &accColl, &collateralParams)
 	if err != nil {
@@ -572,14 +574,15 @@ func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemColla
 	m.Keeper.SetTotalCollateral(ctx, totalColl)
 
 	// send collateral to receiver
-	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(msg.Collateral))
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(msg.CollateralOut, msg.LionOut))
 	if err != nil {
 		return nil, err
 	}
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(types.EventTypeRedeemCollateral,
-			sdk.NewAttribute(types.AttributeKeyCoinOut, msg.Collateral.String()),
+			sdk.NewAttribute(types.AttributeKeyCoinOut, msg.CollateralOut.String()),
+			sdk.NewAttribute(types.AttributeKeyCoinOut, msg.LionOut.String()),
 		),
 		sdk.NewEvent(
 			sdk.EventTypeMessage,

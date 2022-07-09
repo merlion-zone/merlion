@@ -454,9 +454,9 @@ func NewDepositCollateralCmd() *cobra.Command {
 
 func NewRedeemCollateralCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "redeem-collateral [collateral] [receiver]",
+		Use:   "redeem-collateral [collateral] [lion] [receiver]",
 		Short: "Redeem collateral asset",
-		Args:  cobra.RangeArgs(1, 2),
+		Args:  cobra.RangeArgs(2, 3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -470,9 +470,14 @@ func NewRedeemCollateralCmd() *cobra.Command {
 				return err
 			}
 
+			lion, err := sdk.ParseCoinNormalized(args[1])
+			if err != nil {
+				return err
+			}
+
 			var receiver string
-			if len(args) == 2 {
-				receiver = args[1]
+			if len(args) == 3 {
+				receiver = args[2]
 				if _, err := sdk.AccAddressFromBech32(receiver); err != nil {
 					return fmt.Errorf("invalid receiver bech32 address %w", err)
 				}
@@ -481,9 +486,10 @@ func NewRedeemCollateralCmd() *cobra.Command {
 			}
 
 			msg := &types.MsgRedeemCollateral{
-				Sender:     sender,
-				To:         receiver,
-				Collateral: collateral,
+				Sender:        sender,
+				To:            receiver,
+				CollateralOut: collateral,
+				LionOut:       lion,
 			}
 
 			if err := msg.ValidateBasic(); err != nil {
