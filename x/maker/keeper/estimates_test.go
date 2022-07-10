@@ -989,9 +989,9 @@ func (suite *KeeperTestSuite) TestEstimateMintByCollateralIn() {
 			req: &types.EstimateMintByCollateralInRequest{
 				CollateralDenom: suite.bcDenom,
 				Ltv:             sdk.NewDecWithPrec(5, 1),
-				MintOut:         sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1_600000)),
+				MintOut:         sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(2e6)),
 			},
-			expPass: false, // max mint total ~= 1_600000
+			expPass: false, // max mint total < 8e6 - 6e6 = 2e6
 			expErr:  types.ErrMerCeiling,
 		},
 		{
@@ -1002,27 +1002,25 @@ func (suite *KeeperTestSuite) TestEstimateMintByCollateralIn() {
 				MintOut:         sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(400000)),
 			},
 			// interestOfPeriod = 6_000000 * 4 * (1-0) / (10*60*24*365) = 5
-			// CR = (0.65-0.5)/(0.8-0.5) * 0.05 = 0.025
 			expPass: true,
 			expRes: &types.EstimateMintByCollateralInResponse{
-				LionIn:       sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()), // 170000 > (6_000000+5+170000+400000*(1+0.01))*0.025 = 165100
-				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),         // 10_000000 > (6_000000+5+(400000*(1+0.01) - 0)) / 0.65 / 0.99 = 9951834
-				MintFee:      sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(4000)),
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),            // 1e7 > (6e6 + 5 + 4e5 / (1-0.01)) / 0.65 / 0.99 = 9951897
+				LionIn:       sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),    // 0.5 + (3e15*1e-10) / (1e7*0.99) / 0.05 * (0.8-0.5) = 0.682 > 0.65
+				MintFee:      sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(4040)), // 4e5 / (1-0.01) * 0.01
 			},
 		},
 		{
 			name: "correct",
 			req: &types.EstimateMintByCollateralInRequest{
 				CollateralDenom: suite.bcDenom,
-				Ltv:             sdk.NewDecWithPrec(65, 2),
+				Ltv:             sdk.NewDecWithPrec(7, 1),
 				MintOut:         sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1_000000)),
 			},
-			// addedMerByLion = (6_000000+5+170000+1_000000*(1+0.01))*0.025 - 170000 = 9500
 			expPass: true,
 			expRes: &types.EstimateMintByCollateralInResponse{
-				LionIn:       sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(95_000000_000000)), // 9500 / 10**-10
-				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(878796)),                   // (6_000000+5+(1_000000*(1+0.01) - 9500)) / 0.65 / 0.99 - 10_000000
-				MintFee:      sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(10000)),
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(115593)),                    // (6e6 + 5 + 1e6/(1-0.01)) / 0.7 / 0.99 - 1e7
+				LionIn:       sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(338_145690_000000)), // (0.7-0.5) / (0.8-0.5) * 0.05 * (1e7+115593)*0.99 / 1e-10 - 3e15
+				MintFee:      sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(10101)),             // 1e6 / 0.99 * 0.01
 			},
 		},
 		{
@@ -1032,9 +1030,7 @@ func (suite *KeeperTestSuite) TestEstimateMintByCollateralIn() {
 				Ltv:             sdk.NewDecWithPrec(5, 1),
 				MintOut:         sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1_000000)),
 			},
-			// CR = 0
-			// addedMerByLion = 0
-			// CollateralIn = (6_000000+5+(1_000000*(1+0.01) - 0)) / 0.5 / 0.99 - 10_000000 = 4_161626
+			// CollateralIn = (6e6 + 5 + 1e6/(1-0.01)) / 0.5 / 0.99 - 1e7 = 4_161830
 			// pool.Collateral max adding:  1_000000
 			expPass: false,
 			expErr:  types.ErrCollateralCeiling,
@@ -1129,6 +1125,17 @@ func (suite *KeeperTestSuite) TestEstimateMintByCollateralOut() {
 		},
 		{
 			name: "mer over ceiling",
+			req: &types.EstimateMintByCollateralOutRequest{
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1e6)),
+				Ltv:          sdk.NewDecWithPrec(8, 1),
+			},
+			// interestOfPeriod = 6_000000 * 4 * (1-0) / (10*60*24*365) = 5
+			// (1e7+1e6)*0.99*0.8-(6e6+5) + 8e6 = 10_711995 > 1e7
+			expPass: false,
+			expErr:  types.ErrMerCeiling,
+		},
+		{
+			name: "correct",
 			malleate: func() {
 				poolColl, found := suite.app.MakerKeeper.GetPoolCollateral(suite.ctx, suite.bcDenom)
 				suite.Require().True(found)
@@ -1136,32 +1143,14 @@ func (suite *KeeperTestSuite) TestEstimateMintByCollateralOut() {
 				suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, poolColl)
 			},
 			req: &types.EstimateMintByCollateralOutRequest{
-				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(10_000000)),
-				Ltv:          sdk.NewDecWithPrec(5, 1),
+				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1e6)),
+				Ltv:          sdk.NewDecWithPrec(7, 1),
 			},
-			// interestOfPeriod = 6_000000 * 4 * (1-0) / (10*60*24*365) = 5
-			// addedMerByLion = 0
-			// addedMerDebt = (10_000000 + 10_000000)*0.99*0.5 - (6_000000+5) = 3_899995
-			// pool.MerMint = 8_000000 + 3_899995 + 400000 > 10_000000
-			expPass: false,
-			expErr:  types.ErrMerCeiling,
-		},
-		{
-			name: "correct",
-			req: &types.EstimateMintByCollateralOutRequest{
-				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(500000)),
-				Ltv:          sdk.NewDecWithPrec(65, 2),
-			},
-			// CR = (0.65-0.5)/(0.8-0.5) * 0.05 = 0.025
-			// new acc MerDebt = (10_000000+500000)*0.99*0.65 = 6_756750
-			// addedMerDebt = 6_756750 - (6_000000+5) = 756745
-			// new acc MerByLion = 0.025*6_756750/(1-0.025) = 173250
-			// addedMerByLion = 173250 - 170000 = 3250
 			expPass: true,
 			expRes: &types.EstimateMintByCollateralOutResponse{
-				LionIn:  sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(325_00000_000000)), // (173250-170000)/10**-10,
-				MintOut: sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(752470)),           // (756745+3250)/(1+0.01)
-				MintFee: sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(7525)),             // (756745+3250)/(1+0.01)*0.01
+				LionIn:  sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(63e13)),    // (0.7-0.5) / (0.8-0.5) * 0.05 * (1e7+1e6)*0.99 / 1e-10 - 3e15
+				MintOut: sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1_606765)), // ((1e7+1e6)*0.99*0.7 - (6e6+5)) * (1-0.01)
+				MintFee: sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(16230)),    // ((1e7+1e6)*0.99*0.7 - (6e6+5)) * 0.01
 			},
 		},
 		{
@@ -1170,10 +1159,6 @@ func (suite *KeeperTestSuite) TestEstimateMintByCollateralOut() {
 				CollateralIn: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),
 				Ltv:          sdk.NewDecWithPrec(5, 1),
 			},
-			// CR = 0
-			// addedMerByLion = 0
-			// new acc MerDebt = 10_000000*0.99*0.5 = 4_950000 < 6_000000+5
-			// addedMerDebt = 0
 			expPass: true,
 			expRes: &types.EstimateMintByCollateralOutResponse{
 				LionIn:  sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
@@ -1239,20 +1224,17 @@ func (suite *KeeperTestSuite) setupEstimationTest() {
 		Account:             suite.accAddress.String(),
 		Collateral:          sdk.NewCoin(suite.bcDenom, sdk.NewInt(10_000000)),
 		MerDebt:             sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(6_000000)),
-		MerByLion:           sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(170000)),
-		LionBurned:          sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+		LionCollateralized:  sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(3e15)),
 		LastInterest:        sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
 		LastSettlementBlock: 0,
 	})
 	suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, types.PoolCollateral{
-		Collateral: sdk.NewCoin(suite.bcDenom, sdk.NewInt(15_000000)),
-		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(8_000000)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(400000)),
-		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+		Collateral:         sdk.NewCoin(suite.bcDenom, sdk.NewInt(15_000000)),
+		MerDebt:            sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(8_000000)),
+		LionCollateralized: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 	})
 	suite.app.MakerKeeper.SetTotalCollateral(suite.ctx, types.TotalCollateral{
-		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(10_000000)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(500000)),
-		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+		MerDebt:            sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(10_000000)),
+		LionCollateralized: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 	})
 }

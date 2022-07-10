@@ -105,10 +105,9 @@ func (suite *KeeperTestSuite) TestAllCollateralPools() {
 
 	// add collateral pool
 	poolColl := types.PoolCollateral{
-		Collateral: sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
-		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
-		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
+		Collateral:         sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
+		MerDebt:            sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
+		LionCollateralized: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
 	}
 	suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, poolColl)
 	res, err = suite.queryClient.AllCollateralPools(ctx, &types.QueryAllCollateralPoolsRequest{})
@@ -120,10 +119,9 @@ func (suite *KeeperTestSuite) TestAllCollateralPools() {
 
 	// add another collateral pool
 	poolColl2 := types.PoolCollateral{
-		Collateral: sdk.NewCoin("eth", sdk.NewInt(10)),
-		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(300)),
-		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
+		Collateral:         sdk.NewCoin("eth", sdk.NewInt(10)),
+		MerDebt:            sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
+		LionCollateralized: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
 	}
 	suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, poolColl2)
 	res, err = suite.queryClient.AllCollateralPools(ctx, &types.QueryAllCollateralPoolsRequest{})
@@ -155,10 +153,9 @@ func (suite *KeeperTestSuite) TestBackingPool() {
 
 func (suite *KeeperTestSuite) TestCollateralPool() {
 	poolCollateral := types.PoolCollateral{
-		Collateral: sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
-		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(300)),
-		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
+		Collateral:         sdk.NewCoin(suite.bcDenom, sdk.NewInt(10)),
+		MerDebt:            sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
+		LionCollateralized: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2000)),
 	}
 	suite.app.MakerKeeper.SetPoolCollateral(suite.ctx, poolCollateral)
 
@@ -187,8 +184,7 @@ func (suite *KeeperTestSuite) TestCollateralOfAccount() {
 		Account:             accAddress.String(),
 		Collateral:          sdk.NewCoin(suite.bcDenom, sdk.NewInt(100)),
 		MerDebt:             sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(200)),
-		MerByLion:           sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(50)),
-		LionBurned:          sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
+		LionCollateralized:  sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
 		LastInterest:        sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(10)),
 		LastSettlementBlock: 666,
 	}
@@ -268,9 +264,8 @@ func (suite *KeeperTestSuite) TestTotalCollateral() {
 	res, err := suite.queryClient.TotalCollateral(ctx, &types.QueryTotalCollateralRequest{})
 	expRes := &types.QueryTotalCollateralResponse{
 		TotalCollateral: types.TotalCollateral{
-			MerDebt:    sdk.Coin{"", sdk.ZeroInt()},
-			MerByLion:  sdk.Coin{"", sdk.ZeroInt()},
-			LionBurned: sdk.Coin{"", sdk.ZeroInt()},
+			MerDebt:            sdk.Coin{"", sdk.ZeroInt()},
+			LionCollateralized: sdk.Coin{"", sdk.ZeroInt()},
 		},
 	}
 	suite.Require().NoError(err)
@@ -278,9 +273,8 @@ func (suite *KeeperTestSuite) TestTotalCollateral() {
 
 	// set total collateral
 	totalCollateral := types.TotalCollateral{
-		MerDebt:    sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
-		MerByLion:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(50)),
-		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
+		MerDebt:            sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(100)),
+		LionCollateralized: sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1000)),
 	}
 	suite.app.MakerKeeper.SetTotalCollateral(suite.ctx, totalCollateral)
 	res, err = suite.queryClient.TotalCollateral(ctx, &types.QueryTotalCollateralRequest{})
