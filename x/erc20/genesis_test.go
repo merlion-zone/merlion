@@ -43,8 +43,8 @@ func (suite *GenesisTestSuite) TestERC20InitGenesis() {
 		{
 			"custom genesis",
 			types.GenesisState{
-				types.DefaultParams(),
-				[]types.TokenPair{
+				Params: types.DefaultParams(),
+				TokenPairs: []types.TokenPair{
 					{
 						Erc20Address:  "0x5dCA2483280D9727c80b5518faC4556617fb19ZZ",
 						Denom:         "coin",
@@ -88,8 +88,8 @@ func (suite *GenesisTestSuite) TestErc20ExportGenesis() {
 		{
 			"custom genesis",
 			types.GenesisState{
-				types.DefaultParams(),
-				[]types.TokenPair{
+				Params: types.DefaultParams(),
+				TokenPairs: []types.TokenPair{
 					{
 						Erc20Address:  "0x5dCA2483280D9727c80b5518faC4556617fb19ZZ",
 						Denom:         "coin",
@@ -114,6 +114,5 @@ func (suite *GenesisTestSuite) TestErc20ExportGenesis() {
 				suite.Require().Len(genesisExported.TokenPairs, 0)
 			}
 		})
-		// }
 	}
 }
