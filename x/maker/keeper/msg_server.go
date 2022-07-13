@@ -335,28 +335,15 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 		return nil, err
 	}
 
-	zeroCollateralIn := sdk.NewCoin(msg.CollateralDenom, sdk.ZeroInt())
-	lionIn, mintOut, mintFee, totalColl, poolColl, accColl, err := m.Keeper.estimateMintByCollateralOut(ctx, sender, zeroCollateralIn, msg.Ltv)
+	mintFee, totalColl, poolColl, accColl, err := m.Keeper.calculateMintByCollateral(ctx, sender, msg.CollateralDenom, msg.MintOut)
 	if err != nil {
 		return nil, err
 	}
-	mintTotal := mintOut.Add(mintFee)
-
-	if mintOut.IsLT(msg.MintOutMin) {
-		return nil, sdkerrors.Wrapf(types.ErrMerSlippage, "mint out: %s", mintOut)
-	}
+	mintTotal := msg.MintOut.Add(mintFee)
 
 	m.Keeper.SetAccountCollateral(ctx, sender, accColl)
 	m.Keeper.SetPoolCollateral(ctx, poolColl)
 	m.Keeper.SetTotalCollateral(ctx, totalColl)
-
-	// take lion
-	if lionIn.IsPositive() {
-		err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(lionIn))
-		if err != nil {
-			return nil, err
-		}
-	}
 
 	// mint mer
 	err = m.Keeper.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintTotal))
@@ -364,7 +351,7 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 		return nil, err
 	}
 	// send mer to receiver
-	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(mintOut))
+	err = m.Keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, sdk.NewCoins(msg.MintOut))
 	if err != nil {
 		return nil, err
 	}
@@ -378,8 +365,7 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(types.EventTypeMintByCollateral,
-			sdk.NewAttribute(types.AttributeKeyCoinIn, lionIn.String()),
-			sdk.NewAttribute(types.AttributeKeyCoinOut, mintOut.String()),
+			sdk.NewAttribute(types.AttributeKeyCoinOut, msg.MintOut.String()),
 			sdk.NewAttribute(types.AttributeKeyFee, mintFee.String()),
 		),
 		sdk.NewEvent(
@@ -389,8 +375,6 @@ func (m msgServer) MintByCollateral(c context.Context, msg *types.MsgMintByColla
 	})
 
 	return &types.MsgMintByCollateralResponse{
-		LionIn:  lionIn,
-		MintOut: mintOut,
 		MintFee: mintFee,
 	}, nil
 }
@@ -410,7 +394,7 @@ func (m msgServer) BurnByCollateral(c context.Context, msg *types.MsgBurnByColla
 		return nil, err
 	}
 
-	collateralParams, err := m.Keeper.getEnabledCollateralParams(ctx, collateralDenom)
+	collateralParams, err := m.Keeper.getAvailableCollateralParams(ctx, collateralDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -420,7 +404,7 @@ func (m msgServer) BurnByCollateral(c context.Context, msg *types.MsgBurnByColla
 		return nil, err
 	}
 
-	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
+	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, *collateralParams.InterestFee)
 
 	// compute burn-in, repay interest first
 	if !accColl.MerDebt.IsPositive() {
@@ -480,32 +464,33 @@ func (m msgServer) BurnByCollateral(c context.Context, msg *types.MsgBurnByColla
 func (m msgServer) DepositCollateral(c context.Context, msg *types.MsgDepositCollateral) (*types.MsgDepositCollateralResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	collateralDenom := msg.Collateral.Denom
+	collateralDenom := msg.CollateralIn.Denom
 
 	sender, receiver, err := getSenderReceiver(msg.Sender, msg.To)
 	if err != nil {
 		return nil, err
 	}
 
-	collateralParams, err := m.Keeper.getEnabledCollateralParams(ctx, collateralDenom)
+	collateralParams, err := m.Keeper.getAvailableCollateralParams(ctx, collateralDenom)
 	if err != nil {
 		return nil, err
 	}
 
-	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, receiver, collateralDenom)
+	totalColl, poolColl, accColl, err := m.Keeper.getCollateral(ctx, receiver, collateralDenom, true)
 	if err != nil {
 		return nil, err
 	}
 
-	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
+	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, *collateralParams.InterestFee)
 
-	accColl.Collateral = accColl.Collateral.Add(msg.Collateral)
-	poolColl.Collateral = poolColl.Collateral.Add(msg.Collateral)
+	accColl.Collateral = accColl.Collateral.Add(msg.CollateralIn)
+	poolColl.Collateral = poolColl.Collateral.Add(msg.CollateralIn)
+	accColl.LionCollateralized = accColl.LionCollateralized.Add(msg.LionIn)
+	poolColl.LionCollateralized = poolColl.LionCollateralized.Add(msg.LionIn)
+	totalColl.LionCollateralized = totalColl.LionCollateralized.Add(msg.LionIn)
 
-	if collateralParams.MaxCollateral != nil {
-		if poolColl.Collateral.Amount.GT(*collateralParams.MaxCollateral) {
-			return nil, sdkerrors.Wrap(types.ErrCollateralCeiling, "collateral over ceiling")
-		}
+	if collateralParams.MaxCollateral != nil && poolColl.Collateral.Amount.GT(*collateralParams.MaxCollateral) {
+		return nil, sdkerrors.Wrap(types.ErrCollateralCeiling, "")
 	}
 
 	m.Keeper.SetAccountCollateral(ctx, receiver, accColl)
@@ -513,14 +498,14 @@ func (m msgServer) DepositCollateral(c context.Context, msg *types.MsgDepositCol
 	m.Keeper.SetTotalCollateral(ctx, totalColl)
 
 	// take collateral from sender
-	err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(msg.Collateral))
+	err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(msg.CollateralIn))
 	if err != nil {
 		return nil, err
 	}
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(types.EventTypeDepositCollateral,
-			sdk.NewAttribute(types.AttributeKeyCoinIn, msg.Collateral.String()),
+			sdk.NewAttribute(types.AttributeKeyCoinIn, sdk.NewCoins(msg.CollateralIn, msg.LionIn).String()),
 		),
 		sdk.NewEvent(
 			sdk.EventTypeMessage,
@@ -541,7 +526,7 @@ func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemColla
 		return nil, err
 	}
 
-	collateralParams, err := m.Keeper.getEnabledCollateralParams(ctx, collateralDenom)
+	collateralParams, err := m.Keeper.getAvailableCollateralParams(ctx, collateralDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -551,13 +536,14 @@ func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemColla
 		return nil, err
 	}
 
-	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
+	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, *collateralParams.InterestFee)
 
 	// update collateral
-	poolColl.Collateral = poolColl.Collateral.Sub(msg.CollateralOut)
-	poolColl.LionCollateralized = poolColl.LionCollateralized.Sub(msg.LionOut)
 	accColl.Collateral = accColl.Collateral.Sub(msg.CollateralOut)
+	poolColl.Collateral = poolColl.Collateral.Sub(msg.CollateralOut)
 	accColl.LionCollateralized = accColl.LionCollateralized.Sub(msg.LionOut)
+	poolColl.LionCollateralized = poolColl.LionCollateralized.Sub(msg.LionOut)
+	totalColl.LionCollateralized = totalColl.LionCollateralized.Sub(msg.LionOut)
 
 	_, maxDebtInUSD, err := m.Keeper.maxLoanToValueForAccount(ctx, &accColl, &collateralParams)
 	if err != nil {
@@ -565,7 +551,7 @@ func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemColla
 	}
 
 	if accColl.MerDebt.Amount.ToDec().Mul(merlion.MicroUSMTarget).GT(maxDebtInUSD) {
-		return nil, sdkerrors.Wrapf(types.ErrAccountInsufficientCollateral, "account has insufficient collateral: %s", collateralDenom)
+		return nil, sdkerrors.Wrapf(types.ErrAccountInsufficientCollateral, "account collateral insufficient: %s", collateralDenom)
 	}
 
 	// eventually persist collateral
@@ -581,8 +567,7 @@ func (m msgServer) RedeemCollateral(c context.Context, msg *types.MsgRedeemColla
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(types.EventTypeRedeemCollateral,
-			sdk.NewAttribute(types.AttributeKeyCoinOut, msg.CollateralOut.String()),
-			sdk.NewAttribute(types.AttributeKeyCoinOut, msg.LionOut.String()),
+			sdk.NewAttribute(types.AttributeKeyCoinOut, sdk.NewCoins(msg.CollateralOut, msg.LionOut).String()),
 		),
 		sdk.NewEvent(
 			sdk.EventTypeMessage,
@@ -607,7 +592,7 @@ func (m msgServer) LiquidateCollateral(c context.Context, msg *types.MsgLiquidat
 		return nil, err
 	}
 
-	collateralParams, err := m.Keeper.getEnabledCollateralParams(ctx, collateralDenom)
+	collateralParams, err := m.Keeper.getAvailableCollateralParams(ctx, collateralDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -617,7 +602,7 @@ func (m msgServer) LiquidateCollateral(c context.Context, msg *types.MsgLiquidat
 		return nil, err
 	}
 
-	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, collateralParams.InterestFee)
+	settleInterestFee(ctx, &accColl, &poolColl, &totalColl, *collateralParams.InterestFee)
 
 	// get prices in usd
 	collateralPrice, err := m.Keeper.oracleKeeper.GetExchangeRate(ctx, collateralDenom)
@@ -627,18 +612,22 @@ func (m msgServer) LiquidateCollateral(c context.Context, msg *types.MsgLiquidat
 
 	// check whether undercollateralized
 	liquidationValue := accColl.Collateral.Amount.ToDec().Mul(collateralPrice).Mul(*collateralParams.LiquidationThreshold)
-	if accColl.MerDebt.Amount.ToDec().LTE(liquidationValue) {
-		return nil, sdkerrors.Wrap(types.ErrNotUndercollateralized, "not undercollateralized")
+	if accColl.MerDebt.Amount.ToDec().Mul(merlion.MicroUSMTarget).LT(liquidationValue) {
+		return nil, sdkerrors.Wrap(types.ErrNotUndercollateralized, "")
 	}
 
 	if msg.Collateral.Amount.GT(accColl.Collateral.Amount) {
-		return nil, sdkerrors.Wrap(types.ErrCollateralCoinInsufficient, "collateral coin balance insufficient")
+		return nil, sdkerrors.Wrap(types.ErrCollateralCoinInsufficient, "")
 	}
 
 	liquidationFee := msg.Collateral.Amount.ToDec().Mul(*collateralParams.LiquidationFee)
 	commissionFee := sdk.NewCoin(collateralDenom, liquidationFee.Mul(m.Keeper.LiquidationCommissionFee(ctx)).TruncateInt())
-	repayIn := sdk.NewCoin(merlion.MicroUSMDenom, msg.Collateral.Amount.ToDec().Sub(liquidationFee).Mul(collateralPrice).TruncateInt())
 	collateralOut := msg.Collateral.Sub(commissionFee)
+	repayIn := sdk.NewCoin(merlion.MicroUSMDenom, msg.Collateral.Amount.ToDec().Sub(liquidationFee).Mul(collateralPrice).Quo(merlion.MicroUSMTarget).TruncateInt())
+
+	if msg.RepayInMax.IsLT(repayIn) {
+		return nil, sdkerrors.Wrap(types.ErrMerSlippage, "")
+	}
 
 	// repay for debtor as much as possible, and repay interest first
 	repayDebt := sdk.NewCoin(merlion.MicroUSMDenom, sdk.MinInt(accColl.MerDebt.Amount, repayIn.Amount))
@@ -650,6 +639,8 @@ func (m msgServer) LiquidateCollateral(c context.Context, msg *types.MsgLiquidat
 	accColl.MerDebt = accColl.MerDebt.Sub(repayDebt)
 	poolColl.MerDebt = poolColl.MerDebt.Sub(repayDebt)
 	totalColl.MerDebt = totalColl.MerDebt.Sub(repayDebt)
+	accColl.Collateral = accColl.Collateral.Sub(msg.Collateral)
+	poolColl.Collateral = poolColl.Collateral.Sub(msg.Collateral)
 
 	// eventually persist collateral
 	m.Keeper.SetAccountCollateral(ctx, debtor, accColl)
@@ -732,12 +723,11 @@ func (k Keeper) getCollateral(ctx sdk.Context, account sdk.AccAddress, denom str
 	if !found {
 		if len(allowNewAccount) > 0 && allowNewAccount[0] {
 			acc = types.AccountCollateral{
-				Account:            account.String(),
-				Collateral:         sdk.NewCoin(denom, sdk.ZeroInt()),
-				MerDebt:            sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
-				LionCollateralized: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
-				LastInterest:       sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
-
+				Account:             account.String(),
+				Collateral:          sdk.NewCoin(denom, sdk.ZeroInt()),
+				MerDebt:             sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
+				LionCollateralized:  sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+				LastInterest:        sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
 				LastSettlementBlock: ctx.BlockHeight(),
 			}
 		} else {
@@ -748,28 +738,28 @@ func (k Keeper) getCollateral(ctx sdk.Context, account sdk.AccAddress, denom str
 	return
 }
 
-func settleInterestFee(ctx sdk.Context, acc *types.AccountCollateral, pool *types.PoolCollateral, total *types.TotalCollateral, apr *sdk.Dec) {
-	if apr != nil {
-		period := ctx.BlockHeight() - acc.LastSettlementBlock
-		if period == 0 {
-			// short circuit
-			return
-		}
-		// principal debt, excluding interest debt
-		principalDebt := acc.MerDebt.Sub(acc.LastInterest)
-		interestOfPeriod := principalDebt.Amount.ToDec().Mul(*apr).MulInt64(period).QuoInt64(int64(merlion.BlocksPerYear)).RoundInt()
-		// update remaining interest accumulation
-		acc.LastInterest = acc.LastInterest.AddAmount(interestOfPeriod)
-		// update debt
-		acc.MerDebt = acc.MerDebt.AddAmount(interestOfPeriod)
-		pool.MerDebt = pool.MerDebt.AddAmount(interestOfPeriod)
-		total.MerDebt = total.MerDebt.AddAmount(interestOfPeriod)
+func settleInterestFee(ctx sdk.Context, acc *types.AccountCollateral, pool *types.PoolCollateral, total *types.TotalCollateral, apr sdk.Dec) {
+	period := ctx.BlockHeight() - acc.LastSettlementBlock
+	if period == 0 {
+		// short circuit
+		return
 	}
+
+	// principal debt, excluding interest debt
+	principalDebt := acc.MerDebt.Sub(acc.LastInterest)
+	interestOfPeriod := principalDebt.Amount.ToDec().Mul(apr).MulInt64(period).QuoInt64(int64(merlion.BlocksPerYear)).RoundInt()
+
+	// update remaining interest accumulation
+	acc.LastInterest = acc.LastInterest.AddAmount(interestOfPeriod)
+	// update debt
+	acc.MerDebt = acc.MerDebt.AddAmount(interestOfPeriod)
+	pool.MerDebt = pool.MerDebt.AddAmount(interestOfPeriod)
+	total.MerDebt = total.MerDebt.AddAmount(interestOfPeriod)
 	// update settlement block
 	acc.LastSettlementBlock = ctx.BlockHeight()
 }
 
-func (k Keeper) maxLoanToValueForAccount(ctx sdk.Context, acc *types.AccountCollateral, collateralParams *types.CollateralRiskParams) (maxLTV, maxDebtInUSD sdk.Dec, err error) {
+func (k Keeper) maxLoanToValueForAccount(ctx sdk.Context, acc *types.AccountCollateral, collateralParams *types.CollateralRiskParams) (availableLTV, maxDebtInUSD sdk.Dec, err error) {
 	collateralPrice, err := k.oracleKeeper.GetExchangeRate(ctx, acc.Collateral.Denom)
 	if err != nil {
 		return
@@ -781,9 +771,10 @@ func (k Keeper) maxLoanToValueForAccount(ctx sdk.Context, acc *types.AccountColl
 
 	collateralInUSD := acc.Collateral.Amount.ToDec().Mul(collateralPrice)
 	collateralizedLionInUSD := acc.LionCollateralized.Amount.ToDec().Mul(lionPrice)
-	catalyticRatio := sdk.MinDec(collateralizedLionInUSD.Quo(collateralInUSD), sdk.OneDec())
-	maxLTV = collateralParams.BasicLoanToValue.Add(collateralParams.LoanToValue.Sub(*collateralParams.BasicLoanToValue).Mul(catalyticRatio))
-	maxDebtInUSD = collateralInUSD.Mul(maxLTV)
+	catalyticRatio := sdk.MinDec(collateralizedLionInUSD.Quo(collateralInUSD), *collateralParams.CatalyticLionRatio)
+	// actualCatalyticRatio / maxCatalyticRatio = (availableLTV - basicLTV) / (maxLTV - basicLTV)
+	availableLTV = collateralParams.LoanToValue.Sub(*collateralParams.BasicLoanToValue).Mul(catalyticRatio).Quo(*collateralParams.CatalyticLionRatio).Add(*collateralParams.BasicLoanToValue)
+	maxDebtInUSD = collateralInUSD.Mul(availableLTV)
 
 	return
 }

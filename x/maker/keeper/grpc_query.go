@@ -133,7 +133,7 @@ func (k Keeper) Params(c context.Context, req *types.QueryParamsRequest) (*types
 
 func (k Keeper) EstimateMintBySwapIn(c context.Context, req *types.EstimateMintBySwapInRequest) (*types.EstimateMintBySwapInResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	backingIn, lionIn, mintFee, err := k.estimateMintBySwapIn(ctx, req.MintOut, req.BackingDenom, req.FullBacking)
+	backingIn, lionIn, mintFee, err := k.calculateMintBySwapIn(ctx, req.MintOut, req.BackingDenom, req.FullBacking)
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +162,7 @@ func (k Keeper) EstimateMintBySwapOut(c context.Context, req *types.EstimateMint
 
 func (k Keeper) EstimateBurnBySwapIn(c context.Context, req *types.EstimateBurnBySwapInRequest) (*types.EstimateBurnBySwapInResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	burnIn, backingOut, lionOut, burnFee, err := k.estimateBurnBySwapIn(ctx, req.BackingOutMax, req.LionOutMax)
+	burnIn, backingOut, lionOut, burnFee, err := k.calculateBurnBySwapIn(ctx, req.BackingOutMax, req.LionOutMax)
 	if err != nil {
 		return nil, err
 	}
@@ -238,43 +238,5 @@ func (k Keeper) EstimateSellBackingOut(c context.Context, req *types.EstimateSel
 	return &types.EstimateSellBackingOutResponse{
 		LionOut:     lionOut,
 		SellbackFee: sellbackFee,
-	}, nil
-}
-
-func (k Keeper) EstimateMintByCollateralIn(c context.Context, req *types.EstimateMintByCollateralInRequest) (*types.EstimateMintByCollateralInResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-	account, err := sdk.AccAddressFromBech32(req.Account)
-	if err != nil {
-		return nil, err
-	}
-
-	collateralIn, lionIn, mintFee, _, _, _, err := k.estimateMintByCollateralIn(ctx, account, req.MintOut, req.CollateralDenom, req.Ltv)
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.EstimateMintByCollateralInResponse{
-		CollateralIn: collateralIn,
-		LionIn:       lionIn,
-		MintFee:      mintFee,
-	}, nil
-}
-
-func (k Keeper) EstimateMintByCollateralOut(c context.Context, req *types.EstimateMintByCollateralOutRequest) (*types.EstimateMintByCollateralOutResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-	account, err := sdk.AccAddressFromBech32(req.Account)
-	if err != nil {
-		return nil, err
-	}
-
-	lionIn, mintOut, mintFee, _, _, _, err := k.estimateMintByCollateralOut(ctx, account, req.CollateralIn, req.Ltv)
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.EstimateMintByCollateralOutResponse{
-		LionIn:  lionIn,
-		MintOut: mintOut,
-		MintFee: mintFee,
 	}, nil
 }

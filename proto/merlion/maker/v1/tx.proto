@@ -239,28 +239,15 @@ message MsgMintByCollateral {
     (gogoproto.jsontag) = "collateral_denom",
     (gogoproto.moretags) = "yaml:\"collateral_denom\""
   ];
-  string ltv = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.moretags) = "yaml:\"ltv\"",
-    (gogoproto.nullable) = false
-  ];
-  cosmos.base.v1beta1.Coin mint_out_min = 5 [
-    (gogoproto.moretags) = "yaml:\"mint_out_min\"",
+  cosmos.base.v1beta1.Coin mint_out = 4 [
+    (gogoproto.moretags) = "yaml:\"mint_out\"",
     (gogoproto.nullable) = false
   ];
 }
 
 // MsgMintByCollateralResponse defines the Msg/MintByCollateral response type.
 message MsgMintByCollateralResponse {
-  cosmos.base.v1beta1.Coin lion_in = 1 [
-    (gogoproto.moretags) = "yaml:\"lion_in\"",
-    (gogoproto.nullable) = false
-  ];
-  cosmos.base.v1beta1.Coin mint_out = 2 [
-    (gogoproto.moretags) = "yaml:\"mint_out\"",
-    (gogoproto.nullable) = false
-  ];
-  cosmos.base.v1beta1.Coin mint_fee = 3 [
+  cosmos.base.v1beta1.Coin mint_fee = 1 [
     (gogoproto.moretags) = "yaml:\"mint_fee\"",
     (gogoproto.nullable) = false
   ];
@@ -305,8 +292,12 @@ message MsgDepositCollateral {
   ];
   string to = 2
       [ (gogoproto.jsontag) = "to", (gogoproto.moretags) = "yaml:\"to\"" ];
-  cosmos.base.v1beta1.Coin collateral = 3 [
-    (gogoproto.moretags) = "yaml:\"collateral\"",
+  cosmos.base.v1beta1.Coin collateral_in = 3 [
+    (gogoproto.moretags) = "yaml:\"collateral_in\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin lion_in = 4 [
+    (gogoproto.moretags) = "yaml:\"lion_in\"",
     (gogoproto.nullable) = false
   ];
 }
@@ -353,6 +344,10 @@ message MsgLiquidateCollateral {
   string debtor = 3 [ (gogoproto.moretags) = "yaml:\"to\"" ];
   cosmos.base.v1beta1.Coin collateral = 4 [
     (gogoproto.moretags) = "yaml:\"collateral\"",
+    (gogoproto.nullable) = false
+  ];
+  cosmos.base.v1beta1.Coin repay_in_max = 5 [
+    (gogoproto.moretags) = "yaml:\"repay_in_max\"",
     (gogoproto.nullable) = false
   ];
 }

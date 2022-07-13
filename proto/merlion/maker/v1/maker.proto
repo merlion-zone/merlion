@@ -232,7 +232,7 @@ message AccountCollateral {
   // total collateralized lion
   cosmos.base.v1beta1.Coin lion_collateralized = 4
       [ (gogoproto.nullable) = false ];
-  // remaining interest debt after last settlement
+  // remaining interest debt at last settlement
   cosmos.base.v1beta1.Coin last_interest = 5 [ (gogoproto.nullable) = false ];
   // the block of last settlement
   int64 last_settlement_block = 6;

@@ -932,7 +932,7 @@ type AccountCollateral struct {
 	MerDebt types.Coin `protobuf:"bytes,3,opt,name=mer_debt,json=merDebt,proto3" json:"mer_debt"`
 	// total collateralized lion
 	LionCollateralized types.Coin `protobuf:"bytes,4,opt,name=lion_collateralized,json=lionCollateralized,proto3" json:"lion_collateralized"`
-	// remaining interest debt after last settlement
+	// remaining interest debt at last settlement
 	LastInterest types.Coin `protobuf:"bytes,5,opt,name=last_interest,json=lastInterest,proto3" json:"last_interest"`
 	// the block of last settlement
 	LastSettlementBlock int64 `protobuf:"varint,6,opt,name=last_settlement_block,json=lastSettlementBlock,proto3" json:"last_settlement_block,omitempty"`
