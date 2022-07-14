@@ -7,7 +7,7 @@ import (
 
 // CreateDenomDescription generates a string with the coin description
 func CreateDenomDescription(address string) string {
-	return fmt.Sprintf("Cosmos coin token representation of %s", address)
+	return fmt.Sprintf("Merlion coin token representation of %s", address)
 }
 
 // CreateDenom generates a string the module name plus the address to avoid conflicts with names staring with a number
