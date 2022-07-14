@@ -247,18 +247,12 @@ func (m *MsgMintByCollateral) ValidateBasic() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
 		}
 	}
-	if m.MintOutMin.Denom != merlion.MicroUSMDenom {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.MintOutMin.Denom)
+	if m.MintOut.Denom != merlion.MicroUSMDenom {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.MintOut.Denom)
 	}
-	if !m.MintOutMin.Amount.IsPositive() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.MintOutMin.String())
+	if !m.MintOut.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.MintOut.String())
 	}
-	// if m.LionInMax.Denom != merlion.AttoLionDenom {
-	//	return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionInMax.Denom)
-	// }
-	// if !m.LionInMax.Amount.IsPositive() {
-	//	return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionInMax.String())
-	// }
 	return nil
 }
 
@@ -329,8 +323,17 @@ func (m *MsgDepositCollateral) ValidateBasic() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
 		}
 	}
-	if !m.Collateral.Amount.IsPositive() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.Collateral.String())
+	if m.CollateralIn.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.CollateralIn.String())
+	}
+	if m.LionIn.Denom != merlion.AttoLionDenom {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionIn.Denom)
+	}
+	if m.LionIn.Amount.IsNegative() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionIn.String())
+	}
+	if m.CollateralIn.Amount.IsZero() && m.LionIn.Amount.IsZero() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, sdk.NewCoins(m.CollateralIn, m.LionIn).String())
 	}
 	return nil
 }
@@ -367,11 +370,17 @@ func (m *MsgRedeemCollateral) ValidateBasic() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid receiver address (%s)", err)
 		}
 	}
-	if !m.CollateralOut.Amount.IsPositive() {
+	if m.CollateralOut.Amount.IsNegative() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.CollateralOut.String())
 	}
-	if !m.LionOut.Amount.IsPositive() {
+	if m.LionOut.Denom != merlion.AttoLionDenom {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.LionOut.Denom)
+	}
+	if m.LionOut.Amount.IsNegative() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.LionOut.String())
+	}
+	if m.CollateralOut.Amount.IsZero() && m.LionOut.Amount.IsZero() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, sdk.NewCoins(m.CollateralOut, m.LionOut).String())
 	}
 	return nil
 }
@@ -414,6 +423,12 @@ func (m *MsgLiquidateCollateral) ValidateBasic() error {
 	}
 	if !m.Collateral.Amount.IsPositive() {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.Collateral.String())
+	}
+	if m.RepayInMax.Denom != merlion.MicroUSMDenom {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coin: %s", m.RepayInMax.Denom)
+	}
+	if !m.RepayInMax.Amount.IsPositive() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.RepayInMax.String())
 	}
 	return nil
 }

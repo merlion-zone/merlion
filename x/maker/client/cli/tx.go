@@ -310,7 +310,7 @@ func NewSellBackingCmd() *cobra.Command {
 func NewMintByCollateralCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "mint-by-collateral [collateral_denom] [mint_out] [receiver]",
-		Short: "Mint by locking collateral asset and spending catalytic lion coin",
+		Short: "Mint by locking collateral asset and catalytic lion coin",
 		Args:  cobra.RangeArgs(2, 3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cliCtx, err := client.GetClientTxContext(cmd)
@@ -337,21 +337,11 @@ func NewMintByCollateralCmd() *cobra.Command {
 				receiver = sender
 			}
 
-			//lionInMaxStr, err := cmd.Flags().GetString(FlagLionInMax)
-			//if err != nil {
-			//	return err
-			//}
-			//lionInMax, err := sdk.ParseCoinNormalized(lionInMaxStr)
-			//if err != nil {
-			//	return fmt.Errorf("--%s: %w", FlagLionInMax, err)
-			//}
-
 			msg := &types.MsgMintByCollateral{
 				Sender:          sender,
 				To:              receiver,
 				CollateralDenom: collateralDenom,
-				MintOutMin:      mintOut,
-				//LionInMax:       lionInMax,
+				MintOut:         mintOut,
 			}
 
 			if err := msg.ValidateBasic(); err != nil {
@@ -361,8 +351,6 @@ func NewMintByCollateralCmd() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), msg)
 		},
 	}
-
-	cmd.Flags().String(FlagLionInMax, "0ulion", "Maximum lion-in coin")
 
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
@@ -435,9 +423,9 @@ func NewDepositCollateralCmd() *cobra.Command {
 			}
 
 			msg := &types.MsgDepositCollateral{
-				Sender:     sender,
-				To:         receiver,
-				Collateral: collateral,
+				Sender:       sender,
+				To:           receiver,
+				CollateralIn: collateral,
 			}
 
 			if err := msg.ValidateBasic(); err != nil {

@@ -35,7 +35,7 @@ var (
 	ErrLionCoinInsufficient       = sdkerrors.Register(ModuleName, 20, "insufficient available lion coin")
 
 	ErrAccountNoCollateral           = sdkerrors.Register(ModuleName, 21, "account has no collateral")
-	ErrAccountInsufficientCollateral = sdkerrors.Register(ModuleName, 22, "account has insufficient collateral")
+	ErrAccountInsufficientCollateral = sdkerrors.Register(ModuleName, 22, "account collateral insufficient")
 	ErrAccountNoDebt                 = sdkerrors.Register(ModuleName, 23, "account has no debt")
 	ErrNotUndercollateralized        = sdkerrors.Register(ModuleName, 24, "position is not undercollateralized")
 
