@@ -4,6 +4,8 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/maker/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -79,7 +81,18 @@ func (k Keeper) CollateralOfAccount(c context.Context, req *types.QueryCollatera
 
 	collateral, found := k.GetAccountCollateral(ctx, account, req.CollateralDenom)
 	if !found {
-		return nil, status.Errorf(codes.NotFound, "collateral with collateral denom '%s' of account '%s'", req.CollateralDenom, account)
+		if !k.IsCollateralRegistered(ctx, req.CollateralDenom) {
+			return nil, sdkerrors.Wrap(types.ErrCollateralCoinNotFound, "")
+		}
+
+		collateral = types.AccountCollateral{
+			Account:             account.String(),
+			Collateral:          sdk.NewCoin(req.CollateralDenom, sdk.ZeroInt()),
+			MerDebt:             sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
+			LionCollateralized:  sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
+			LastInterest:        sdk.NewCoin(merlion.MicroUSMDenom, sdk.ZeroInt()),
+			LastSettlementBlock: ctx.BlockHeight(),
+		}
 	}
 
 	return &types.QueryCollateralOfAccountResponse{

@@ -388,12 +388,6 @@ func (m msgServer) BurnByCollateral(c context.Context, msg *types.MsgBurnByColla
 
 	collateralDenom := msg.CollateralDenom
 
-	// check price upper bound
-	err = m.Keeper.checkBurnPriceUpperBound(ctx)
-	if err != nil {
-		return nil, err
-	}
-
 	collateralParams, err := m.Keeper.getAvailableCollateralParams(ctx, collateralDenom)
 	if err != nil {
 		return nil, err
@@ -498,7 +492,7 @@ func (m msgServer) DepositCollateral(c context.Context, msg *types.MsgDepositCol
 	m.Keeper.SetTotalCollateral(ctx, totalColl)
 
 	// take collateral from sender
-	err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(msg.CollateralIn))
+	err = m.Keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(msg.CollateralIn, msg.LionIn))
 	if err != nil {
 		return nil, err
 	}
@@ -771,6 +765,10 @@ func (k Keeper) maxLoanToValueForAccount(ctx sdk.Context, acc *types.AccountColl
 
 	collateralInUSD := acc.Collateral.Amount.ToDec().Mul(collateralPrice)
 	collateralizedLionInUSD := acc.LionCollateralized.Amount.ToDec().Mul(lionPrice)
+	if !collateralInUSD.IsPositive() {
+		return sdk.ZeroDec(), sdk.ZeroDec(), nil
+	}
+
 	catalyticRatio := sdk.MinDec(collateralizedLionInUSD.Quo(collateralInUSD), *collateralParams.CatalyticLionRatio)
 	// actualCatalyticRatio / maxCatalyticRatio = (availableLTV - basicLTV) / (maxLTV - basicLTV)
 	availableLTV = collateralParams.LoanToValue.Sub(*collateralParams.BasicLoanToValue).Mul(catalyticRatio).Quo(*collateralParams.CatalyticLionRatio).Add(*collateralParams.BasicLoanToValue)
