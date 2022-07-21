@@ -20,7 +20,7 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapIn() {
 		{
 			name: "mer price too low",
 			malleate: func() {
-				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(989, 3))
+				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(1009, 3))
 			},
 			req:     &types.EstimateMintBySwapInRequest{BackingDenom: suite.bcDenom},
 			expPass: false,
@@ -124,6 +124,7 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapIn() {
 		suite.Run(fmt.Sprintf("Case %s", tc.name), func() {
 			suite.SetupTest() // reset
 			suite.setupEstimationTest()
+			suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(101, 2))
 			if tc.malleate != nil {
 				tc.malleate()
 			}
@@ -180,8 +181,8 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 			expRes: &types.EstimateMintBySwapOutResponse{
 				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1_000000)),
 				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
-				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(985075)), // 1_000000 * 0.99 * (1 / (1+0.005))
-				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(4925)),   // 1_000000 * 0.99 * (0.005 / (1+0.005))
+				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(985050)), // 1_000000 * 0.99 * (1 - 0.005)
+				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(4950)),   // 1_000000 * 0.99 * 0.005
 			},
 		},
 		{
@@ -197,8 +198,8 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 			expRes: &types.EstimateMintBySwapOutResponse{
 				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1_000000)),
 				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
-				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(985075)), // 1_000000 * 0.99 * (1 / (1+0.005))
-				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(4925)),   // 1_000000 * 0.99 * (0.005 / (1+0.005))
+				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(985050)), // 1_000000 * 0.99 * (1 - 0.005)
+				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(4950)),   // 1_000000 * 0.99 * 0.005
 			},
 		},
 		{
@@ -214,8 +215,8 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 			expRes: &types.EstimateMintBySwapOutResponse{
 				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt()),
 				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(10000_000000_000000)),
-				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(995025)), // 10**16 * 10**-10 * (1 / (1+0.005))
-				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(4975)),   // 10**16 * 10**-10 * (0.005 / (1+0.005))
+				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(995000)), // 10**16 * 10**-10 * (1 - 0.005)
+				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(5000)),   // 10**16 * 10**-10 * 0.005
 			},
 		},
 		{
@@ -231,8 +232,8 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 			expRes: &types.EstimateMintBySwapOutResponse{
 				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(500000)),
 				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1237_500000_000000)), // 500000 * 0.99 / 0.8 * 0.2 / (10**-10)
-				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(615672)),             // 500000 * 0.99 / 0.8 * (1 / (1+0.005))
-				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(3078)),               // 500000 * 0.99 / 0.8 * (0.005 / (1+0.005))
+				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(615656)),             // 500000 * 0.99 / 0.8 * (1 - 0.005)
+				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(3094)),               // 500000 * 0.99 / 0.8 * 0.005
 			},
 		},
 		{
@@ -248,8 +249,8 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 			expRes: &types.EstimateMintBySwapOutResponse{
 				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(500000)),
 				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(1237_500000_000000)), // 500000 * 0.99 / 0.8 * 0.2 / (10**-10)
-				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(615672)),             // 500000 * 0.99 / 0.8 * (1 / (1+0.005))
-				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(3078)),               // 500000 * 0.99 / 0.8 * (0.005 / (1+0.005))
+				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(615656)),             // 500000 * 0.99 / 0.8 * (1 - 0.005)
+				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(3094)),               // 500000 * 0.99 / 0.8 * 0.005
 			},
 		},
 		{
@@ -265,8 +266,8 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 			expRes: &types.EstimateMintBySwapOutResponse{
 				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(252525)), // 10**16 * 10**-10 / 0.8 * 0.2 / 0.99
 				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(10000_000000_000000)),
-				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1243781)), // 10**16 * 10**-10 / 0.8 * (1 / (1+0.005))
-				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(6219)),    // 10**16 * 10**-10 / 0.8 * (0.005 / (1+0.005))
+				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1243750)), // 10**16 * 10**-10 / 0.8 * (1 - 0.005))
+				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(6250)),    // 10**16 * 10**-10 / 0.8 * 0.005
 			},
 		},
 		{
@@ -282,8 +283,8 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 			expRes: &types.EstimateMintBySwapOutResponse{
 				BackingIn: sdk.NewCoin(suite.bcDenom, sdk.NewInt(252525)), // 10**16 * 10**-10 / 0.8 * 0.2 / 0.99
 				LionIn:    sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(10000_000000_000000)),
-				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1243781)), // 10**16 * 10**-10 / 0.8 * (1 / (1+0.005))
-				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(6219)),    // 10**16 * 10**-10 / 0.8 * (0.005 / (1+0.005))
+				MintOut:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1243750)), // 10**16 * 10**-10 / 0.8 * (1 - 0.005)
+				MintFee:   sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(6250)),    // 10**16 * 10**-10 / 0.8 * 0.005
 			},
 		},
 		{
@@ -308,6 +309,7 @@ func (suite *KeeperTestSuite) TestEstimateMintBySwapOut() {
 		suite.Run(fmt.Sprintf("Case %s", tc.name), func() {
 			suite.SetupTest() // reset
 			suite.setupEstimationTest()
+			suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(101, 2))
 			if tc.malleate != nil {
 				tc.malleate()
 			}
@@ -337,7 +339,7 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapIn() {
 		{
 			name: "mer price too high",
 			malleate: func() {
-				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(1011, 3))
+				suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(991, 3))
 			},
 			req:     &types.EstimateBurnBySwapInRequest{BackingOutMax: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt())},
 			expPass: false,
@@ -356,16 +358,16 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapIn() {
 			expErr:  types.ErrBackingCoinDisabled,
 		},
 		{
-			name:    "moudle backing insufficient",
+			name: "moudle backing insufficient",
+			malleate: func() {
+				suite.app.BankKeeper.BurnCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
+			},
 			req:     &types.EstimateBurnBySwapInRequest{BackingOutMax: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1_000000))},
 			expPass: false,
 			expErr:  types.ErrBackingCoinInsufficient,
 		},
 		{
 			name: "full backing",
-			malleate: func() {
-				suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
-			},
 			req: &types.EstimateBurnBySwapInRequest{
 				BackingOutMax: sdk.NewCoin(suite.bcDenom, sdk.NewInt(1_000000)),
 			},
@@ -380,7 +382,6 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapIn() {
 		{
 			name: "full algorithmic",
 			malleate: func() {
-				suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.ZeroDec())
 			},
 			req: &types.EstimateBurnBySwapInRequest{
@@ -398,7 +399,6 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapIn() {
 		{
 			name: "zero lion using backing",
 			malleate: func() {
-				suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(80, 2))
 			},
 			req: &types.EstimateBurnBySwapInRequest{
@@ -416,7 +416,6 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapIn() {
 		{
 			name: "fractional using max backing",
 			malleate: func() {
-				suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(80, 2))
 			},
 			req: &types.EstimateBurnBySwapInRequest{
@@ -434,7 +433,6 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapIn() {
 		{
 			name: "zero backing using lion",
 			malleate: func() {
-				suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(20, 2))
 			},
 			req: &types.EstimateBurnBySwapInRequest{
@@ -452,7 +450,6 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapIn() {
 		{
 			name: "fractional using max lion",
 			malleate: func() {
-				suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(20, 2))
 			},
 			req: &types.EstimateBurnBySwapInRequest{
@@ -473,6 +470,7 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapIn() {
 		suite.Run(fmt.Sprintf("Case %s", tc.name), func() {
 			suite.SetupTest() // reset
 			suite.setupEstimationTest()
+			suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(99, 2))
 			if tc.malleate != nil {
 				tc.malleate()
 			}
@@ -521,7 +519,25 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapOut() {
 			expErr:  types.ErrBackingCoinDisabled,
 		},
 		{
+			name: "pool backing insufficient",
+			malleate: func() {
+				poolBacking, found := suite.app.MakerKeeper.GetPoolBacking(suite.ctx, suite.bcDenom)
+				suite.Require().True(found)
+				poolBacking.Backing.Amount = sdk.ZeroInt()
+				suite.app.MakerKeeper.SetPoolBacking(suite.ctx, poolBacking)
+			},
+			req: &types.EstimateBurnBySwapOutRequest{
+				BurnIn:       sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1)),
+				BackingDenom: suite.bcDenom,
+			},
+			expPass: false,
+			expErr:  types.ErrBackingCoinInsufficient,
+		},
+		{
 			name: "moudle backing insufficient",
+			malleate: func() {
+				suite.app.BankKeeper.BurnCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
+			},
 			req: &types.EstimateBurnBySwapOutRequest{
 				BurnIn:       sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1)),
 				BackingDenom: suite.bcDenom,
@@ -531,9 +547,6 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapOut() {
 		},
 		{
 			name: "full backing",
-			malleate: func() {
-				suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
-			},
 			req: &types.EstimateBurnBySwapOutRequest{
 				BurnIn:       sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(1_000000)),
 				BackingDenom: suite.bcDenom,
@@ -548,7 +561,6 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapOut() {
 		{
 			name: "full algorithmic",
 			malleate: func() {
-				suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.ZeroDec())
 			},
 			req: &types.EstimateBurnBySwapOutRequest{
@@ -565,7 +577,6 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapOut() {
 		{
 			name: "fractional",
 			malleate: func() {
-				suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
 				suite.app.MakerKeeper.SetBackingRatio(suite.ctx, sdk.NewDecWithPrec(80, 2))
 			},
 			req: &types.EstimateBurnBySwapOutRequest{
@@ -585,6 +596,7 @@ func (suite *KeeperTestSuite) TestEstimateBurnBySwapOut() {
 		suite.Run(fmt.Sprintf("Case %s", tc.name), func() {
 			suite.SetupTest() // reset
 			suite.setupEstimationTest()
+			suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(99, 2))
 			if tc.malleate != nil {
 				tc.malleate()
 			}
@@ -624,18 +636,6 @@ func (suite *KeeperTestSuite) TestEstimateBuyBackingIn() {
 			expErr:  types.ErrBackingCoinDisabled,
 		},
 		{
-			name: "no mer minted",
-			malleate: func() {
-				totalBacking, found := suite.app.MakerKeeper.GetTotalBacking(suite.ctx)
-				suite.Require().True(found)
-				totalBacking.MerMinted.Amount = sdk.ZeroInt()
-				suite.app.MakerKeeper.SetTotalBacking(suite.ctx, totalBacking)
-			},
-			req:     &types.EstimateBuyBackingInRequest{BackingOut: sdk.NewCoin(suite.bcDenom, sdk.ZeroInt())},
-			expPass: false,
-			expErr:  types.ErrBackingCoinInsufficient,
-		},
-		{
 			name: "excess backing insufficient",
 			req: &types.EstimateBuyBackingInRequest{
 				BackingOut: sdk.NewCoin(suite.bcDenom, sdk.NewInt(500000)),
@@ -658,14 +658,25 @@ func (suite *KeeperTestSuite) TestEstimateBuyBackingIn() {
 			expErr:  types.ErrBackingCoinInsufficient,
 		},
 		{
+			name: "moudle backing insufficient",
+			malleate: func() {
+				suite.app.BankKeeper.BurnCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
+			},
+			req: &types.EstimateBuyBackingInRequest{
+				BackingOut: sdk.NewCoin(suite.bcDenom, sdk.NewInt(300000)),
+			},
+			expPass: false,
+			expErr:  types.ErrBackingCoinInsufficient,
+		},
+		{
 			name: "correct",
 			req: &types.EstimateBuyBackingInRequest{
 				BackingOut: sdk.NewCoin(suite.bcDenom, sdk.NewInt(300000)),
 			},
 			expPass: true,
 			expRes: &types.EstimateBuyBackingInResponse{
-				LionIn:     sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(2990_936555_891239)), // 3*10**5 * 0.99 / (1-0.007) / 10**-10
-				BuybackFee: sdk.NewCoin(suite.bcDenom, sdk.NewInt(2094)),                       // 3*10**5 * 0.99 / (1-0.007) * 0.007
+				LionIn:     sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(29909_28600_000000)), // [3*10**5 / (1-0.007)] * 0.99 / 10**-10
+				BuybackFee: sdk.NewCoin(suite.bcDenom, sdk.NewInt(2115)),                       // [3*10**5 / (1-0.007)] * 0.007
 			},
 		},
 	}
@@ -712,18 +723,6 @@ func (suite *KeeperTestSuite) TestEstimateBuyBackingOut() {
 			expErr:  types.ErrBackingCoinDisabled,
 		},
 		{
-			name: "no mer minted",
-			malleate: func() {
-				totalBacking, found := suite.app.MakerKeeper.GetTotalBacking(suite.ctx)
-				suite.Require().True(found)
-				totalBacking.MerMinted.Amount = sdk.ZeroInt()
-				suite.app.MakerKeeper.SetTotalBacking(suite.ctx, totalBacking)
-			},
-			req:     &types.EstimateBuyBackingOutRequest{BackingDenom: suite.bcDenom},
-			expPass: false,
-			expErr:  types.ErrBackingCoinInsufficient,
-		},
-		{
 			name: "excess backing insufficient",
 			req: &types.EstimateBuyBackingOutRequest{
 				BackingDenom: suite.bcDenom,
@@ -739,6 +738,18 @@ func (suite *KeeperTestSuite) TestEstimateBuyBackingOut() {
 				suite.Require().True(found)
 				poolBacking.Backing.Amount = sdk.ZeroInt()
 				suite.app.MakerKeeper.SetPoolBacking(suite.ctx, poolBacking)
+			},
+			req: &types.EstimateBuyBackingOutRequest{
+				BackingDenom: suite.bcDenom,
+				LionIn:       sdk.NewCoin(merlion.AttoLionDenom, sdk.NewInt(3000_000000_000000)),
+			},
+			expPass: false,
+			expErr:  types.ErrBackingCoinInsufficient,
+		},
+		{
+			name: "moudle backing insufficient",
+			malleate: func() {
+				suite.app.BankKeeper.BurnCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
 			},
 			req: &types.EstimateBuyBackingOutRequest{
 				BackingDenom: suite.bcDenom,
@@ -936,7 +947,7 @@ func (suite *KeeperTestSuite) setupEstimationTest() {
 	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, "eth", sdk.NewDec(1000_000000))
 	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, "fil", sdk.NewDec(5_000000))
 	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.AttoLionDenom, sdk.NewDecWithPrec(100, 12))
-	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(101, 2))
+	suite.app.OracleKeeper.SetExchangeRate(suite.ctx, merlion.MicroUSMDenom, sdk.NewDecWithPrec(1005, 3))
 
 	// set risk params
 	brp, brp2 := suite.dummyBackingRiskParams()
@@ -953,6 +964,7 @@ func (suite *KeeperTestSuite) setupEstimationTest() {
 		Backing:    sdk.NewCoin(suite.bcDenom, sdk.NewInt(9_000000)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
 	})
+	suite.app.BankKeeper.MintCoins(suite.ctx, types.ModuleName, sdk.NewCoins(sdk.NewCoin(suite.bcDenom, sdk.NewInt(1000_000000))))
 	suite.app.MakerKeeper.SetTotalBacking(suite.ctx, types.TotalBacking{
 		MerMinted:  sdk.NewCoin(merlion.MicroUSMDenom, sdk.NewInt(8_500000)),
 		LionBurned: sdk.NewCoin(merlion.AttoLionDenom, sdk.ZeroInt()),
