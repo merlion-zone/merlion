@@ -7,6 +7,9 @@ import (
 	"os"
 	"path/filepath"
 
+	mgravity "github.com/Gravity-Bridge/Gravity-Bridge/module/x/multigravity"
+	mgravitykeeper "github.com/Gravity-Bridge/Gravity-Bridge/module/x/multigravity/keeper"
+	mgravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/multigravity/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
@@ -78,21 +81,9 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/v3/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
-	custombank "github.com/merlion-zone/merlion/x/bank"
-	custombankclient "github.com/merlion-zone/merlion/x/bank/client"
-	custombankkeeper "github.com/merlion-zone/merlion/x/bank/keeper"
-	custombanktypes "github.com/merlion-zone/merlion/x/bank/types"
-	"github.com/merlion-zone/merlion/x/gauge"
-	gaugekeeper "github.com/merlion-zone/merlion/x/gauge/keeper"
-	gaugetypes "github.com/merlion-zone/merlion/x/gauge/types"
-	customstaking "github.com/merlion-zone/merlion/x/staking"
-	customstakingkeeper "github.com/merlion-zone/merlion/x/staking/keeper"
-	"github.com/merlion-zone/merlion/x/ve"
-	vekeeper "github.com/merlion-zone/merlion/x/ve/keeper"
-	vetypes "github.com/merlion-zone/merlion/x/ve/types"
-	"github.com/merlion-zone/merlion/x/voter"
-	voterkeeper "github.com/merlion-zone/merlion/x/voter/keeper"
-	votertypes "github.com/merlion-zone/merlion/x/voter/types"
+	"github.com/osmosis-labs/bech32-ibc/x/bech32ibc"
+	bech32ibckeeper "github.com/osmosis-labs/bech32-ibc/x/bech32ibc/keeper"
+	bech32ibctypes "github.com/osmosis-labs/bech32-ibc/x/bech32ibc/types"
 	statikfs "github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
 	"github.com/tendermint/starport/starport/pkg/openapiconsole"
@@ -112,9 +103,16 @@ import (
 	"github.com/tharsis/evmos/v4/app/ante"
 
 	_ "github.com/merlion-zone/merlion/client/docs/statik"
+	custombank "github.com/merlion-zone/merlion/x/bank"
+	custombankclient "github.com/merlion-zone/merlion/x/bank/client"
+	custombankkeeper "github.com/merlion-zone/merlion/x/bank/keeper"
+	custombanktypes "github.com/merlion-zone/merlion/x/bank/types"
 	"github.com/merlion-zone/merlion/x/erc20"
 	erc20keeper "github.com/merlion-zone/merlion/x/erc20/keeper"
 	erc20types "github.com/merlion-zone/merlion/x/erc20/types"
+	"github.com/merlion-zone/merlion/x/gauge"
+	gaugekeeper "github.com/merlion-zone/merlion/x/gauge/keeper"
+	gaugetypes "github.com/merlion-zone/merlion/x/gauge/types"
 	"github.com/merlion-zone/merlion/x/maker"
 	makerclient "github.com/merlion-zone/merlion/x/maker/client"
 	makerkeeper "github.com/merlion-zone/merlion/x/maker/keeper"
@@ -123,9 +121,17 @@ import (
 	oracleclient "github.com/merlion-zone/merlion/x/oracle/client"
 	oraclekeeper "github.com/merlion-zone/merlion/x/oracle/keeper"
 	oracletypes "github.com/merlion-zone/merlion/x/oracle/types"
+	customstaking "github.com/merlion-zone/merlion/x/staking"
+	customstakingkeeper "github.com/merlion-zone/merlion/x/staking/keeper"
+	"github.com/merlion-zone/merlion/x/ve"
+	vekeeper "github.com/merlion-zone/merlion/x/ve/keeper"
+	vetypes "github.com/merlion-zone/merlion/x/ve/types"
 	customvesting "github.com/merlion-zone/merlion/x/vesting"
 	customvestingkeeper "github.com/merlion-zone/merlion/x/vesting/keeper"
 	customvestingtypes "github.com/merlion-zone/merlion/x/vesting/types"
+	"github.com/merlion-zone/merlion/x/voter"
+	voterkeeper "github.com/merlion-zone/merlion/x/voter/keeper"
+	votertypes "github.com/merlion-zone/merlion/x/voter/types"
 )
 
 // App represents a Cosmos SDK application that can be run as a server and with an exportable state
@@ -203,6 +209,8 @@ var (
 		gauge.AppModuleBasic{},
 		voter.AppModuleBasic{},
 		customvesting.AppModuleBasic{},
+		mgravity.AppModuleBasic{},
+		bech32ibc.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -224,6 +232,7 @@ var (
 		gaugetypes.ModuleName:          nil,
 		votertypes.ModuleName:          nil,
 		customvestingtypes.ModuleName:  {authtypes.Minter},
+		mgravitytypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 	}
 
 	// module accounts that are allowed to receive tokens
@@ -303,6 +312,9 @@ type Merlion struct {
 
 	VestingKeeper customvestingkeeper.Keeper
 
+	GravityKeeper   mgravitykeeper.Keeper
+	Bech32IbcKeeper bech32ibckeeper.Keeper
+
 	// mm is the module manager
 	mm *module.Manager
 
@@ -348,6 +360,8 @@ func NewMerlion(
 		gaugetypes.StoreKey,
 		votertypes.StoreKey,
 		customvestingtypes.StoreKey,
+		mgravitytypes.StoreKey,
+		bech32ibctypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey, evmtypes.TransientKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -420,7 +434,11 @@ func NewMerlion(
 	// register the staking hooks
 	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
 	app.StakingKeeper = *stakingKeeper.SetHooks(
-		stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(), app.SlashingKeeper.Hooks()),
+		stakingtypes.NewMultiStakingHooks(
+			app.DistrKeeper.Hooks(),
+			app.SlashingKeeper.Hooks(),
+			app.GravityKeeper.Hooks(),
+		),
 	)
 
 	// ... other modules keepers
@@ -513,6 +531,31 @@ func NewMerlion(
 		),
 	)
 
+	app.Bech32IbcKeeper = *bech32ibckeeper.NewKeeper(
+		app.IBCKeeper.ChannelKeeper, appCodec, keys[bech32ibctypes.StoreKey],
+		app.TransferKeeper,
+	)
+	bech32ibcModule := bech32ibc.NewAppModule(
+		appCodec,
+		app.Bech32IbcKeeper,
+	)
+
+	app.GravityKeeper = mgravitykeeper.NewKeeper(
+		app.BaseApp,
+		keys[mgravitytypes.StoreKey],
+		app.GetSubspace(mgravitytypes.ModuleName),
+		appCodec,
+		app.BankKeeper,
+		&stakingKeeper,
+		&app.SlashingKeeper,
+		&app.DistrKeeper,
+		&app.AccountKeeper,
+		&app.TransferKeeper,
+		&app.Bech32IbcKeeper,
+		&app.ParamsKeeper,
+	)
+	gravityModule := mgravity.NewAppModule(app.GravityKeeper, app.BankKeeper)
+
 	// register the proposal types
 	govRouter := govtypes.NewRouter()
 	govRouter.AddRoute(govtypes.RouterKey, govtypes.ProposalHandler).
@@ -522,7 +565,9 @@ func NewMerlion(
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
 		AddRoute(makertypes.RouterKey, maker.NewMakerProposalHandler(app.MakerKeeper)).
 		AddRoute(oracletypes.RouterKey, oracle.NewOracleProposalHandler(app.OracleKeeper)).
-		AddRoute(banktypes.RouterKey, custombank.NewBankProposalHandler(app.BankKeeper))
+		AddRoute(banktypes.RouterKey, custombank.NewBankProposalHandler(app.BankKeeper)).
+		AddRoute(mgravitytypes.RouterKey, mgravitykeeper.NewGravityProposalHandler(app.GravityKeeper)).
+		AddRoute(bech32ibctypes.RouterKey, bech32ibc.NewBech32IBCProposalHandler(app.Bech32IbcKeeper))
 
 	app.GovKeeper = govkeeper.NewKeeper(
 		appCodec, keys[govtypes.StoreKey], app.GetSubspace(govtypes.ModuleName), app.AccountKeeper, app.BankKeeper,
@@ -572,6 +617,8 @@ func NewMerlion(
 		gaugeModule,
 		voterModule,
 		vestingModule,
+		gravityModule,
+		bech32ibcModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -605,6 +652,8 @@ func NewMerlion(
 		gaugetypes.ModuleName,
 		votertypes.ModuleName,
 		customvestingtypes.ModuleName,
+		mgravitytypes.ModuleName,
+		bech32ibctypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -634,6 +683,8 @@ func NewMerlion(
 		gaugetypes.ModuleName,
 		votertypes.ModuleName,
 		customvestingtypes.ModuleName,
+		mgravitytypes.ModuleName,
+		bech32ibctypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -667,6 +718,8 @@ func NewMerlion(
 		gaugetypes.ModuleName,
 		votertypes.ModuleName,
 		customvestingtypes.ModuleName,
+		mgravitytypes.ModuleName,
+		bech32ibctypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(&app.CrisisKeeper)
@@ -746,6 +799,8 @@ func NewMerlion(
 		// so we have to ignore this error explicitly.
 		_ = app.tpsCounter.start(context.Background())
 	}()
+
+	mgravitykeeper.RegisterProposalTypes()
 
 	return app
 }
@@ -933,6 +988,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(gaugetypes.ModuleName)
 	paramsKeeper.Subspace(votertypes.ModuleName)
 	paramsKeeper.Subspace(customvestingtypes.ModuleName)
+	paramsKeeper.Subspace(mgravitytypes.ModuleName)
 
 	return paramsKeeper
 }
