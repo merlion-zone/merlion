@@ -10,7 +10,7 @@ import (
 	"github.com/merlion-zone/merlion/x/erc20/types"
 )
 
-func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {
+func setupMsgServer(t *testing.T) (types.MsgServer, context.Context) {
 	k, ctx := keepertest.Erc20Keeper(t)
 	return keeper.NewMsgServerImpl(*k), sdk.WrapSDKContext(ctx)
 }

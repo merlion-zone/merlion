@@ -1,7 +1,6 @@
 package types
 
 import (
-	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -42,8 +41,8 @@ func SetDenomMetaDataForStableCoins(ctx sdk.Context, k bankkeeper.Keeper) {
 			},
 			Base:    base,
 			Display: display,
-			Name:    fmt.Sprintf("%s", strings.ToUpper(display)), // e.g., USM
-			Symbol:  fmt.Sprintf("%s", strings.ToUpper(display)), // e.g., USM
+			Name:    strings.ToUpper(display), // e.g., USM
+			Symbol:  strings.ToUpper(display), // e.g., USM
 		})
 	}
 }
