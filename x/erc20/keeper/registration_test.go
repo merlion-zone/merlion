@@ -20,7 +20,7 @@ import (
 	"github.com/tendermint/tendermint/version"
 )
 
-func TestKeeper_DeployERC20Contract(t *testing.T) {
+func TestKeeper_RegisterCoin(t *testing.T) {
 	var (
 		coinMetadata = banktypes.Metadata{
 			Description: "USDT",
@@ -80,4 +80,22 @@ func TestKeeper_DeployERC20Contract(t *testing.T) {
 
 	_, err = myapp.Erc20Keeper.RegisterCoin(ctx, "uusd")
 	require.Error(t, err, sdkerrors.Wrapf(erc20types.ErrTokenPairAlreadyExists, "coin denomination already registered: %s", coinMetadata.Base))
+
+	addr, err := myapp.Erc20Keeper.DeployERC20Contract(ctx, coinMetadata)
+	require.NoError(t, err)
+	require.Equal(t, "0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75", addr.String())
+
+	tokenPair, err := myapp.Erc20Keeper.RegisterERC20(ctx, addr)
+	require.NoError(t, err)
+
+	require.Equal(t, "0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75", tokenPair.Erc20Address)
+	require.Equal(t, "erc20/0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75", tokenPair.Denom)
+	require.Equal(t, erc20types.Owner(2), tokenPair.ContractOwner)
+
+	// QueryERC20
+	erc20Data, err := myapp.Erc20Keeper.QueryERC20(ctx, addr)
+	require.NoError(t, err)
+	require.Equal(t, "USDT", erc20Data.Name)
+	require.Equal(t, "USDT", erc20Data.Symbol)
+	require.Equal(t, uint8(0), erc20Data.Decimals)
 }
