@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -38,11 +37,6 @@ func (k Keeper) RegisterCoin(ctx sdk.Context, denom string) (*types.TokenPair, e
 			"base denomination '%s' cannot have a supply of 0", coinMetadata.Base,
 		)
 	}
-
-	//// DEBUG
-	consAddr := sdk.ConsAddress(ctx.BlockHeader().ProposerAddress)
-	fmt.Println("consAddr----->", consAddr)
-	//// DEBUG
 
 	addr, err := k.DeployERC20Contract(ctx, coinMetadata)
 	if err != nil {
