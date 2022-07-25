@@ -353,6 +353,16 @@ func (k Keeper) GetVoteTargets(ctx sdk.Context) (voteTargets []string) {
 	return voteTargets
 }
 
+// ClearVoteTargets clears vote targets
+func (k Keeper) ClearVoteTargets(ctx sdk.Context) {
+	store := ctx.KVStore(k.storeKey)
+	iter := sdk.KVStorePrefixIterator(store, types.VoteTargetKey)
+	defer iter.Close()
+	for ; iter.Valid(); iter.Next() {
+		store.Delete(iter.Key())
+	}
+}
+
 // -----------------------------------
 // Target logic
 
