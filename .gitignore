@@ -5,8 +5,9 @@ docs/.pnp.*
 vue/node_modules
 vue/dist
 release/
-build/
 vendor/
+build/
+build-bridging/
 .idea/
 .vscode/
 .DS_Store
