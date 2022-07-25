@@ -236,12 +236,29 @@ func TestQueryVoteTargets(t *testing.T) {
 	ctx := sdk.WrapSDKContext(input.Ctx)
 	querier := NewQuerier(input.OracleKeeper)
 
+	input.OracleKeeper.ClearVoteTargets(input.Ctx)
+
 	voteTargets := []string{"denom", "denom2", "denom3"}
-	for _, target := range voteTargets {
-		input.OracleKeeper.SetVoteTarget(input.Ctx, target)
+	for _, voteTarget := range voteTargets {
+		input.OracleKeeper.SetVoteTarget(input.Ctx, voteTarget)
 	}
 
 	res, err := querier.VoteTargets(ctx, &types.QueryVoteTargetsRequest{})
 	require.NoError(t, err)
 	require.Equal(t, voteTargets, res.VoteTargets)
+}
+
+func TestQueryTargets(t *testing.T) {
+	input := CreateTestInput(t)
+	ctx := sdk.WrapSDKContext(input.Ctx)
+	querier := NewQuerier(input.OracleKeeper)
+
+	targets := []string{"denom", "denom2", "denom3"}
+	for _, target := range targets {
+		input.OracleKeeper.SetTarget(input.Ctx, target)
+	}
+
+	res, err := querier.Targets(ctx, &types.QueryTargetsRequest{})
+	require.NoError(t, err)
+	require.Equal(t, targets, res.Targets)
 }

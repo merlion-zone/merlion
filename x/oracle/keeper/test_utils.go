@@ -233,6 +233,9 @@ func CreateTestInput(t *testing.T) TestInput {
 	defaults := types.DefaultParams()
 	keeper.SetParams(ctx, defaults)
 
+	keeper.SetVoteTarget(ctx, merlion.AttoLionDenom)
+	keeper.SetVoteTarget(ctx, merlion.MicroUSMDenom)
+
 	return TestInput{ctx, legacyAmino, accountKeeper, bankKeeper, *keeper, stakingKeeper, distrKeeper}
 }
 

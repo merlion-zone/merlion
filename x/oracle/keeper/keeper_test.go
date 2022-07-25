@@ -309,6 +309,54 @@ func TestAggregateVoteIterate(t *testing.T) {
 	})
 }
 
+func TestVoteTargets(t *testing.T) {
+	input := CreateTestInput(t)
+
+	input.OracleKeeper.ClearVoteTargets(input.Ctx)
+
+	expectedVoteTargets := []string{"bar", "foo", "whoowhoo"}
+	for _, voteTarget := range expectedVoteTargets {
+		input.OracleKeeper.SetVoteTarget(input.Ctx, voteTarget)
+	}
+
+	for _, voteTarget := range expectedVoteTargets {
+		require.True(t, input.OracleKeeper.IsVoteTarget(input.Ctx, voteTarget))
+	}
+
+	i := 0
+	input.OracleKeeper.IterateVoteTargets(input.Ctx, func(denom string) (stop bool) {
+		require.Equal(t, expectedVoteTargets[i], denom)
+		i++
+		return false
+	})
+
+	voteTargets := input.OracleKeeper.GetVoteTargets(input.Ctx)
+	require.Equal(t, expectedVoteTargets, voteTargets)
+}
+
+func TestTargets(t *testing.T) {
+	input := CreateTestInput(t)
+
+	expectedTargets := []string{"bar", "foo", "whoowhoo"}
+	for _, target := range expectedTargets {
+		input.OracleKeeper.SetTarget(input.Ctx, target)
+	}
+
+	for _, target := range expectedTargets {
+		require.True(t, input.OracleKeeper.IsTarget(input.Ctx, target))
+	}
+
+	i := 0
+	input.OracleKeeper.IterateTargets(input.Ctx, func(denom string) (stop bool) {
+		require.Equal(t, expectedTargets[i], denom)
+		i++
+		return false
+	})
+
+	targets := input.OracleKeeper.GetTargets(input.Ctx)
+	require.Equal(t, expectedTargets, targets)
+}
+
 func TestValidateFeeder(t *testing.T) {
 	// initial setup
 	input := CreateTestInput(t)
