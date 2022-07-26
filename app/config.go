@@ -1,11 +1,15 @@
 package app
 
 import (
+	"strings"
 	"sync"
 
+	mgravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/multigravity/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	merlion "github.com/merlion-zone/merlion/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ethermint "github.com/tharsis/ethermint/types"
+
+	merlion "github.com/merlion-zone/merlion/types"
 )
 
 const (
@@ -42,6 +46,23 @@ func RegisterDenoms() {
 	if err := sdk.RegisterDenom(merlion.BaseDenom, sdk.NewDecWithPrec(1, ethermint.BaseDenomUnit)); err != nil {
 		panic(err)
 	}
+
+	mgravitytypes.SetGasCoinMetata(banktypes.Metadata{
+		Description: "The native gas token of the Merlion.",
+		DenomUnits: []*banktypes.DenomUnit{{
+			Denom:    merlion.DisplayDenom,
+			Exponent: ethermint.BaseDenomUnit,
+			Aliases:  []string{},
+		}, {
+			Denom:    merlion.BaseDenom,
+			Exponent: 0,
+			Aliases:  []string{},
+		}},
+		Base:    merlion.BaseDenom,
+		Display: merlion.DisplayDenom,
+		Name:    strings.ToUpper(merlion.DisplayDenom),
+		Symbol:  strings.ToUpper(merlion.DisplayDenom),
+	})
 }
 
 var setup sync.Once

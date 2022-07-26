@@ -26,7 +26,7 @@ fi
 export MERLION_HOME="/merlion/node${ID}/merliond"
 
 if [ -d "$(dirname "${MERLION_HOME}"/"${LOG}")" ]; then
-  "${BINARY}" --home "${MERLION_HOME}" "$@" | tee "${MERLION_HOME}/${LOG}"
+  "${BINARY}" --home "${MERLION_HOME}" --trace "$@" | tee "${MERLION_HOME}/${LOG}"
 else
-  "${BINARY}" --home "${MERLION_HOME}" "$@"
+  "${BINARY}" --home "${MERLION_HOME}" --trace "$@"
 fi

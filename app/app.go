@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	gravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
 	mgravity "github.com/Gravity-Bridge/Gravity-Bridge/module/x/multigravity"
 	mgravitykeeper "github.com/Gravity-Bridge/Gravity-Bridge/module/x/multigravity/keeper"
 	mgravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/multigravity/types"
@@ -232,6 +233,7 @@ var (
 		gaugetypes.ModuleName:          nil,
 		votertypes.ModuleName:          nil,
 		customvestingtypes.ModuleName:  {authtypes.Minter},
+		gravitytypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		mgravitytypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 	}
 
