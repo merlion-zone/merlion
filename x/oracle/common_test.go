@@ -3,13 +3,17 @@ package oracle_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
-	"github.com/merlion-zone/merlion/x/oracle"
-	"github.com/merlion-zone/merlion/x/oracle/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/staking"
+	"github.com/merlion-zone/merlion/x/oracle"
+	"github.com/merlion-zone/merlion/x/oracle/keeper"
+	"github.com/stretchr/testify/require"
+)
+
+const (
+	denom1    = "denom1"
+	denom2    = "denom2"
+	microUnit = int64(1e6)
 )
 
 var (
@@ -17,6 +21,8 @@ var (
 
 	randomExchangeRate        = sdk.NewDec(1700)
 	anotherRandomExchangeRate = sdk.NewDecWithPrec(4882, 2) // swap rate
+
+	denom1ExchangeRateStr = denom1 + ":" + randomExchangeRate.String()
 )
 
 func setupWithSmallVotingPower(t *testing.T) (keeper.TestInput, sdk.Handler) {
@@ -58,6 +64,9 @@ func setup(t *testing.T) (keeper.TestInput, sdk.Handler) {
 	require.NoError(t, err)
 	staking.EndBlocker(input.Ctx, input.StakingKeeper)
 
+	input.OracleKeeper.SetVoteTarget(input.Ctx, denom1)
+	input.OracleKeeper.SetVoteTarget(input.Ctx, denom2)
+
 	return input, h
 }
 
@@ -84,6 +93,8 @@ func setupVal5(t *testing.T) (keeper.TestInput, sdk.Handler) {
 	_, err = sh(input.Ctx, keeper.NewTestMsgCreateValidator(keeper.ValAddrs[4], keeper.ValPubKeys[4], stakingAmt))
 	require.NoError(t, err)
 	staking.EndBlocker(input.Ctx, input.StakingKeeper)
+
+	input.OracleKeeper.SetVoteTarget(input.Ctx, denom2)
 
 	return input, h
 }

@@ -51,12 +51,12 @@ The purpose of aggregate prevote is to hide aggregate exchange rate vote with ha
 as hex string in SHA256("{salt};{denom}:{exchange_rate},...,{denom}:{exchange_rate};{voter}")
 
 # Aggregate Prevote
-$ merliond tx oracle aggregate-prevote 1234 alion:1.234,uusd:0.99
+$ merliond tx oracle aggregate-prevote 1234 alion:1.234,uusm:0.99
 
-where "alion,uusd" is the denominating currencies, and "1.234,0.99" is the exchange rates of these currencies in $uUSD from the voter's point of view.
+where "alion,uusm" is the denominating currencies, and "1.234,0.99" is the exchange rates of these currencies in $uUSD from the voter's point of view.
 
 If voting from a voting delegate, set "validator" to the address of the validator to vote on behalf of:
-$ merliond tx oracle aggregate-prevote 1234 alion:1.234,uusd:0.99 mervaloper1...
+$ merliond tx oracle aggregate-prevote 1234 alion:1.234,uusm:0.99 mervaloper1...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -110,14 +110,14 @@ func CmdAggregateExchangeRateVote() *cobra.Command {
 		Long: strings.TrimSpace(`
 Submit a aggregate vote for the exchange_rates of various assets w.r.t $uUSD. Companion to a prevote submitted in the previous vote period. 
 
-$ merliond tx oracle aggregate-vote 1234 alion:1.234,uusd:0.99
+$ merliond tx oracle aggregate-vote 1234 alion:1.234,uusm:0.99
 
-where "alion,uusd" is the denominating currencies, and "1.234,0.99" is the exchange rates of these currencies in $uUSD from the voter's point of view.
+where "alion,uusm" is the denominating currencies, and "1.234,0.99" is the exchange rates of these currencies in $uUSD from the voter's point of view.
 
 "salt" should match the salt used to generate the SHA256 hex in the aggregated pre-vote. 
 
 If voting from a voting delegate, set "validator" to the address of the validator to vote on behalf of:
-$ merliond tx oracle aggregate-vote 1234 alion:1.234,uusd:0.99 mervaloper1...
+$ merliond tx oracle aggregate-vote 1234 alion:1.234,uusm:0.99 mervaloper1...
 `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
