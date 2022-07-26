@@ -70,6 +70,10 @@ func (k Keeper) StakingKeeper() types.StakingKeeper {
 	return k.stakingKeeper
 }
 
+func (k *Keeper) SetStakingKeeper(sk types.StakingKeeper) {
+	k.stakingKeeper = sk
+}
+
 // GetOracleAccount returns oracle ModuleAccount
 func (k Keeper) GetOracleAccount(ctx sdk.Context) authtypes.ModuleAccountI {
 	return k.accountKeeper.GetModuleAccount(ctx, types.ModuleName)
