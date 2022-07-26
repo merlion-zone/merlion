@@ -157,7 +157,7 @@ require (
 )
 
 replace (
-	github.com/Gravity-Bridge/Gravity-Bridge/module => github.com/merlion-zone/gravity/module v0.0.0-20220723082203-ce44a5391a2d
+	github.com/Gravity-Bridge/Gravity-Bridge/module => github.com/merlion-zone/gravity/module v0.0.0-20220725111544-04afca59031b
 	github.com/cosmos/cosmos-sdk => github.com/merlion-zone/cosmos-sdk v0.45.4-merlion.6
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 	github.com/keybase/go-keychain => github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4

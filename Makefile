@@ -12,6 +12,7 @@ BINDIR ?= $(GOPATH)/bin
 MERLION_BINARY = merliond
 MERLION_DIR = merlion
 BUILDDIR ?= $(CURDIR)/build
+BUILD_BRIDGING_DIR ?= $(CURDIR)/build-bridging
 SIMAPP = ./app
 HTTPS_GIT := https://github.com/merlion-zone/merlion.git
 DOCKER := $(shell which docker)
@@ -547,11 +548,30 @@ else
 	@docker run --rm -v $(CURDIR)/localnet-setup/node3/merliond:/merlion:Z merliond/node "./merliond unsafe-reset-all --home=/merlion"
 endif
 
-# Clean testnet
 localnet-show-logstream:
 	docker-compose logs --tail=1000 -f
 
-.PHONY: build-docker-local-merlion localnet-start localnet-stop
+.PHONY: localnet-start localnet-stop
+
+###############################################################################
+###                                Localnet for Bridging                    ###
+###############################################################################
+
+bridging-localnet-start: bridging-localnet-stop build-linux localnet-build
+	sudo mkdir -p $(BUILD_BRIDGING_DIR) && sudo cp -r $(BUILDDIR)/$(MERLION_BINARY) $(BUILD_BRIDGING_DIR)/
+	@if ! [ -f $(BUILD_BRIDGING_DIR)/node0/merliond/config/genesis.json ]; \
+	then docker run --rm -v $(BUILD_BRIDGING_DIR):/merlion:Z merlionzone/localnetnode testnet init-files -v 4 -o /merlion --starting-ip-address 192.168.11.2 --predetermined-mnemonic --keyring-backend=test; \
+	fi
+	docker-compose -f docker-compose-bridging.yml up -d
+
+bridging-localnet-stop:
+	docker-compose -f docker-compose-bridging.yml down
+
+bridging-localnet-clean:
+	docker-compose -f docker-compose-bridging.yml down
+	sudo rm -rf $(BUILD_BRIDGING_DIR)
+
+.PHONY: bridging-localnet-start bridging-localnet-stop
 
 ###############################################################################
 ###                                Releasing                                ###

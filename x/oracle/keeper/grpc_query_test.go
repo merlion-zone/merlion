@@ -32,7 +32,7 @@ func TestQueryExchangeRate(t *testing.T) {
 	querier := NewQuerier(input.OracleKeeper)
 
 	rate := sdk.NewDec(1700)
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroSDRDenom, rate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom3, rate)
 
 	// empty request
 	_, err := querier.ExchangeRate(ctx, nil)
@@ -40,7 +40,7 @@ func TestQueryExchangeRate(t *testing.T) {
 
 	// Query to grpc
 	res, err := querier.ExchangeRate(ctx, &types.QueryExchangeRateRequest{
-		Denom: MicroSDRDenom,
+		Denom: fooDenom3,
 	})
 	require.NoError(t, err)
 	require.Equal(t, rate, res.ExchangeRate)
@@ -72,15 +72,15 @@ func TestQueryExchangeRates(t *testing.T) {
 	querier := NewQuerier(input.OracleKeeper)
 
 	rate := sdk.NewDec(1700)
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroSDRDenom, rate)
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroUSDDenom, rate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom3, rate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom6, rate)
 
 	res, err := querier.ExchangeRates(ctx, &types.QueryExchangeRatesRequest{})
 	require.NoError(t, err)
 
 	require.Equal(t, sdk.DecCoins{
-		sdk.NewDecCoinFromDec(MicroSDRDenom, rate),
-		sdk.NewDecCoinFromDec(MicroUSDDenom, rate),
+		sdk.NewDecCoinFromDec(fooDenom3, rate),
+		sdk.NewDecCoinFromDec(fooDenom6, rate),
 	}, res.ExchangeRates)
 }
 
@@ -90,17 +90,17 @@ func TestQueryActives(t *testing.T) {
 	querier := NewQuerier(input.OracleKeeper)
 
 	rate := sdk.NewDec(1700)
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroSDRDenom, rate)
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroKRWDenom, rate)
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroUSDDenom, rate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom3, rate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom2, rate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom6, rate)
 
 	res, err := querier.Actives(ctx, &types.QueryActivesRequest{})
 	require.NoError(t, err)
 
 	targetDenoms := []string{
-		MicroKRWDenom,
-		MicroSDRDenom,
-		MicroUSDDenom,
+		fooDenom2,
+		fooDenom3,
+		fooDenom6,
 	}
 
 	require.Equal(t, targetDenoms, res.Actives)
@@ -236,12 +236,29 @@ func TestQueryVoteTargets(t *testing.T) {
 	ctx := sdk.WrapSDKContext(input.Ctx)
 	querier := NewQuerier(input.OracleKeeper)
 
+	input.OracleKeeper.ClearVoteTargets(input.Ctx)
+
 	voteTargets := []string{"denom", "denom2", "denom3"}
-	for _, target := range voteTargets {
-		input.OracleKeeper.SetVoteTarget(input.Ctx, target)
+	for _, voteTarget := range voteTargets {
+		input.OracleKeeper.SetVoteTarget(input.Ctx, voteTarget)
 	}
 
 	res, err := querier.VoteTargets(ctx, &types.QueryVoteTargetsRequest{})
 	require.NoError(t, err)
 	require.Equal(t, voteTargets, res.VoteTargets)
+}
+
+func TestQueryTargets(t *testing.T) {
+	input := CreateTestInput(t)
+	ctx := sdk.WrapSDKContext(input.Ctx)
+	querier := NewQuerier(input.OracleKeeper)
+
+	targets := []string{"denom", "denom2", "denom3"}
+	for _, target := range targets {
+		input.OracleKeeper.SetTarget(input.Ctx, target)
+	}
+
+	res, err := querier.Targets(ctx, &types.QueryTargetsRequest{})
+	require.NoError(t, err)
+	require.Equal(t, targets, res.Targets)
 }

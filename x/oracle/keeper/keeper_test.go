@@ -2,22 +2,23 @@ package keeper
 
 import (
 	"bytes"
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/merlion-zone/merlion/x/oracle/types"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 const (
-	MicroLunaDenom = "uluna"
-	MicroKRWDenom  = "ukrw"
-	MicroSDRDenom  = "usdr"
-	MicroCNYDenom  = "ucny"
-	MicroGBPDenom  = "ugbp"
-	MicroUSDDenom  = "uusd"
+	fooDenom1 = "bar1"
+	fooDenom2 = "bar2"
+	fooDenom3 = "bar3"
+	fooDenom4 = "bar4"
+	fooDenom5 = "bar5"
+	fooDenom6 = "bar6"
 
 	MicroUnit = int64(1e6)
 )
@@ -25,28 +26,28 @@ const (
 func TestExchangeRate(t *testing.T) {
 	input := CreateTestInput(t)
 
-	cnyExchangeRate := sdk.NewDecWithPrec(839, int64(OracleDecPrecision)).MulInt64(MicroUnit)
-	gbpExchangeRate := sdk.NewDecWithPrec(4995, int64(OracleDecPrecision)).MulInt64(MicroUnit)
-	krwExchangeRate := sdk.NewDecWithPrec(2838, int64(OracleDecPrecision)).MulInt64(MicroUnit)
+	bar4ExchangeRate := sdk.NewDecWithPrec(839, int64(OracleDecPrecision)).MulInt64(MicroUnit)
+	bar5ExchangeRate := sdk.NewDecWithPrec(4995, int64(OracleDecPrecision)).MulInt64(MicroUnit)
+	bar2ExchangeRate := sdk.NewDecWithPrec(2838, int64(OracleDecPrecision)).MulInt64(MicroUnit)
 
 	// Set & get rates
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroCNYDenom, cnyExchangeRate)
-	rate, err := input.OracleKeeper.GetExchangeRate(input.Ctx, MicroCNYDenom)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom4, bar4ExchangeRate)
+	rate, err := input.OracleKeeper.GetExchangeRate(input.Ctx, fooDenom4)
 	require.NoError(t, err)
-	require.Equal(t, cnyExchangeRate, rate)
+	require.Equal(t, bar4ExchangeRate, rate)
 
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroGBPDenom, gbpExchangeRate)
-	rate, err = input.OracleKeeper.GetExchangeRate(input.Ctx, MicroGBPDenom)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom5, bar5ExchangeRate)
+	rate, err = input.OracleKeeper.GetExchangeRate(input.Ctx, fooDenom5)
 	require.NoError(t, err)
-	require.Equal(t, gbpExchangeRate, rate)
+	require.Equal(t, bar5ExchangeRate, rate)
 
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroKRWDenom, krwExchangeRate)
-	rate, err = input.OracleKeeper.GetExchangeRate(input.Ctx, MicroKRWDenom)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom2, bar2ExchangeRate)
+	rate, err = input.OracleKeeper.GetExchangeRate(input.Ctx, fooDenom2)
 	require.NoError(t, err)
-	require.Equal(t, krwExchangeRate, rate)
+	require.Equal(t, bar2ExchangeRate, rate)
 
-	input.OracleKeeper.DeleteExchangeRate(input.Ctx, MicroKRWDenom)
-	_, err = input.OracleKeeper.GetExchangeRate(input.Ctx, MicroKRWDenom)
+	input.OracleKeeper.DeleteExchangeRate(input.Ctx, fooDenom2)
+	_, err = input.OracleKeeper.GetExchangeRate(input.Ctx, fooDenom2)
 	require.Error(t, err)
 
 	numExchangeRates := 0
@@ -62,27 +63,27 @@ func TestExchangeRate(t *testing.T) {
 func TestIterateExchangeRates(t *testing.T) {
 	input := CreateTestInput(t)
 
-	cnyExchangeRate := sdk.NewDecWithPrec(839, int64(OracleDecPrecision)).MulInt64(MicroUnit)
-	gbpExchangeRate := sdk.NewDecWithPrec(4995, int64(OracleDecPrecision)).MulInt64(MicroUnit)
-	krwExchangeRate := sdk.NewDecWithPrec(2838, int64(OracleDecPrecision)).MulInt64(MicroUnit)
-	lunaExchangeRate := sdk.NewDecWithPrec(3282384, int64(OracleDecPrecision)).MulInt64(MicroUnit)
+	bar4ExchangeRate := sdk.NewDecWithPrec(839, int64(OracleDecPrecision)).MulInt64(MicroUnit)
+	bar5ExchangeRate := sdk.NewDecWithPrec(4995, int64(OracleDecPrecision)).MulInt64(MicroUnit)
+	bar2ExchangeRate := sdk.NewDecWithPrec(2838, int64(OracleDecPrecision)).MulInt64(MicroUnit)
+	bar1ExchangeRate := sdk.NewDecWithPrec(3282384, int64(OracleDecPrecision)).MulInt64(MicroUnit)
 
 	// Set & get rates
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroCNYDenom, cnyExchangeRate)
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroGBPDenom, gbpExchangeRate)
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroKRWDenom, krwExchangeRate)
-	input.OracleKeeper.SetExchangeRate(input.Ctx, MicroLunaDenom, lunaExchangeRate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom4, bar4ExchangeRate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom5, bar5ExchangeRate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom2, bar2ExchangeRate)
+	input.OracleKeeper.SetExchangeRate(input.Ctx, fooDenom1, bar1ExchangeRate)
 
 	input.OracleKeeper.IterateExchangeRates(input.Ctx, func(denom string, rate sdk.Dec) (stop bool) {
 		switch denom {
-		case MicroCNYDenom:
-			require.Equal(t, cnyExchangeRate, rate)
-		case MicroGBPDenom:
-			require.Equal(t, gbpExchangeRate, rate)
-		case MicroKRWDenom:
-			require.Equal(t, krwExchangeRate, rate)
-		case MicroLunaDenom:
-			require.Equal(t, lunaExchangeRate, rate)
+		case fooDenom4:
+			require.Equal(t, bar4ExchangeRate, rate)
+		case fooDenom5:
+			require.Equal(t, bar5ExchangeRate, rate)
+		case fooDenom2:
+			require.Equal(t, bar2ExchangeRate, rate)
+		case fooDenom1:
+			require.Equal(t, bar1ExchangeRate, rate)
 		}
 		return false
 	})
@@ -92,14 +93,14 @@ func TestIterateExchangeRates(t *testing.T) {
 func TestRewardPool(t *testing.T) {
 	input := CreateTestInput(t)
 
-	fees := sdk.NewCoins(sdk.NewCoin(MicroSDRDenom, sdk.NewInt(1000)))
+	fees := sdk.NewCoins(sdk.NewCoin(fooDenom3, sdk.NewInt(1000)))
 	acc := input.AccountKeeper.GetModuleAccount(input.Ctx, types.ModuleName)
 	err := FundAccount(input, acc.GetAddress(), fees)
 	if err != nil {
 		panic(err) // never occurs
 	}
 
-	KFees := input.OracleKeeper.GetRewardPool(input.Ctx, MicroSDRDenom)
+	KFees := input.OracleKeeper.GetRewardPool(input.Ctx, fooDenom3)
 	require.Equal(t, fees[0], KFees)
 }
 
@@ -216,7 +217,7 @@ func TestIterateMissCounters(t *testing.T) {
 func TestAggregatePrevoteAddDelete(t *testing.T) {
 	input := CreateTestInput(t)
 
-	hash := types.GetAggregateVoteHash("salt", "100ukrw,1000uusd", sdk.ValAddress(Addrs[0]))
+	hash := types.GetAggregateVoteHash("salt", "foo:100,bar:1000", sdk.ValAddress(Addrs[0]))
 	aggregatePrevote := types.NewAggregateExchangeRatePrevote(hash, sdk.ValAddress(Addrs[0]), 0)
 	input.OracleKeeper.SetAggregateExchangeRatePrevote(input.Ctx, sdk.ValAddress(Addrs[0]), aggregatePrevote)
 
@@ -232,11 +233,11 @@ func TestAggregatePrevoteAddDelete(t *testing.T) {
 func TestAggregatePrevoteIterate(t *testing.T) {
 	input := CreateTestInput(t)
 
-	hash := types.GetAggregateVoteHash("salt", "100ukrw,1000uusd", sdk.ValAddress(Addrs[0]))
+	hash := types.GetAggregateVoteHash("salt", "foo:100,bar:1000", sdk.ValAddress(Addrs[0]))
 	aggregatePrevote1 := types.NewAggregateExchangeRatePrevote(hash, sdk.ValAddress(Addrs[0]), 0)
 	input.OracleKeeper.SetAggregateExchangeRatePrevote(input.Ctx, sdk.ValAddress(Addrs[0]), aggregatePrevote1)
 
-	hash2 := types.GetAggregateVoteHash("salt", "100ukrw,1000uusd", sdk.ValAddress(Addrs[1]))
+	hash2 := types.GetAggregateVoteHash("salt", "foo:100,bar:1000", sdk.ValAddress(Addrs[1]))
 	aggregatePrevote2 := types.NewAggregateExchangeRatePrevote(hash2, sdk.ValAddress(Addrs[1]), 0)
 	input.OracleKeeper.SetAggregateExchangeRatePrevote(input.Ctx, sdk.ValAddress(Addrs[1]), aggregatePrevote2)
 
@@ -306,6 +307,54 @@ func TestAggregateVoteIterate(t *testing.T) {
 		i++
 		return false
 	})
+}
+
+func TestVoteTargets(t *testing.T) {
+	input := CreateTestInput(t)
+
+	input.OracleKeeper.ClearVoteTargets(input.Ctx)
+
+	expectedVoteTargets := []string{"bar", "foo", "whoowhoo"}
+	for _, voteTarget := range expectedVoteTargets {
+		input.OracleKeeper.SetVoteTarget(input.Ctx, voteTarget)
+	}
+
+	for _, voteTarget := range expectedVoteTargets {
+		require.True(t, input.OracleKeeper.IsVoteTarget(input.Ctx, voteTarget))
+	}
+
+	i := 0
+	input.OracleKeeper.IterateVoteTargets(input.Ctx, func(denom string) (stop bool) {
+		require.Equal(t, expectedVoteTargets[i], denom)
+		i++
+		return false
+	})
+
+	voteTargets := input.OracleKeeper.GetVoteTargets(input.Ctx)
+	require.Equal(t, expectedVoteTargets, voteTargets)
+}
+
+func TestTargets(t *testing.T) {
+	input := CreateTestInput(t)
+
+	expectedTargets := []string{"bar", "foo", "whoowhoo"}
+	for _, target := range expectedTargets {
+		input.OracleKeeper.SetTarget(input.Ctx, target)
+	}
+
+	for _, target := range expectedTargets {
+		require.True(t, input.OracleKeeper.IsTarget(input.Ctx, target))
+	}
+
+	i := 0
+	input.OracleKeeper.IterateTargets(input.Ctx, func(denom string) (stop bool) {
+		require.Equal(t, expectedTargets[i], denom)
+		i++
+		return false
+	})
+
+	targets := input.OracleKeeper.GetTargets(input.Ctx)
+	require.Equal(t, expectedTargets, targets)
 }
 
 func TestValidateFeeder(t *testing.T) {
