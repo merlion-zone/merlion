@@ -59,7 +59,7 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 		voteMap := k.OrganizeBallotByDenom(ctx, validatorClaimMap)
 		ctx.Logger().Debug("organized ballot by denom", "voteMap", voteMap)
 
-		if referenceMer := pickReferenceMer(ctx, k, voteTargets, voteMap); referenceMer != "" {
+		if referenceMer := PickReferenceMer(ctx, k, voteTargets, voteMap); referenceMer != "" {
 			// make voteMap of Reference Mer to calculate cross exchange rates
 			ballotRM := voteMap[referenceMer]
 			voteMapRM := ballotRM.ToMap()

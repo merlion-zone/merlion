@@ -32,14 +32,15 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/go-bip39"
 	"github.com/ethereum/go-ethereum/common"
-	merlion "github.com/merlion-zone/merlion/types"
-	makertypes "github.com/merlion-zone/merlion/x/maker/types"
-	customvestingtypes "github.com/merlion-zone/merlion/x/vesting/types"
 	"github.com/spf13/cobra"
 	tmconfig "github.com/tendermint/tendermint/config"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
 	"github.com/tendermint/tendermint/types"
 	tmtime "github.com/tendermint/tendermint/types/time"
+
+	merlion "github.com/merlion-zone/merlion/types"
+	makertypes "github.com/merlion-zone/merlion/x/maker/types"
+	customvestingtypes "github.com/merlion-zone/merlion/x/vesting/types"
 
 	"github.com/tharsis/ethermint/crypto/hd"
 	"github.com/tharsis/ethermint/server/config"
@@ -303,6 +304,27 @@ func initTestnetFiles(
 		if err != nil {
 			_ = os.RemoveAll(args.outputDir)
 			return err
+		}
+
+		// For validator bridging orchestrator
+		{
+			mnemonic := ""
+			if args.predeterminedMnemonic {
+				entropy := append([]byte{}, predeterminedEntropy...)
+				entropy[len(entropy)-2] = 1
+				entropy[len(entropy)-1] = byte(i)
+				mnemonic, err = bip39.NewMnemonic(entropy)
+				if err != nil {
+					return err
+				}
+				fmt.Printf("Mnemonic for validator orchestrator %d: %s\n", i, mnemonic)
+			}
+
+			_, _, err := testutil.GenerateSaveCoinKey(kb, fmt.Sprintf("%s-orchestrator", nodeDirName), mnemonic, true, algo)
+			if err != nil {
+				_ = os.RemoveAll(args.outputDir)
+				return err
+			}
 		}
 
 		info := map[string]string{"mnemonic": mnemonic}

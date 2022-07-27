@@ -11,6 +11,7 @@ require (
 	github.com/ethereum/go-ethereum v1.10.16
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
+	github.com/google/gofuzz v1.2.0
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/osmosis-labs/bech32-ibc v0.3.0-rc1
@@ -157,7 +158,7 @@ require (
 )
 
 replace (
-	github.com/Gravity-Bridge/Gravity-Bridge/module => github.com/merlion-zone/gravity/module v0.0.0-20220725111544-04afca59031b
+	github.com/Gravity-Bridge/Gravity-Bridge/module => github.com/merlion-zone/gravity/module v0.0.0-20220726103435-1f23555a12c8
 	github.com/cosmos/cosmos-sdk => github.com/merlion-zone/cosmos-sdk v0.45.4-merlion.6
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 	github.com/keybase/go-keychain => github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4
