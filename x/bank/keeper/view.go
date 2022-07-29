@@ -9,7 +9,8 @@ func (k Keeper) HasBalance(ctx sdk.Context, addr sdk.AccAddress, amt sdk.Coin) b
 	if !k.erc20Keeper().IsDenomForErc20(amt.Denom) {
 		return k.BaseKeeper.HasBalance(ctx, addr, amt)
 	} else {
-		return k.erc20Keeper().GetBalance(ctx, addr, amt.Denom).IsGTE(amt)
+		bal := k.erc20Keeper().GetBalance(ctx, addr, amt.Denom)
+		return !bal.Amount.IsNil() && bal.IsGTE(amt)
 	}
 }
 

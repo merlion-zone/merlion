@@ -9,7 +9,7 @@ import (
 
 func (k Keeper) InputOutputCoins(ctx sdk.Context, inputs []banktypes.Input, outputs []banktypes.Output) error {
 	// Safety check ensuring that when sending coins the keeper must maintain the
-	// Check supply invariant and validity of Coins.
+	// Check supply invariant and validity of coins.
 	if err := banktypes.ValidateInputsOutputs(inputs, outputs); err != nil {
 		return err
 	}
