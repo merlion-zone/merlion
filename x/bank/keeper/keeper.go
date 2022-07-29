@@ -77,7 +77,8 @@ func (k Keeper) HasSupply(ctx sdk.Context, denom string) bool {
 	if !k.erc20Keeper().IsDenomForErc20(denom) {
 		return k.BaseKeeper.HasSupply(ctx, denom)
 	} else {
-		return !k.erc20Keeper().GetSupply(ctx, denom).IsZero()
+		supply := k.erc20Keeper().GetSupply(ctx, denom)
+		return !supply.Amount.IsNil() && !supply.IsZero()
 	}
 }
 
