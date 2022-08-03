@@ -44,6 +44,8 @@ func TestKeeperTestSuite(t *testing.T) {
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
+	// init app
+	suite.app = app.Setup(false)
 	var (
 		PKS   = simapp.CreateTestPubKeys(5)
 		addrs = []sdk.AccAddress{
@@ -55,9 +57,6 @@ func (suite *KeeperTestSuite) SetupTest() {
 		}
 		valConsPk1 = PKS[0]
 	)
-
-	// init app
-	suite.app = app.Setup(false)
 	ctx := suite.app.BaseApp.NewContext(false, tmproto.Header{})
 	app.FundTestAddrs(suite.app, ctx, addrs, sdk.NewInt(1234))
 
