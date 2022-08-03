@@ -38,7 +38,6 @@ func (suite *GenesisTestSuite) TestVeInitGenesis() {
 
 	params := veKeeper.GetParams(suite.ctx)
 	suite.Require().Equal(params.GetLockDenom(), merlion.BaseDenom)
-
 	suite.Require().Equal(sdk.ZeroInt(), veKeeper.GetTotalLockedAmount(suite.ctx))
 	suite.Require().EqualValues(types.FirstVeID, veKeeper.GetNextVeID(suite.ctx))
 	suite.Require().EqualValues(types.EmptyEpoch, veKeeper.GetEpoch(suite.ctx))
