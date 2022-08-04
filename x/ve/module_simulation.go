@@ -10,14 +10,12 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/merlion-zone/merlion/testutil/sample"
-	vesimulation "github.com/merlion-zone/merlion/x/ve/simulation"
 	"github.com/merlion-zone/merlion/x/ve/types"
 )
 
 // avoid unused import issue
 var (
 	_ = sample.AccAddress
-	_ = vesimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind
 	_ = baseapp.Paramspace
