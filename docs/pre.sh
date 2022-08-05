@@ -25,4 +25,4 @@ cp -r cosmos-sdk/x/staking/spec/ ./modules/staking
 if [ ! -d "ibc-go" ]; then
     git clone https://github.com/cosmos/ibc-go.git
 fi
-cp -r ibc-go/modules/apps/transfer/spec/ ./modules/transfer
+cp -r ibc-go/docs/apps/transfer/ ./modules/transfer
