@@ -101,7 +101,7 @@ func (k Keeper) GetDistributionAccruedLastTimestamp(ctx sdk.Context) uint64 {
 
 func (k Keeper) SetDistributionTotalAmount(ctx sdk.Context, total sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{total})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: total})
 	store.Set(types.DistributionTotalAmountKey(), bz)
 }
 
@@ -118,7 +118,7 @@ func (k Keeper) GetDistributionTotalAmount(ctx sdk.Context) sdk.Int {
 
 func (k Keeper) SetDistributionPerPeriod(ctx sdk.Context, timestamp uint64, amount sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{amount})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: amount})
 	store.Set(types.DistributionPerPeriodKey(timestamp), bz)
 }
 

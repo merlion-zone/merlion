@@ -8,7 +8,7 @@ import (
 // SetTotalLockedAmount sets total locked amount
 func (k Keeper) SetTotalLockedAmount(ctx sdk.Context, amount sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{amount})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: amount})
 	store.Set(types.TotalLockedAmountKey(), bz)
 }
 
