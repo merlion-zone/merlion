@@ -270,7 +270,7 @@ func (k Keeper) GetUserCheckpoint(ctx sdk.Context, veID uint64, epoch uint64) ty
 
 func (k Keeper) SetSlopeChange(ctx sdk.Context, timestamp uint64, slopeChange sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{slopeChange})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: slopeChange})
 	store.Set(types.SlopeChangeKey(timestamp), bz)
 }
 
