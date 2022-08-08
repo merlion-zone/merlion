@@ -24,3 +24,10 @@ As price information is extrinsic to the blockchain, the Merlion network relies 
     - [Reward Band](01_concepts.md#Reward-Band)
     - [Slashing](01_concepts.md#Slashing)
     - [Abstaining from Voting](01_concepts.md#Abstaining-from-Voting)
+    - [Transitions](01_concepts.md#Transitions)
+2. **[State](02_state.md)**
+   - [AggregateExchangeRatePrevote](02_state.md#AggregateExchangeRatePrevote)
+   - [AggregateExchangeRateVote](02_state.md#AggregateExchangeRateVote)
+   - [ExchangeRate](02_state.md#ExchangeRate)
+   - [FeederDelegation](02_state.md#FeederDelegation)
+   - [MissCounter](02_state.md#MissCounter)
