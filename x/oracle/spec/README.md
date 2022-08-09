@@ -15,7 +15,7 @@ The Oracle module provides the Merlion blockchain with an up-to-date and accurat
 
 As price information is extrinsic to the blockchain, the Merlion network relies on validators to periodically vote on the current coins' exchange rate, with the protocol tallying up the results once per `VotePeriod` and updating the on-chain exchange rate as the weighted median of the ballot.
 
-> Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](https://github.com/cosmos/cosmos-sdk/tree/master/x/staking/spec/README.md) module, which covers the logic for staking and validators.
+> Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](../staking/) module, which covers the logic for staking and validators.
 
 ## Contents
 

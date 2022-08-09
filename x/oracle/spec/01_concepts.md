@@ -55,4 +55,4 @@ A validator may abstain from voting by submitting a non-positive integers for th
 
 ## Transitions
 
-The control flow for vote-tallying, exchange rate updates, ballot rewards and slashing happens at the end of every `VotePeriod`, and is found at the end-block ABCI function rather than inside message handlers.
+The control flow for vote-tallying, exchange rate updates, ballot rewards and slashing happens at the end of every `VotePeriod`, and is found at the [end-block ABCI](./03_end_block.md) function rather than inside message handlers.
