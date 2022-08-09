@@ -20,14 +20,16 @@ As price information is extrinsic to the blockchain, the Merlion network relies 
 ## Contents
 
 1. **[Concepts](01_concepts.md)**
-    - [Voting Procedure](01_concepts.md#Voting-Procedure)
-    - [Reward Band](01_concepts.md#Reward-Band)
-    - [Slashing](01_concepts.md#Slashing)
-    - [Abstaining from Voting](01_concepts.md#Abstaining-from-Voting)
-    - [Transitions](01_concepts.md#Transitions)
+    - [Voting Procedure](01_concepts.md#voting-procedure)
+    - [Reward Band](01_concepts.md#reward-band)
+    - [Slashing](01_concepts.md#slashing)
+    - [Abstaining from Voting](01_concepts.md#abstaining-from-voting)
+    - [Transitions](01_concepts.md#transitions)
 2. **[State](02_state.md)**
-   - [AggregateExchangeRatePrevote](02_state.md#AggregateExchangeRatePrevote)
-   - [AggregateExchangeRateVote](02_state.md#AggregateExchangeRateVote)
-   - [ExchangeRate](02_state.md#ExchangeRate)
-   - [FeederDelegation](02_state.md#FeederDelegation)
-   - [MissCounter](02_state.md#MissCounter)
+   - [AggregateExchangeRatePrevote](02_state.md#aggregateexchangerateprevote)
+   - [AggregateExchangeRateVote](02_state.md#aggregateexchangeratevote)
+   - [ExchangeRate](02_state.md#exchangerate)
+   - [FeederDelegation](02_state.md#feederdelegation)
+   - [MissCounter](02_state.md#misscounter)
+3. **[EndBlock](03_end_block.md)**
+   - [Tally Exchange Rate Votes](03_end_block.md#tally-exchange-rate-votes)
