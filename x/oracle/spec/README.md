@@ -33,3 +33,7 @@ As price information is extrinsic to the blockchain, the Merlion network relies 
    - [MissCounter](02_state.md#misscounter)
 3. **[EndBlock](03_end_block.md)**
    - [Tally Exchange Rate Votes](03_end_block.md#tally-exchange-rate-votes)
+4. **[Messages](04_messages.md)**
+   - [MsgAggregateExchangeRatePrevote](04_messages.md#msgaggregateexchangerateprevote)
+   - [MsgAggregateExchangeRateVote](04_messages.md#msgaggregateexchangeratevote)
+   - [MsgDelegateFeedConsent](04_messages.md#msgdelegatefeedconsent)
