@@ -45,4 +45,3 @@ The oracle module emits the following events:
 | message       | module        | oracle             |
 | message       | action        | delegatefeeder     |
 | message       | sender        | {senderAddress}    |
-
