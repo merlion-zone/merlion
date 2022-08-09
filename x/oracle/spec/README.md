@@ -40,3 +40,4 @@ As price information is extrinsic to the blockchain, the Merlion network relies 
 5. **[Events](05_events.md)**
    - [EndBlocker](05_events.md#endblocker)
    - [Handlers](05_events.md#handlers)
+6. **[Parameters](06_params.md)**
