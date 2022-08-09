@@ -13,10 +13,11 @@ order: 2
 ```go
 // AggregateVoteHash is hash value to hide vote exchange rates
 // which is formatted as hex string in SHA256("{salt}:{exchange rate}{denom},...,{exchange rate}{denom}:{voter}")
+type AggregateVoteHash []byte
 
 type AggregateExchangeRatePrevote struct {
-	Hash        string // Vote hex hash to protect centralize data source problem
-	Voter       string // Voter val address
+	Hash        AggregateVoteHash // Vote hex hash to protect centralize data source problem
+	Voter       sdk.ValAddress    // Voter val address
 	SubmitBlock int64
 }
 ```
@@ -37,7 +38,7 @@ type ExchangeRateTuples []ExchangeRateTuple
 
 type AggregateExchangeRateVote struct {
 	ExchangeRateTuples ExchangeRateTuples // ExchangeRates of Luna in target fiat currencies
-	Voter              string             // voter val address of validator
+	Voter              sdk.ValAddress     // voter val address of validator
 }
 ```
 
