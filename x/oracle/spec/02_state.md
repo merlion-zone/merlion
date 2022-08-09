@@ -37,7 +37,7 @@ type ExchangeRateTuple struct {
 type ExchangeRateTuples []ExchangeRateTuple
 
 type AggregateExchangeRateVote struct {
-	ExchangeRateTuples ExchangeRateTuples // ExchangeRates of Luna in target fiat currencies
+	ExchangeRateTuples ExchangeRateTuples // ExchangeRates of vote targets against USD
 	Voter              sdk.ValAddress     // voter val address of validator
 }
 ```
