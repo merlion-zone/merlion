@@ -8,7 +8,7 @@ order: 2
 
 `AggregateExchangeRatePrevote` containing validator voter's aggregated prevote for all denoms for the current `VotePeriod`.
 
-- AggregateExchangeRatePrevote: `0x06<valAddress_Bytes> -> protobuf(AggregateExchangeRatePrevote)`
+- AggregateExchangeRatePrevote: `0x06<valAddress_Bytes> -> ProtocolBuffer(AggregateExchangeRatePrevote)`
 
 ```go
 // AggregateVoteHash is hash value to hide vote exchange rates
@@ -26,7 +26,7 @@ type AggregateExchangeRatePrevote struct {
 
 `AggregateExchangeRateVote` containing validator voter's aggregate vote for all denoms for the current `VotePeriod`.
 
-- AggregateExchangeRateVote: `0x07<valAddress_Bytes> -> protobuf(AggregateExchangeRateVote)`
+- AggregateExchangeRateVote: `0x07<valAddress_Bytes> -> ProtocolBuffer(AggregateExchangeRateVote)`
 
 ```go
 type ExchangeRateTuple struct {
@@ -46,16 +46,16 @@ type AggregateExchangeRateVote struct {
 
 An `sdk.Dec` that stores the current exchange rate of a given denom against USD, which is used by the Maker module for pricing swaps etc.
 
-- ExchangeRate: `0x03<denom_Bytes> -> protobuf(sdk.Dec)`
+- ExchangeRate: `0x03<denom_Bytes> -> ProtocolBuffer(sdk.Dec)`
 
 ## FeederDelegation
 
 An `sdk.AccAddress` (`mer-` account) address of `operator`'s delegated price feeder.
 
-- FeederDelegation: `0x04<valAddress_Bytes> -> protobuf(sdk.AccAddress)`
+- FeederDelegation: `0x04<valAddress_Bytes> -> ProtocolBuffer(sdk.AccAddress)`
 
 ## MissCounter
 
 An `int64` representing the number of `VotePeriods` that validator `operator` missed during the current `SlashWindow`.
 
-- MissCounter: `0x05<valAddress_Bytes> -> protobuf(int64)`
+- MissCounter: `0x05<valAddress_Bytes> -> ProtocolBuffer(int64)`
