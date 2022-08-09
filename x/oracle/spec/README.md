@@ -37,3 +37,6 @@ As price information is extrinsic to the blockchain, the Merlion network relies 
    - [MsgAggregateExchangeRatePrevote](04_messages.md#msgaggregateexchangerateprevote)
    - [MsgAggregateExchangeRateVote](04_messages.md#msgaggregateexchangeratevote)
    - [MsgDelegateFeedConsent](04_messages.md#msgdelegatefeedconsent)
+5. **[Events](05_events.md)**
+   - [EndBlocker](05_events.md#endblocker)
+   - [Handlers](05_events.md#handlers)
