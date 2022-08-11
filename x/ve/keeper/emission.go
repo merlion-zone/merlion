@@ -106,7 +106,7 @@ func (k Keeper) AddTotalEmission(ctx sdk.Context, emission sdk.Int) {
 
 func (k Keeper) SetTotalEmission(ctx sdk.Context, total sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{total})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: total})
 	store.Set(types.TotalEmissionKey(), bz)
 }
 
@@ -123,7 +123,7 @@ func (k Keeper) GetTotalEmission(ctx sdk.Context) sdk.Int {
 
 func (k Keeper) SetEmissionAtLastPeriod(ctx sdk.Context, emission sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{emission})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: emission})
 	store.Set(types.EmissionAtLastPeriodKey(), bz)
 }
 
