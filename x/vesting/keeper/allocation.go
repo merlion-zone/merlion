@@ -104,7 +104,7 @@ func (k Keeper) GetAllocationAddresses(ctx sdk.Context) types.AllocationAddresse
 // SetAirdropTotalAmount sets airdrop total amount
 func (k Keeper) SetAirdropTotalAmount(ctx sdk.Context, total sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{total})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: total})
 	store.Set(types.AirdropsTotalAmountKey(), bz)
 }
 
