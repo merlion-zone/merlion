@@ -14,11 +14,7 @@ func (k Keeper) Bribe(ctx sdk.Context, depoistDenom string) Bribe {
 		panic("gauge not found")
 	}
 	return Bribe{
-		Base: Base{
-			keeper:       k,
-			depoistDenom: depoistDenom,
-			prefixKey:    types.BribeKey(depoistDenom),
-		},
+		Base: NewBase(k, depoistDenom, types.BribeKey(depoistDenom), false),
 	}
 }
 

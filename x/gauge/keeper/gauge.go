@@ -29,12 +29,7 @@ func (k Keeper) Gauge(ctx sdk.Context, depoistDenom string) Gauge {
 		panic("gauge not found")
 	}
 	return Gauge{
-		Base: Base{
-			keeper:       k,
-			depoistDenom: depoistDenom,
-			prefixKey:    types.GaugeKey(depoistDenom),
-			isGauge:      true,
-		},
+		Base: NewBase(k, depoistDenom, types.GaugeKey(depoistDenom), true),
 	}
 }
 

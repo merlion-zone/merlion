@@ -7,7 +7,7 @@ import (
 
 func (k Keeper) SetTotalVotes(ctx sdk.Context, votes sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{votes})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: votes})
 	store.Set(types.TotalVotesKey(), bz)
 }
 
@@ -24,7 +24,7 @@ func (k Keeper) GetTotalVotes(ctx sdk.Context) sdk.Int {
 
 func (k Keeper) SetTotalVotesByUser(ctx sdk.Context, veID uint64, votes sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{votes})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: votes})
 	store.Set(types.TotalVotesByUserKey(veID), bz)
 }
 
@@ -46,7 +46,7 @@ func (k Keeper) DeleteTotalVotesByUser(ctx sdk.Context, veID uint64) {
 
 func (k Keeper) SetPoolWeightedVotes(ctx sdk.Context, poolDenom string, votes sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{votes})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: votes})
 	store.Set(types.PoolWeightedVotesKey(poolDenom), bz)
 }
 
@@ -63,7 +63,7 @@ func (k Keeper) GetPoolWeightedVotes(ctx sdk.Context, poolDenom string) sdk.Int 
 
 func (k Keeper) SetPoolWeightedVotesByUser(ctx sdk.Context, veID uint64, poolDenom string, votes sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{votes})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: votes})
 	store.Set(types.PoolWeightedVotesByUserKey(veID, poolDenom), bz)
 }
 
@@ -85,7 +85,7 @@ func (k Keeper) DeletePoolWeightedVotesByUser(ctx sdk.Context, veID uint64, pool
 
 func (k Keeper) SetIndex(ctx sdk.Context, index sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{index})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: index})
 	store.Set(types.IndexKey(), bz)
 }
 
@@ -102,7 +102,7 @@ func (k Keeper) GetIndex(ctx sdk.Context) sdk.Int {
 
 func (k Keeper) SetIndexAtLastUpdatedByGauge(ctx sdk.Context, poolDenom string, index sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{index})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: index})
 	store.Set(types.IndexAtLastUpdatedByGaugeKey(poolDenom), bz)
 }
 
@@ -119,7 +119,7 @@ func (k Keeper) GetIndexAtLastUpdatedByGauge(ctx sdk.Context, poolDenom string) 
 
 func (k Keeper) SetClaimableRewardByGauge(ctx sdk.Context, poolDenom string, claimable sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{claimable})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: claimable})
 	store.Set(types.ClaimableRewardByGaugeKey(poolDenom), bz)
 }
 
