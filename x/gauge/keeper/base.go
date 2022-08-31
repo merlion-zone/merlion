@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+
 	merlion "github.com/merlion-zone/merlion/types"
 	"github.com/merlion-zone/merlion/x/gauge/types"
 	vetypes "github.com/merlion-zone/merlion/x/ve/types"
@@ -30,23 +31,18 @@ func (b *Base) PoolName() string {
 	return fmt.Sprintf("%s_%s", name, b.depoistDenom)
 }
 
-func (b *Base) EscrowPool(ctx sdk.Context) authtypes.ModuleAccountI {
+func (b *Base) EscrowPool(ctx sdk.Context) authtypes.AccountI {
 	poolName := b.PoolName()
 	acc := b.keeper.accountKeeper.GetAccount(ctx, authtypes.NewModuleAddress(poolName))
 	if acc != nil {
-		macc, ok := acc.(authtypes.ModuleAccountI)
-		if !ok {
-			panic("account is not a module account")
-		}
-		return macc
+		return acc
 	}
 
-	// create a new module account
-	macc := authtypes.NewEmptyModuleAccount(poolName)
-	maccI := (b.keeper.accountKeeper.NewAccount(ctx, macc)).(authtypes.ModuleAccountI) // set the account number
-	b.keeper.accountKeeper.SetModuleAccount(ctx, maccI)
+	// create a new account and set the account number
+	acc = b.keeper.accountKeeper.NewAccountWithAddress(ctx, authtypes.NewModuleAddress(poolName))
+	b.keeper.accountKeeper.SetAccount(ctx, acc)
 
-	return maccI
+	return acc
 }
 
 func (b *Base) isRewardDenom(ctx sdk.Context, denom string) bool {
@@ -269,7 +265,7 @@ func (b *Base) claimReward(ctx sdk.Context, veID uint64) (err error) {
 
 		if rewardAmount.IsPositive() {
 			coin := sdk.NewCoin(rewardDenom, rewardAmount)
-			err = b.keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, pool.GetName(), owner, sdk.NewCoins(coin))
+			err = b.keeper.bankKeeper.SendCoins(ctx, pool.GetAddress(), owner, sdk.NewCoins(coin))
 			if err != nil {
 				return err
 			}
@@ -324,7 +320,7 @@ func (b *Base) depositReward(ctx sdk.Context, sender sdk.AccAddress, rewardDenom
 	reward = b.GetReward(ctx, rewardDenom)
 
 	coin := sdk.NewCoin(rewardDenom, amount)
-	err := b.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, b.EscrowPool(ctx).GetName(), sdk.NewCoins(coin))
+	err := b.keeper.bankKeeper.SendCoins(ctx, sender, b.EscrowPool(ctx).GetAddress(), sdk.NewCoins(coin))
 	if err != nil {
 		return err
 	}

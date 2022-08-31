@@ -2,6 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/merlion-zone/merlion/x/gauge/types"
 	vetypes "github.com/merlion-zone/merlion/x/ve/types"
 )
@@ -46,7 +47,7 @@ func (g Gauge) ClaimReward(ctx sdk.Context, veID uint64, voterKeeper types.Voter
 func (g Gauge) Deposit(ctx sdk.Context, veID uint64, amount sdk.Int) (err error) {
 	owner := g.keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, vetypes.VeIDFromUint64(veID))
 	coin := sdk.NewCoin(g.depoistDenom, amount)
-	err = g.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, owner, g.EscrowPool(ctx).GetName(), sdk.NewCoins(coin))
+	err = g.keeper.bankKeeper.SendCoins(ctx, owner, g.EscrowPool(ctx).GetAddress(), sdk.NewCoins(coin))
 	if err != nil {
 		return err
 	}
@@ -91,7 +92,7 @@ func (g Gauge) Withdraw(ctx sdk.Context, veID uint64, amount sdk.Int) (err error
 	}
 
 	coin := sdk.NewCoin(g.depoistDenom, amount)
-	err = g.keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, g.EscrowPool(ctx).GetName(), owner, sdk.NewCoins(coin))
+	err = g.keeper.bankKeeper.SendCoins(ctx, g.EscrowPool(ctx).GetAddress(), owner, sdk.NewCoins(coin))
 	if err != nil {
 		return err
 	}
