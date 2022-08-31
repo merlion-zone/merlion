@@ -66,7 +66,7 @@ func (suite *KeeperTestSuite) SetupTest() {
 	err = suite.app.StakingKeeper.SetValidatorByConsAddr(suite.ctx, validator)
 	require.NoError(err)
 
-	amount := sdk.NewInt64Coin(merlion.BaseDenom, 10000)
+	amount := sdk.NewInt64Coin(merlion.BaseDenom, 10000000)
 	err = app.FundAccount(suite.app.BankKeeper, suite.ctx, sdk.AccAddress(suite.address.Bytes()), sdk.NewCoins(amount))
 	require.NoError(err)
 }
