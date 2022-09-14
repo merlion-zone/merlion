@@ -85,7 +85,7 @@ func (k Keeper) RemoveVeDelegation(ctx sdk.Context, delegation types.VeDelegatio
 
 func (k Keeper) SetVeDelegatedAmount(ctx sdk.Context, veID uint64, amount sdk.Int) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{amount})
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: amount})
 	store.Set(types.GetVeTokensKey(veID), bz)
 }
 
@@ -106,9 +106,12 @@ func (k Keeper) RemoveVeDelegatedAmount(ctx sdk.Context, veID uint64) {
 }
 
 func (k Keeper) SubVeDelegatedAmount(ctx sdk.Context, veID uint64, subAmount sdk.Int) {
+	if !subAmount.IsPositive() {
+		return
+	}
 	veDelegatedAmt := k.GetVeDelegatedAmount(ctx, veID)
 	veDelegatedAmt = veDelegatedAmt.Sub(subAmount)
-	if veDelegatedAmt.IsZero() {
+	if !veDelegatedAmt.IsPositive() {
 		k.RemoveVeDelegatedAmount(ctx, veID)
 	} else {
 		k.SetVeDelegatedAmount(ctx, veID, veDelegatedAmt)
