@@ -275,26 +275,25 @@ func (k Keeper) VeDelegate(
 	if validator.InvalidExRate() {
 		return sdk.ZeroDec(), stakingtypes.ErrDelegatorShareExRateInvalid
 	}
-
-	delegation, found := k.GetDelegation(ctx, delAddr, validator.GetOperator())
+	valAddr := validator.GetOperator()
+	delegation, found := k.GetDelegation(ctx, delAddr, valAddr)
 	if !found {
-		delegation = stakingtypes.NewDelegation(delAddr, validator.GetOperator(), sdk.ZeroDec())
+		delegation = stakingtypes.NewDelegation(delAddr, valAddr, sdk.ZeroDec())
 	}
 
-	veDelegation, got := k.GetVeDelegation(ctx, delAddr, validator.GetOperator())
+	veDelegation, got := k.GetVeDelegation(ctx, delAddr, valAddr)
 	if !got {
 		veDelegation = types.VeDelegation{
 			DelegatorAddress: delAddr.String(),
-			ValidatorAddress: validator.String(),
+			ValidatorAddress: validator.OperatorAddress,
 		}
 	} else {
 		veDelegation = k.SettleVeDelegation(ctx, veDelegation, validator)
 	}
-
 	if found {
-		k.BeforeDelegationSharesModified(ctx, delAddr, validator.GetOperator())
+		k.BeforeDelegationSharesModified(ctx, delAddr, valAddr)
 	} else {
-		k.BeforeDelegationCreated(ctx, delAddr, validator.GetOperator())
+		k.BeforeDelegationCreated(ctx, delAddr, valAddr)
 	}
 
 	totalNewShares := sdk.ZeroDec()
@@ -368,7 +367,6 @@ func (k Keeper) VeDelegate(
 		veShares, _ := veDelegation.GetSharesByVeID(veID)
 
 		veDelegatedAmt := k.GetVeDelegatedAmount(ctx, veID)
-
 		veDelegatedAmt = veDelegatedAmt.Add(veBondAmt)
 		if veDelegatedAmt.GT(locked.Amount) {
 			return sdk.ZeroDec(), sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "insufficient ve locked amount")
@@ -390,7 +388,7 @@ func (k Keeper) VeDelegate(
 	}
 
 	if totalNewShares.IsPositive() {
-		veValidator, found := k.GetVeValidator(ctx, validator.GetOperator())
+		veValidator, found := k.GetVeValidator(ctx, valAddr)
 		if !found {
 			veValidator = types.VeValidator{
 				OperatorAddress:   validator.OperatorAddress,
@@ -417,13 +415,11 @@ func (k Keeper) BeginRedelegation(
 	if !found {
 		return time.Time{}, stakingtypes.ErrBadRedelegationDst
 	}
-	_ = dstValidator
 
 	srcValidator, found := k.GetValidator(ctx, valSrcAddr)
 	if !found {
 		return time.Time{}, stakingtypes.ErrBadRedelegationDst
 	}
-	_ = srcValidator
 
 	// check if this is a transitive redelegation
 	if k.HasReceivingRedelegation(ctx, delAddr, valSrcAddr) {

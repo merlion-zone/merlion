@@ -11,7 +11,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/merlion-zone/merlion/app"
 	merlion "github.com/merlion-zone/merlion/types"
-	"github.com/merlion-zone/merlion/x/ve/types"
 	"github.com/stretchr/testify/suite"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmversion "github.com/tendermint/tendermint/proto/tendermint/version"
@@ -25,11 +24,10 @@ type KeeperTestSuite struct {
 	ctx sdk.Context
 	app *app.Merlion
 
-	address   common.Address
-	signer    keyring.Signer
-	validator stakingtypes.Validator
-
-	queryClient types.QueryClient
+	address             common.Address
+	signer              keyring.Signer
+	validator           stakingtypes.Validator
+	validatorRedelegate stakingtypes.Validator
 }
 
 func TestKeeperTestSuite(t *testing.T) {
@@ -71,7 +69,32 @@ func (suite *KeeperTestSuite) SetupTest() {
 	require.NoError(err)
 	suite.validator = validator
 
+	// Set validatorRedelegate
+	suite.SetupValidatorRedelegate()
 	amount := sdk.NewInt64Coin(merlion.BaseDenom, 10000)
 	err = app.FundAccount(suite.app.BankKeeper, suite.ctx, sdk.AccAddress(suite.address.Bytes()), sdk.NewCoins(amount))
 	require.NoError(err)
+}
+
+func (suite *KeeperTestSuite) SetupValidatorRedelegate() {
+	require := suite.Require()
+
+	// account key
+	priv, err := ethsecp256k1.GenerateKey()
+	require.NoError(err)
+	address := common.BytesToAddress(priv.PubKey().Address().Bytes())
+
+	// consensus key
+	privCons, err := ethsecp256k1.GenerateKey()
+	require.NoError(err)
+
+	// set validator
+	valAddr := sdk.ValAddress(address.Bytes())
+	validator, err := stakingtypes.NewValidator(valAddr, privCons.PubKey(), stakingtypes.Description{})
+	require.NoError(err)
+	validator = stakingkeeper.TestingUpdateValidator(suite.app.StakingKeeper.Keeper, suite.ctx, validator, true)
+	suite.app.StakingKeeper.AfterValidatorCreated(suite.ctx, validator.GetOperator())
+	err = suite.app.StakingKeeper.SetValidatorByConsAddr(suite.ctx, validator)
+	require.NoError(err)
+	suite.validatorRedelegate = validator
 }

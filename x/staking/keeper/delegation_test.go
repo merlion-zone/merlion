@@ -1,8 +1,12 @@
 package keeper_test
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/merlion-zone/merlion/x/staking/types"
+	vekeeper "github.com/merlion-zone/merlion/x/ve/keeper"
 	vetypes "github.com/merlion-zone/merlion/x/ve/types"
 )
 
@@ -20,7 +24,6 @@ func (suite *KeeperTestSuite) TestKeeper_SetVeValidator_GetVeValidator() {
 	}
 	k.SetVeValidator(suite.ctx, v)
 
-	sdk.ValAddressFromBech32(v.OperatorAddress)
 	validator, found = k.GetVeValidator(suite.ctx, valAddr)
 	suite.Require().Equal(v, validator)
 	suite.Require().Equal(true, found)
@@ -359,4 +362,173 @@ func (suite *KeeperTestSuite) TestKeeper_SetVeRedelegationEntry() {
 	suite.Require().Equal(true, found)
 }
 
-// TODO:VeDelegate
+func (suite *KeeperTestSuite) TestKeeper_VeDelegate() {
+	suite.SetupTest()
+	k := suite.app.StakingKeeper
+	delAcct := sdk.AccAddress(suite.address.Bytes())
+	ctx := sdk.WrapSDKContext(suite.ctx)
+	denom := k.BondDenom(suite.ctx)
+	veServer := vekeeper.NewMsgServerImpl(suite.app.VeKeeper)
+
+	testCases := []struct {
+		name            string
+		delAddr         sdk.AccAddress
+		bondAmt         sdk.Int
+		veTokens        types.VeTokensSlice
+		tokenSrc        stakingtypes.BondStatus
+		validator       stakingtypes.Validator
+		subtractAccount bool
+		shares          sdk.Dec
+	}{
+		{"not subtract account", delAcct, sdk.NewInt(100), types.VeTokensSlice{
+			types.VeTokens{
+				VeId:   uint64(1),
+				Tokens: sdk.NewInt(100),
+			},
+		}, stakingtypes.Bonded, suite.validator, false, sdk.NewDec(100)},
+	}
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("Case %s", tc.name), func() {
+			amount := sdk.NewCoin(denom, tc.veTokens[0].Tokens)
+			veID := fmt.Sprintf("ve-%d", tc.veTokens[0].VeId)
+			_, err := veServer.Create(ctx, &vetypes.MsgCreate{
+				Sender:       delAcct.String(),
+				To:           delAcct.String(),
+				Amount:       amount,
+				LockDuration: vetypes.RegulatedPeriod,
+			})
+			suite.Require().NoError(err)
+
+			_, err = veServer.Deposit(ctx, &vetypes.MsgDeposit{
+				Sender: delAcct.String(),
+				VeId:   veID,
+				Amount: amount,
+			})
+			suite.Require().NoError(err)
+
+			newShares, err := k.VeDelegate(suite.ctx, tc.delAddr, tc.bondAmt, tc.veTokens, tc.tokenSrc, tc.validator, tc.subtractAccount)
+			suite.Require().NoError(err)
+			suite.Require().Equal(tc.shares, newShares)
+		})
+	}
+}
+
+func (suite *KeeperTestSuite) TestKeeper_BeginRedelegation() {
+	suite.SetupTest()
+	k := suite.app.StakingKeeper
+	delAcct := sdk.AccAddress(suite.address.Bytes())
+	ctx := sdk.WrapSDKContext(suite.ctx)
+	denom := k.BondDenom(suite.ctx)
+	veServer := vekeeper.NewMsgServerImpl(suite.app.VeKeeper)
+
+	// VeDelegate in advance
+	veTokens := types.VeTokensSlice{
+		types.VeTokens{
+			VeId:   uint64(1),
+			Tokens: sdk.NewInt(100),
+		},
+	}
+	amount := sdk.NewCoin(denom, veTokens[0].Tokens)
+	boundAmt := sdk.NewInt(100)
+	veID := fmt.Sprintf("ve-%d", veTokens[0].VeId)
+	_, err := veServer.Create(ctx, &vetypes.MsgCreate{
+		Sender:       delAcct.String(),
+		To:           delAcct.String(),
+		Amount:       amount,
+		LockDuration: vetypes.RegulatedPeriod,
+	})
+	suite.Require().NoError(err)
+
+	_, err = veServer.Deposit(ctx, &vetypes.MsgDeposit{
+		Sender: delAcct.String(),
+		VeId:   veID,
+		Amount: amount,
+	})
+	suite.Require().NoError(err)
+
+	_, err = k.VeDelegate(suite.ctx, delAcct, boundAmt, veTokens, stakingtypes.Bonded, suite.validator, false)
+	suite.Require().NoError(err)
+
+	valSrcAddr := "mervaloper1mnfm9c7cdgqnkk66sganp78m0ydmcr4pctrjr3"
+	valDestAddr := "mervaloper1353a4uac03etdylz86tyq9ssm3x2704j6g0p55"
+	valSrc, err := sdk.ValAddressFromBech32(valSrcAddr)
+	suite.Require().NoError(err)
+	valDest, err := sdk.ValAddressFromBech32(valDestAddr)
+	suite.Require().NoError(err)
+
+	testCases := []struct {
+		name         string
+		delAddr      sdk.AccAddress
+		valSrcAddr   sdk.ValAddress
+		valDstAddr   sdk.ValAddress
+		sharesAmount sdk.Dec
+		err          error
+	}{
+		{"ErrSelfRedelegation", delAcct, suite.validator.GetOperator(), suite.validator.GetOperator(), sdk.NewDec(10), stakingtypes.ErrSelfRedelegation},
+		{"ErrBadRedelegationSrc", delAcct, valSrc, suite.validator.GetOperator(), sdk.NewDec(10), stakingtypes.ErrBadRedelegationDst},
+		{"ErrBadRedelegationDst", delAcct, suite.validator.GetOperator(), valDest, sdk.NewDec(10), stakingtypes.ErrBadRedelegationDst},
+		{"ErrTinyRedelegationAmount", delAcct, suite.validator.GetOperator(), suite.validatorRedelegate.GetOperator(), sdk.NewDec(0), stakingtypes.ErrTinyRedelegationAmount},
+		{"ok", delAcct, suite.validator.GetOperator(), suite.validatorRedelegate.GetOperator(), sdk.NewDec(10), nil},
+	}
+
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("Case %s", tc.name), func() {
+			_, err := k.BeginRedelegation(suite.ctx, tc.delAddr, tc.valSrcAddr, tc.valDstAddr, tc.sharesAmount)
+			if err != nil {
+				suite.Require().Equal(tc.err, err)
+			}
+		})
+	}
+}
+
+func (suite *KeeperTestSuite) TestKeeper_Undelegate() {
+	suite.SetupTest()
+	k := suite.app.StakingKeeper
+	delAcct := sdk.AccAddress(suite.address.Bytes())
+	ctx := sdk.WrapSDKContext(suite.ctx)
+	denom := k.BondDenom(suite.ctx)
+	veServer := vekeeper.NewMsgServerImpl(suite.app.VeKeeper)
+
+	// VeDelegate in advance
+	veTokens := types.VeTokensSlice{
+		types.VeTokens{
+			VeId:   uint64(1),
+			Tokens: sdk.NewInt(100),
+		},
+	}
+	amount := sdk.NewCoin(denom, veTokens[0].Tokens)
+	boundAmt := sdk.NewInt(100)
+	veID := fmt.Sprintf("ve-%d", veTokens[0].VeId)
+	_, err := veServer.Create(ctx, &vetypes.MsgCreate{
+		Sender:       delAcct.String(),
+		To:           delAcct.String(),
+		Amount:       amount,
+		LockDuration: vetypes.RegulatedPeriod,
+	})
+	suite.Require().NoError(err)
+
+	_, err = veServer.Deposit(ctx, &vetypes.MsgDeposit{
+		Sender: delAcct.String(),
+		VeId:   veID,
+		Amount: amount,
+	})
+	suite.Require().NoError(err)
+
+	_, err = k.VeDelegate(suite.ctx, delAcct, boundAmt, veTokens, stakingtypes.Bonded, suite.validator, false)
+	suite.Require().NoError(err)
+
+	valNoExistAddr := "mervaloper1mnfm9c7cdgqnkk66sganp78m0ydmcr4pctrjr3"
+	valNoExist, err := sdk.ValAddressFromBech32(valNoExistAddr)
+	suite.Require().NoError(err)
+
+	// Try ErrNoDelegatorForAddress
+	_, err = k.Undelegate(suite.ctx, delAcct, valNoExist, sdk.NewDec(1))
+	suite.Require().Error(err, stakingtypes.ErrNoDelegatorForAddress)
+
+	_, err = k.Undelegate(suite.ctx, delAcct, suite.validator.GetOperator(), sdk.NewDec(90))
+	suite.Require().NoError(err)
+
+	notBounded := suite.app.AccountKeeper.GetModuleAccount(suite.ctx, stakingtypes.NotBondedPoolName).GetAddress()
+	notBoundBalance := suite.app.BankKeeper.GetBalance(suite.ctx, notBounded, denom)
+	suite.Require().Equal(sdk.ZeroInt(), notBoundBalance.Amount)
+}
