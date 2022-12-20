@@ -19,6 +19,15 @@ type Base struct {
 	isGauge      bool
 }
 
+func NewBase(k Keeper, depoistDenom string, prefixKey []byte, isGauge bool) Base {
+	return Base{
+		keeper:       k,
+		depoistDenom: depoistDenom,
+		prefixKey:    prefixKey,
+		isGauge:      isGauge,
+	}
+}
+
 func (b *Base) PoolDenom() string {
 	return b.depoistDenom
 }

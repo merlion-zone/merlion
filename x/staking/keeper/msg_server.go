@@ -57,7 +57,7 @@ func (k MsgServer) VeDelegate(goCtx context.Context, msg *types.MsgVeDelegate) (
 	}
 
 	owner := k.Keeper.nftKeeper.GetOwner(ctx, vetypes.VeNftClass.Id, msg.VeId)
-	if owner.Equals(delegatorAddress) {
+	if !owner.Equals(delegatorAddress) {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ve %s not owned by delegator", msg.VeId)
 	}
 
